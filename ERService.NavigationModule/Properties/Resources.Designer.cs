@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERService.NavigationModule.Properties
+namespace ERService.Navigation.Properties
 {
     using System;
 

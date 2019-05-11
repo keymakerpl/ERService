@@ -56,19 +56,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Startup\Bootstrapper.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="Views\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +89,56 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="EnterpriseLibrary.ExceptionHandling">
+      <Version>6.0.1304</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>3.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Unity" Version="7.1.0.431&#xD;" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\Shell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Startup\" />
+    <Folder Include="Views\Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERService.Header\ERService.Header.csproj">
+      <Project>{29CCB452-8D14-4FD4-AF65-7BD659640829}</Project>
+      <Name>ERService.Header</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Infrastructure\ERService.Infrastructure.csproj">
+      <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
+      <Name>ERService.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.NavigationModule\ERService.Navigation.csproj">
+      <Project>{0580267C-8C3F-4D71-BD5A-851E67B08812}</Project>
+      <Name>ERService.Navigation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Settings\ERService.Settings.csproj">
+      <Project>{406E7194-6493-4031-9FC3-B341E84C9D1A}</Project>
+      <Name>ERService.Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.StartPage\ERService.StartPage.csproj">
+      <Project>{1AA0F144-F7E9-4C27-AE41-4CB8EC09DA20}</Project>
+      <Name>ERService.StartPage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.StatusBarModule\ERService.StatusBar.csproj">
+      <Project>{E26D3ECE-1846-46A7-A570-FE2A969561BC}</Project>
+      <Name>ERService.StatusBar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.ToolbarModule\ERService.Toolbar.csproj">
+      <Project>{D2FB292B-478B-47D7-83DF-DBF0463E49B2}</Project>
+      <Name>ERService.Toolbar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

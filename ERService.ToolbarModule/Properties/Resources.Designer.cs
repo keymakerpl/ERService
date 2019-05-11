@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERService.ToolbarModule.Properties
+namespace ERService.Toolbar.Properties
 {
     using System;
 

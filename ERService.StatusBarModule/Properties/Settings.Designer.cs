@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERService.StatusBarModule.Properties
+namespace ERService.StatusBar.Properties
 {
 
 
