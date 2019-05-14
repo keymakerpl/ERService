@@ -1,5 +1,7 @@
-﻿using ERService.Navigation.Views;
-using ERService.Settings.ViewModels;
+﻿using ERService.CustomerModule.Views;
+using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Repositories;
+using ERService.Navigation.Views;
 using ERService.Settings.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -20,13 +22,16 @@ namespace ERService.Navigation
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _container = containerProvider;
-            _regionManager.RegisterViewWithRegion("NavigationRegion", typeof(NavigationView));
+            _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
             _container.Resolve<NavigationView>();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //TODO: move or refactor, change object to interface mapping    
+            containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
+            containerRegistry.Register<object, CustomerListView>(typeof(CustomerListView).FullName);
         }
     }
 }

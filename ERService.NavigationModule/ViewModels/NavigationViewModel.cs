@@ -1,5 +1,4 @@
-﻿using ERService.Infrastructure.Commands;
-using ERService.Settings.Views;
+﻿using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using Prism.Regions;
 using System;
@@ -8,18 +7,19 @@ namespace ERService.Navigation.ViewModels
 {
     public class NavigationViewModel
     {
-        public DelegateCommand OpenDetailViewCommand { get; }
+        public DelegateCommand<object> OpenDetailViewCommand { get; }
+
         public IRegionManager _regionManager { get; private set; }
 
         public NavigationViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            OpenDetailViewCommand = new DelegateCommand(OnOpenDetailViewExecute);
+            OpenDetailViewCommand = new DelegateCommand<object>(OnOpenDetailViewExecute);
         }
 
-        private void OnOpenDetailViewExecute()
+        private void OnOpenDetailViewExecute(object viewType)
         {
-            _regionManager.RequestNavigate("ContentRegion", new Uri(typeof(SettingsView).FullName, UriKind.Relative));
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(viewType.ToString(), UriKind.Relative));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ERService.StatusBar.Views;
+﻿using ERService.Infrastructure.Constants;
+using ERService.StatusBar.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -18,13 +19,12 @@ namespace ERService.StatusBar
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _container = containerProvider;
-            _regionManager.RegisterViewWithRegion("StatusBarRegion", typeof(StatusBarView));
+            _regionManager.RegisterViewWithRegion(RegionNames.StatusbarRegion, typeof(StatusBarView));
             _container.Resolve<StatusBarView>();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
         }
     }
 }

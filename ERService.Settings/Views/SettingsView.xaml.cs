@@ -1,6 +1,4 @@
 ﻿using ERService.Infrastructure.Base;
-using ERService.Settings.ViewModels;
-using Prism.Regions;
 using System.Windows.Controls;
 
 namespace ERService.Settings.Views
@@ -10,7 +8,6 @@ namespace ERService.Settings.Views
         public SettingsView()
         {
             InitializeComponent();
-        }
-
+        }        
     }
 }

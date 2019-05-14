@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using System;
 
 namespace ERService.Infrastructure.Events
 {
@@ -12,7 +13,7 @@ namespace ERService.Infrastructure.Events
         {
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ViewModelName { get; set; }
     }
 }

@@ -1,15 +1,9 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
-    public class SettingsViewModel : BindableBase, INavigationAware, IRegionMemberLifetime
+    public class SettingsViewModel : BindableBase, INavigationAware
     {
         private string _message;
         public string Message
@@ -23,9 +17,7 @@ namespace ERService.Settings.ViewModels
         {
             get { return _counter; }
             set { SetProperty(ref _counter, value); RaisePropertyChanged(); }
-        }
-
-        public bool KeepAlive { get { return false; } }
+        }        
 
         public SettingsViewModel()
         {

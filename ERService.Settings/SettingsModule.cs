@@ -1,4 +1,4 @@
-﻿using ERService.Settings.ViewModels;
+﻿using ERService.Infrastructure.Constants;
 using ERService.Settings.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -14,7 +14,7 @@ namespace ERService.Settings
         public SettingsModule(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(SettingsView));
+            _regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(SettingsView));
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
@@ -23,8 +23,7 @@ namespace ERService.Settings
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            
+        {            
         }
     }
 }

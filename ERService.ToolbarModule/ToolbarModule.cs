@@ -1,4 +1,5 @@
-﻿using ERService.Toolbar.Views;
+﻿using ERService.Infrastructure.Constants;
+using ERService.Toolbar.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -18,13 +19,12 @@ namespace ERService.Toolbar
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _container = containerProvider;
-            _regionManager.RegisterViewWithRegion("ToolBarRegion", typeof(ToolBarView));
+            _regionManager.RegisterViewWithRegion(RegionNames.ToolbarRegion, typeof(ToolBarView));
             _container.Resolve<ToolBarView>();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
         }
     }
 }

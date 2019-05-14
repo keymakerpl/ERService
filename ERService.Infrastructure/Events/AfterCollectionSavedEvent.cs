@@ -2,11 +2,11 @@
 
 namespace ERService.Infrastructure.Events
 {
-    internal class AfterCollectionSavedEvent : PubSubEvent<AfterCollectionSavedEventArgs>
+    public class AfterCollectionSavedEvent : PubSubEvent<AfterCollectionSavedEventArgs>
     {
     }
 
-    internal class AfterCollectionSavedEventArgs
+    public class AfterCollectionSavedEventArgs
     {
         public AfterCollectionSavedEventArgs()
         {
