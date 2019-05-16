@@ -18,7 +18,8 @@ namespace ERService.Business
             CustomerAddresses = new Collection<CustomerAddress>();            
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
@@ -29,8 +30,29 @@ namespace ERService.Business
         public string LastName { get; set; }
 
         [StringLength(50)]
+        public string CompanyName { get; set; }
+
+        [StringLength(50)]
+        public string NIP { get; set; }
+
+        [StringLength(50)]
         [EmailAddress]
         public string Email { get; set; }
+
+        [StringLength(50)]
+        [EmailAddress]
+        public string Email2 { get; set; }
+
+        [Phone]
+        [MaxLength(20)]
+        public string PhoneNumber { get; set; }
+
+        [Phone]
+        [MaxLength(20)]
+        public string PhoneNumber2 { get; set; }
+
+        [StringLength(50)]
+        public string Description { get; set; }
 
         #region Relacje
 

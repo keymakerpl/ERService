@@ -20,12 +20,12 @@ namespace ERService.MSSQLDataAccess.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
 
-            context.Customers.AddOrUpdate(e => e.Id,
-                new Customer() { Id = new Guid(), FirstName = "Jan", LastName = "Nowak" },
-                new Customer() { Id = new Guid(), FirstName = "Marek", LastName = "Kawa³ek" },
-                new Customer() { Id = new Guid(), FirstName = "Anna", LastName = "Nowak" });            
+            //context.Customers.AddOrUpdate(e => e.Id,
+            //    new Customer() { Id = new Guid(), FirstName = "Jan", LastName = "Nowak" },
+            //    new Customer() { Id = new Guid(), FirstName = "Marek", LastName = "Kawa³ek" },
+            //    new Customer() { Id = new Guid(), FirstName = "Anna", LastName = "Nowak" });            
 
-            context.SaveChanges();
+            //context.SaveChanges();
         }
 
     }

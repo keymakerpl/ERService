@@ -78,24 +78,24 @@
                 <Controls:HamburgerMenuItemCollection>
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Start"
                                                      Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type startView:StartPageView}">
-                        
-                    </Controls:HamburgerMenuGlyphItem>
+                                                     CommandParameter="{x:Type startView:StartPageView}"/>
+
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Klienci"
                                                      Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type cw:CustomerListView}">
+                                                     CommandParameter="{x:Type cw:CustomerListView}"/>
 
-                    </Controls:HamburgerMenuGlyphItem>
+
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia" 
                                                      Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type settingsView:SettingsView}">
-                    </Controls:HamburgerMenuGlyphItem>
+                                                     CommandParameter="{x:Type settingsView:SettingsView}"/>
+
+
                 </Controls:HamburgerMenuItemCollection>
             </Controls:HamburgerMenu.ItemsSource>
 
-            <!--  Options  -->
+            <!--  About  -->
             <Controls:HamburgerMenu.OptionsItemsSource>
                 <Controls:HamburgerMenuItemCollection>
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="O programie">

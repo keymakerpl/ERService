@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201905131904448_AddedGuidIdGenerated.Designer.cs">
       <DependentUpon>201905131904448_AddedGuidIdGenerated.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905161504231_AddedCustomerColumns.cs" />
+    <Compile Include="Migrations\201905161504231_AddedCustomerColumns.Designer.cs">
+      <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -80,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905131904448_AddedGuidIdGenerated.resx">
       <DependentUpon>201905131904448_AddedGuidIdGenerated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905161504231_AddedCustomerColumns.resx">
+      <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

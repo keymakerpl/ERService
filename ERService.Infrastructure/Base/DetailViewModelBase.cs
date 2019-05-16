@@ -6,6 +6,7 @@ using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ERService.Infrastructure.Base
@@ -113,14 +114,16 @@ namespace ERService.Infrastructure.Base
 
         protected async virtual void OnCloseDetailViewExecute()
         {
+            //TODO: MessageService
             if (HasChanges)
             {
                 //var result = await MessageDialogService.ShowOkCancelDialog("Continue and Cancel changes?", Title);
-                
-                //if (result == MessageDialogResult.Cancel)
-                //{
-                //    return;
-                //}
+                var result = MessageBox.Show("Leave changes?", "Continue?", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
             }
 
             EventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs()

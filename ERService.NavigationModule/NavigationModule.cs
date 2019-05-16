@@ -1,6 +1,6 @@
-﻿using ERService.CustomerModule.Views;
+﻿using ERService.CustomerModule.Repository;
+using ERService.CustomerModule.Views;
 using ERService.Infrastructure.Constants;
-using ERService.Infrastructure.Repositories;
 using ERService.Navigation.Views;
 using ERService.Settings.Views;
 using Prism.Ioc;
@@ -27,9 +27,9 @@ namespace ERService.Navigation
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            //TODO: move or refactor, change object to interface mapping    
+        { 
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
+            containerRegistry.Register<object, CustomerView>(typeof(CustomerView).FullName);
             containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
             containerRegistry.Register<object, CustomerListView>(typeof(CustomerListView).FullName);
         }

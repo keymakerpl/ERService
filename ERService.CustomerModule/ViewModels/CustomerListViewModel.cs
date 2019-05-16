@@ -1,25 +1,42 @@
 ﻿using ERService.Infrastructure.Base;
-using ERService.Infrastructure.Repositories;
 using ERService.Business;
 using Prism.Events;
 using System;
-using System.Linq;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
+using ERService.CustomerModule.Repository;
+using Prism.Regions;
+using ERService.CustomerModule.Views;
+using ERService.Infrastructure.Constants;
 
 namespace ERService.CustomerModule.ViewModels
 {
     public class CustomerListViewModel : DetailViewModelBase
     {
         private ICustomerRepository _repository;
+        private IRegionManager _regionManager;
 
-        public CustomerListViewModel(ICustomerRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
+        public CustomerListViewModel(IRegionManager regionManager, ICustomerRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = repository;
+            _regionManager = regionManager;
 
-            Customers = new ObservableCollection<Business.Customer>();
+            Customers = new ObservableCollection<Customer>();
             LoadCustomersAsync();
         }
+
+        public void OnMouseDoubleClickExecute()
+        {
+            if (SelectedCustomer != null)
+            {
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", SelectedCustomer.Id);
+
+                var uri = new Uri(typeof(CustomerView).FullName + parameters, UriKind.Relative);
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, uri);
+            }
+        }   
 
         private async void LoadCustomersAsync()
         {
@@ -30,7 +47,9 @@ namespace ERService.CustomerModule.ViewModels
             }
         }
 
-        public ObservableCollection<Business.Customer> Customers { get; }
+        public Customer SelectedCustomer { get; set; }
+
+        public ObservableCollection<Customer> Customers { get; }
 
         public override Task LoadAsync(Guid id)
         {

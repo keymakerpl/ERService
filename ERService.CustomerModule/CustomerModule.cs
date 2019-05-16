@@ -25,8 +25,7 @@ namespace ERService.CustomerModule
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-                        
+        {            
         }
     }
 }

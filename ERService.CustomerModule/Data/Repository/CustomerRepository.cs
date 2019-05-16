@@ -1,11 +1,12 @@
 ﻿using ERService.Business;
+using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 
-namespace ERService.Infrastructure.Repositories
+namespace ERService.CustomerModule.Repository
 {
     public class CustomerRepository : GenericRepository<Customer, ERServiceDbContext>, ICustomerRepository
     {
@@ -23,5 +24,6 @@ namespace ERService.Infrastructure.Repositories
         {
             return await Context.Set<Customer>().ToListAsync();
         }
+        
     }
 }

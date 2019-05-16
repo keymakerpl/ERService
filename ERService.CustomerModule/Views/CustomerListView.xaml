@@ -4,19 +4,54 @@
              xmlns:local="clr-namespace:ERService.CustomerModule.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:helpers="clr-namespace:ERService.CustomerModule.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="590" d:DesignWidth="1410"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
     <Grid>
-        <DataGrid Background="AntiqueWhite"
-                  ItemsSource="{Binding Customers, Mode=TwoWay}"
-                  AutoGenerateColumns="False">
+
+        <DataGrid
+                  ItemsSource="{Binding Customers, Mode=OneWay}"
+                  SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
+                  SelectionMode="Single"  
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  IsSynchronizedWithCurrentItem="True"
+                  helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
+
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Width="*"
+                <DataGridTextColumn Header="Imię" Width="*"
                                     ElementStyle="{StaticResource DataGridColumnStyle}"
                                     EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                                     Binding="{Binding FirstName}"/>
+                <DataGridTextColumn Header="Nazwisko" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding LastName}"/>
+                <DataGridTextColumn Header="Firma" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding CompanyName}"/>
+                <DataGridTextColumn Header="NIP" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding NIP}"/>
+                <DataGridTextColumn Header="Telefon" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding PhoneNumber}"/>
+                <DataGridTextColumn Header="Telefon 2" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding PhoneNumber2}"/>
+                <DataGridTextColumn Header="E-mail" Width="*"
+                                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                    Binding="{Binding Email}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

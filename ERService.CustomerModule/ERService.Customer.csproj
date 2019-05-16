@@ -63,8 +63,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Data\Repository\CustomerRepository.cs" />
+    <Compile Include="Data\Repository\ICustomerRepository.cs" />
     <Compile Include="ViewModels\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\RowDoubleClickHandler.cs" />
     <Compile Include="Views\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,10 @@
       <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
       <Name>ERService.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
+      <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
+      <Name>ERService.MSSQLDataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\CustomerListView.xaml">
@@ -103,6 +110,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
