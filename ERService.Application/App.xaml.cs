@@ -1,11 +1,9 @@
 ﻿using ERService.Application.Views;
-using ERService.CustomerModule;
 using ERService.Header;
 using ERService.Navigation;
 using ERService.Settings;
 using ERService.StartPage;
 using ERService.StatusBar;
-using ERService.Toolbar;
 using Prism.Ioc;
 using Prism.Modularity;
 using System.Windows;
@@ -32,7 +30,6 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
-            moduleCatalog.AddModule(typeof(ToolbarModule));
             moduleCatalog.AddModule(typeof(SettingsModule), InitializationMode.OnDemand);
             moduleCatalog.AddModule(typeof(StartPageModule));
             moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule), InitializationMode.OnDemand);

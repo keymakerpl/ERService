@@ -13,7 +13,7 @@ namespace ERService.Header.ViewModels
 
         public HeaderViewModel()
         {
-            Message = "Header";
+            Message = "ERService";
         }
     }
 }

@@ -9,6 +9,8 @@ using ERService.CustomerModule.Repository;
 using Prism.Regions;
 using ERService.CustomerModule.Views;
 using ERService.Infrastructure.Constants;
+using Prism.Modularity;
+using ERService.Infrastructure.Events;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -17,12 +19,21 @@ namespace ERService.CustomerModule.ViewModels
         private ICustomerRepository _repository;
         private IRegionManager _regionManager;
 
-        public CustomerListViewModel(IRegionManager regionManager, ICustomerRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
+        public CustomerListViewModel(IRegionManager regionManager, ICustomerRepository repository, 
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = repository;
             _regionManager = regionManager;
 
+            eventAggregator.GetEvent<AfterDetailSavedEvent>()
+                .Subscribe(OnAfterDetailSavedHandler);
+
             Customers = new ObservableCollection<Customer>();
+            LoadCustomersAsync();
+        }
+
+        private void OnAfterDetailSavedHandler(AfterDetailSavedEventArgs obj)
+        {
             LoadCustomersAsync();
         }
 
@@ -33,7 +44,7 @@ namespace ERService.CustomerModule.ViewModels
                 var parameters = new NavigationParameters();
                 parameters.Add("ID", SelectedCustomer.Id);
 
-                var uri = new Uri(typeof(CustomerView).FullName + parameters, UriKind.Relative);
+                var uri = new Uri(typeof(CustomerView).FullName + parameters, UriKind.Relative);                
                 _regionManager.RequestNavigate(RegionNames.ContentRegion, uri);
             }
         }   
@@ -41,6 +52,7 @@ namespace ERService.CustomerModule.ViewModels
         private async void LoadCustomersAsync()
         {
             var customers = await _repository.GetAllAsync();
+            Customers.Clear();
             foreach (var customer in customers)
             {
                 Customers.Add(customer);
@@ -56,7 +68,7 @@ namespace ERService.CustomerModule.ViewModels
             return new Task(null);
         }
 
-        protected override void OnDeleteExecute()
+        protected override void OnSaveExecute()
         {
             throw new NotImplementedException();
         }
@@ -66,7 +78,7 @@ namespace ERService.CustomerModule.ViewModels
             throw new NotImplementedException();
         }
 
-        protected override void OnSaveExecute()
+        protected override void OnDeleteExecute()
         {
             throw new NotImplementedException();
         }

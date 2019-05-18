@@ -13,7 +13,7 @@
         
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -27,10 +27,11 @@
         </DockPanel>
 
         <DockPanel Grid.Row="1" 
-                   Grid.Column="1" 
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
                    LastChildFill="True">
             <ContentControl DockPanel.Dock="Right" 
-                            prism:RegionManager.RegionName="ToolBarRegion"/>
+                            prism:RegionManager.RegionName="NotificationRegion"/>
         </DockPanel>
 
         <DockPanel Grid.Row="1" 

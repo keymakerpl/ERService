@@ -86,8 +86,9 @@
                                                      CommandParameter="{x:Type cw:CustomerListView}"/>
 
 
+                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Naprawy"/>
 
-                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia" 
+                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia"                                                     
                                                      Command="{Binding OpenDetailViewCommand}"
                                                      CommandParameter="{x:Type settingsView:SettingsView}"/>
 

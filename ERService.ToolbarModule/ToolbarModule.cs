@@ -13,14 +13,13 @@ namespace ERService.Toolbar
 
         public ToolbarModule(IRegionManager regionManager)
         {
-            _regionManager = regionManager;
+            _regionManager = regionManager;            
+            
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _container = containerProvider;
-            _regionManager.RegisterViewWithRegion(RegionNames.ToolbarRegion, typeof(ToolBarView));
-            _container.Resolve<ToolBarView>();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

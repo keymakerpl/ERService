@@ -30,8 +30,8 @@ namespace ERService.Navigation
         { 
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<object, CustomerView>(typeof(CustomerView).FullName);
-            containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
             containerRegistry.Register<object, CustomerListView>(typeof(CustomerListView).FullName);
+            containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
         }
     }
 }

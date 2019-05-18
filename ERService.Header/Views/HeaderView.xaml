@@ -10,8 +10,10 @@
              prism:ViewModelLocator.AutoWireViewModel="True" >
     <Grid Background="CornflowerBlue">
         <TextBlock Text="{Binding Message}" 
-                   HorizontalAlignment="Center"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Center"
-                   Foreground="Black"/>
+                   Foreground="Black"
+                   FontSize="28"
+                   Margin="35"/>
     </Grid>
 </UserControl>

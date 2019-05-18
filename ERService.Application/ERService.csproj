@@ -134,10 +134,6 @@
       <Project>{E26D3ECE-1846-46A7-A570-FE2A969561BC}</Project>
       <Name>ERService.StatusBar</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ERService.ToolbarModule\ERService.Toolbar.csproj">
-      <Project>{D2FB292B-478B-47D7-83DF-DBF0463E49B2}</Project>
-      <Name>ERService.Toolbar</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

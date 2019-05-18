@@ -1,17 +1,16 @@
-﻿<UserControl x:Class="ERService.StatusBar.Views.StatusBarView"
+﻿<UserControl x:Class="ERService.Notification.Views.ViewA"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ERService.StatusBar.Views"
+             xmlns:local="clr-namespace:ERService.Notification.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="800"
+             d:DesignHeight="300" d:DesignWidth="300"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid Background="DimGray">
-        <TextBlock Text="{Binding Message}" 
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Foreground="Black"/>
+    <Grid>
+        <TextBlock Text="{Binding Message}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
     </Grid>
 </UserControl>

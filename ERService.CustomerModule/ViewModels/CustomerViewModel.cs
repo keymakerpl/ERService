@@ -5,6 +5,7 @@ using ERService.Business;
 using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Constants;
 using Prism.Events;
 using Prism.Regions;
 
@@ -20,11 +21,12 @@ namespace ERService.CustomerModule.ViewModels
 
         public bool KeepAlive => false;
 
-        public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
+        public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
-        }        
+        }
 
         public override async Task LoadAsync(Guid id)
         {
@@ -63,15 +65,15 @@ namespace ERService.CustomerModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var id = navigationContext.Parameters.GetValue<string>("ID");
             if (!String.IsNullOrWhiteSpace(id))
             {
-                LoadAsync(Guid.Parse(id));
+                await LoadAsync(Guid.Parse(id));
             }
         }
 
@@ -94,12 +96,19 @@ namespace ERService.CustomerModule.ViewModels
 
         protected override bool OnSaveCanExecute()
         {
-            throw new NotImplementedException();
+            return Customer != null && !Customer.HasErrors && HasChanges;
         }
 
-        protected override void OnSaveExecute()
+        protected override async void OnSaveExecute()
         {
-            throw new NotImplementedException();
+            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
+            {
+                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
+                ID = Customer.Id; //odśwież Id friend wrappera
+
+                //Powiadom agregator eventów, że zapisano
+                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+            });
         }
 
         
