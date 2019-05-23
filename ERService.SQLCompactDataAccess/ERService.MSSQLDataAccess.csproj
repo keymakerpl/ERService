@@ -64,6 +64,26 @@
     <Compile Include="Migrations\201905161504231_AddedCustomerColumns.Designer.cs">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.cs" />
+    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.Designer.cs">
+      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905231441288_InitialDatabase1.cs" />
+    <Compile Include="Migrations\201905231441288_InitialDatabase1.Designer.cs">
+      <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905231620319_InitialDatabase2.cs" />
+    <Compile Include="Migrations\201905231620319_InitialDatabase2.Designer.cs">
+      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905231644212_InitialDatabase3.cs" />
+    <Compile Include="Migrations\201905231644212_InitialDatabase3.Designer.cs">
+      <DependentUpon>201905231644212_InitialDatabase3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905231646458_InitialDatabase4.cs" />
+    <Compile Include="Migrations\201905231646458_InitialDatabase4.Designer.cs">
+      <DependentUpon>201905231646458_InitialDatabase4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -87,6 +107,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905161504231_AddedCustomerColumns.resx">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905231431133_AddedPhoneRequired.resx">
+      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905231441288_InitialDatabase1.resx">
+      <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905231620319_InitialDatabase2.resx">
+      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905231644212_InitialDatabase3.resx">
+      <DependentUpon>201905231644212_InitialDatabase3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905231646458_InitialDatabase4.resx">
+      <DependentUpon>201905231646458_InitialDatabase4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

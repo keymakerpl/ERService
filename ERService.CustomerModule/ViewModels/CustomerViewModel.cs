@@ -6,11 +6,13 @@ using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 
 namespace ERService.CustomerModule.ViewModels
 {
+    //TODO: Refactor Interface
     public class CustomerViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         private CustomerWrapper _customer;
@@ -30,7 +32,7 @@ namespace ERService.CustomerModule.ViewModels
 
         public override async Task LoadAsync(Guid id)
         {
-            var customer = await _repository.GetByIdAsync(id);
+            var customer = id != Guid.Empty ? await _repository.GetByIdAsync(id) : CreateNewCustomer();
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
@@ -38,17 +40,46 @@ namespace ERService.CustomerModule.ViewModels
             InitializeCustomer(customer);
         }
 
+        private Customer CreateNewCustomer()
+        {
+            var Customer = new Customer();
+            _repository.Add(Customer);
+
+            return Customer;
+        }
+
         private void InitializeCustomer(Customer customer)
         {
+            //Opakowanie modelu detala w ModelWrapper aby korzystał z walidacji propertisów
             Customer = new CustomerWrapper(customer);
 
+            //Po załadowaniu detala i każdej zmianie propertisa sprawdzamy CanExecute Sejwa
             Customer.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)
                 {
                     HasChanges = _repository.HasChanges();
                 }
+
+                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
+                if (args.PropertyName == nameof(Customer.HasErrors))
+                {
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+
+                if (args.PropertyName == nameof(Customer.FirstName) || args.PropertyName == nameof(Customer.LastName))
+                {
+                    SetTitle();
+                }
             });
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+            if(ID == Guid.Empty)
+            {
+                Customer.FirstName = ""; // takie se, trzeba tacznąć propertisa aby zadziałała walidacja nowego detalu
+                Customer.PhoneNumber = "";
+            }
+                
 
             SetTitle();
         }

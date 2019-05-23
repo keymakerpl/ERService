@@ -27,7 +27,6 @@ namespace ERService.MSSQLDataAccess
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            
 
             //Fluent API - zakomentowane bo użyjemy atrybutów, a następnie update-migration
             //modelBuilder.Configurations.Add(new FriendConfiguration());

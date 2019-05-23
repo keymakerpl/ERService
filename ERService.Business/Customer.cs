@@ -18,8 +18,8 @@ namespace ERService.Business
             CustomerAddresses = new Collection<CustomerAddress>();            
         }
 
-        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -43,6 +43,7 @@ namespace ERService.Business
         [EmailAddress]
         public string Email2 { get; set; }
 
+        [Required]
         [Phone]
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
