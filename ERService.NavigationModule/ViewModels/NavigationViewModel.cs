@@ -20,7 +20,8 @@ namespace ERService.Navigation.ViewModels
         }
 
         private void OnOpenDetailViewExecute(object viewType)
-        {           
+        {
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
             _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(viewType.ToString(), UriKind.Relative));            
         }
     }

@@ -81,7 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\IListViewModelBase.cs" />
     <Compile Include="Base\IDetailViewModelBase.cs" />
+    <Compile Include="Base\ListViewModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Events\AfterCollectionSavedEvent.cs" />

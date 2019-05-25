@@ -46,14 +46,13 @@
         <ScrollViewer Grid.Row="1">
             <Grid>
                 <DataGrid
-                  ItemsSource="{Binding Customers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
+                  ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
                   SelectionMode="Single"  
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   IsReadOnly="True"
-                  IsSynchronizedWithCurrentItem="True"
                   helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
 
                     <DataGrid.Columns>

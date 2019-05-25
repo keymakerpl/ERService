@@ -3,6 +3,7 @@ using ERService.CustomerModule.Views;
 using ERService.Infrastructure.Constants;
 using ERService.Navigation.Views;
 using ERService.Settings.Views;
+using ERService.StartPage.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -32,6 +33,7 @@ namespace ERService.Navigation
             containerRegistry.Register<object, CustomerView>(typeof(CustomerView).FullName);
             containerRegistry.Register<object, CustomerListView>(typeof(CustomerListView).FullName);
             containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
+            containerRegistry.Register<object, StartPageView>(typeof(StartPageView).FullName);
         }
     }
 }

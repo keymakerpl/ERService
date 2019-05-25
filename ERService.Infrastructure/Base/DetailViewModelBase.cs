@@ -23,7 +23,7 @@ namespace ERService.Infrastructure.Base
             EventAggregator = eventAggregator;
             //MessageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
             CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }                        
 
@@ -111,6 +111,8 @@ namespace ERService.Infrastructure.Base
         protected abstract bool OnSaveCanExecute();
 
         protected abstract void OnDeleteExecute();
+
+        protected abstract bool OnDeleteCanExecute();
 
         protected async virtual void OnCloseDetailViewExecute()
         {

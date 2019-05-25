@@ -142,6 +142,9 @@ namespace ERService.CustomerModule.ViewModels
             });
         }
 
-        
+        protected override bool OnDeleteCanExecute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
