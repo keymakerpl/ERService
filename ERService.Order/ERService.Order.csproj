@@ -4,14 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C154C972-2789-4666-852D-1215DFF4914A}</ProjectGuid>
+    <ProjectGuid>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</ProjectGuid>
     <OutputType>library</OutputType>
-    <RootNamespace>ERService.Business</RootNamespace>
-    <AssemblyName>ERService.Business</AssemblyName>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ERService.Order</RootNamespace>
+    <AssemblyName>ERService.Order</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +34,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,13 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
-    <Compile Include="CustomerAddress.cs" />
-    <Compile Include="Hardware.cs" />
-    <Compile Include="HardwareType.cs" />
-    <Compile Include="Order.cs" />
-    <Compile Include="OrderStatus.cs" />
-    <Compile Include="OrderType.cs" />
+    <Compile Include="OrderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -68,7 +63,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="ViewModels\OrderListViewModel.cs" />
+    <Compile Include="Views\OrderListView.xaml.cs">
+      <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -77,6 +75,37 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERService.Business\ERService.Business.csproj">
+      <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
+      <Name>ERService.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Infrastructure\ERService.Infrastructure.csproj">
+      <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
+      <Name>ERService.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
+      <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
+      <Name>ERService.MSSQLDataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Core">
+      <Version>7.1.0.431</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\OrderListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

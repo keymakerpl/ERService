@@ -23,15 +23,15 @@ namespace ERService.Infrastructure.Base
             EventAggregator = eventAggregator;
             //MessageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
             CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
-        }                        
+            CancelEditDetailCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
+        }        
 
         public ICommand SaveCommand { get; private set; }
 
-        public ICommand DeleteCommand { get; private set; }
-
         public ICommand CloseDetailViewCommand { get; set; }
+
+        public ICommand CancelEditDetailCommand { get; set; }
 
         public Guid ID { get; protected set; }
 
@@ -82,7 +82,7 @@ namespace ERService.Infrastructure.Base
                 if (databaseValues == null) //sprawdzamy czy jest nadal w bazie
                 {
                     //await MessageDialogService.ShowOkCancelDialog("The entity has been deleted by another user.", Title);
-                    RaiseDetailDeletedEvent(ID);
+                    //RaiseDetailDeletedEvent(ID);
                     return;
                 }
 
@@ -110,9 +110,9 @@ namespace ERService.Infrastructure.Base
 
         protected abstract bool OnSaveCanExecute();
 
-        protected abstract void OnDeleteExecute();
+        protected abstract void OnCancelEditExecute();
 
-        protected abstract bool OnDeleteCanExecute();
+        protected abstract bool OnCancelEditCanExecute();
 
         protected async virtual void OnCloseDetailViewExecute()
         {
@@ -142,25 +142,6 @@ namespace ERService.Infrastructure.Base
                 {
                     Id = modelId,
                     DisplayMember = displayMember,
-                    ViewModelName = this.GetType().Name
-                });
-        }
-
-        protected virtual void RaiseDetailDeletedEvent(Guid modelId)
-        {
-            EventAggregator.GetEvent<AfterDetailDeletedEvent>()
-                .Publish(new AfterDetailDeletedEventArgs()
-                {
-                    Id = modelId,
-                    ViewModelName = this.GetType().Name
-                });
-        }
-
-        protected virtual void RaiseCollectionSavedEvent()
-        {
-            EventAggregator.GetEvent<AfterCollectionSavedEvent>()
-                .Publish(new AfterCollectionSavedEventArgs()
-                {
                     ViewModelName = this.GetType().Name
                 });
         }

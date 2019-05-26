@@ -4,21 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class CustomerAddress
+    public class Hardware
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
 
-        public Guid CustomerId { get; set; }
-        
-        public string Street { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
 
-        public string City { get; set; }
-
-        public string Postcode { get; set; }
-
-        public Customer Customer { get; set; }
+        public HardwareType Type { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

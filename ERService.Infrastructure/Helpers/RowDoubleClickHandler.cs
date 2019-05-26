@@ -3,10 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ERService.CustomerModule.ViewModels
+namespace ERService.Infrastructure.Helpers
 {
-    //TODO: Move to infrastructure
-
     /// <summary>
     /// The attached DependencyProperty solution uses a helper class so that it can be reused across your application. It also assumes that your DataGrid’s DataContext is your view model. If that is not the case, you will need to modify it.
     /// </summary>

@@ -9,6 +9,7 @@
              xmlns:settingsView="clr-namespace:ERService.Settings.Views;assembly=ERService.Settings"
              xmlns:startView="clr-namespace:ERService.StartPage.Views;assembly=ERService.StartPage"
              xmlns:cw="clr-namespace:ERService.CustomerModule.Views;assembly=ERService.Customer"
+             xmlns:orderView="clr-namespace:ERService.OrderModule.Views;assembly=ERService.Order"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="200">
@@ -28,12 +29,12 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontFamily="Segoe MDL2 Assets"
-                               Foreground="White"
+                               Foreground="Black"
                                Text="{Binding Glyph}" />
                     <TextBlock Grid.Column="1"
                                VerticalAlignment="Center"
                                FontSize="16"
-                               Foreground="White"
+                               Foreground="Black"
                                Text="{Binding Label}" />
                 </Grid>
             </DataTemplate>
@@ -41,8 +42,8 @@
         
         
         <Controls:HamburgerMenu x:Name="HamburgerMenuControl"
-                        Foreground="White"
-                        PaneBackground="#FF444444"
+                        Foreground="Black"
+                        PaneBackground="WhiteSmoke"
                         IsPaneOpen="True"
                         ItemTemplate="{StaticResource MenuItemTemplate}"
                         OptionsItemTemplate="{StaticResource MenuItemTemplate}"
@@ -86,7 +87,9 @@
                                                      CommandParameter="{x:Type cw:CustomerListView}"/>
 
 
-                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Naprawy"/>
+                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Naprawy"
+                                                     Command="{Binding OpenDetailViewCommand}"
+                                                     CommandParameter="{x:Type orderView:OrderListView}"/>
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia"                                                     
                                                      Command="{Binding OpenDetailViewCommand}"

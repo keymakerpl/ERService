@@ -10,7 +10,7 @@ using ERService.MSSQLDataAccess;
 
 namespace ERService.CustomerModule.ViewModels
 {
-    public class CustomerListViewModel : ListViewModelBase<Customer, ERServiceDbContext>
+    public class CustomerListViewModel : ListModelBase<Customer, ERServiceDbContext>
     {
         public CustomerListViewModel(ERServiceDbContext context, IRegionManager regionManager, 
             IEventAggregator eventAggregator) : base(context, regionManager)

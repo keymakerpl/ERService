@@ -81,9 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IListViewModelBase.cs" />
+    <Compile Include="Base\IListModelBase.cs" />
     <Compile Include="Base\IDetailViewModelBase.cs" />
-    <Compile Include="Base\ListViewModelBase.cs" />
+    <Compile Include="Base\ListModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Events\AfterCollectionSavedEvent.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
+    <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

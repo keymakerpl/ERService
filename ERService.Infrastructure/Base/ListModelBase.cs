@@ -7,11 +7,11 @@ using Prism.Regions;
 
 namespace ERService.Infrastructure.Base
 {
-    public class ListViewModelBase<TEntity, TContext> : GenericRepository<TEntity, TContext>, IListViewModelBase<TEntity>
+    public abstract class ListModelBase<TEntity, TContext> : GenericRepository<TEntity, TContext>, IListModelBase<TEntity>
         where TEntity : class
         where TContext : DbContext
     {
-        public ListViewModelBase(TContext context, IRegionManager regionManager) : base(context)
+        public ListModelBase(TContext context, IRegionManager regionManager) : base(context)
         {
             _regionManager = regionManager;
             Models = new ObservableCollection<TEntity>();
@@ -53,10 +53,7 @@ namespace ERService.Infrastructure.Base
             await SaveAsync();
         }
 
-        public virtual void OnMouseDoubleClickExecute()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void OnMouseDoubleClickExecute();
 
         public virtual void ShowDetail(Guid id, string regionName, string viewFullName)
         {

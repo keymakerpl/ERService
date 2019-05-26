@@ -84,6 +84,10 @@
     <Compile Include="Migrations\201905231646458_InitialDatabase4.Designer.cs">
       <DependentUpon>201905231646458_InitialDatabase4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905251454020_AddedOrdersTypesConfig.cs" />
+    <Compile Include="Migrations\201905251454020_AddedOrdersTypesConfig.Designer.cs">
+      <DependentUpon>201905251454020_AddedOrdersTypesConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905231646458_InitialDatabase4.resx">
       <DependentUpon>201905231646458_InitialDatabase4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905251454020_AddedOrdersTypesConfig.resx">
+      <DependentUpon>201905251454020_AddedOrdersTypesConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

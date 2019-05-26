@@ -4,7 +4,7 @@ using Prism.Commands;
 
 namespace ERService.Infrastructure.Base
 {
-    public interface IListViewModelBase<T>
+    public interface IListModelBase<T>
     {
         DelegateCommand AddCommand { get; set; }
         DelegateCommand DeleteCommand { get; set; }

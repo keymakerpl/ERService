@@ -43,7 +43,7 @@ namespace ERService.Infrastructure.Repositories
 
         public void Remove(TEntity model)
         {
-            Context.Set<TEntity>().Remove(model);
+            Context.Set<TEntity>().Remove(model);            
         }
     }   
 }

@@ -32,6 +32,7 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(StatusBarModule));
             moduleCatalog.AddModule(typeof(SettingsModule), InitializationMode.OnDemand);
             moduleCatalog.AddModule(typeof(StartPageModule));
+            moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
             moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule), InitializationMode.OnDemand);
         }
 

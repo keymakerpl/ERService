@@ -8,10 +8,15 @@
              d:DesignHeight="30" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid Background="DimGray">
-        <TextBlock Text="{Binding Message}" 
-                   HorizontalAlignment="Center"
+
+    <Border Grid.Row="1" x:Name="ListBorder" Margin="10 0 10 5"
+                BorderBrush="LightGray" BorderThickness="1">
+        <Grid >
+            <TextBlock Text="{Binding Message}"
+                   Margin="10 0 10 0"
+                   HorizontalAlignment="Right"
                    VerticalAlignment="Center"
                    Foreground="Black"/>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

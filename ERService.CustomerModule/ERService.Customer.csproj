@@ -67,7 +67,6 @@
     <Compile Include="Data\Repository\ICustomerRepository.cs" />
     <Compile Include="ViewModels\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
-    <Compile Include="ViewModels\RowDoubleClickHandler.cs" />
     <Compile Include="Views\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>

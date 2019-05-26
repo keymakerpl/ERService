@@ -59,6 +59,7 @@ namespace ERService.CustomerModule.ViewModels
                 if (!HasChanges)
                 {
                     HasChanges = _repository.HasChanges();
+                    ((DelegateCommand)CancelEditDetailCommand).RaiseCanExecuteChanged();
                 }
 
                 //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
@@ -120,11 +121,6 @@ namespace ERService.CustomerModule.ViewModels
             continuationCallback(result);
         }
 
-        protected override void OnDeleteExecute()
-        {
-            throw new NotImplementedException();
-        }
-
         protected override bool OnSaveCanExecute()
         {
             return Customer != null && !Customer.HasErrors && HasChanges;
@@ -142,9 +138,11 @@ namespace ERService.CustomerModule.ViewModels
             });
         }
 
-        protected override bool OnDeleteCanExecute()
+        protected override void OnCancelEditExecute()
         {
-            throw new NotImplementedException();
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
+
+        protected override bool OnCancelEditCanExecute() => HasChanges;
     }
 }

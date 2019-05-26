@@ -31,7 +31,7 @@ namespace ERService.StartPage.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            Message = "View StarPage from your Prism Module";
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

@@ -122,6 +122,10 @@
       <Project>{0580267C-8C3F-4D71-BD5A-851E67B08812}</Project>
       <Name>ERService.Navigation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.Order\ERService.Order.csproj">
+      <Project>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</Project>
+      <Name>ERService.Order</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Settings\ERService.Settings.csproj">
       <Project>{406E7194-6493-4031-9FC3-B341E84C9D1A}</Project>
       <Name>ERService.Settings</Name>

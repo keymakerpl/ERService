@@ -19,6 +19,20 @@ namespace ERService.MSSQLDataAccess
         /// </summary>
         public DbSet<Customer> Customers { get; set; }
 
+        public DbSet<CustomerAddress> CustomerAddresses { get; set; }
+
+        public DbSet<Hardware> Hardwares { get; set; }
+
+        public DbSet<HardwareType> HardwareTypes { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+
+        public DbSet<OrderType> OrderTypes { get; set; }
+
+        public DbSet<Settings> Settings { get; set; }
+
         /// <summary>
         /// Tutaj ustawiamy jak ma być tworzona baza
         /// </summary>
@@ -29,7 +43,7 @@ namespace ERService.MSSQLDataAccess
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             //Fluent API - zakomentowane bo użyjemy atrybutów, a następnie update-migration
-            //modelBuilder.Configurations.Add(new FriendConfiguration());
+            //modelBuilder.Configurations.Add(new CustomerConfiguration());
 
         }
     }
@@ -38,9 +52,9 @@ namespace ERService.MSSQLDataAccess
     /// <summary>
     /// Fluent Api cfg example
     /// </summary>
-    public class FriendConfiguration : EntityTypeConfiguration<Customer>
+    public class CustomerConfiguration : EntityTypeConfiguration<Customer>
     {
-        public FriendConfiguration()
+        public CustomerConfiguration()
         {
             Property(f => f.FirstName)
                 .IsRequired()
