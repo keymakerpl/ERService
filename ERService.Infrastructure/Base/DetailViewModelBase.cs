@@ -11,6 +11,7 @@ using System.Windows.Input;
 
 namespace ERService.Infrastructure.Base
 {
+    //TODO: Split to DetailViewModelBase and DetailModel?
     public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase
     {
         protected readonly IEventAggregator EventAggregator;

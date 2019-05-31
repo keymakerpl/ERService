@@ -1,5 +1,6 @@
 ﻿using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Views;
+using ERService.HardwareModule.Views;
 using ERService.Infrastructure.Constants;
 using ERService.Navigation.Views;
 using ERService.OrderModule.Views;
@@ -32,8 +33,10 @@ namespace ERService.Navigation
         { 
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<object, CustomerView>(typeof(CustomerView).FullName);
-            containerRegistry.Register<object, OrderListView>(typeof(OrderListView).FullName);
             containerRegistry.Register<object, CustomerListView>(typeof(CustomerListView).FullName);
+            containerRegistry.Register<object, HardwareView>(typeof(HardwareView).FullName);
+            containerRegistry.Register<object, OrderListView>(typeof(OrderListView).FullName);
+            containerRegistry.Register<object, OrderView>(typeof(OrderView).FullName);
             containerRegistry.Register<object, SettingsView>(typeof(SettingsView).FullName);
             containerRegistry.Register<object, StartPageView>(typeof(StartPageView).FullName);
         }

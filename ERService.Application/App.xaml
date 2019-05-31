@@ -50,7 +50,7 @@
                                 <ControlTemplate>
                                     <StackPanel>
                                         <AdornedElementPlaceholder x:Name="Placeholder"/>
-                                        <TextBlock FontSize="12" Foreground="AliceBlue" Text="{Binding ElementName=Placeholder, 
+                                        <TextBlock FontSize="12" Foreground="Black" Text="{Binding ElementName=Placeholder, 
                                 Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
                                     </StackPanel>
                                 </ControlTemplate>
@@ -66,7 +66,7 @@
                         </Style.Triggers>
                     </Style>
 
-                    <!-- Style dla gridów</-->
+                    <!-- Style dla TextBlock</-->
                     <Style x:Key="DataGridColumnStyle" TargetType="TextBlock">
                         <Style.Triggers>
                             <Trigger Property="Validation.HasError" Value="True">

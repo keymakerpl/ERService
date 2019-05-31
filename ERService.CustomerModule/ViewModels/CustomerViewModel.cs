@@ -4,6 +4,7 @@ using System.Windows;
 using ERService.Business;
 using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
+using ERService.HardwareModule.Views;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using Prism.Commands;
@@ -19,20 +20,43 @@ namespace ERService.CustomerModule.ViewModels
         private ICustomerRepository _repository;
         private IRegionManager _regionManager;
 
+        public DelegateCommand GoForwardCommand { get; private set; }
+
+        private bool _wizardMode;
+        public bool WizardMode { get { return _wizardMode; } set { _wizardMode = value; RaisePropertyChanged(); } }
+
         public CustomerWrapper Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }
 
-        public bool KeepAlive => false;
+        public bool KeepAlive => WizardMode;
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
             IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
+
+            GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
         }
 
+        private bool OnGoForwardCanExecute()
+        {
+            return true;
+        }
+
+        private void OnGoForwardExecute()
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("Customer", this);
+            parameters.Add("Wizard", WizardMode);
+
+            //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(typeof(HardwareView).FullName + parameters, UriKind.Relative));
+        }
+
+        //TODO: Refactor?
         public override async Task LoadAsync(Guid id)
         {
-            var customer = id != Guid.Empty ? await _repository.GetByIdAsync(id) : CreateNewCustomer();
+            var customer = id != Guid.Empty ? await _repository.GetByIdAsync(id) : GetNewDetail();
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
@@ -40,7 +64,7 @@ namespace ERService.CustomerModule.ViewModels
             InitializeCustomer(customer);
         }
 
-        private Customer CreateNewCustomer()
+        private Customer GetNewDetail()
         {
             var Customer = new Customer();
             _repository.Add(Customer);
@@ -103,6 +127,8 @@ namespace ERService.CustomerModule.ViewModels
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var id = navigationContext.Parameters.GetValue<string>("ID");
+            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
+
             if (!String.IsNullOrWhiteSpace(id))
             {
                 await LoadAsync(Guid.Parse(id));

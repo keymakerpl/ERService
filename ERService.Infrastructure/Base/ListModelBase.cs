@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Repositories;
 using Prism.Commands;
 using Prism.Regions;
@@ -55,14 +56,19 @@ namespace ERService.Infrastructure.Base
 
         public abstract void OnMouseDoubleClickExecute();
 
-        public virtual void ShowDetail(Guid id, string regionName, string viewFullName)
+        public virtual void ShowDetail(NavigationParameters parameters)
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", id);
+            var region = parameters.GetValue<string>("REGION");
+            if (region != null)
+            {
+                region = parameters["REGION"].ToString();
+            }
+            else region = RegionNames.ContentRegion;
 
-            var uri = new Uri(viewFullName + parameters, UriKind.Relative);
-            _regionManager.Regions[regionName].RemoveAll();
-            _regionManager.RequestNavigate(regionName, uri);
+            var viewName = parameters["ViewFullName"].ToString();
+
+            _regionManager.Regions[region].RemoveAll();
+            _regionManager.RequestNavigate(region, new Uri(viewName + parameters, UriKind.Relative));
         }
     }
 }

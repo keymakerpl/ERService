@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Prism.Commands;
+using Prism.Regions;
 
 namespace ERService.Infrastructure.Base
 {
@@ -12,7 +13,7 @@ namespace ERService.Infrastructure.Base
         T SelectedModel { get; set; }
 
         void LoadAsync();
-        void ShowDetail(Guid id, string regionName, string viewFullName);
+        void ShowDetail(NavigationParameters parameters);
         void OnMouseDoubleClickExecute();
         void OnAddExecute();
         void OnDeleteExecute();

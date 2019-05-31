@@ -48,7 +48,6 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="NotificationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -79,17 +78,17 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup />
-
   <ItemGroup>
     <Page Include="Views\ViewA.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="7.1.0.431" />
+    <PackageReference Include="Prism.Core">
+      <Version>7.2.0.1233-pre</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1233-pre" />
   </ItemGroup>
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

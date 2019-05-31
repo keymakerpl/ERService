@@ -9,7 +9,7 @@
              xmlns:settingsView="clr-namespace:ERService.Settings.Views;assembly=ERService.Settings"
              xmlns:startView="clr-namespace:ERService.StartPage.Views;assembly=ERService.StartPage"
              xmlns:cw="clr-namespace:ERService.CustomerModule.Views;assembly=ERService.Customer"
-             xmlns:orderView="clr-namespace:ERService.OrderModule.Views;assembly=ERService.Order"
+             xmlns:orderView="clr-namespace:ERService.OrderModule.Views;assembly=ERService.OrderModule"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="200">

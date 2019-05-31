@@ -23,14 +23,22 @@ namespace ERService.CustomerModule.ViewModels
 
         public override void OnAddExecute()
         {
-            ShowDetail(Guid.Empty, RegionNames.ContentRegion, typeof(CustomerView).FullName);
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", Guid.Empty);
+            parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+
+            ShowDetail(parameters);
         }
 
         public override void OnMouseDoubleClickExecute()
         {
             if (SelectedModel != null)
             {
-                ShowDetail(SelectedModel.Id, RegionNames.ContentRegion, typeof(CustomerView).FullName);
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", SelectedModel.Id);
+                parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+
+                ShowDetail(parameters);
             }
         }            
 
