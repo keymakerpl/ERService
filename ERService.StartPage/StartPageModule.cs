@@ -8,22 +8,21 @@ namespace ERService.StartPage
 {
     public class StartPageModule : IModule
     {
-        private IContainerProvider _container;
         private IRegionManager _regionManager;
 
         public StartPageModule(IRegionManager regionManager)
         {
-            _regionManager = regionManager;
-            _regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(StartPageView));
+            _regionManager = regionManager;            
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _container = containerProvider;
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(StartPageView).FullName);
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<StartPageView>(typeof(StartPageView).FullName);
         }
     }
 }

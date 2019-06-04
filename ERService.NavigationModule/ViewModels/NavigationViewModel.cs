@@ -2,7 +2,6 @@
 using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
-using System;
 
 namespace ERService.Navigation.ViewModels
 {
@@ -21,8 +20,8 @@ namespace ERService.Navigation.ViewModels
 
         private void OnOpenDetailViewExecute(object viewType)
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(viewType.ToString(), UriKind.Relative));            
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll(); //Na ten moment nawigujemy tylko po widokach w wybranym module
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewType.ToString());            
         }
     }
 }

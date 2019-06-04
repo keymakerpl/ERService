@@ -115,7 +115,7 @@ namespace ERService.Infrastructure.Base
 
         protected abstract bool OnCancelEditCanExecute();
 
-        protected async virtual void OnCloseDetailViewExecute()
+        protected virtual void OnCloseDetailViewExecute()
         {
             //TODO: MessageService
             if (HasChanges)

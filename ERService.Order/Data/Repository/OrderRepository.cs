@@ -1,11 +1,9 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace ERService.OrderModule.Data
 {

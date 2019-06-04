@@ -8,7 +8,6 @@ namespace ERService.StartPage.ViewModels
     public class StartPageViewModel : BindableBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         private string _message;
-        private IRegionManager _regionManager;
 
         public string Message
         {
@@ -20,13 +19,12 @@ namespace ERService.StartPage.ViewModels
 
         public StartPageViewModel(IRegionManager regionManager)
         {
-            _regionManager = regionManager;
-            Message = "View StarPage from your Prism Module";
+
         }
 
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            throw new NotImplementedException();
+            continuationCallback(true);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -41,7 +39,7 @@ namespace ERService.StartPage.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            
         }
     }
 }

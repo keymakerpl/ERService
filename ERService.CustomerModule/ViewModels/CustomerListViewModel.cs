@@ -4,23 +4,21 @@ using Prism.Events;
 using System;
 using Prism.Regions;
 using ERService.CustomerModule.Views;
-using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using ERService.MSSQLDataAccess;
 
 namespace ERService.CustomerModule.ViewModels
 {
-    public class CustomerListViewModel : ListModelBase<Customer, ERServiceDbContext>
+    public class CustomerListViewModel : ListModelBase<Customer, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         public CustomerListViewModel(ERServiceDbContext context, IRegionManager regionManager, 
             IEventAggregator eventAggregator) : base(context, regionManager)
         {        
             AddCommand = new DelegateCommand(OnAddExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
-            
-            LoadAsync();
-        }
+            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);                        
+        }        
 
+        //TODO: Refactor with OnMouseDoubleClick
         public override void OnAddExecute()
         {
             var parameters = new NavigationParameters();
@@ -40,7 +38,32 @@ namespace ERService.CustomerModule.ViewModels
 
                 ShowDetail(parameters);
             }
-        }            
+        }
 
+        #region Navigation
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            LoadAsync();
+        }
+
+        public bool KeepAlive => false;
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            continuationCallback(true);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace ERService.Application
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            base.OnStartup(e);            
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -30,14 +30,17 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
-            moduleCatalog.AddModule(typeof(SettingsModule), InitializationMode.OnDemand);
+            moduleCatalog.AddModule(typeof(SettingsModule));
             moduleCatalog.AddModule(typeof(StartPageModule));
+
+            //TODO: Assembly names refactor
             moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
-            moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule), InitializationMode.OnDemand);
+            moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule));
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+
         }
     }
 }

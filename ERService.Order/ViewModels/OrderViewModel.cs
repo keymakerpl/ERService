@@ -22,8 +22,7 @@ namespace ERService.OrderModule.ViewModels
 
         public OrderViewModel(IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            _repository = repository;
-            
+            _repository = repository;            
         }
 
         #region Navigation

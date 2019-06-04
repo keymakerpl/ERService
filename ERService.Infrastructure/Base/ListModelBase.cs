@@ -56,6 +56,7 @@ namespace ERService.Infrastructure.Base
 
         public abstract void OnMouseDoubleClickExecute();
 
+        //TODO: Refactor
         public virtual void ShowDetail(NavigationParameters parameters)
         {
             var region = parameters.GetValue<string>("REGION");

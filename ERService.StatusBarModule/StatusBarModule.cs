@@ -8,7 +8,6 @@ namespace ERService.StatusBar
 {
     public class StatusBarModule : IModule
     {
-        private IContainerProvider _container;
         private IRegionManager _regionManager;
 
         public StatusBarModule(IRegionManager regionManager)
@@ -18,13 +17,12 @@ namespace ERService.StatusBar
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _container = containerProvider;
             _regionManager.RegisterViewWithRegion(RegionNames.StatusbarRegion, typeof(StatusBarView));
-            _container.Resolve<StatusBarView>();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
+
         }
     }
 }

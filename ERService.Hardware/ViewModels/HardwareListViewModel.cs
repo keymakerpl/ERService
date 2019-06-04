@@ -14,7 +14,7 @@ namespace ERService.HardwareModule.ViewModels
 
         public override void OnMouseDoubleClickExecute()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

@@ -48,23 +48,7 @@
                     Height="30"
                     Width="120"/>
                 </DockPanel>
-                <DockPanel Grid.Column="1" HorizontalAlignment="Right">
-                    <Button Content="Wstecz"
-                    Command="{Binding GoBackwardCommand}"
-                    Margin="10 10 5 10"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
-                    <Button Content="Dalej"
-                    Command="{Binding GoForwardCommand}"
-                    Margin="10 10 5 10"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"
-                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
+                
             </Grid>
             
         </Border>

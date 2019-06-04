@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows;
 using ERService.Business;
 using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
-using ERService.HardwareModule.Views;
 using ERService.Infrastructure.Base;
-using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -19,38 +16,15 @@ namespace ERService.CustomerModule.ViewModels
         private CustomerWrapper _customer;
         private ICustomerRepository _repository;
         private IRegionManager _regionManager;
+        private IRegionNavigationService _navigationService;        
 
-        public DelegateCommand GoForwardCommand { get; private set; }
-
-        private bool _wizardMode;
-        public bool WizardMode { get { return _wizardMode; } set { _wizardMode = value; RaisePropertyChanged(); } }
-
-        public CustomerWrapper Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }
-
-        public bool KeepAlive => WizardMode;
+        public CustomerWrapper Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }        
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
             IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
-
-            GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
-        }
-
-        private bool OnGoForwardCanExecute()
-        {
-            return true;
-        }
-
-        private void OnGoForwardExecute()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("Customer", this);
-            parameters.Add("Wizard", WizardMode);
-
-            //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(typeof(HardwareView).FullName + parameters, UriKind.Relative));
         }
 
         //TODO: Refactor?
@@ -64,6 +38,7 @@ namespace ERService.CustomerModule.ViewModels
             InitializeCustomer(customer);
         }
 
+        //TODO: Refactor to Generic and base class?
         private Customer GetNewDetail()
         {
             var Customer = new Customer();
@@ -114,38 +89,12 @@ namespace ERService.CustomerModule.ViewModels
             Title = $"{Customer.FirstName} {Customer.LastName}";
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        protected override void OnCancelEditExecute()
         {
-            return true;
+            _navigationService.Journal.GoBack();
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
-        public async void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
-
-            if (!String.IsNullOrWhiteSpace(id))
-            {
-                await LoadAsync(Guid.Parse(id));
-            }
-        }
-
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        {
-            //TODO: refactor to dialog service
-            var result = true;
-            if (HasChanges)
-            {
-                result = MessageBox.Show("Continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
-            }
-
-            continuationCallback(result);
-        }
+        protected override bool OnCancelEditCanExecute() => true;
 
         protected override bool OnSaveCanExecute()
         {
@@ -164,11 +113,43 @@ namespace ERService.CustomerModule.ViewModels
             });
         }
 
-        protected override void OnCancelEditExecute()
+        #region Navigation
+
+        public bool KeepAlive { get { return true; } }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            return true;
         }
 
-        protected override bool OnCancelEditCanExecute() => HasChanges;
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+        }
+
+        public async void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _navigationService = navigationContext.NavigationService;
+
+            var id = navigationContext.Parameters.GetValue<string>("ID");
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                await LoadAsync(Guid.Parse(id));
+            }
+        }
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            //TODO: Refactor to dialog service
+            var result = true;
+            if (HasChanges)
+            {
+                //result = MessageBox.Show("Continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+            }
+
+            continuationCallback(result);
+        }        
+
+        #endregion
     }
 }
