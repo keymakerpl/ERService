@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 using ERService.Business;
 using ERService.CustomerModule.Repository;
+using ERService.CustomerModule.Views;
 using ERService.CustomerModule.Wrapper;
+using ERService.HardwareModule.Views;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -14,17 +17,36 @@ namespace ERService.CustomerModule.ViewModels
     public class CustomerViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         private CustomerWrapper _customer;
+        private bool _wizardMode;
         private ICustomerRepository _repository;
         private IRegionManager _regionManager;
+
+        public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand OrdersCommand { get; private set; }
+
         private IRegionNavigationService _navigationService;        
 
-        public CustomerWrapper Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }        
+        public CustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
             IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
+
+            GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
+            OrdersCommand = new DelegateCommand(OnOrdersCommandExecute, OnOrdersCommandCanExecute);
+        }
+
+        private bool OnOrdersCommandCanExecute()
+        {
+            return !WizardMode;
+        }
+
+        private void OnOrdersCommandExecute()
+        {
+            
         }
 
         //TODO: Refactor?
@@ -98,7 +120,7 @@ namespace ERService.CustomerModule.ViewModels
 
         protected override bool OnSaveCanExecute()
         {
-            return Customer != null && !Customer.HasErrors && HasChanges;
+            return Customer != null && !Customer.HasErrors && HasChanges && !WizardMode;
         }
 
         protected override async void OnSaveExecute()
@@ -117,22 +139,30 @@ namespace ERService.CustomerModule.ViewModels
 
         public bool KeepAlive { get { return true; } }
 
+        private bool _allowLoadAsync;
+        public bool AllowLoadAsync { get => _allowLoadAsync; set => _allowLoadAsync = value; }
+
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
-
+        
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-
+            if (WizardMode)
+            {
+                AllowLoadAsync = true;
+            }
         }
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
+            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
+
             var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id))
+            if (!String.IsNullOrWhiteSpace(id) && !AllowLoadAsync)
             {
                 await LoadAsync(Guid.Parse(id));
             }
@@ -148,7 +178,22 @@ namespace ERService.CustomerModule.ViewModels
             }
 
             continuationCallback(result);
-        }        
+        }
+
+        private bool OnGoForwardCanExecute()
+        {
+            return true;
+        }
+
+        private void OnGoForwardExecute()
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", Guid.Empty);
+            parameters.Add("Wizard", true);
+            parameters.Add("Customer", Customer.Model);
+
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(HardwareView).FullName, parameters);
+        }
 
         #endregion
     }

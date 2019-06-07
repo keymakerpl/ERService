@@ -12,7 +12,9 @@ namespace ERService.OrderModule.ViewModels
 {
     public class OrderViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
-        private IOrderRepository _repository;        
+        private IOrderRepository _repository;
+
+        public DelegateCommand GoBackCommand { get; private set; }
 
         private OrderWrapper _order;
         public OrderWrapper Order { get => _order; set { _order = value; RaisePropertyChanged(); } }
@@ -22,7 +24,13 @@ namespace ERService.OrderModule.ViewModels
 
         public OrderViewModel(IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            _repository = repository;            
+            _repository = repository;
+            GoBackCommand = new DelegateCommand(OnGoBackExecute);
+        }
+
+        private void OnGoBackExecute()
+        {
+            
         }
 
         #region Navigation
@@ -44,13 +52,13 @@ namespace ERService.OrderModule.ViewModels
             
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id))
-            {
-                await LoadAsync(Guid.Parse(id));
-            }
+            //var id = navigationContext.Parameters.GetValue<string>("ID");
+            //if (!String.IsNullOrWhiteSpace(id))
+            //{
+            //    await LoadAsync(Guid.Parse(id));
+            //}
         }
 
         #endregion

@@ -18,19 +18,19 @@
                 BorderBrush="LightGray" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <DockPanel
                     HorizontalAlignment="Left">
 
-                    <Button Content="Drukuj"
+                    <!--<Button Content="Drukuj"
                     Command="{Binding PrintCommand}"
                     Margin="10 10 5 10"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"/>-->
 
                     <Button Content="Anuluj"
                     Command="{Binding CancelCommand}"
@@ -48,7 +48,27 @@
                     Height="30"
                     Width="120"/>
                 </DockPanel>
-                
+
+                <DockPanel Grid.Column="1" FlowDirection="RightToLeft"
+                           HorizontalAlignment="Right">
+                    <Button Content="Dalej"
+                    Command="{Binding GoForwardCommand}"
+                    Margin="5 10 10 10"
+                    Foreground="Black"
+                    Background="GhostWhite"
+                    Height="30"
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <Button Content="Wstecz"
+                    Command="{Binding GoBackCommand}"
+                    Margin="5 10 10 10"
+                    Foreground="Black"
+                    Background="GhostWhite"
+                    Height="30"
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </DockPanel>
+
             </Grid>
             
         </Border>
@@ -61,19 +81,38 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Content="Urządzenie:" FontSize="18" FontWeight="Bold"/>
-                    <Label Grid.Row="1" Content="Nazwa:" FontSize="14"/>
+                    <Label Content="Urządzenie:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
 
+                    <Label Grid.Row="1" Content="Nazwa urządzenia:" FontSize="14" Margin="10 10 10 10"/>
                     <TextBox Grid.Column="1" Grid.Row="1" Width="250"
-                             HorizontalAlignment="Left"/>
+                             HorizontalAlignment="Left" Margin="10 10 10 10"/>
+
+                    <Label Grid.Column="2" Content="Klient:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
+
+                    <Label Grid.Column="2" Grid.Row="1" Content="Imię:" FontSize="14" Margin="10 10 10 10"/>
+                    <Label Grid.Column="3" Grid.Row="1" Width="250"
+                             HorizontalAlignment="Left"
+                           Margin="10 10 10 10"
+                           FontSize="14"
+                             Content="{Binding Customer.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Label Grid.Column="2" Grid.Row="2" Content="Nazwisko:" FontSize="14" Margin="10 10 10 10"/>
+                    <Label Grid.Column="3" Grid.Row="2" Width="250"
+                             HorizontalAlignment="Left"
+                           FontSize="14"
+                           Margin="10 10 10 10"
+                             Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </ScrollViewer>
         </Border>

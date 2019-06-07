@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ERService.CustomerModule\ERService.Customer.csproj">
-      <Project>{73229C43-9BB4-42B6-B7DF-A61A369CC85A}</Project>
+      <Project>{73229c43-9bb4-42b6-b7df-a61a369cc85a}</Project>
       <Name>ERService.Customer</Name>
     </ProjectReference>
     <ProjectReference Include="..\ERService.Hardware\ERService.Hardware.csproj">
