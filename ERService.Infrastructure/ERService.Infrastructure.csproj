@@ -61,6 +61,7 @@
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
+    <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

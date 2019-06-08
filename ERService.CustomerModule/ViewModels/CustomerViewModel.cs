@@ -78,7 +78,7 @@ namespace ERService.CustomerModule.ViewModels
                 if (!HasChanges)
                 {
                     HasChanges = _repository.HasChanges();
-                    ((DelegateCommand)CancelEditDetailCommand).RaiseCanExecuteChanged();
+                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
                 }
 
                 //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
@@ -111,7 +111,7 @@ namespace ERService.CustomerModule.ViewModels
 
         protected override void OnCancelEditExecute()
         {
-            _navigationService.Journal.GoBack();
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
 
         protected override bool OnCancelEditCanExecute() => true;

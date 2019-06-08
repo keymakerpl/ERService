@@ -31,16 +31,18 @@
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                     <Button Content="Naprawy"
                     Command="{Binding CustomerOrdersCommand}"
                     Margin="5 10 10 10"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                     <Button Content="Anuluj"
-                    Command="{Binding CancelEditDetailCommand}"
+                    Command="{Binding CancelCommand}"
                     Margin="5 10 10 10"
                     Foreground="Black"
                     Background="GhostWhite"

@@ -13,7 +13,7 @@ namespace ERService.HardwareModule.ViewModels
     {
         public bool KeepAlive => true;
 
-        public bool WizardMode { get; set; }
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         private IRegionManager _regionManager;
 
@@ -23,6 +23,8 @@ namespace ERService.HardwareModule.ViewModels
         private IRegionNavigationService _navigationService;
 
         private Customer _customer;
+        private bool _wizardMode;
+
         public Customer Customer
         {
             get { return _customer; }
@@ -32,13 +34,14 @@ namespace ERService.HardwareModule.ViewModels
         public HardwareViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _regionManager = regionManager;
+
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
             GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
         }
 
         private bool OnGoForwardCanExecute()
         {
-            return WizardMode;
+            return true;
         }
 
         private void OnGoForwardExecute()
@@ -46,6 +49,7 @@ namespace ERService.HardwareModule.ViewModels
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
+            parameters.Add("Customer", Customer);
 
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
         }
@@ -72,7 +76,7 @@ namespace ERService.HardwareModule.ViewModels
 
         protected override void OnCancelEditExecute()
         {
-            //_navigationService.Journal.GoBack();
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
 
         protected override bool OnCancelEditCanExecute()

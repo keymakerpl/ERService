@@ -5,6 +5,7 @@ using ERService.HardwareModule.Views;
 using ERService.Header;
 using ERService.Infrastructure.Constants;
 using ERService.Navigation;
+using ERService.OrderModule.Repository;
 using ERService.OrderModule.Views;
 using ERService.Settings;
 using ERService.StartPage;
@@ -46,6 +47,7 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
+            containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
             containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            

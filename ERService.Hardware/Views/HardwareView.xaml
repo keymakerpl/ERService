@@ -24,14 +24,6 @@
                 <DockPanel
                     HorizontalAlignment="Left">
 
-                    <!--<Button Content="Drukuj"
-                    Command="{Binding PrintCommand}"
-                    Margin="10 10 5 10"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>-->
-
                     <Button Content="Anuluj"
                     Command="{Binding CancelCommand}"
                     Margin="10 10 5 10"
@@ -46,7 +38,8 @@
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                 </DockPanel>
 
                 <DockPanel Grid.Column="1" FlowDirection="RightToLeft"

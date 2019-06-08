@@ -5,11 +5,11 @@ using System.Data.Entity;
 using System;
 using System.Threading.Tasks;
 
-namespace ERService.OrderModule.Data
+namespace ERService.OrderModule.Repository
 {
     public class OrderRepository : GenericRepository<Order, ERServiceDbContext>, IOrderRepository
     {
-        protected OrderRepository(ERServiceDbContext context) : base(context)
+        public OrderRepository(ERServiceDbContext context) : base(context)
         {
         }
 
