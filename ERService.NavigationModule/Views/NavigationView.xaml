@@ -4,12 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ERService.Navigation.Views"
+             xmlns:con="clr-namespace:ERService.Infrastructure.Constants;assembly=ERService.Infrastructure"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:settingsView="clr-namespace:ERService.Settings.Views;assembly=ERService.Settings"
-             xmlns:startView="clr-namespace:ERService.StartPage.Views;assembly=ERService.StartPage"
-             xmlns:cw="clr-namespace:ERService.CustomerModule.Views;assembly=ERService.Customer"
-             xmlns:orderView="clr-namespace:ERService.OrderModule.Views;assembly=ERService.OrderModule"
+             xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="200">
@@ -78,22 +75,20 @@
             <Controls:HamburgerMenu.ItemsSource>
                 <Controls:HamburgerMenuItemCollection>
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Start"
-                                                     Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type startView:StartPageView}"/>
+                                                     Command="{Binding OpenDetailViewCommand}"/>
 
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Klienci"
                                                      Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type cw:CustomerListView}"/>
+                                                     CommandParameter="CustomerListView"/>
 
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Naprawy"
                                                      Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type orderView:OrderListView}"/>
+                                                     CommandParameter="OrderListView"/>
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia"                                                     
-                                                     Command="{Binding OpenDetailViewCommand}"
-                                                     CommandParameter="{x:Type settingsView:SettingsView}"/>
+                                                     Command="{Binding OpenDetailViewCommand}"/>
 
 
                 </Controls:HamburgerMenuItemCollection>

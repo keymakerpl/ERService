@@ -13,7 +13,7 @@ namespace ERService.HardwareModule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<HardwareView>(typeof(HardwareView).FullName);
+            
         }
     }
 }

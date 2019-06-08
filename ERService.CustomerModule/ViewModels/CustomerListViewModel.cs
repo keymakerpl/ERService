@@ -6,6 +6,7 @@ using Prism.Regions;
 using ERService.CustomerModule.Views;
 using Prism.Commands;
 using ERService.MSSQLDataAccess;
+using ERService.Infrastructure.Constants;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -23,7 +24,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
-            parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+            parameters.Add("ViewFullName", ViewNames.CustomerView);
 
             ShowDetail(parameters);
         }
@@ -34,7 +35,7 @@ namespace ERService.CustomerModule.ViewModels
             {
                 var parameters = new NavigationParameters();
                 parameters.Add("ID", SelectedModel.Id);
-                parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+                parameters.Add("ViewFullName", ViewNames.CustomerView);
 
                 ShowDetail(parameters);
             }

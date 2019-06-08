@@ -47,7 +47,7 @@ namespace ERService.HardwareModule.ViewModels
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
 
-            //_regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(OrderView).FullName, parameters);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
         }
 
         private void OnGoBackExecute()

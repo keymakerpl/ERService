@@ -4,7 +4,7 @@ using ERService.Business;
 using Prism.Regions;
 using Prism.Commands;
 using System;
-using ERService.CustomerModule.Views;
+using ERService.Infrastructure.Constants;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -21,7 +21,7 @@ namespace ERService.OrderModule.ViewModels
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
-            parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+            parameters.Add("ViewFullName", ViewNames.CustomerView);
 
             ShowDetail(parameters);
         }

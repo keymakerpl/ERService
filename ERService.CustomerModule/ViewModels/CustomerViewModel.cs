@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using ERService.Business;
 using ERService.CustomerModule.Repository;
-using ERService.CustomerModule.Views;
 using ERService.CustomerModule.Wrapper;
-using ERService.HardwareModule.Views;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using Prism.Commands;
@@ -192,7 +190,7 @@ namespace ERService.CustomerModule.ViewModels
             parameters.Add("Wizard", true);
             parameters.Add("Customer", Customer.Model);
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(HardwareView).FullName, parameters);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.HardwareView, parameters);
         }
 
         #endregion

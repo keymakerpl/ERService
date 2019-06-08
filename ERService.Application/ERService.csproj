@@ -116,6 +116,10 @@
       <Project>{73229C43-9BB4-42B6-B7DF-A61A369CC85A}</Project>
       <Name>ERService.Customer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.Hardware\ERService.Hardware.csproj">
+      <Project>{296667e4-9991-4f81-9cb9-b81fc9485825}</Project>
+      <Name>ERService.Hardware</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Header\ERService.Header.csproj">
       <Project>{29CCB452-8D14-4FD4-AF65-7BD659640829}</Project>
       <Name>ERService.Header</Name>
