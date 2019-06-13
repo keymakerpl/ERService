@@ -15,20 +15,20 @@ namespace ERService.OrderModule.ViewModels
     {
         private IOrderRepository _repository;
         private IRegionManager _regionManager;
-
+        private IRegionNavigationService _navigationService;
         public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand SaveCommand { get; private set; }
-
+        
+        private bool _wizardMode;
         public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         private OrderWrapper _order;
-        public OrderWrapper Order { get => _order; set { _order = value; RaisePropertyChanged(); } }
+        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
         private Customer _customer;
-        private IRegionNavigationService _navigationService;
-        private bool _wizardMode;
+        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
 
-        public Customer Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }
+        private Hardware _hardware;
+        private Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
@@ -36,7 +36,6 @@ namespace ERService.OrderModule.ViewModels
             _regionManager = regionManager;
 
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
-            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
         #region Navigation

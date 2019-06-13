@@ -23,6 +23,10 @@ namespace ERService.MSSQLDataAccess
 
         public DbSet<Hardware> Hardwares { get; set; }
 
+        public DbSet<HwCustomItem> HardwareCustomItems { get; set; }
+
+        public DbSet<CustomItem> CustomItems { get; set; }
+
         public DbSet<HardwareType> HardwareTypes { get; set; }
 
         public DbSet<Order> Orders { get; set; }

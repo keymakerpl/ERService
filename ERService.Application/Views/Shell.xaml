@@ -11,7 +11,9 @@
                       BorderThickness="0"
                       GlowBrush="Black"
                       ResizeMode="CanResizeWithGrip"
-                      WindowTransitionsEnabled="False">
+                      WindowTransitionsEnabled="False"
+                      Height="780"
+                      Width="1280">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>

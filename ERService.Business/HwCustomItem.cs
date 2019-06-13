@@ -1,26 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ERService.Business
 {
-    public class CustomerAddress
+    public class HwCustomItem
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
 
-        public Guid CustomerId { get; set; }
-        
-        public string Street { get; set; }
+        public Guid CustomItemId { get; set; }
 
-        public string HouseNumber { get; set; }
+        [StringLength(200)]
+        public string Value { get; set; }
 
-        public string City { get; set; }
+        public Guid HardwareId { get; set; }
 
-        public string Postcode { get; set; }
-
-        public Customer Customer { get; set; }
+        public Hardware Hardware { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
