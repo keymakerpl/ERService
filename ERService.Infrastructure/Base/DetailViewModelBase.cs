@@ -19,6 +19,8 @@ namespace ERService.Infrastructure.Base
         private string _title;
         private bool _hasChanges;
 
+        public bool AllowLoadAsync { get; set; } = true;
+
         public DetailViewModelBase(IEventAggregator eventAggregator)
         {
             EventAggregator = eventAggregator;

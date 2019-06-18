@@ -16,6 +16,8 @@ namespace ERService.Business
 
         public Guid CustomItemId { get; set; }
 
+        public CustomItem CustomItem { get; set; }
+
         [StringLength(200)]
         public string Value { get; set; }
 

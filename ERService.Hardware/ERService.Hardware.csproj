@@ -7,7 +7,7 @@
     <ProjectGuid>{296667E4-9991-4F81-9CB9-B81FC9485825}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ERService.Hardware</RootNamespace>
+    <RootNamespace>ERService.HardwareModule</RootNamespace>
     <AssemblyName>ERService.Hardware</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -49,7 +49,16 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repository\CustomItemRepository.cs" />
+    <Compile Include="Data\Repository\HardwareRepository.cs" />
+    <Compile Include="Data\Repository\HardwareTypeRepository.cs" />
+    <Compile Include="Data\Repository\HwCustomItemRepository.cs" />
+    <Compile Include="Data\Repository\ICustomItemRepository.cs" />
+    <Compile Include="Data\Repository\IHardwareRepository.cs" />
+    <Compile Include="Data\Repository\IHardwareTypeRepository.cs" />
+    <Compile Include="Data\Repository\IHwCustomItemRepository.cs" />
     <Compile Include="HardwareModule.cs" />
+    <Compile Include="Wrapper\HardwareWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

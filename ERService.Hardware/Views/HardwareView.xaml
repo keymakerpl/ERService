@@ -8,6 +8,40 @@
              d:DesignHeight="650" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
+
+    <UserControl.Resources>
+
+        <Style x:Key="NaviItemContainerStyle" TargetType="ContentPresenter">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+
+        <DataTemplate x:Key="DataTemplate">
+            <Border>
+                <Border.Style>
+                    <Style>
+                        <Setter Property="Border.BorderThickness" Value="0"/>
+                        <Setter Property="Border.BorderBrush" Value="Black"/>
+                        <Style.Triggers>
+                            <Trigger Property="Border.IsMouseOver" Value="True">
+                                <Setter Property="Border.BorderThickness" Value="1"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid Margin="10 10 10 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="{Binding ItemName}"/>
+                    <TextBox Grid.Column="1" Text="{Binding Value}" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -84,6 +118,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="Urządzenie:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
@@ -105,6 +141,19 @@
                              HorizontalAlignment="Left"
                            FontSize="14"
                              Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Label Grid.Row="2" Content="Typ urządzenia:" FontSize="14" Margin="10 0 0 0"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="10 0 0 0"
+                              ItemsSource="{Binding HardwareTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding SelectedHardwareType}"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="Id"/>
+
+                    <ItemsControl Grid.Row="3" Grid.ColumnSpan="2"
+                                  Margin="10"
+                                  ItemTemplate="{StaticResource DataTemplate}"
+                                  ItemContainerStyle="{StaticResource NaviItemContainerStyle}"/>
+
                 </Grid>
             </ScrollViewer>
         </Border>

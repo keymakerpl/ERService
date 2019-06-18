@@ -71,10 +71,10 @@ namespace ERService.CustomerModule.ViewModels
         //TODO: Refactor to Generic and base class?
         private Customer GetNewDetail()
         {
-            var Customer = new Customer();
-            _repository.Add(Customer);
+            var customer = new Customer();
+            _repository.Add(customer);
 
-            return Customer;
+            return customer;
         }
 
         private void InitializeCustomer(Customer customer)
@@ -151,10 +151,7 @@ namespace ERService.CustomerModule.ViewModels
 
         #region Navigation
 
-        public bool KeepAlive { get { return true; } }
-
-        private bool _allowLoadAsync;
-        public bool AllowLoadAsync { get => _allowLoadAsync; set => _allowLoadAsync = value; }
+        public bool KeepAlive { get { return true; } }        
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
@@ -165,7 +162,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             if (WizardMode)
             {
-                AllowLoadAsync = true;
+                AllowLoadAsync = false;
             }
         }
 
@@ -176,7 +173,7 @@ namespace ERService.CustomerModule.ViewModels
             WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
 
             var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id) && !AllowLoadAsync)
+            if (!String.IsNullOrWhiteSpace(id) && AllowLoadAsync)
             {
                 await LoadAsync(Guid.Parse(id));
             }

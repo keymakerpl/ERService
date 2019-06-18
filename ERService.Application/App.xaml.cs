@@ -1,6 +1,7 @@
 ﻿using ERService.Application.Views;
 using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Views;
+using ERService.HardwareModule.Data.Repository;
 using ERService.HardwareModule.Views;
 using ERService.Header;
 using ERService.Infrastructure.Constants;
@@ -48,10 +49,13 @@ namespace ERService.Application
         {
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
+            containerRegistry.Register<IHardwareRepository, HardwareRepository>();
+            containerRegistry.Register<IHardwareTypeRepository, HardwareTypeRepository>();
+            containerRegistry.Register<ICustomItemRepository, CustomItemRepository>();
+
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
             containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
-
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
         }
