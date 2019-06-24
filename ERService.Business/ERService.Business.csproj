@@ -66,8 +66,10 @@
   <ItemGroup>
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerAddress.cs" />
+    <Compile Include="CustomItem.cs" />
     <Compile Include="Hardware.cs" />
     <Compile Include="HardwareType.cs" />
+    <Compile Include="HwCustomItem.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderStatus.cs" />
     <Compile Include="OrderType.cs" />

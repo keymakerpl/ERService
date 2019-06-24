@@ -1,7 +1,15 @@
 ﻿using ERService.Application.Views;
+using ERService.CustomerModule.Repository;
+using ERService.CustomerModule.Views;
+using ERService.HardwareModule.Data.Repository;
+using ERService.HardwareModule.Views;
 using ERService.Header;
+using ERService.Infrastructure.Constants;
 using ERService.Navigation;
+using ERService.OrderModule.Repository;
+using ERService.OrderModule.Views;
 using ERService.Settings;
+using ERService.Settings.Views;
 using ERService.StartPage;
 using ERService.StatusBar;
 using Prism.Ioc;
@@ -40,7 +48,21 @@ namespace ERService.Application
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<ICustomerRepository, CustomerRepository>();
+            containerRegistry.Register<IOrderRepository, OrderRepository>();
+            containerRegistry.Register<IHardwareRepository, HardwareRepository>();
+            containerRegistry.Register<IHardwareTypeRepository, HardwareTypeRepository>();
+            containerRegistry.Register<ICustomItemRepository, CustomItemRepository>();
 
+            containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
+            containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
+            containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
+            containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
+            containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
+            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
+            containerRegistry.RegisterForNavigation<CustomItemsView>(ViewNames.CustomItemsView);
+            containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
+            containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
         }
     }
 }

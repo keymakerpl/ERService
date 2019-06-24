@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="800"
+             d:DesignHeight="1000" d:DesignWidth="1280"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
     <Grid Background="White">
@@ -18,7 +18,7 @@
                 BorderBrush="LightGray" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -31,21 +31,35 @@
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                     <Button Content="Naprawy"
                     Command="{Binding CustomerOrdersCommand}"
                     Margin="5 10 10 10"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
-                    Width="120"/>
+                    Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                     <Button Content="Anuluj"
-                    Command="{Binding CancelEditDetailCommand}"
+                    Command="{Binding CancelCommand}"
                     Margin="5 10 10 10"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="30"
                     Width="120"/>
+                </DockPanel>
+
+                <DockPanel Grid.Column="1" FlowDirection="RightToLeft"
+                           HorizontalAlignment="Right">
+                    <Button Content="Dalej"
+                            Command="{Binding GoForwardCommand}"
+                            Margin="5 10 10 10"
+                            Foreground="Black"
+                            Background="GhostWhite"
+                            Height="30"
+                            Width="120"
+                            Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </DockPanel>
 
             </Grid>
@@ -68,49 +82,73 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Content="Imię" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="1" Margin="10 0 10 10"
+                    <Label Content="Dane klienta:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
+
+                    <Label Grid.Row="1" Content="Imię" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="2" Margin="10 0 10 10"
                  Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="2" Content="Nazwisko" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="3" Margin="10 0 10 10"
+                    <Label Grid.Row="3" Content="Nazwisko" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="4" Margin="10 0 10 10"
                  Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="4" Content="Firma" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="5" Margin="10 0 10 10"
+                    <Label Grid.Row="5" Content="Firma" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="6" Margin="10 0 10 10"
                  Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="6" Content="NIP" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="7" Margin="10 0 10 10"
+                    <Label Grid.Row="7" Content="NIP" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
                  Text="{Binding Customer.NIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="0" Grid.Column="2" Content="Email" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="10 0 10 10"
+                    <Label Grid.Row="1" Grid.Column="2" Content="Email" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0 10 10"
                  Text="{Binding Customer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="2" Grid.Column="2" Content="Email 2" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="3" Grid.Column="2" Margin="10 0 10 10"
+                    <Label Grid.Row="3" Grid.Column="2" Content="Email 2" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" Margin="10 0 10 10"
                  Text="{Binding Customer.Email2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="4" Grid.Column="2" Content="Numer telefonu" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="5" Grid.Column="2" Margin="10 0 10 10"
+                    <Label Grid.Row="5" Grid.Column="2" Content="Numer telefonu" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="6" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"
                  Text="{Binding Customer.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="6" Grid.Column="2" Content="Numer telefonu 2" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="7" Grid.Column="2" Margin="10 0 10 10"
+                    <Label Grid.Row="7" Grid.Column="2" Content="Numer telefonu 2" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="8" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"
                  Text="{Binding Customer.PhoneNumber2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
-                    <Label Grid.Row="8" Grid.Column="2" Content="Opis" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="9" Grid.Column="2" Margin="10 0 10 10" AcceptsReturn="True"
+                    <Label Grid.Row="9" Grid.Column="2" Content="Opis" Margin="10 10 0 0"/>
+                    <TextBox Grid.Row="10" Grid.Column="2" Margin="10 0 10 10" AcceptsReturn="True"
+                             MinLines="5" Grid.ColumnSpan="3"
                  Text="{Binding Customer.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <Label Grid.Column="4" Content="Adres:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
+                    
+                    <Label Grid.Column="4" Grid.Row="1" Content="Ulica:" Margin="10 10 0 0"/>
+                    <TextBox Grid.Column="4" Grid.Row="2" Margin="10 0 10 10"
+                 Text="{Binding CustomerAddress.Street, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <Label Grid.Column="4" Grid.Row="3" Content="Numer budynku:" Margin="10 10 0 0"/>
+                    <TextBox Grid.Column="4" Grid.Row="4" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
+                 Text="{Binding CustomerAddress.HouseNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <Label Grid.Column="4" Grid.Row="5" Content="Miasto:" Margin="10 10 0 0"/>
+                    <TextBox Grid.Column="4" Grid.Row="6" Margin="10 0 10 10"
+                 Text="{Binding CustomerAddress.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                    <Label Grid.Column="4" Grid.Row="7" Content="Kod pocztowy:" Margin="10 10 0 0"/>
+                    <TextBox Grid.Column="4" Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
+                 Text="{Binding CustomerAddress.Postcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                 </Grid>
             </ScrollViewer>

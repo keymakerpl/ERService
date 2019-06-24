@@ -1,6 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Base;
-using ERService.OrderModule.Data;
+using ERService.Infrastructure.Constants;
+using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
 using Prism.Commands;
 using Prism.Events;
@@ -12,26 +13,43 @@ namespace ERService.OrderModule.ViewModels
 {
     public class OrderViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
-        private IOrderRepository _repository;        
+        private IOrderRepository _repository;
+        private IRegionManager _regionManager;
+        private IRegionNavigationService _navigationService;
+        public DelegateCommand GoBackCommand { get; private set; }
+        
+        private bool _wizardMode;
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         private OrderWrapper _order;
-        public OrderWrapper Order { get => _order; set { _order = value; RaisePropertyChanged(); } }
+        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
         private Customer _customer;
-        public Customer Customer { get => _customer; set { _customer = value; RaisePropertyChanged(); } }
+        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
 
-        public OrderViewModel(IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
+        private Hardware _hardware;
+        private Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+
+        public OrderViewModel(IRegionManager regionManager, IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            _repository = repository;            
+            _repository = repository;
+            _regionManager = regionManager;
+
+            GoBackCommand = new DelegateCommand(OnGoBackExecute);
         }
 
         #region Navigation
+
+        private void OnGoBackExecute()
+        {
+            _navigationService.Journal.GoBack();
+        }
 
         public bool KeepAlive => false;
 
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            
+            continuationCallback(true);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -44,13 +62,20 @@ namespace ERService.OrderModule.ViewModels
             
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id))
-            {
-                await LoadAsync(Guid.Parse(id));
-            }
+            _navigationService = navigationContext.NavigationService;
+            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
+
+            var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
+            if (customer != null)
+                Customer = customer;
+
+            //var id = navigationContext.Parameters.GetValue<string>("ID");
+            //if (!String.IsNullOrWhiteSpace(id))
+            //{
+            //    await LoadAsync(Guid.Parse(id));
+            //}
         }
 
         #endregion
@@ -64,14 +89,8 @@ namespace ERService.OrderModule.ViewModels
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
-
+            
             InitializeOrder(order);
-            InitializeCustomer(order);
-        }
-
-        private void InitializeCustomer(Order order)
-        {
-            Customer = order.Customer;
         }
 
         //TODO: Refactor?
@@ -94,7 +113,7 @@ namespace ERService.OrderModule.ViewModels
                 if (!HasChanges)
                 {
                     HasChanges = _repository.HasChanges();
-                    ((DelegateCommand)CancelEditDetailCommand).RaiseCanExecuteChanged();
+                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
                 }
 
                 //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
@@ -126,22 +145,22 @@ namespace ERService.OrderModule.ViewModels
 
         protected override bool OnCancelEditCanExecute()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         protected override void OnCancelEditExecute()
         {
-            throw new NotImplementedException();
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
 
         protected override bool OnSaveCanExecute()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         protected override void OnSaveExecute()
         {
-            throw new NotImplementedException();
+            
         }
 
         #endregion

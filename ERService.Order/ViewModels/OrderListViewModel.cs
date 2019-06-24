@@ -4,6 +4,7 @@ using ERService.Business;
 using Prism.Regions;
 using Prism.Commands;
 using System;
+using ERService.Infrastructure.Constants;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -17,12 +18,12 @@ namespace ERService.OrderModule.ViewModels
 
         public override void OnAddExecute()
         {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("ID", Guid.Empty);
-            //parameters.Add("Wizard", true);
-            //parameters.Add("ViewFullName", typeof(CustomerView).FullName);
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", Guid.Empty);
+            parameters.Add("Wizard", true);
+            parameters.Add("ViewFullName", ViewNames.CustomerView);
 
-            //ShowDetail(parameters);
+            ShowDetail(parameters);
         }
 
         public override void OnMouseDoubleClickExecute()

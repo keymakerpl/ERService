@@ -13,8 +13,7 @@ namespace ERService.OrderModule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<OrderView>(typeof(OrderView).FullName);
-            containerRegistry.RegisterForNavigation<OrderListView>(typeof(OrderListView).FullName);
+            
         }
     }
 }

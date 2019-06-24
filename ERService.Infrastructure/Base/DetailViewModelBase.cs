@@ -19,20 +19,22 @@ namespace ERService.Infrastructure.Base
         private string _title;
         private bool _hasChanges;
 
+        public bool AllowLoadAsync { get; set; } = true;
+
         public DetailViewModelBase(IEventAggregator eventAggregator)
         {
             EventAggregator = eventAggregator;
             //MessageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-            CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
-            CancelEditDetailCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
+            CloseCommand = new DelegateCommand(OnCloseDetailViewExecute);
+            CancelCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
         }        
 
         public ICommand SaveCommand { get; private set; }
 
-        public ICommand CloseDetailViewCommand { get; set; }
+        public ICommand CloseCommand { get; set; }
 
-        public ICommand CancelEditDetailCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
 
         public Guid ID { get; protected set; }
 
@@ -107,6 +109,7 @@ namespace ERService.Infrastructure.Base
             afterSaveAction();
         }        
 
+        //TODO: OnSave* Raczej do wywalenia, nie każda dziedzicząca będzie z tego korzystać. Bądźmy SOLID. 
         protected abstract void OnSaveExecute();
 
         protected abstract bool OnSaveCanExecute();

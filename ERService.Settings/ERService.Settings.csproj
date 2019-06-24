@@ -63,7 +63,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\CustomItemsViewModel.cs" />
+    <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
+    <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\CustomItemsView.xaml.cs">
+      <DependentUpon>CustomItemsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GeneralSettingsView.xaml.cs">
+      <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HardwareTypesView.xaml.cs">
+      <DependentUpon>HardwareTypesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -78,12 +90,32 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ERService.Business\ERService.Business.csproj">
+      <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
+      <Name>ERService.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Hardware\ERService.Hardware.csproj">
+      <Project>{296667E4-9991-4F81-9CB9-B81FC9485825}</Project>
+      <Name>ERService.Hardware</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Infrastructure\ERService.Infrastructure.csproj">
       <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
       <Name>ERService.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\CustomItemsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HardwareTypesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

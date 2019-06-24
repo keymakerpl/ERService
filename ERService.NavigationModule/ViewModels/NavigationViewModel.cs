@@ -18,10 +18,10 @@ namespace ERService.Navigation.ViewModels
             OpenDetailViewCommand = new DelegateCommand<object>(OnOpenDetailViewExecute);
         }
 
-        private void OnOpenDetailViewExecute(object viewType)
+        private void OnOpenDetailViewExecute(object viewName)
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll(); //Na ten moment nawigujemy tylko po widokach w wybranym module
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewType.ToString());            
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());            
         }
     }
 }
