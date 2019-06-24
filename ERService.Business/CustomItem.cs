@@ -14,6 +14,9 @@ namespace ERService.Business
         [StringLength(50)]
         public string Key { get; set; }
 
+        [Required]
+        public Guid HardwareTypeId { get; set; }
+
         public HardwareType HardwareType { get; set; }
 
         [Timestamp]

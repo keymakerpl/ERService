@@ -59,10 +59,12 @@
     <Compile Include="Events\AfterDetailSavedEvent.cs" />
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
+    <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
+    <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -110,6 +112,9 @@
     <PackageReference Include="Prism.Wpf">
       <Version>7.2.0.1233-pre</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Repositories\ConnectedRepository.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

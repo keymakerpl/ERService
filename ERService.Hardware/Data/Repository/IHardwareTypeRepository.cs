@@ -8,7 +8,6 @@ namespace ERService.HardwareModule.Data.Repository
 {
     public interface IHardwareTypeRepository : IGenericRepository<HardwareType>
     {
-        Task<IEnumerable<HardwareType>> GetAllAsync();
-        Task<HardwareType> GetByIdAsync(Guid id);
+
     }
 }

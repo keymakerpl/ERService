@@ -7,5 +7,6 @@
         public const string StatusbarRegion = "StatusBarRegion";
         public const string HeaderRegion = "HeaderRegion";
         public const string NavigationRegion = "NavigationRegion";
+        public const string SettingsTabControlRegion = "SettingsTabControlRegion";
     }
 }

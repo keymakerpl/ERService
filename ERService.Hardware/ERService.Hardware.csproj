@@ -58,6 +58,8 @@
     <Compile Include="Data\Repository\IHardwareTypeRepository.cs" />
     <Compile Include="Data\Repository\IHwCustomItemRepository.cs" />
     <Compile Include="HardwareModule.cs" />
+    <Compile Include="Wrapper\CustomItemWrapper.cs" />
+    <Compile Include="Wrapper\HardwareTypeWrapper.cs" />
     <Compile Include="Wrapper\HardwareWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -88,7 +88,8 @@
                                                      CommandParameter="OrderListView"/>
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Ustawienia"                                                     
-                                                     Command="{Binding OpenDetailViewCommand}"/>
+                                                     Command="{Binding OpenDetailViewCommand}"
+                                                     CommandParameter="SettingsView"/>
 
 
                 </Controls:HamburgerMenuItemCollection>

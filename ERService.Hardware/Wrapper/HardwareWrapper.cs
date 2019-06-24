@@ -12,10 +12,11 @@ namespace ERService.HardwareModule
 
         public Guid Id { get { return Model.Id; } }
 
+        private string _name;
         public string Name
         {
             get { return GetValue<string>(); }
-            set { SetValue(value); }
+            set { SetProperty(ref _name, value); }
         }
     }
 }

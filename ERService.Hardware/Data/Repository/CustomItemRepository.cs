@@ -25,9 +25,10 @@ namespace ERService.HardwareModule.Data.Repository
             return base.GetByIdAsync(id);
         }
 
+        [Obsolete]
         public async Task<List<CustomItem>> GetCustomItemsByHardwareTypeAsync(Guid typeId)
         {
-            var result = await Context.Set<CustomItem>().Include(c => c.HardwareType).ToListAsync();
+            var result = await Context.Set<CustomItem>().AsNoTracking().Include(c => c.HardwareType).ToListAsync();
 
             return result.FindAll(e => e.HardwareType.Id == typeId);
         }

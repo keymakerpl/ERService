@@ -14,5 +14,9 @@ namespace ERService.Infrastructure.Constants
         public const string HardwareListView = "HardwareListView";
         public const string OrderListView = "OrderListView";
         public const string OrderView = "OrderView";
+        public const string SettingsView = "SettingsView";
+        public const string CustomItemsView = "CustomItemsView";
+        public const string GeneralSettingsView = "GeneralSettingsView";
+        public const string HardwareTypesView = "HardwareTypesView";
     }
 }

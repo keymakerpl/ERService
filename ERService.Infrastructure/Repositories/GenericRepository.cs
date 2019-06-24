@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Repositories
@@ -16,14 +18,38 @@ namespace ERService.Infrastructure.Repositories
             this.Context = context;
         }
 
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+        }
+
         public virtual async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Context.Set<TEntity>().ToListAsync();
+            IEnumerable<TEntity> result = await Context.Set<TEntity>().AsNoTracking()
+                .Where(predicate).ToListAsync();
+
+            return result;
+        }
+
+        public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, 
+            params Expression<Func<TEntity, object>>[] includeProps)
+        {
+            var query = GetAllIncluding(includeProps);
+            IEnumerable<TEntity> result = query.Where(predicate).ToList();
+
+            return result;
+        }
+
+        private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
+        {
+            IQueryable<TEntity> queryable = Context.Set<TEntity>().AsNoTracking();
+
+            return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
 
         public async Task SaveAsync()
@@ -44,6 +70,6 @@ namespace ERService.Infrastructure.Repositories
         public void Remove(TEntity model)
         {
             Context.Set<TEntity>().Remove(model);            
-        }
+        }        
     }   
 }

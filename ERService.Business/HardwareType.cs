@@ -12,10 +12,6 @@ namespace ERService.Business
 
         public string Name { get; set; }
 
-        //public string SerialNumber { get; set; }
-
-        //public string ProductNumber { get; set; }
-
         [Timestamp]
         public byte[] RowVersion { get; set; }
     }

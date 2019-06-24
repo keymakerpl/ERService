@@ -9,6 +9,7 @@ using ERService.Navigation;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Views;
 using ERService.Settings;
+using ERService.Settings.Views;
 using ERService.StartPage;
 using ERService.StatusBar;
 using Prism.Ioc;
@@ -58,6 +59,10 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
+            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
+            containerRegistry.RegisterForNavigation<CustomItemsView>(ViewNames.CustomItemsView);
+            containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
+            containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
         }
     }
 }

@@ -109,6 +109,7 @@ namespace ERService.Infrastructure.Base
             afterSaveAction();
         }        
 
+        //TODO: OnSave* Raczej do wywalenia, nie każda dziedzicząca będzie z tego korzystać. Bądźmy SOLID. 
         protected abstract void OnSaveExecute();
 
         protected abstract bool OnSaveCanExecute();
