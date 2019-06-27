@@ -13,16 +13,7 @@ namespace ERService.HardwareModule.Data.Repository
     {
         public HardwareTypeRepository(ERServiceDbContext context) : base(context)
         {
-        }
 
-        public override Task<IEnumerable<HardwareType>> GetAllAsync()
-        {
-            return base.GetAllAsync();
-        }
-
-        public override Task<HardwareType> GetByIdAsync(Guid id)
-        {
-            return base.GetByIdAsync(id);
-        }    
+        }  
     }
 }

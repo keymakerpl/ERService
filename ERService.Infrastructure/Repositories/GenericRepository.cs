@@ -54,6 +54,11 @@ namespace ERService.Infrastructure.Repositories
 
         public async Task SaveAsync()
         {
+
+#if DEBUG
+            Context.Database.Log = Console.Write;
+#endif
+
             await Context.SaveChangesAsync();
         }
 

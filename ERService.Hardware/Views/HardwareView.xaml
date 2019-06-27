@@ -24,18 +24,18 @@
                         <Setter Property="Border.BorderBrush" Value="Black"/>
                         <Style.Triggers>
                             <Trigger Property="Border.IsMouseOver" Value="True">
-                                <Setter Property="Border.BorderThickness" Value="1"/>
+                                <Setter Property="Border.BorderThickness" Value="0"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
                 <Grid Margin="10 10 10 10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="{Binding ItemName}"/>
-                    <TextBox Grid.Column="1" Text="{Binding Value}" VerticalContentAlignment="Center"/>
+                    <Label Grid.Column="0" Content="{Binding CustomItem.Key}" Foreground="Black"/>
+                    <TextBox Grid.Column="1" Text="{Binding HwCustomItem.Value}" VerticalContentAlignment="Center"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -126,7 +126,7 @@
 
                     <Label Grid.Row="1" Content="Nazwa urządzenia:" FontSize="14" Margin="10 0 0 0"/>
                     <TextBox Grid.Column="1" Grid.Row="1" Width="250"
-                             HorizontalAlignment="Left" Margin="10 0 0 0"/>
+                             HorizontalAlignment="Left" Margin="10 0 0 5"/>
 
                     <Label Grid.Column="3" Content="Klient:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
 
@@ -143,14 +143,21 @@
                              Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Row="2" Content="Typ urządzenia:" FontSize="14" Margin="10 0 0 0"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="10 0 0 0"
+                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="10 5 0 0"
                               ItemsSource="{Binding HardwareTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedHardwareType}"
                               DisplayMemberPath="Name"
                               SelectedValuePath="Id"/>
 
-                    <ItemsControl Grid.Row="3" Grid.ColumnSpan="2"
-                                  Margin="10"
+                    <Label Content="Zdefiniowane parametry urządzenia:" 
+                           Grid.Row="3" FontSize="18" 
+                           FontWeight="Bold"
+                           Margin="10 30 10 0"
+                           Grid.ColumnSpan="5"/>
+
+                    <ItemsControl Grid.Row="4" Grid.ColumnSpan="5"
+                                  Margin="5"
+                                  ItemsSource="{Binding DisplayableCustomItems}"
                                   ItemTemplate="{StaticResource DataTemplate}"
                                   ItemContainerStyle="{StaticResource NaviItemContainerStyle}"/>
 

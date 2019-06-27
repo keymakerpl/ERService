@@ -12,23 +12,24 @@ using System.Threading.Tasks;
 namespace ERService.OrderModule.ViewModels
 {
     public class OrderViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {
+    {        
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
+
+        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
+
+        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+
+        public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+
+        public DelegateCommand GoBackCommand { get; private set; }
+
+        private bool _wizardMode;
+        private OrderWrapper _order;
+        private Customer _customer;
+        private Hardware _hardware;
         private IOrderRepository _repository;
         private IRegionManager _regionManager;
         private IRegionNavigationService _navigationService;
-        public DelegateCommand GoBackCommand { get; private set; }
-        
-        private bool _wizardMode;
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
-
-        private OrderWrapper _order;
-        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
-
-        private Customer _customer;
-        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
-
-        private Hardware _hardware;
-        private Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
@@ -62,20 +63,38 @@ namespace ERService.OrderModule.ViewModels
             
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
             WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
 
-            var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
-            if (customer != null)
-                Customer = customer;
+            if (WizardMode)
+            {
+                //TODO: REFACTOR, czy możemy użyć tutaj budowniczego np. OrderBuilder?
+                var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
+                if (customer != null)
+                    Customer = customer;
 
-            //var id = navigationContext.Parameters.GetValue<string>("ID");
-            //if (!String.IsNullOrWhiteSpace(id))
-            //{
-            //    await LoadAsync(Guid.Parse(id));
-            //}
+                var hardware = navigationContext.Parameters.GetValue<Hardware>("Hardware");
+                if (customer != null)
+                    Hardware = hardware;
+
+                await LoadAsync(Guid.Empty);
+
+                //Order.DateAdded = DateTime.Now;
+                Order.Model.Hardwares.Clear();
+                Order.Model.Hardwares.Add(Hardware);
+                Order.Model.Customer = Customer;
+            }
+            else
+            {
+                //var id = navigationContext.Parameters.GetValue<string>("ID");
+                //if (!String.IsNullOrWhiteSpace(id))
+                //{
+                //    await LoadAsync(Guid.Parse(id));
+                //}
+            }
+
         }
 
         #endregion
@@ -158,9 +177,17 @@ namespace ERService.OrderModule.ViewModels
             return true;
         }
 
-        protected override void OnSaveExecute()
+        protected async override void OnSaveExecute()
         {
-            
+            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
+            {
+                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
+                ID = Customer.Id; //odśwież Id friend wrappera                
+
+                //Powiadom agregator eventów, że zapisano
+                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            });
         }
 
         #endregion

@@ -8,55 +8,82 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using Prism.Mvvm;
 
 namespace ERService.HardwareModule.ViewModels
 {
+    public class DisblayableCustomItem : BindableBase
+    {
+        //private string _key;
+        //public string Key { get { return _key; } set { SetProperty(ref _key, value); } }
+
+        //private string _value;
+        //public string Value { get { return _value; } set { SetProperty(ref _value, value); } }
+
+        private CustomItem _customItem;
+        public CustomItem CustomItem { get { return _customItem; } set { SetProperty(ref _customItem, value); } }
+
+        private HwCustomItem _hwCustomItem;
+        public HwCustomItem HwCustomItem { get { return _hwCustomItem; } set { SetProperty(ref _hwCustomItem, value); } }
+    }
+
     public class HardwareViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {       
-        private bool _wizardMode;
+    {               
         public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand GoForwardCommand { get; private set; }
-
-        public HardwareWrapper _hardware;
-        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
-
-        public HardwareType _selectedHardwareType;
-        public HardwareType SelectedHardwareType { get => _selectedHardwareType; set { SetProperty(ref _selectedHardwareType, value); } }
-
-        public ObservableCollection<HwCustomItem> HardwareCustomItems;
-
-        public ObservableCollection<HardwareType> _hardwareTypes;
-        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
-
-        private Customer _customer;
         public Customer Customer
         {
             get { return _customer; }
             set { SetProperty(ref _customer, value); }
         }
 
+        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+
+        public HardwareType SelectedHardwareType { get => _selectedHardwareType; set { SetProperty(ref _selectedHardwareType, value); } }
+
+        public ObservableCollection<HwCustomItem> HardwareCustomItems;
+
+        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
+
+        public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems
+        {
+            get => _displayableCustomItems;
+            set
+            {
+                SetProperty(ref _displayableCustomItems, value);
+            }
+        }
+
+        public DelegateCommand GoBackCommand { get; private set; }
+
+        public DelegateCommand GoForwardCommand { get; private set; }
+
+        private bool _wizardMode;
+        private Customer _customer;
+        private HardwareWrapper _hardware;
+        private HardwareType _selectedHardwareType;
+        private ObservableCollection<HardwareType> _hardwareTypes;
         private IRegionManager _regionManager;
         private IHardwareRepository _repository;
         private IHardwareTypeRepository _typeRepository;
         private ICustomItemRepository _customItemRepository;
         private IRegionNavigationService _navigationService;
+        private ObservableCollection<DisblayableCustomItem> _displayableCustomItems;
 
         public HardwareViewModel(IHardwareRepository repository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
             IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec kompozyt? Aby wrzucić repo w jedno miejsce
+            //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec Fasada? Aby wrzucić repo w jedno miejsce
             _regionManager = regionManager;
             _repository = repository;
             _typeRepository = typeRepository;
             _customItemRepository = customItemRepository;
 
             HardwareCustomItems = new ObservableCollection<HwCustomItem>();
-            HardwareTypes= new ObservableCollection<HardwareType>();
+            HardwareTypes = new ObservableCollection<HardwareType>();
+            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();
 
             PropertyChanged += HardwareViewModel_PropertyChanged;
 
@@ -68,13 +95,32 @@ namespace ERService.HardwareModule.ViewModels
         {
             if (e.PropertyName == "SelectedHardwareType" )
             {
-                LoadCustomItems();
+                LoadHardwareCustomItemsAsync();
             }
         }
 
-        private void LoadCustomItems()
+        private async void LoadHardwareCustomItemsAsync()
         {
-            var list = _customItemRepository.GetCustomItemsByHardwareType(SelectedHardwareType.Id);
+            var items = await _customItemRepository
+                .FindByAsync(i => i.HardwareTypeId == SelectedHardwareType.Id);
+
+            HardwareCustomItems.Clear();
+            foreach (var item in items)
+            {
+                HardwareCustomItems
+                    .Add(new HwCustomItem
+                    { CustomItemId = item.Id, Hardware = Hardware.Model, Value = "" });
+            }
+
+            var query = from hci in HardwareCustomItems
+                        from ci in items
+                        where hci.CustomItemId == ci.Id
+                        select new DisblayableCustomItem { HwCustomItem = hci, CustomItem = ci };
+
+            var result = query.ToList();
+
+            DisplayableCustomItems.Clear();
+            DisplayableCustomItems.AddRange(result);
         }
 
         private bool OnGoForwardCanExecute()
@@ -84,10 +130,17 @@ namespace ERService.HardwareModule.ViewModels
 
         private void OnGoForwardExecute()
         {
+            Hardware.Model.HardwareCustomItems.Clear();
+            foreach (var item in DisplayableCustomItems)
+            {
+                Hardware.Model.HardwareCustomItems.Add(item.HwCustomItem);
+            }
+
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
             parameters.Add("Customer", Customer);
+            parameters.Add("Hardware", Hardware.Model);
 
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
         }
@@ -105,27 +158,32 @@ namespace ERService.HardwareModule.ViewModels
             ID = id;
 
             InitializeHardware(hardware);
-            InitializeHwCustomItems();
-            InitializeHardwareTypes();
+            //LoadHardwareCustomItems();
+            LoadHardwareTypes();
 
+            InitializeEvents();
         }
 
-        private async void InitializeHardwareTypes()
+        private void InitializeEvents()
+        {
+            PropertyChanged += HardwareViewModel_PropertyChanged1;
+        }
+
+        private void HardwareViewModel_PropertyChanged1(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectedHardwareType")
+            {
+                LoadHardwareCustomItemsAsync();
+            }
+        }
+
+        private async void LoadHardwareTypes()
         {
             HardwareTypes.Clear();
             var types = await _typeRepository.GetAllAsync();            
 
             if(types != null)
                 HardwareTypes.AddRange(types);
-        }
-
-        private void InitializeHwCustomItems()
-        {
-            HardwareCustomItems.Clear();
-            foreach (var item in Hardware.Model.HardwareCustomItems)
-            {
-                HardwareCustomItems.Add(item);
-            }
         }
 
         private void InitializeHardware(Hardware hardware)

@@ -8,6 +8,7 @@ namespace ERService.CustomerModule.Wrapper
     {
         public CustomerWrapper(Customer model) : base(model)
         {
+
         }
 
         public Guid Id { get { return Model.Id; } }

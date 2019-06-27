@@ -7,9 +7,9 @@ using System;
 namespace ERService.Infrastructure.Wrapper
 {
     /// <summary>
-    /// Klasa opakowująca model, korzystamy z generyków przez co opakujemy każdy model. Wywołuje walidację. Ustawia propertisy Set Get.
+    /// Klasa opakowująca model. Wywołuje walidację. SetProperty ustawia i informuje subskrybentów o zmianie.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Model który chcemy opakować</typeparam>
     public class ModelWrapper<T> : NotifyDataErrorInfoBase
     {
         public T Model;
@@ -41,7 +41,7 @@ namespace ERService.Infrastructure.Wrapper
         }
 
         /// <summary>
-        /// Walidacja 2 etapowa: 1.Adnotacje 2.Custom error
+        /// Walidacja 2 etapowa: 1.Adnotacje w modelu krotki 2.Custom errors
         /// </summary>
         /// <param name="propertyName"></param>
         private void ValidatePropertyInternal(string propertyName, object currentValue)

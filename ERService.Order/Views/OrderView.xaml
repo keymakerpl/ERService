@@ -18,8 +18,7 @@
                 BorderBrush="LightGray" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto
-                                      "/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <DockPanel
@@ -70,9 +69,9 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -104,18 +103,20 @@
                            Content="Opis usterki:"/>
 
                     <TextBox Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
-                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"/>
+                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
+                             Text="{Binding Fault, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Opis naprawy:"/>
 
                     <TextBox Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
-                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"/>
+                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
+                             Text="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Załączniki:"/>
 
-                    <ListView Grid.Row="8" Grid.ColumnSpan="2" MinHeight="150" Margin="10 10 10 10"/>
+                    <ListView Grid.Row="8" Grid.ColumnSpan="2" MinHeight="120" Margin="10 10 10 10"/>
 
                 </Grid>
                 

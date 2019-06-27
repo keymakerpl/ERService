@@ -27,9 +27,11 @@ namespace ERService.Business
 
         [StringLength(50)]
         public string Number { get; set; }
-        
+
+        [Column(TypeName = "datetime2")]
         public DateTime DateAdded { get; set; }
-        
+
+        [Column(TypeName = "datetime2")]
         public DateTime DateEnded { get; set; }
 
         public OrderStatus OrderStatus { get; set; }

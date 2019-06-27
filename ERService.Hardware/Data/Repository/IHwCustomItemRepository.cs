@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ERService.Business;
+﻿using ERService.Business;
+using ERService.Infrastructure.Repositories;
 
 namespace ERService.HardwareModule.Data.Repository
 {
-    public interface IHwCustomItemRepository
+    public interface IHwCustomItemRepository : IGenericRepository<HwCustomItem>
     {
-        Task<IEnumerable<HwCustomItem>> GetAllAsync();
-        Task<HwCustomItem> GetByIdAsync(Guid id);
+
     }
 }

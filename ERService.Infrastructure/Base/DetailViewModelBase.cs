@@ -14,12 +14,18 @@ namespace ERService.Infrastructure.Base
     //TODO: Split to DetailViewModelBase and DetailModel?
     public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase
     {
+        public Guid ID { get; protected set; }
+        public bool AllowLoadAsync { get; set; } = true;
+
+        public ICommand SaveCommand { get; private set; }
+        public ICommand CloseCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+        
         protected readonly IEventAggregator EventAggregator;
         //protected readonly IMessageDialogService MessageDialogService;
+                
         private string _title;
         private bool _hasChanges;
-
-        public bool AllowLoadAsync { get; set; } = true;
 
         public DetailViewModelBase(IEventAggregator eventAggregator)
         {
@@ -28,15 +34,7 @@ namespace ERService.Infrastructure.Base
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute);
             CancelCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
-        }        
-
-        public ICommand SaveCommand { get; private set; }
-
-        public ICommand CloseCommand { get; set; }
-
-        public ICommand CancelCommand { get; set; }
-
-        public Guid ID { get; protected set; }
+        }                
 
         public string Title
         {
