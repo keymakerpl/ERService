@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ERService.Business;
+﻿using ERService.Business;
 using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
@@ -8,28 +6,21 @@ using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.CustomerModule.ViewModels
 {
     //TODO: Refactor Interface
     public class CustomerViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {                
-        private ICustomerRepository _repository;
-        private IRegionManager _regionManager;
-        private IRegionNavigationService _navigationService;
-
-        public DelegateCommand GoForwardCommand { get; private set; }
-        public DelegateCommand OrdersCommand { get; private set; }        
-
+    {
         private CustomerWrapper _customer;
-        public CustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
-
         private CustomerAddress _customerAddress;
-        public CustomerAddress CustomerAddress { get => _customerAddress ?? new CustomerAddress(); set { SetProperty(ref _customerAddress, value); } }
-
+        private IRegionNavigationService _navigationService;
+        private IRegionManager _regionManager;
+        private ICustomerRepository _repository;
         private bool _wizardMode;
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
             IEventAggregator eventAggregator) : base(eventAggregator)
@@ -41,15 +32,11 @@ namespace ERService.CustomerModule.ViewModels
             OrdersCommand = new DelegateCommand(OnOrdersCommandExecute, OnOrdersCommandCanExecute);
         }
 
-        private bool OnOrdersCommandCanExecute()
-        {
-            return !WizardMode;
-        }
-
-        private void OnOrdersCommandExecute()
-        {
-            
-        }
+        public CustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+        public CustomerAddress CustomerAddress { get => _customerAddress ?? new CustomerAddress(); set { SetProperty(ref _customerAddress, value); } }
+        public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand OrdersCommand { get; private set; }
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         //TODO: Refactor?
         public override async Task LoadAsync(Guid id)
@@ -63,9 +50,73 @@ namespace ERService.CustomerModule.ViewModels
             InitializeAddress(customer.CustomerAddresses.FirstOrDefault());
         }
 
-        private void InitializeAddress(CustomerAddress customerAddress)
+        #region Navigation
+
+        public bool KeepAlive { get { return true; } }
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            CustomerAddress = customerAddress ?? new CustomerAddress();
+            //TODO: Refactor to dialog service
+            var result = true;
+            if (HasChanges)
+            {
+                //result = MessageBox.Show("Continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+            }
+
+            continuationCallback(result);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            if (WizardMode)
+            {
+                AllowLoadAsync = false;
+            }
+        }
+
+        public async void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _navigationService = navigationContext.NavigationService;
+
+            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
+
+            var id = navigationContext.Parameters.GetValue<string>("ID");
+            if (!String.IsNullOrWhiteSpace(id) && AllowLoadAsync)
+            {
+                await LoadAsync(Guid.Parse(id));
+            }
+        }
+        #endregion Navigation
+
+        protected override bool OnCancelEditCanExecute() => true;
+
+        protected override void OnCancelEditExecute()
+        {
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+        }
+
+        protected override bool OnSaveCanExecute()
+        {
+            return Customer != null && !Customer.HasErrors && HasChanges && !WizardMode;
+        }
+
+        protected override async void OnSaveExecute()
+        {
+            AddAddress();
+
+            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
+            {
+                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
+                ID = Customer.Id; //odśwież Id friend wrappera
+
+                //Powiadom agregator eventów, że zapisano
+                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+            });
         }
 
         //TODO: Refactor to Generic and base class?
@@ -75,6 +126,11 @@ namespace ERService.CustomerModule.ViewModels
             _repository.Add(customer);
 
             return customer;
+        }
+
+        private void InitializeAddress(CustomerAddress customerAddress)
+        {
+            CustomerAddress = customerAddress ?? new CustomerAddress();
         }
 
         private void InitializeCustomer(Customer customer)
@@ -109,86 +165,11 @@ namespace ERService.CustomerModule.ViewModels
 
             if (ID == Guid.Empty)
             {
-                Customer.FirstName = ""; // takie se, trzeba tacznąć propertisa aby zadziałała walidacja nowego detalu
+                Customer.LastName = ""; // takie se, trzeba tacznąć propertisa aby zadziałała walidacja nowego detalu
                 Customer.PhoneNumber = "";
             }
-                
 
             SetTitle();
-        }
-
-        private void SetTitle()
-        {
-            Title = $"{Customer.FirstName} {Customer.LastName}";
-        }
-
-        protected override void OnCancelEditExecute()
-        {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
-        protected override bool OnCancelEditCanExecute() => true;
-
-        protected override bool OnSaveCanExecute()
-        {
-            return Customer != null && !Customer.HasErrors && HasChanges && !WizardMode;
-        }
-
-        protected override async void OnSaveExecute()
-        {
-            Customer.Model.CustomerAddresses.Clear();
-            Customer.Model.CustomerAddresses.Add(CustomerAddress);
-
-            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
-            {
-                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id friend wrappera                
-
-                //Powiadom agregator eventów, że zapisano
-                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
-            });
-        }
-
-        #region Navigation
-
-        public bool KeepAlive { get { return true; } }        
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-        
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            if (WizardMode)
-            {
-                AllowLoadAsync = false;
-            }
-        }
-
-        public async void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            _navigationService = navigationContext.NavigationService;
-
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
-
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id) && AllowLoadAsync)
-            {
-                await LoadAsync(Guid.Parse(id));
-            }
-        }
-
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        {
-            //TODO: Refactor to dialog service
-            var result = true;
-            if (HasChanges)
-            {
-                //result = MessageBox.Show("Continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
-            }
-
-            continuationCallback(result);
         }
 
         private bool OnGoForwardCanExecute()
@@ -198,6 +179,8 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnGoForwardExecute()
         {
+            AddAddress();
+
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
@@ -206,6 +189,24 @@ namespace ERService.CustomerModule.ViewModels
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.HardwareView, parameters);
         }
 
-        #endregion
+        private void AddAddress()
+        {
+            Customer.Model.CustomerAddresses.Clear();
+            Customer.Model.CustomerAddresses.Add(CustomerAddress);
+        }
+
+        private bool OnOrdersCommandCanExecute()
+        {
+            return !WizardMode;
+        }
+
+        private void OnOrdersCommandExecute()
+        {
+        }
+
+        private void SetTitle()
+        {
+            Title = $"{Customer.FirstName} {Customer.LastName}";
+        }
     }
 }

@@ -13,16 +13,7 @@ namespace ERService.HardwareModule.Data.Repository
     {
         public CustomItemRepository(ERServiceDbContext context) : base(context)
         {
-        }
 
-        public override Task<IEnumerable<CustomItem>> GetAllAsync()
-        {
-            return base.GetAllAsync();
-        }
-
-        public override Task<CustomItem> GetByIdAsync(Guid id)
-        {
-            return base.GetByIdAsync(id);
         }
 
         [Obsolete]
@@ -33,14 +24,5 @@ namespace ERService.HardwareModule.Data.Repository
             return result.FindAll(e => e.HardwareType.Id == typeId);
         }
 
-        public List<string> GetCustomItemsByHardwareType(Guid typeId)
-        {
-            var result = from h in Context.HardwareTypes
-                         join c in Context.CustomItems on h.Id equals c.HardwareType.Id
-                         where c.HardwareType.Id == typeId
-                         select c.Key;
-
-            return result.ToList();
-        }
     }
 }

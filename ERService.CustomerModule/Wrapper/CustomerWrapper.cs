@@ -27,11 +27,11 @@ namespace ERService.CustomerModule.Wrapper
             set { SetProperty(ref _lastName, value); }
         }
 
-        private string _customerName;
-        public string CustomerName
+        private string _companyName;
+        public string CompanyName
         {
             get { return GetValue<string>(); }
-            set { SetProperty(ref _customerName, value); }
+            set { SetProperty(ref _companyName, value); }
         }
 
         private string _nip;

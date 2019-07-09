@@ -14,18 +14,10 @@ namespace ERService.Infrastructure.Base
     //TODO: Split to DetailViewModelBase and DetailModel?
     public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase
     {
-        public Guid ID { get; protected set; }
-        public bool AllowLoadAsync { get; set; } = true;
-
-        public ICommand SaveCommand { get; private set; }
-        public ICommand CloseCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
-        
         protected readonly IEventAggregator EventAggregator;
         //protected readonly IMessageDialogService MessageDialogService;
-                
-        private string _title;
         private bool _hasChanges;
+        private string _title;
 
         public DetailViewModelBase(IEventAggregator eventAggregator)
         {
@@ -34,17 +26,11 @@ namespace ERService.Infrastructure.Base
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute);
             CancelCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
-        }                
-
-        public string Title
-        {
-            get { return _title; }
-            protected set
-            {
-                _title = value;
-                RaisePropertyChanged();
-            }
         }
+
+        public bool AllowLoadAsync { get; set; } = true;
+        public ICommand CancelCommand { get; set; }
+        public ICommand CloseCommand { get; set; }
 
         /// <summary>
         /// Właściwośc pomocnicza do przechowania zmiany z repo, odpala even jeśli w repo zaszły  zmiany
@@ -63,7 +49,58 @@ namespace ERService.Infrastructure.Base
             }
         }
 
+        public Guid ID { get; protected set; }
+        public ICommand SaveCommand { get; private set; }
+        public string Title
+        {
+            get { return _title; }
+            protected set
+            {
+                _title = value;
+                RaisePropertyChanged();
+            }
+        }
         public abstract Task LoadAsync(Guid id);
+
+        protected abstract bool OnCancelEditCanExecute();
+
+        protected abstract void OnCancelEditExecute();
+
+        protected virtual void OnCloseDetailViewExecute()
+        {
+            //TODO: MessageService
+            if (HasChanges)
+            {
+                //var result = await MessageDialogService.ShowOkCancelDialog("Continue and Cancel changes?", Title);
+                var result = MessageBox.Show("Leave changes?", "Continue?", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            EventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs()
+            {
+                Id = this.ID,
+                ViewModelName = this.GetType().Name
+            });
+        }
+
+        protected abstract bool OnSaveCanExecute();
+
+        protected abstract void OnSaveExecute();
+
+        protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
+        {
+            EventAggregator.GetEvent<AfterDetailSavedEvent>()
+                .Publish(new AfterDetailSavedEventArgs()
+                {
+                    Id = modelId,
+                    DisplayMember = displayMember,
+                    ViewModelName = this.GetType().Name
+                });
+        }
 
         /// <summary>
         /// Zapisuje optymistycznie, ze sprawdzaniem czy nadpisać
@@ -105,47 +142,6 @@ namespace ERService.Infrastructure.Base
             }
 
             afterSaveAction();
-        }        
-
-        //TODO: OnSave* Raczej do wywalenia, nie każda dziedzicząca będzie z tego korzystać. Bądźmy SOLID. 
-        protected abstract void OnSaveExecute();
-
-        protected abstract bool OnSaveCanExecute();
-
-        protected abstract void OnCancelEditExecute();
-
-        protected abstract bool OnCancelEditCanExecute();
-
-        protected virtual void OnCloseDetailViewExecute()
-        {
-            //TODO: MessageService
-            if (HasChanges)
-            {
-                //var result = await MessageDialogService.ShowOkCancelDialog("Continue and Cancel changes?", Title);
-                var result = MessageBox.Show("Leave changes?", "Continue?", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
-            }
-
-            EventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs()
-            {
-                Id = this.ID,
-                ViewModelName = this.GetType().Name
-            });
-        }
-
-        protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
-        {
-            EventAggregator.GetEvent<AfterDetailSavedEvent>()
-                .Publish(new AfterDetailSavedEventArgs()
-                {
-                    Id = modelId,
-                    DisplayMember = displayMember,
-                    ViewModelName = this.GetType().Name
-                });
         }
     }
 }

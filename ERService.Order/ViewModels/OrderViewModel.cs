@@ -12,24 +12,14 @@ using System.Threading.Tasks;
 namespace ERService.OrderModule.ViewModels
 {
     public class OrderViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {        
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
-
-        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
-
-        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
-
-        public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
-
-        public DelegateCommand GoBackCommand { get; private set; }
-
-        private bool _wizardMode;
-        private OrderWrapper _order;
+    {
         private Customer _customer;
         private Hardware _hardware;
-        private IOrderRepository _repository;
+        private OrderWrapper _order;
         private IRegionManager _regionManager;
+        private IOrderRepository _repository;
         private IRegionNavigationService _navigationService;
+        private bool _wizardMode;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
@@ -39,12 +29,13 @@ namespace ERService.OrderModule.ViewModels
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
         }
 
-        #region Navigation
+        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+        public DelegateCommand GoBackCommand { get; private set; }
+        public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+        public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
-        private void OnGoBackExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
+        #region Navigation
 
         public bool KeepAlive => false;
 
@@ -60,7 +51,6 @@ namespace ERService.OrderModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -94,10 +84,14 @@ namespace ERService.OrderModule.ViewModels
                 //    await LoadAsync(Guid.Parse(id));
                 //}
             }
-
         }
 
-        #endregion
+        private void OnGoBackExecute()
+        {
+            _navigationService.Journal.GoBack();
+        }
+
+        #endregion Navigation
 
         #region Overrides
 
@@ -108,14 +102,45 @@ namespace ERService.OrderModule.ViewModels
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
-            
+
             InitializeOrder(order);
+        }
+
+        protected override bool OnCancelEditCanExecute()
+        {
+            return true;
+        }
+
+        protected override void OnCancelEditExecute()
+        {
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+        }
+
+        protected override bool OnSaveCanExecute()
+        {
+            return true;
+        }
+
+        protected async override void OnSaveExecute()
+        {
+            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
+            {
+                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
+                ID = Customer.Id; //odśwież Id friend wrappera
+
+                //Powiadom agregator eventów, że zapisano
+                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            });
         }
 
         //TODO: Refactor?
         private Order GetNewDetail()
         {
             var order = new Order();
+            order.DateAdded = DateTime.Now;
+            order.DateEnded = DateTime.Now.AddDays(14);
+            order.Number = OrderNumberGenerator.GetNext();
             _repository.Add(order);
 
             return order;
@@ -148,12 +173,6 @@ namespace ERService.OrderModule.ViewModels
             });
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
-            if (ID == Guid.Empty)
-            {
-                Order.Number = "";
-            }
-
-
             SetTitle();
         }
 
@@ -161,35 +180,15 @@ namespace ERService.OrderModule.ViewModels
         {
             Title = $"{Order.Number}";
         }
+        #endregion Overrides
+    }
 
-        protected override bool OnCancelEditCanExecute()
+    internal class OrderNumberGenerator
+    {
+        internal static string GetNext()
         {
-            return true;
+            //TODO: Random number generator
+            return new Random().Next().ToString();
         }
-
-        protected override void OnCancelEditExecute()
-        {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
-        protected override bool OnSaveCanExecute()
-        {
-            return true;
-        }
-
-        protected async override void OnSaveExecute()
-        {
-            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
-            {
-                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id friend wrappera                
-
-                //Powiadom agregator eventów, że zapisano
-                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
-                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            });
-        }
-
-        #endregion
     }
 }

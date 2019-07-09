@@ -92,6 +92,8 @@
 
                     <Label Grid.Column="2" Grid.Row="0" Content="Urządzenie:" FontSize="18" FontWeight="Bold"/>
                     <Label Grid.Column="2" Grid.Row="1" Content="Nazwa urządzenia:" FontSize="14"/>
+                    <Label Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" 
+                           Content="{Binding Hardware.Name}"/>
 
                     <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" 
                            Content="{Binding Customer.FirstName}"/>
@@ -104,20 +106,27 @@
 
                     <TextBox Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
                              TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
-                             Text="{Binding Fault, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Opis naprawy:"/>
 
                     <TextBox Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
                              TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
-                             Text="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Załączniki:"/>
 
                     <ListView Grid.Row="8" Grid.ColumnSpan="2" MinHeight="120" Margin="10 10 10 10"/>
 
+                    <Label Grid.Column="2" Grid.Row="7" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
+                           Content="Komentarz:"/>
+
+                    <TextBox Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="2" AcceptsReturn="True"
+                             TextWrapping="Wrap" MinLines="5" Margin="10 10 10 10"
+                             Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
                 </Grid>
                 
             </ScrollViewer>
