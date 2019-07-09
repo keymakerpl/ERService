@@ -73,6 +73,8 @@
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\OrderStatusWrapper.cs" />
+    <Compile Include="Wrapper\OrderTypeWrapper.cs" />
     <Compile Include="Wrapper\OrderWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

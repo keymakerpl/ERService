@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
-using System.Linq;
-using System;
 
 namespace ERService.Infrastructure.Wrapper
 {
@@ -24,19 +22,11 @@ namespace ERService.Infrastructure.Wrapper
             return (TValue)typeof(T).GetProperty(propertyName).GetValue(Model);
         }
 
-        //TODO: Do wywalnia, możemy korzystać z BindableBase Prisma override SetProperty + Validate
-        [Obsolete]
-        protected virtual void SetValue<TValue>(TValue value, [CallerMemberName]string propertyName = null)
-        {
-            typeof(T).GetProperty(propertyName).SetValue(Model, value);
-            RaisePropertyChanged(propertyName);
-            ValidatePropertyInternal(propertyName, value);
-        }
-
         protected override bool SetProperty<TValue>(ref TValue storage, TValue value, [CallerMemberName] string propertyName = null)
         {
             typeof(T).GetProperty(propertyName).SetValue(Model, value);
             ValidatePropertyInternal(propertyName, value);
+
             return base.SetProperty(ref storage, value, propertyName);
         }
 
