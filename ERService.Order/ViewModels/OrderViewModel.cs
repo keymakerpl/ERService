@@ -1,4 +1,5 @@
 ﻿using ERService.Business;
+using ERService.HardwareModule.Data.Repository;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.OrderModule.Repository;
@@ -7,6 +8,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ERService.OrderModule.ViewModels
@@ -15,24 +17,55 @@ namespace ERService.OrderModule.ViewModels
     {
         private Customer _customer;
         private Hardware _hardware;
-        private OrderWrapper _order;
-        private IRegionManager _regionManager;
-        private IOrderRepository _repository;
         private IRegionNavigationService _navigationService;
+        private OrderWrapper _order;
+        private IOrderRepository _orderRepository;
+        private IRegionManager _regionManager;
+        private OrderStatus _selectedOrderStatus;
+        private OrderType _selectedOrderType;
+        private IOrderStatusRepository _statusRepository;
+        private IOrderTypeRepository _typeRepository;
+
         private bool _wizardMode;
 
-        public OrderViewModel(IRegionManager regionManager, IOrderRepository repository, IEventAggregator eventAggregator) : base(eventAggregator)
+        public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
+            IOrderStatusRepository statusRepository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            _repository = repository;
+            _orderRepository = orderRepository;
+            _typeRepository = typeRepository;
+            _statusRepository = statusRepository;
             _regionManager = regionManager;
+
+            OrderStatuses = new ObservableCollection<OrderStatus>();
+            OrderTypes = new ObservableCollection<OrderType>();
 
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
         }
 
         public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+
         public DelegateCommand GoBackCommand { get; private set; }
+
         public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+
         public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
+
+        public ObservableCollection<OrderStatus> OrderStatuses { get; private set; }
+
+        public ObservableCollection<OrderType> OrderTypes { get; private set; }
+
+        public OrderStatus SelectedOrderStatus
+        {
+            get { return _selectedOrderStatus; }
+            set { SetProperty(ref _selectedOrderStatus, value); Order.Model.OrderStatusId = value.Id; }
+        }
+
+        public OrderType SelectedOrderType
+        {
+            get { return _selectedOrderType; }
+            set { SetProperty(ref _selectedOrderType, value); Order.Model.OrderTypeId = value.Id; }
+        }
+
         public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         #region Navigation
@@ -98,12 +131,13 @@ namespace ERService.OrderModule.ViewModels
         //TODO: Refactor?
         public override async Task LoadAsync(Guid id)
         {
-            var order = id != Guid.Empty ? await _repository.GetByIdAsync(id) : GetNewDetail();
+            var order = id != Guid.Empty ? await _orderRepository.GetByIdAsync(id) : GetNewDetail();
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
 
             InitializeOrder(order);
+            InitializeComboBoxes();
         }
 
         protected override bool OnCancelEditCanExecute()
@@ -123,10 +157,10 @@ namespace ERService.OrderModule.ViewModels
 
         protected async override void OnSaveExecute()
         {
-            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
+            await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
             {
-                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id friend wrappera
+                HasChanges = _orderRepository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
+                ID = Customer.Id; //odśwież Id
 
                 //Powiadom agregator eventów, że zapisano
                 RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
@@ -141,9 +175,15 @@ namespace ERService.OrderModule.ViewModels
             order.DateAdded = DateTime.Now;
             order.DateEnded = DateTime.Now.AddDays(14);
             order.Number = OrderNumberGenerator.GetNext();
-            _repository.Add(order);
+            _orderRepository.Add(order);
 
             return order;
+        }
+
+        private void InitializeComboBoxes()
+        {
+            LoadOrderStatusesAsync();
+            LoadOrderTypesAsync();
         }
 
         private void InitializeOrder(Order order)
@@ -156,7 +196,7 @@ namespace ERService.OrderModule.ViewModels
             {
                 if (!HasChanges)
                 {
-                    HasChanges = _repository.HasChanges();
+                    HasChanges = _orderRepository.HasChanges();
                     ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
                 }
 
@@ -176,10 +216,31 @@ namespace ERService.OrderModule.ViewModels
             SetTitle();
         }
 
+        private async void LoadOrderStatusesAsync()
+        {
+            OrderStatuses.Clear();
+            var statuses = await _statusRepository.GetAllAsync();
+            foreach (var status in statuses)
+            {
+                OrderStatuses.Add(status);
+            }
+        }
+
+        private async void LoadOrderTypesAsync()
+        {
+            OrderTypes.Clear();
+            var types = await _typeRepository.GetAllAsync();
+            foreach (var type in types)
+            {
+                OrderTypes.Add(type);
+            }
+        }
+
         private void SetTitle()
         {
             Title = $"{Order.Number}";
         }
+
         #endregion Overrides
     }
 

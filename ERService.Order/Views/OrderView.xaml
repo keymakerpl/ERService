@@ -78,7 +78,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="25"/>
@@ -100,6 +100,26 @@
 
                     <Label Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" 
                            Content="{Binding Customer.LastName}"/>
+
+                    <Label Grid.Column="0" Grid.Row="3" 
+                           Content="Status naprawy:" 
+                           FontSize="14"
+                           Margin="0 10 0 10"/>
+                    <ComboBox Grid.Column="1" Grid.Row="3" Margin="10"
+                              ItemsSource="{Binding OrderStatuses}"
+                              SelectedItem="{Binding SelectedOrderStatus}"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="Id"/>
+
+                    <Label Grid.Column="2" Grid.Row="3" 
+                           Content="Typ naprawy:" 
+                           FontSize="14"
+                           Margin="0 10 0 10"/>
+                    <ComboBox Grid.Column="3" Grid.Row="3" Margin="10"
+                              ItemsSource="{Binding OrderTypes}"
+                              SelectedItem="{Binding SelectedOrderType}"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="Id"/>
 
                     <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Opis usterki:"/>
