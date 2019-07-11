@@ -34,7 +34,7 @@
                     Width="120"
                             Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                     <Button Content="Naprawy"
-                    Command="{Binding CustomerOrdersCommand}"
+                    Command="{Binding OrdersCommand}"
                     Margin="5 10 10 10"
                     Foreground="Black"
                     Background="GhostWhite"

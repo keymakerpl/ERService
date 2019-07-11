@@ -108,6 +108,14 @@
     <Compile Include="Migrations\201906221237057_AddedHwTypeIdToCustomItem.Designer.cs">
       <DependentUpon>201906221237057_AddedHwTypeIdToCustomItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906261722208_AddeddATETIME2.cs" />
+    <Compile Include="Migrations\201906261722208_AddeddATETIME2.Designer.cs">
+      <DependentUpon>201906261722208_AddeddATETIME2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907100621088_AddedOrderStatusTypeId.cs" />
+    <Compile Include="Migrations\201907100621088_AddedOrderStatusTypeId.Designer.cs">
+      <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -164,6 +172,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906221237057_AddedHwTypeIdToCustomItem.resx">
       <DependentUpon>201906221237057_AddedHwTypeIdToCustomItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261722208_AddeddATETIME2.resx">
+      <DependentUpon>201906261722208_AddeddATETIME2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907100621088_AddedOrderStatusTypeId.resx">
+      <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

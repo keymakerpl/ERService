@@ -8,9 +8,9 @@ namespace ERService.Settings.ViewModels
 {
     public class GeneralSettingsViewModel : BindableBase
     {
-        public string Title { get { return "General Settings"; } }
+        public string Title { get { return "Ogólne"; } }
 
-        public string Content { get { return "General Settings"; } }
+        public string Content { get { return "Ustawienia ogólne"; } }
 
         public GeneralSettingsViewModel()
         {

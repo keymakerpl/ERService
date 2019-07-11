@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ERService.Settings.Views
 {
     /// <summary>
-    /// Interaction logic for CustomItemsView.xaml
+    /// Interaction logic for StatusConfigView.xaml
     /// </summary>
-    public partial class CustomItemsView : UserControl
+    public partial class StatusConfigView : UserControl
     {
-        public CustomItemsView()
+        public StatusConfigView()
         {
             InitializeComponent();
         }

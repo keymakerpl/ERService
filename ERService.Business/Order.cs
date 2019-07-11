@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -27,13 +26,17 @@ namespace ERService.Business
 
         [StringLength(50)]
         public string Number { get; set; }
-        
+
+        [Column(TypeName = "datetime2")]
         public DateTime DateAdded { get; set; }
-        
+
+        [Column(TypeName = "datetime2")]
         public DateTime DateEnded { get; set; }
 
+        public Guid OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; }
 
+        public Guid OrderTypeId { get; set; }
         public OrderType OrderType { get; set; }
 
         [StringLength(50)]

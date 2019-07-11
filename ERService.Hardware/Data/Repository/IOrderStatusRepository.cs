@@ -3,7 +3,7 @@ using ERService.Infrastructure.Repositories;
 
 namespace ERService.HardwareModule.Data.Repository
 {
-    public interface IHwCustomItemRepository : IGenericRepository<HwCustomItem>
+    public interface IOrderStatusRepository : IGenericRepository<OrderStatus>
     {
 
     }

@@ -4,59 +4,51 @@ using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.HardwareModule.ViewModels
 {
+    public class DisblayableCustomItem : BindableBase
+    {
+        private CustomItem _customItem;
+        private HwCustomItem _hwCustomItem;
+        public CustomItem CustomItem { get { return _customItem; } set { SetProperty(ref _customItem, value); } }
+        public HwCustomItem HwCustomItem { get { return _hwCustomItem; } set { SetProperty(ref _hwCustomItem, value); } }
+    }
+
     public class HardwareViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {       
-        private bool _wizardMode;
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
-
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand GoForwardCommand { get; private set; }
-
-        public HardwareWrapper _hardware;
-        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
-
-        public HardwareType _selectedHardwareType;
-        public HardwareType SelectedHardwareType { get => _selectedHardwareType; set { SetProperty(ref _selectedHardwareType, value); } }
-
+    {
         public ObservableCollection<HwCustomItem> HardwareCustomItems;
-
-        public ObservableCollection<HardwareType> _hardwareTypes;
-        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
-
         private Customer _customer;
-        public Customer Customer
-        {
-            get { return _customer; }
-            set { SetProperty(ref _customer, value); }
-        }
-
+        private ICustomItemRepository _customItemRepository;
+        private ObservableCollection<DisblayableCustomItem> _displayableCustomItems;
+        private HardwareWrapper _hardware;
+        private ObservableCollection<HardwareType> _hardwareTypes;
+        private IRegionNavigationService _navigationService;
         private IRegionManager _regionManager;
         private IHardwareRepository _repository;
+        private HardwareType _selectedHardwareType;
         private IHardwareTypeRepository _typeRepository;
-        private ICustomItemRepository _customItemRepository;
-        private IRegionNavigationService _navigationService;
+        private bool _wizardMode;
 
         public HardwareViewModel(IHardwareRepository repository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
             IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec kompozyt? Aby wrzucić repo w jedno miejsce
+            //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec Fasada? Aby wrzucić repo w jedno miejsce
             _regionManager = regionManager;
             _repository = repository;
             _typeRepository = typeRepository;
             _customItemRepository = customItemRepository;
 
             HardwareCustomItems = new ObservableCollection<HwCustomItem>();
-            HardwareTypes= new ObservableCollection<HardwareType>();
+            HardwareTypes = new ObservableCollection<HardwareType>();
+            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();
 
             PropertyChanged += HardwareViewModel_PropertyChanged;
 
@@ -64,73 +56,56 @@ namespace ERService.HardwareModule.ViewModels
             GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
         }
 
-        private void HardwareViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public Customer Customer
         {
-            if (e.PropertyName == "SelectedHardwareType" )
+            get { return _customer; }
+            set { SetProperty(ref _customer, value); }
+        }
+
+        public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems
+        {
+            get => _displayableCustomItems;
+            set
             {
-                LoadCustomItems();
+                SetProperty(ref _displayableCustomItems, value);
             }
         }
 
-        private void LoadCustomItems()
-        {
-            var list = _customItemRepository.GetCustomItemsByHardwareType(SelectedHardwareType.Id);
-        }
-
-        private bool OnGoForwardCanExecute()
-        {
-            return true;
-        }
-
-        private void OnGoForwardExecute()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", Guid.Empty);
-            parameters.Add("Wizard", true);
-            parameters.Add("Customer", Customer);
-
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
-        }
-
-        private void OnGoBackExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
+        public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand GoForwardCommand { get; private set; }
+        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
+        public HardwareType SelectedHardwareType { get => _selectedHardwareType; set { SetProperty(ref _selectedHardwareType, value); } }
+        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
         public override async Task LoadAsync(Guid id)
         {
             var hardware = id != Guid.Empty ? await _repository.GetByIdAsync(id) : GetNewDetail();
-            
+
             //TODO: Można to przypisanie id zrobić niżej w bazowych?
             ID = id;
 
             InitializeHardware(hardware);
-            InitializeHwCustomItems();
-            InitializeHardwareTypes();
-
+            LoadHardwareTypes();
         }
 
-        private async void InitializeHardwareTypes()
+        protected override bool OnCancelEditCanExecute()
         {
-            HardwareTypes.Clear();
-            var types = await _typeRepository.GetAllAsync();            
-
-            if(types != null)
-                HardwareTypes.AddRange(types);
+            return true;
         }
 
-        private void InitializeHwCustomItems()
+        protected override void OnCancelEditExecute()
         {
-            HardwareCustomItems.Clear();
-            foreach (var item in Hardware.Model.HardwareCustomItems)
-            {
-                HardwareCustomItems.Add(item);
-            }
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
         }
 
-        private void InitializeHardware(Hardware hardware)
+        protected override bool OnSaveCanExecute()
         {
-            Hardware = new HardwareWrapper(hardware);
+            return !WizardMode;
+        }
+
+        protected override void OnSaveExecute()
+        {
         }
 
         private Hardware GetNewDetail()
@@ -141,29 +116,100 @@ namespace ERService.HardwareModule.ViewModels
             return Hardware;
         }
 
-        protected override void OnSaveExecute()
+        private async void HardwareViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-           
+            if (e.PropertyName == "SelectedHardwareType")
+            {
+                await LoadHardwareCustomItemsAsync();
+            }
         }
 
-        protected override bool OnSaveCanExecute()
+        private void InitializeHardware(Hardware hardware)
         {
-            return !WizardMode;
+            Hardware = new HardwareWrapper(hardware);
         }
 
-        protected override void OnCancelEditExecute()
+        private async Task LoadHardwareCustomItemsAsync()
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            var items = await _customItemRepository
+                .FindByAsync(i => i.HardwareTypeId == SelectedHardwareType.Id);
+
+            HardwareCustomItems.Clear();
+            foreach (var item in items)
+            {
+                HardwareCustomItems
+                    .Add(new HwCustomItem
+                    { CustomItemId = item.Id, Hardware = Hardware.Model, Value = "" });
+            }
+
+            var query = from hci in HardwareCustomItems
+                        from ci in items
+                        where hci.CustomItemId == ci.Id
+                        select new DisblayableCustomItem { HwCustomItem = hci, CustomItem = ci };
+
+            var result = query.ToList();
+
+            DisplayableCustomItems.Clear();
+            DisplayableCustomItems.AddRange(result);
         }
 
-        protected override bool OnCancelEditCanExecute()
+        private async void LoadHardwareTypes()
+        {
+            HardwareTypes.Clear();
+            var types = await _typeRepository.GetAllAsync();
+
+            if (types != null)
+                HardwareTypes.AddRange(types);
+        }
+
+        private void OnGoBackExecute()
+        {
+            _navigationService.Journal.GoBack();
+        }
+
+        private bool OnGoForwardCanExecute()
         {
             return true;
+        }
+
+        private void OnGoForwardExecute()
+        {
+            Hardware.Model.HardwareCustomItems.Clear();
+            foreach (var item in DisplayableCustomItems)
+            {
+                Hardware.Model.HardwareCustomItems.Add(item.HwCustomItem);
+            }
+
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", Guid.Empty);
+            parameters.Add("Wizard", true);
+            parameters.Add("Customer", Customer);
+            parameters.Add("Hardware", Hardware.Model);
+
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
         }
 
         #region Navigation
 
         public bool KeepAlive => true;
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            continuationCallback(true);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            if (WizardMode)
+            {
+                AllowLoadAsync = false;
+            }
+        }
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -181,24 +227,6 @@ namespace ERService.HardwareModule.ViewModels
             }
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            if (WizardMode)
-            {
-                AllowLoadAsync = false;
-            }
-        }
-
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        {
-            continuationCallback(true);
-        }
-
-        #endregion
+        #endregion Navigation
     }
 }

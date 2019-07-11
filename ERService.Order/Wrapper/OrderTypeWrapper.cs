@@ -1,18 +1,12 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Wrapper;
-using System;
 
-namespace ERService.HardwareModule.Wrapper
+namespace ERService.OrderModule.Wrapper
 {
-    public class HardwareTypeWrapper : ModelWrapper<HardwareType>
+    public class OrderTypeWrapper : ModelWrapper<OrderType>
     {
-        public HardwareTypeWrapper(HardwareType model) : base(model)
+        public OrderTypeWrapper(OrderType model) : base(model)
         {
-        }
-
-        public Guid Id
-        {
-            get { return Model.Id; }
         }
 
         private string _name;

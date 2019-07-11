@@ -53,6 +53,8 @@ namespace ERService.Application
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
             containerRegistry.Register<IHardwareTypeRepository, HardwareTypeRepository>();
             containerRegistry.Register<ICustomItemRepository, CustomItemRepository>();
+            containerRegistry.Register<IOrderStatusRepository, OrderStatusRepository>();
+            containerRegistry.Register<IOrderTypeRepository, OrderTypeRepository>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
@@ -60,9 +62,9 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
-            containerRegistry.RegisterForNavigation<CustomItemsView>(ViewNames.CustomItemsView);
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
             containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
+            containerRegistry.RegisterForNavigation<StatusConfigView>(typeof(StatusConfigView).FullName);
         }
     }
 }
