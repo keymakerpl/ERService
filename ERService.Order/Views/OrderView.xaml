@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ERService.OrderModule.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="800"
+             d:DesignHeight="750" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid Background="White">
@@ -81,7 +81,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -90,10 +92,39 @@
                     <Label Grid.Row="1" Content="Imię:" FontSize="14"/>
                     <Label Grid.Row="2" Content="Nazwisko:" FontSize="14"/>
 
-                    <Label Grid.Column="2" Grid.Row="0" Content="Urządzenie:" FontSize="18" FontWeight="Bold"/>
-                    <Label Grid.Column="2" Grid.Row="1" Content="Nazwa urządzenia:" FontSize="14"/>
-                    <Label Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" 
+                    <Label Grid.Column="2" Grid.Row="0" Content="Numer naprawy:" FontSize="18" FontWeight="Bold"/>
+                    <Label Grid.Column="2" Grid.Row="1" Content="Postęp:" FontSize="14"/>
+                    <Slider Grid.Row="1" Grid.Column="3" Minimum="0" Maximum="100"
+                            Width="200"
+                            HorizontalAlignment="Left"
+                            Margin="10 5 10 5"
+                            Style="{DynamicResource FlatSlider}"
+                            Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </Slider>
+
+                    <Label Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left"
+                           FontWeight="Bold"
+                           Content="{Binding Number}"/>
+                    <Label Grid.Column="2" Grid.Row="2" Content="Nazwa urządzenia:" FontSize="14"/>
+                    <Label Grid.Column="3" Grid.Row="2" HorizontalAlignment="Left" 
                            Content="{Binding Hardware.Name}"/>
+                    
+                    <Label Grid.Column="2" Grid.Row="3" Content="Numer zewnętrzny:" 
+                           FontSize="14" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Grid.Column="3" Grid.Row="3"
+                             HorizontalAlignment="Left"
+                             Width="150"
+                             Margin="10"/>
+
+                    <Label Grid.Column="2" Grid.Row="4" Content="Koszt naprawy:" 
+                           FontSize="14"
+                           VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Grid.Column="3" Grid.Row="4"
+                             Margin="10"
+                             Width="150"
+                             HorizontalAlignment="Left"/>
 
                     <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" 
                            Content="{Binding Customer.FirstName}"/>
@@ -109,43 +140,52 @@
                               ItemsSource="{Binding OrderStatuses}"
                               SelectedItem="{Binding SelectedOrderStatus}"
                               DisplayMemberPath="Name"
-                              SelectedValuePath="Id"/>
+                              SelectedValuePath="Id"
+                              Width="180"
+                              HorizontalAlignment="Left"/>
 
-                    <Label Grid.Column="2" Grid.Row="3" 
+                    <Label Grid.Column="0" Grid.Row="4" 
                            Content="Typ naprawy:" 
                            FontSize="14"
                            Margin="0 10 0 10"/>
-                    <ComboBox Grid.Column="3" Grid.Row="3" Margin="10"
+                    <ComboBox Grid.Column="1" Grid.Row="4" Margin="10"
                               ItemsSource="{Binding OrderTypes}"
                               SelectedItem="{Binding SelectedOrderType}"
                               DisplayMemberPath="Name"
-                              SelectedValuePath="Id"/>
+                              SelectedValuePath="Id"
+                              Width="180"
+                              HorizontalAlignment="Left"/>
 
-                    <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
+                    <Label Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Opis usterki:"/>
 
-                    <TextBox Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
+                    <TextBox Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" AcceptsReturn="True"
                              TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
                              Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <Label Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
+                    <Label Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Opis naprawy:"/>
 
-                    <TextBox Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2" AcceptsReturn="True"
+                    <TextBox Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="2" AcceptsReturn="True"
                              TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
                              Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
+                    <Label Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Załączniki:"/>
 
-                    <ListView Grid.Row="8" Grid.ColumnSpan="2" MinHeight="120" Margin="10 10 10 10"/>
+                    <ListView Grid.Row="9" Grid.ColumnSpan="2" MinHeight="120" Margin="10 10 10 10"/>
 
-                    <Label Grid.Column="2" Grid.Row="7" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
+                    <Label Grid.Column="2" Grid.Row="8" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Komentarz:"/>
 
-                    <TextBox Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="2" AcceptsReturn="True"
+                    <TextBox Grid.Column="2" Grid.Row="9" Grid.ColumnSpan="2" AcceptsReturn="True"
                              TextWrapping="Wrap" MinLines="5" Margin="10 10 10 10"
                              Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <StackPanel Grid.Row="10" Grid.ColumnSpan="2">
+                        <Button Content="Dodaj" Width="120" HorizontalAlignment="Right"/>
+                        <Button Content="Usuń" Width="120" HorizontalAlignment="Right"/>
+                    </StackPanel>
                     
                 </Grid>
                 

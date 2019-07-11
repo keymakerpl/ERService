@@ -27,6 +27,8 @@ namespace ERService.OrderModule.ViewModels
         private IOrderTypeRepository _typeRepository;
 
         private bool _wizardMode;
+        private string _cost;
+        private string _externalNumber;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator) : base(eventAggregator)
@@ -41,6 +43,10 @@ namespace ERService.OrderModule.ViewModels
 
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
         }
+
+        public string Cost { get => _cost; set { SetProperty(ref _cost, value); } }
+
+        public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
 
         public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
 
