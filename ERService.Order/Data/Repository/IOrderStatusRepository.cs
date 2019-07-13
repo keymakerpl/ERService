@@ -1,7 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Repositories;
 
-namespace ERService.HardwareModule.Data.Repository
+namespace ERService.OrderModule.Repository
 {
     public interface IOrderStatusRepository : IGenericRepository<OrderStatus>
     {

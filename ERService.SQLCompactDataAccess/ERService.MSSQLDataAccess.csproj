@@ -116,6 +116,26 @@
     <Compile Include="Migrations\201907100621088_AddedOrderStatusTypeId.Designer.cs">
       <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907111322481_AddedBlobsAttachments.cs" />
+    <Compile Include="Migrations\201907111322481_AddedBlobsAttachments.Designer.cs">
+      <DependentUpon>201907111322481_AddedBlobsAttachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907111724175_AddedBlobsSize.cs" />
+    <Compile Include="Migrations\201907111724175_AddedBlobsSize.Designer.cs">
+      <DependentUpon>201907111724175_AddedBlobsSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907111852282_AddedBlobOrderId.cs" />
+    <Compile Include="Migrations\201907111852282_AddedBlobOrderId.Designer.cs">
+      <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907111854456_AddedBlobOrder.cs" />
+    <Compile Include="Migrations\201907111854456_AddedBlobOrder.Designer.cs">
+      <DependentUpon>201907111854456_AddedBlobOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.cs" />
+    <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.Designer.cs">
+      <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -178,6 +198,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907100621088_AddedOrderStatusTypeId.resx">
       <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111322481_AddedBlobsAttachments.resx">
+      <DependentUpon>201907111322481_AddedBlobsAttachments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111724175_AddedBlobsSize.resx">
+      <DependentUpon>201907111724175_AddedBlobsSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111852282_AddedBlobOrderId.resx">
+      <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111854456_AddedBlobOrder.resx">
+      <DependentUpon>201907111854456_AddedBlobOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.resx">
+      <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

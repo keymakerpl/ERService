@@ -112,7 +112,7 @@ namespace ERService.CustomerModule.ViewModels
             await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
             {
                 HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id friend wrappera
+                ID = Customer.Id; //odśwież Id wrappera
 
                 //Powiadom agregator eventów, że zapisano
                 RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");

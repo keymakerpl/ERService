@@ -57,10 +57,6 @@
     <Compile Include="Data\Repository\IHardwareRepository.cs" />
     <Compile Include="Data\Repository\IHardwareTypeRepository.cs" />
     <Compile Include="Data\Repository\IHwCustomItemRepository.cs" />
-    <Compile Include="Data\Repository\IOrderStatusRepository.cs" />
-    <Compile Include="Data\Repository\IOrderTypeRepository.cs" />
-    <Compile Include="Data\Repository\OrderStatusRepository.cs" />
-    <Compile Include="Data\Repository\OrderTypeRepository.cs" />
     <Compile Include="HardwareModule.cs" />
     <Compile Include="Wrapper\CustomItemWrapper.cs" />
     <Compile Include="Wrapper\HardwareTypeWrapper.cs" />

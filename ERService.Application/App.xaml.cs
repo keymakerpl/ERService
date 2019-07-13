@@ -6,6 +6,7 @@ using ERService.HardwareModule.Views;
 using ERService.Header;
 using ERService.Infrastructure.Constants;
 using ERService.Navigation;
+using ERService.OrderModule.Data.Repository;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Views;
 using ERService.Settings;
@@ -14,7 +15,9 @@ using ERService.StartPage;
 using ERService.StatusBar;
 using Prism.Ioc;
 using Prism.Modularity;
+using System;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace ERService.Application
 {
@@ -29,6 +32,18 @@ namespace ERService.Application
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);            
+        }
+
+        protected override void OnInitialized()
+        {
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            base.OnInitialized();
+        }
+
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            //TODO: MessageBox error handler
+            MessageBox.Show("Ups... " + Environment.NewLine + e.Exception.Message);
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -55,6 +70,7 @@ namespace ERService.Application
             containerRegistry.Register<ICustomItemRepository, CustomItemRepository>();
             containerRegistry.Register<IOrderStatusRepository, OrderStatusRepository>();
             containerRegistry.Register<IOrderTypeRepository, OrderTypeRepository>();
+            containerRegistry.Register<IBlobRepository, BlobRepository>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);

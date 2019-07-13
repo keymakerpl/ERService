@@ -1,5 +1,5 @@
 ﻿using ERService.Business;
-using ERService.HardwareModule.Data.Repository;
+using ERService.OrderModule.Repository;
 using ERService.Infrastructure.Base;
 using ERService.OrderModule.Wrapper;
 using Prism.Commands;

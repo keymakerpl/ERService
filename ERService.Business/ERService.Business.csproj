@@ -64,6 +64,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blob.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerAddress.cs" />
     <Compile Include="CustomItem.cs" />

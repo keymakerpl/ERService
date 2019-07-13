@@ -16,6 +16,7 @@ namespace ERService.Business
         private void Init()
         {
             Hardwares = new Collection<Hardware>();
+            Attachments = new Collection<Blob>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -57,6 +58,8 @@ namespace ERService.Business
         public int Progress { get; set; }
 
         public ICollection<Hardware> Hardwares { get; set; }
+
+        public ICollection<Blob> Attachments { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

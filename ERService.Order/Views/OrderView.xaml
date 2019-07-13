@@ -138,9 +138,11 @@
                            Margin="0 10 0 10"/>
                     <ComboBox Grid.Column="1" Grid.Row="3" Margin="10"
                               ItemsSource="{Binding OrderStatuses}"
-                              SelectedItem="{Binding SelectedOrderStatus}"
                               DisplayMemberPath="Name"
-                              SelectedValuePath="Id"
+                              SelectedValuePath="Name"
+                              SelectedValue="{Binding SelectedOrderStatus.Name}"
+                              SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsSynchronizedWithCurrentItem="True"
                               Width="180"
                               HorizontalAlignment="Left"/>
 
@@ -150,9 +152,11 @@
                            Margin="0 10 0 10"/>
                     <ComboBox Grid.Column="1" Grid.Row="4" Margin="10"
                               ItemsSource="{Binding OrderTypes}"
-                              SelectedItem="{Binding SelectedOrderType}"
                               DisplayMemberPath="Name"
-                              SelectedValuePath="Id"
+                              SelectedValuePath="Name"
+                              SelectedValue="{Binding SelectedOrderType.Name}"
+                              SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsSynchronizedWithCurrentItem="True"
                               Width="180"
                               HorizontalAlignment="Left"/>
 
@@ -173,7 +177,11 @@
                     <Label Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Załączniki:"/>
 
-                    <ListView Grid.Row="9" Grid.ColumnSpan="2" MinHeight="120" Margin="10 10 10 10"/>
+                    <ListView Grid.Row="9" Grid.ColumnSpan="2" 
+                              MinHeight="120" Margin="10 10 10 10"
+                              SelectedItem="{Binding SelectedAttachment}"
+                              ItemsSource="{Binding Attachments}"
+                              DisplayMemberPath="FileName"/>
 
                     <Label Grid.Column="2" Grid.Row="8" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
                            Content="Komentarz:"/>
@@ -183,8 +191,10 @@
                              Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="2">
-                        <Button Content="Dodaj" Width="120" HorizontalAlignment="Right"/>
-                        <Button Content="Usuń" Width="120" HorizontalAlignment="Right"/>
+                        <Button Content="Dodaj" Width="120" HorizontalAlignment="Right"
+                                Command="{Binding AddAttachmentCommand}"/>
+                        <Button Content="Usuń" Width="120" HorizontalAlignment="Right"
+                                Command="{Binding RemoveAttachmentCommand}"/>
                     </StackPanel>
                     
                 </Grid>

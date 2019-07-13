@@ -2,7 +2,7 @@
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
 
-namespace ERService.HardwareModule.Data.Repository
+namespace ERService.OrderModule.Repository
 {
     public class OrderStatusRepository : GenericRepository<OrderStatus, ERServiceDbContext>, IOrderStatusRepository
     {

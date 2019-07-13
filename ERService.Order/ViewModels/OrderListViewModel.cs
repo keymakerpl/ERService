@@ -30,7 +30,11 @@ namespace ERService.OrderModule.ViewModels
         {
             if (SelectedModel != null)
             {
-                //ShowDetail(SelectedModel.Id, RegionNames.ContentRegion, typeof(CustomerView).FullName);
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", SelectedModel.Id);
+                parameters.Add("ViewFullName", ViewNames.OrderView);
+
+                ShowDetail(parameters);
             }
         }
 
