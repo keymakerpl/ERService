@@ -65,6 +65,8 @@
     </Compile>
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
+    <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
+    <Compile Include="ViewModels\NumerationWrapper.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StatusConfigViewModel.cs" />
     <Compile Include="Views\GeneralSettingsView.xaml.cs">
@@ -72,6 +74,9 @@
     </Compile>
     <Compile Include="Views\HardwareTypesView.xaml.cs">
       <DependentUpon>HardwareTypesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NumerationSettingsView.xaml.cs">
+      <DependentUpon>NumerationSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -113,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HardwareTypesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NumerationSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

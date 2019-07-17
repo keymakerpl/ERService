@@ -64,17 +64,9 @@
     <Compile Include="Migrations\201905161504231_AddedCustomerColumns.Designer.cs">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.cs" />
-    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.Designer.cs">
-      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201905231441288_InitialDatabase1.cs" />
     <Compile Include="Migrations\201905231441288_InitialDatabase1.Designer.cs">
       <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905231620319_InitialDatabase2.cs" />
-    <Compile Include="Migrations\201905231620319_InitialDatabase2.Designer.cs">
-      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201905231644212_InitialDatabase3.cs" />
     <Compile Include="Migrations\201905231644212_InitialDatabase3.Designer.cs">
@@ -128,13 +120,17 @@
     <Compile Include="Migrations\201907111852282_AddedBlobOrderId.Designer.cs">
       <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201907111854456_AddedBlobOrder.cs" />
-    <Compile Include="Migrations\201907111854456_AddedBlobOrder.Designer.cs">
-      <DependentUpon>201907111854456_AddedBlobOrder.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.cs" />
     <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.Designer.cs">
       <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907131858442_AddedNumeration6.cs" />
+    <Compile Include="Migrations\201907131858442_AddedNumeration6.Designer.cs">
+      <DependentUpon>201907131858442_AddedNumeration6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907140856104_AddedOrderId.cs" />
+    <Compile Include="Migrations\201907140856104_AddedOrderId.Designer.cs">
+      <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
@@ -160,14 +156,8 @@
     <EmbeddedResource Include="Migrations\201905161504231_AddedCustomerColumns.resx">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905231431133_AddedPhoneRequired.resx">
-      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905231441288_InitialDatabase1.resx">
       <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905231620319_InitialDatabase2.resx">
-      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905231644212_InitialDatabase3.resx">
       <DependentUpon>201905231644212_InitialDatabase3.cs</DependentUpon>
@@ -208,11 +198,14 @@
     <EmbeddedResource Include="Migrations\201907111852282_AddedBlobOrderId.resx">
       <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907111854456_AddedBlobOrder.resx">
-      <DependentUpon>201907111854456_AddedBlobOrder.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.resx">
       <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907131858442_AddedNumeration6.resx">
+      <DependentUpon>201907131858442_AddedNumeration6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907140856104_AddedOrderId.resx">
+      <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -22,7 +22,7 @@ namespace ERService.OrderModule.Wrapper
         private string _number;
         public string Number
         {
-            get { return GetValue<string>(); }
+            get { return $"{Model.OrderId}/{Model.Number}"; }
             set { SetProperty(ref _number, value); }
         }
 

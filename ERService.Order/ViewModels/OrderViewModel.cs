@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
+using ERService.OrderModule.OrderNumeration;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -32,15 +33,18 @@ namespace ERService.OrderModule.ViewModels
         private IOrderTypeRepository _typeRepository;
         private IOrderStatusRepository _statusRepository;
         private IRegionNavigationService _navigationService;
+        private INumerationRepository _numerationRepository;
 
         private bool _wizardMode;
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
-            IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator) : base(eventAggregator)
+            IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator,
+            INumerationRepository numerationRepository) : base(eventAggregator)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
             _statusRepository = statusRepository;
             _blobRepository = blobRepository;
+            _numerationRepository = numerationRepository;
             _regionManager = regionManager;
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
@@ -207,7 +211,7 @@ namespace ERService.OrderModule.ViewModels
         //TODO: Refactor?
         public override async Task LoadAsync(Guid id)
         {
-            var order = id != Guid.Empty ? await _orderRepository.GetByIdAsync(id) : GetNewDetail();
+            var order = id != Guid.Empty ? await _orderRepository.GetByIdAsync(id) : await GetNewDetail();
 
             //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
             ID = id;
@@ -221,11 +225,13 @@ namespace ERService.OrderModule.ViewModels
 
         private void InitializeCustomer()
         {
+            if (WizardMode) return;
             Customer = Order.Model.Customer;
         }
 
         private void InitializeHarware()
         {
+            if (WizardMode) return;
             Hardware = Order.Model.Hardwares.FirstOrDefault();
         }
 
@@ -252,18 +258,20 @@ namespace ERService.OrderModule.ViewModels
                 ID = Customer.Id; //odśwież Id
 
                 //Powiadom agregator eventów, że zapisano
-                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                //RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
                 _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
             });
         }
 
         //TODO: Refactor?
-        private Order GetNewDetail()
+        private async Task<Order> GetNewDetail()
         {
+            var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
+
             var order = new Order();
+            order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
             order.DateAdded = DateTime.Now;
             order.DateEnded = DateTime.Now.AddDays(14);
-            order.Number = OrderNumberGenerator.GetNext();
             _orderRepository.Add(order);
 
             return order;
@@ -350,15 +358,11 @@ namespace ERService.OrderModule.ViewModels
             Title = $"{Order.Number}";
         }
 
-        #endregion Overrides
-    }
-
-    internal class OrderNumberGenerator
-    {
-        internal static string GetNext()
+        public override Task LoadAsync()
         {
-            //TODO: Random number generator
-            return new Random().Next().ToString();
+            throw new NotImplementedException();
         }
+
+        #endregion Overrides
     }
 }

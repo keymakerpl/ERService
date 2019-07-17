@@ -37,6 +37,8 @@ namespace ERService.MSSQLDataAccess
 
         public DbSet<Settings> Settings { get; set; }
 
+        public DbSet<Numeration> Numeration { get; set; }
+
         /// <summary>
         /// Tutaj ustawiamy jak ma być tworzona baza
         /// </summary>

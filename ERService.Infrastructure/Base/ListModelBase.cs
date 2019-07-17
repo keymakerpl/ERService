@@ -26,7 +26,7 @@ namespace ERService.Infrastructure.Base
 
         public ObservableCollection<TEntity> Models { get; set; }
 
-        public TEntity SelectedModel { get; set; }
+        public virtual TEntity SelectedModel { get; set; }
 
         public virtual async void LoadAsync()
         {

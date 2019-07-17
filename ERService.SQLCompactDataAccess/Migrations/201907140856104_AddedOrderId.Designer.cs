@@ -7,13 +7,13 @@ namespace ERService.MSSQLDataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class InitialDatabase2 : IMigrationMetadata
+    public sealed partial class AddedOrderId : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDatabase2));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedOrderId));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905231620319_InitialDatabase2"; }
+            get { return "201907140856104_AddedOrderId"; }
         }
         
         string IMigrationMetadata.Source

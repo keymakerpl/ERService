@@ -15,7 +15,7 @@ namespace ERService.Infrastructure.Repositories
 
         protected GenericRepository(TContext context)
         {
-            this.Context = context;
+            this.Context = context;            
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -52,13 +52,12 @@ namespace ERService.Infrastructure.Repositories
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public async Task SaveAsync()
+        public virtual async Task SaveAsync()
         {
 
 #if DEBUG
             Context.Database.Log = Console.Write;
 #endif
-
             await Context.SaveChangesAsync();
         }
 
@@ -75,6 +74,6 @@ namespace ERService.Infrastructure.Repositories
         public void Remove(TEntity model)
         {
             Context.Set<TEntity>().Remove(model);            
-        }        
+        }                
     }   
 }

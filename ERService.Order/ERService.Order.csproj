@@ -51,9 +51,11 @@
   <ItemGroup>
     <Compile Include="Data\Repository\BlobRepository.cs" />
     <Compile Include="Data\Repository\IBlobRepository.cs" />
+    <Compile Include="Data\Repository\INumerationRepository.cs" />
     <Compile Include="Data\Repository\IOrderRepository.cs" />
     <Compile Include="Data\Repository\IOrderStatusRepository.cs" />
     <Compile Include="Data\Repository\IOrderTypeRepository.cs" />
+    <Compile Include="Data\Repository\NumerationRepository.cs" />
     <Compile Include="Data\Repository\OrderRepository.cs" />
     <Compile Include="Data\Repository\OrderStatusRepository.cs" />
     <Compile Include="Data\Repository\OrderTypeRepository.cs" />
@@ -72,6 +74,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModels\OrderListViewModel.cs" />
+    <Compile Include="Numeration\OrderNumberGenerator.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="Views\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>

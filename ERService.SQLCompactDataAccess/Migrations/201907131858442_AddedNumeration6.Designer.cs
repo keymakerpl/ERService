@@ -7,13 +7,13 @@ namespace ERService.MSSQLDataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddedBlobOrder : IMigrationMetadata
+    public sealed partial class AddedNumeration6 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedBlobOrder));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedNumeration6));
         
         string IMigrationMetadata.Id
         {
-            get { return "201907111854456_AddedBlobOrder"; }
+            get { return "201907131858442_AddedNumeration6"; }
         }
         
         string IMigrationMetadata.Source

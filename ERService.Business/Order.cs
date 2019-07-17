@@ -23,6 +23,10 @@ namespace ERService.Business
         [Key]
         public Guid Id { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public int OrderId { get; set; }
+
         public Customer Customer { get; set; }
 
         [StringLength(50)]

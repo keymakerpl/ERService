@@ -50,8 +50,8 @@
             <ScrollViewer>
                 <Grid Margin="1 1 1 1">
                     <DataGrid
-                  ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                  ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
                   SelectionMode="Single"  
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
@@ -67,7 +67,7 @@
                         </DataGrid.Resources>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Numer" Width="*"
+                            <DataGridTextColumn Header="Numer" Width="Auto"
                                     ElementStyle="{StaticResource DataGridColumnStyle}"
                                     EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                                     Binding="{Binding Number}"/>
