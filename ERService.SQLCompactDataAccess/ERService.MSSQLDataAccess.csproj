@@ -132,6 +132,10 @@
     <Compile Include="Migrations\201907140856104_AddedOrderId.Designer.cs">
       <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907181051166_AddedOrderCusId.cs" />
+    <Compile Include="Migrations\201907181051166_AddedOrderCusId.Designer.cs">
+      <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -206,6 +210,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907140856104_AddedOrderId.resx">
       <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907181051166_AddedOrderCusId.resx">
+      <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

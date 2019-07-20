@@ -116,6 +116,9 @@
       <Version>7.2.0.1233-pre</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1233-pre" />
+    <PackageReference Include="WPFToolkit">
+      <Version>3.5.50211.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

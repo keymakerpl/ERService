@@ -227,11 +227,6 @@ namespace ERService.HardwareModule.ViewModels
             }
         }
 
-        public override Task LoadAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion Navigation
     }
 }

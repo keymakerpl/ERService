@@ -179,7 +179,7 @@ namespace ERService.OrderModule.ViewModels
                     Customer = customer;
 
                 var hardware = navigationContext.Parameters.GetValue<Hardware>("Hardware");
-                if (customer != null)
+                if (hardware != null)
                     Hardware = hardware;
 
                 await LoadAsync(Guid.Empty);
@@ -187,7 +187,14 @@ namespace ERService.OrderModule.ViewModels
                 //Order.DateAdded = DateTime.Now;
                 Order.Model.Hardwares.Clear();
                 Order.Model.Hardwares.Add(Hardware);
-                Order.Model.Customer = Customer;
+                if (Customer.Id != Guid.Empty)
+                {
+                    Order.Model.CustomerId = Customer.Id;
+                }
+                else
+                {
+                    Order.Model.Customer = Customer;
+                }
             }
             else
             {

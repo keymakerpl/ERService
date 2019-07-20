@@ -27,6 +27,7 @@ namespace ERService.Business
         [Required]
         public int OrderId { get; set; }
 
+        public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
 
         [StringLength(50)]

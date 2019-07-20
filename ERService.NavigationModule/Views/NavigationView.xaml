@@ -75,7 +75,8 @@
             <Controls:HamburgerMenu.ItemsSource>
                 <Controls:HamburgerMenuItemCollection>
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Start"
-                                                     Command="{Binding OpenDetailViewCommand}"/>
+                                                     Command="{Binding OpenDetailViewCommand}"
+                                                     CommandParameter="StartPageView"/>
 
 
                     <Controls:HamburgerMenuGlyphItem Glyph="" Label="Klienci"

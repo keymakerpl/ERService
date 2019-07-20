@@ -18,5 +18,6 @@ namespace ERService.Infrastructure.Constants
         public const string CustomItemsView = "CustomItemsView";
         public const string GeneralSettingsView = "GeneralSettingsView";
         public const string HardwareTypesView = "HardwareTypesView";
+        public const string StartPageView = "StartPageView";
     }
 }

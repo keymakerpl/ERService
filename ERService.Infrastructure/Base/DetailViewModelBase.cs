@@ -29,6 +29,9 @@ namespace ERService.Infrastructure.Base
         }
 
         public bool AllowLoadAsync { get; set; } = true;
+
+        private bool _isReadOnly;
+        public bool IsReadOnly { get => _isReadOnly; set { SetProperty(ref _isReadOnly, value); } }
         public ICommand CancelCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 

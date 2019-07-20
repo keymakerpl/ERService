@@ -12,6 +12,7 @@ using ERService.OrderModule.Views;
 using ERService.Settings;
 using ERService.Settings.Views;
 using ERService.StartPage;
+using ERService.StartPage.Views;
 using ERService.StatusBar;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -79,6 +80,7 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
+            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
             containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
             containerRegistry.RegisterForNavigation<StatusConfigView>(typeof(StatusConfigView).FullName);
