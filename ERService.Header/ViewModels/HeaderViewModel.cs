@@ -1,19 +1,58 @@
-﻿using Prism.Mvvm;
+﻿using ERService.OrderModule.Repository;
+using Prism.Events;
+using Prism.Mvvm;
+using System;
+using System.Reflection;
+using System.Linq;
 
 namespace ERService.Header.ViewModels
 {
     public class HeaderViewModel : BindableBase
     {
-        private string _message;
-        public string Message
+        private int _inProgressCounter;
+
+        private string _currentUserFullName;
+        public string CurrentUserFullName
         {
-            get { return _message; }
-            set { SetProperty(ref _message, value); }
+            get { return "Radosław Kurek"; }
         }
 
-        public HeaderViewModel()
+        public int InProgressCounter
         {
-            Message = "ERService";
+            get { return _inProgressCounter; }
+            set { SetProperty(ref _inProgressCounter, value); }
+        }
+
+        private int _expiredOrderCounter;
+        private IOrderRepository _orderRepository;
+
+        public int ExpiredOrderCounter
+        {
+            get { return _expiredOrderCounter; }
+            set { SetProperty(ref _expiredOrderCounter, value); }
+        }
+
+        private readonly string _applicationName;
+        public string ApplicationName { get { return _applicationName; } }
+
+        public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator)
+        {
+            _orderRepository = orderRepository;
+
+            var assembly = Assembly.GetEntryAssembly();
+            _applicationName = assembly.GetName().Name;
+
+            RefreshCounters();
+        }
+
+        public async void RefreshCounters()
+        {
+            var orders = await _orderRepository.GetAllAsync();
+            if (orders != null)
+            {
+                InProgressCounter = orders.Count(o => DateTime.Now >= o.DateAdded && DateTime.Now <= o.DateEnded);
+                ExpiredOrderCounter = orders.Count(o => o.DateEnded < DateTime.Now);
+            }
         }
     }
 }

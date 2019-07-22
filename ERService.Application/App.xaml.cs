@@ -27,6 +27,7 @@ namespace ERService.Application
         //TODO: App unexpected error handler
         protected override Window CreateShell()
         {
+            //TODO: Login Window
             return Container.Resolve<Shell>();
         }
 
@@ -44,7 +45,8 @@ namespace ERService.Application
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             //TODO: MessageBox error handler
-            MessageBox.Show("Ups... " + Environment.NewLine + e.Exception.Message);
+            MessageBox.Show("Ups... " + Environment.NewLine +
+                Environment.NewLine + e.Exception.Message);
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
