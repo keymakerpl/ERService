@@ -1,7 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Wrapper;
 
-namespace ERService.Settings.ViewModels
+namespace ERService.Settings.Wrapper
 {
     public class NumerationWrapper : ModelWrapper<Numeration>
     {

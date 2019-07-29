@@ -66,6 +66,7 @@ namespace ERService.Application
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
@@ -85,8 +86,9 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
             containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
-            containerRegistry.RegisterForNavigation<StatusConfigView>(typeof(StatusConfigView).FullName);
-            containerRegistry.RegisterForNavigation<NumerationSettingsView>(typeof(NumerationSettingsView).FullName);
+            containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);
+            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.NumerationSettingsView);
+            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.UserSettingsView);
         }
     }
 }

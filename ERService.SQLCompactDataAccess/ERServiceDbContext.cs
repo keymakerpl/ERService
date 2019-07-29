@@ -8,7 +8,7 @@ namespace ERService.MSSQLDataAccess
 {
     public class ERServiceDbContext : DbContext
     {
-        //TODO: Make db connection setting in settings
+        //TODO: Make db connection setting in entry login window
         public ERServiceDbContext() : base("ERServiceDb")
         {
 
@@ -38,6 +38,14 @@ namespace ERService.MSSQLDataAccess
         public DbSet<Settings> Settings { get; set; }
 
         public DbSet<Numeration> Numeration { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Acl> ACLs { get; set; }
+
+        public DbSet<AclVerb> AclVerbs { get; set; }
 
         /// <summary>
         /// Tutaj ustawiamy jak ma być tworzona baza

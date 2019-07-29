@@ -136,6 +136,26 @@
     <Compile Include="Migrations\201907181051166_AddedOrderCusId.Designer.cs">
       <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907221830081_AddedUserAndAcl.cs" />
+    <Compile Include="Migrations\201907221830081_AddedUserAndAcl.Designer.cs">
+      <DependentUpon>201907221830081_AddedUserAndAcl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251650310_ChangedAcl.cs" />
+    <Compile Include="Migrations\201907251650310_ChangedAcl.Designer.cs">
+      <DependentUpon>201907251650310_ChangedAcl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251838069_AddedAclVerbs.cs" />
+    <Compile Include="Migrations\201907251838069_AddedAclVerbs.Designer.cs">
+      <DependentUpon>201907251838069_AddedAclVerbs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251919536_AddedAclVerbs1.cs" />
+    <Compile Include="Migrations\201907251919536_AddedAclVerbs1.Designer.cs">
+      <DependentUpon>201907251919536_AddedAclVerbs1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251931127_AddedAclVerbs2.cs" />
+    <Compile Include="Migrations\201907251931127_AddedAclVerbs2.Designer.cs">
+      <DependentUpon>201907251931127_AddedAclVerbs2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -213,6 +233,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907181051166_AddedOrderCusId.resx">
       <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907221830081_AddedUserAndAcl.resx">
+      <DependentUpon>201907221830081_AddedUserAndAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251650310_ChangedAcl.resx">
+      <DependentUpon>201907251650310_ChangedAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251838069_AddedAclVerbs.resx">
+      <DependentUpon>201907251838069_AddedAclVerbs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251919536_AddedAclVerbs1.resx">
+      <DependentUpon>201907251919536_AddedAclVerbs1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251931127_AddedAclVerbs2.resx">
+      <DependentUpon>201907251931127_AddedAclVerbs2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,13 +1,9 @@
-﻿using ERService.Business;
-using ERService.Infrastructure.Base;
+﻿using ERService.Infrastructure.Base;
 using ERService.OrderModule.Data.Repository;
-using Prism.Commands;
+using ERService.Settings.Wrapper;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.Linq;

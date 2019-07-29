@@ -22,8 +22,9 @@ namespace ERService.Settings.ViewModels
         {
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, typeof(StatusConfigView).FullName); //TODO: zmień na viewname
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, typeof(NumerationSettingsView).FullName); //TODO: zmień na viewname
+            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
+            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.NumerationSettingsView);
+            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.UserSettingsView);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
