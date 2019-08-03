@@ -66,13 +66,17 @@
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
-    <Compile Include="Views\UserSettingsView.xaml.cs">
-      <DependentUpon>UserSettingsView.xaml</DependentUpon>
+    <Compile Include="ViewModels\UserDetailViewModel.cs" />
+    <Compile Include="Views\UserDetailView.xaml.cs">
+      <DependentUpon>UserDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UsersSettingsView.xaml.cs">
+      <DependentUpon>UsersSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrapper\NumerationWrapper.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StatusConfigViewModel.cs" />
-    <Compile Include="ViewModels\UserSettingsViewModel.cs" />
+    <Compile Include="ViewModels\UsersSettingsViewModel.cs" />
     <Compile Include="Views\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
     </Compile>
@@ -88,6 +92,7 @@
     <Compile Include="Views\StatusConfigView.xaml.cs">
       <DependentUpon>StatusConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\UserWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -115,6 +120,10 @@
       <Project>{0ef3f2eb-b309-4f06-a14d-949b81b5b308}</Project>
       <Name>ERService.Order</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
+      <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
+      <Name>ERService.RBAC</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\GeneralSettingsView.xaml">
@@ -137,16 +146,20 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserSettingsView.xaml">
+    <Page Include="Views\UserDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UsersSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
-    <PackageReference Include="Prism.Wpf" Version="7.2.0.1233-pre" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

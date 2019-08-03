@@ -15,8 +15,11 @@ namespace ERService.Infrastructure.Base
     public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase
     {
         protected readonly IEventAggregator EventAggregator;
+
         //protected readonly IMessageDialogService MessageDialogService;
         private bool _hasChanges;
+
+        private bool _isReadOnly;
         private string _title;
 
         public DetailViewModelBase(IEventAggregator eventAggregator)
@@ -24,17 +27,13 @@ namespace ERService.Infrastructure.Base
             EventAggregator = eventAggregator;
             //MessageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-            CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem? 
-            CancelCommand = new DelegateCommand(OnCancelEditExecute, OnCancelEditCanExecute);
+            CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem?
+            CancelCommand = new DelegateCommand(OnCancelEditExecute);
         }
 
-        public bool AllowLoadAsync { get; set; } = true;
-
-        private bool _isReadOnly;
-        public bool IsReadOnly { get => _isReadOnly; set { SetProperty(ref _isReadOnly, value); } }
+        public bool AllowLoadAsync { get; set; } = true; //TODO: czy da się z tego zrezygnować?
         public ICommand CancelCommand { get; set; }
         public ICommand CloseCommand { get; set; }
-
         /// <summary>
         /// Właściwośc pomocnicza do przechowania zmiany z repo, odpala even jeśli w repo zaszły  zmiany
         /// </summary>
@@ -53,7 +52,9 @@ namespace ERService.Infrastructure.Base
         }
 
         public Guid ID { get; protected set; }
+        public bool IsReadOnly { get => _isReadOnly; set { SetProperty(ref _isReadOnly, value); } }
         public ICommand SaveCommand { get; private set; }
+
         public string Title
         {
             get { return _title; }
@@ -63,15 +64,21 @@ namespace ERService.Infrastructure.Base
                 RaisePropertyChanged();
             }
         }
+
         public virtual Task LoadAsync()
+        {
+            throw new NotImplementedException("Ogarnij się!");
+        }
+
+        public virtual Task LoadAsync(Guid id)
+        {
+            throw new NotImplementedException("Ogarnij się!");
+        }
+
+        protected virtual void OnCancelEditExecute()
         {
             throw new NotImplementedException();
         }
-        public abstract Task LoadAsync(Guid id);
-
-        protected abstract bool OnCancelEditCanExecute();
-
-        protected abstract void OnCancelEditExecute();
 
         protected virtual void OnCloseDetailViewExecute()
         {
@@ -94,9 +101,15 @@ namespace ERService.Infrastructure.Base
             });
         }
 
-        protected abstract bool OnSaveCanExecute();
+        protected virtual bool OnSaveCanExecute()
+        {
+            return false;
+        }
 
-        protected abstract void OnSaveExecute();
+        protected virtual void OnSaveExecute()
+        {
+            throw new NotImplementedException();
+        }
 
         protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
         {

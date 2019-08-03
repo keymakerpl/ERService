@@ -30,17 +30,11 @@ namespace ERService.Header.ViewModels
         {
             get { return _expiredOrderCounter; }
             set { SetProperty(ref _expiredOrderCounter, value); }
-        }
-
-        private readonly string _applicationName;
-        public string ApplicationName { get { return _applicationName; } }
+        }        
 
         public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator)
         {
-            _orderRepository = orderRepository;
-
-            var assembly = Assembly.GetEntryAssembly();
-            _applicationName = assembly.GetName().Name;
+            _orderRepository = orderRepository;            
 
             RefreshCounters();
         }

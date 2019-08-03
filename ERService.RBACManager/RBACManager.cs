@@ -1,21 +1,35 @@
 ﻿using ERService.Business;
 using ERService.RBAC.Data.Repository;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ERService.RBAC
 {
-    public class RBACManager
+    public class RBACManager : IRBACManager
     {
         private IUserRepository _userRepository;
+        private IEnumerable<User> _users;
 
         public RBACManager(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+
+            LoadUsers();
         }
 
-        public bool Authorize()
+        private async void LoadUsers()
         {
-            return false;
+            _users = await _userRepository.GetAllAsync();
+        }
+
+        public bool Authorize(string login, string password)
+        {
+            //TODO: Null Guard 
+            //TODO: Password Hashing
+            var user = _users.SingleOrDefault(u => u.Login == login && u.Password == password);
+
+            return user != null;
         }
 
         public void AddUserToRole(User user, Role role)

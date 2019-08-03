@@ -221,11 +221,6 @@ namespace ERService.Settings.ViewModels
             
         }
 
-        protected override bool OnCancelEditCanExecute()
-        {
-            return true;
-        }
-
         #region Navigation
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -235,7 +230,7 @@ namespace ERService.Settings.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

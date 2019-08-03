@@ -61,11 +61,6 @@ namespace ERService.Settings.ViewModels
             await LoadTypes();
         }
 
-        protected override bool OnCancelEditCanExecute()
-        {
-            return false;
-        }
-
         protected override void OnCancelEditExecute()
         {
         }
@@ -190,7 +185,7 @@ namespace ERService.Settings.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

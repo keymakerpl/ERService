@@ -242,11 +242,6 @@ namespace ERService.OrderModule.ViewModels
             Hardware = Order.Model.Hardwares.FirstOrDefault();
         }
 
-        protected override bool OnCancelEditCanExecute()
-        {
-            return true;
-        }
-
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();

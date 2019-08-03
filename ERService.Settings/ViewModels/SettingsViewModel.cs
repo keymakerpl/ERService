@@ -7,9 +7,11 @@ using Prism.Regions;
 
 namespace ERService.Settings.ViewModels
 {
-    public class SettingsViewModel : BindableBase, INavigationAware
+    public class SettingsViewModel : BindableBase, INavigationAware, IRegionMemberLifetime
     {
         private IRegionManager _regionManager;
+
+        public bool KeepAlive => true;
 
         public SettingsViewModel(IRegionManager regionManager)
         {
@@ -29,7 +31,7 @@ namespace ERService.Settings.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

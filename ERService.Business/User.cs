@@ -16,6 +16,8 @@ namespace ERService.Business
         
         public string Password { get; set; }
 
+        public string Salt { get; set; }
+
         [MaxLength(50)]
         public string FirstName { get; set; }
         

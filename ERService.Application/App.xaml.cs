@@ -9,6 +9,8 @@ using ERService.Navigation;
 using ERService.OrderModule.Data.Repository;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Views;
+using ERService.RBAC;
+using ERService.RBAC.Data.Repository;
 using ERService.Settings;
 using ERService.Settings.Views;
 using ERService.StartPage;
@@ -28,6 +30,7 @@ namespace ERService.Application
         protected override Window CreateShell()
         {
             //TODO: Login Window
+            
             return Container.Resolve<Shell>();
         }
 
@@ -58,6 +61,7 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(StatusBarModule));
             moduleCatalog.AddModule(typeof(SettingsModule));
             moduleCatalog.AddModule(typeof(StartPageModule));
+            moduleCatalog.AddModule(typeof(RBACModule));
 
             //TODO: Assembly names refactor
             moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
@@ -67,6 +71,8 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
+            containerRegistry.Register<IUserRepository, RBACRepository.UserRepository>();
+            containerRegistry.Register<IRBACManager, RBACManager>();
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
@@ -88,7 +94,8 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
             containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);
             containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.NumerationSettingsView);
-            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.UserSettingsView);
+            containerRegistry.RegisterForNavigation<UsersSettingsView>(ViewNames.UserSettingsView);
+            containerRegistry.RegisterForNavigation<UserDetailView>(ViewNames.UserDetailView);
         }
     }
 }

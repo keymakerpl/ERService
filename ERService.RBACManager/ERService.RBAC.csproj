@@ -49,7 +49,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repository\IUserRepository.cs" />
     <Compile Include="Data\Repository\RBACRepository.cs" />
+    <Compile Include="IRBACManager.cs" />
     <Compile Include="RBACManager.cs" />
     <Compile Include="RBACModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -77,12 +79,20 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ERService.Business\ERService.Business.csproj">
+      <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
+      <Name>ERService.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Infrastructure\ERService.Infrastructure.csproj">
       <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
       <Name>ERService.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
+      <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
+      <Name>ERService.MSSQLDataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

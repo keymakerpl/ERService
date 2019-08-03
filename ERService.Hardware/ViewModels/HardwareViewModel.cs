@@ -89,11 +89,6 @@ namespace ERService.HardwareModule.ViewModels
             LoadHardwareTypes();
         }
 
-        protected override bool OnCancelEditCanExecute()
-        {
-            return true;
-        }
-
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();

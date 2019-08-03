@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
-    public class NumerationSettingsViewModel : DetailViewModelBase, INavigationAware, IRegionMemberLifetime
+    public class NumerationSettingsViewModel : DetailViewModelBase, INavigationAware
     {
         private INumerationRepository _repository;
 
@@ -23,8 +23,6 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _numeration, value); }
         }
 
-        public bool KeepAlive => false;
-
         public NumerationSettingsViewModel(IEventAggregator eventAggregator, INumerationRepository numerationRepository) : base(eventAggregator)
         {
             _repository = numerationRepository;
@@ -33,7 +31,7 @@ namespace ERService.Settings.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;
         }
 
         public override Task LoadAsync(Guid id)
@@ -43,9 +41,16 @@ namespace ERService.Settings.ViewModels
 
         public override async Task LoadAsync()
         {
-            var numerations = await _repository.FindByAsync(n => n.Name == "default");
+            await LoadNumeration();
+        }
 
-            Numeration = new NumerationWrapper(numerations.First());
+        private async Task LoadNumeration()
+        {
+            var numerations = await _repository.GetAllAsync();
+            var defaultNumeration = numerations.FirstOrDefault(n => n.Name == "default");
+
+            if(defaultNumeration != null)
+                Numeration = new NumerationWrapper(defaultNumeration);
         }
 
         private void Numeration_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -62,11 +67,6 @@ namespace ERService.Settings.ViewModels
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync();
-        }
-
-        protected override bool OnCancelEditCanExecute()
-        {
-            return true;
         }
 
         protected override void OnCancelEditExecute()

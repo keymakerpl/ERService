@@ -22,5 +22,6 @@ namespace ERService.Infrastructure.Constants
         public const string StatusConfigView = "StatusConfigView";
         public const string NumerationSettingsView = "NumerationSettingsView";
         public const string UserSettingsView = "UserSettingsView";
+        public const string UserDetailView = "UserDetailView";
     }
 }

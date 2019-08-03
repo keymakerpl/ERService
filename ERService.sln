@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.Hardware", "ERSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.RBAC", "ERService.RBACManager\ERService.RBAC.csproj", "{760DD7CC-474C-4386-BF15-71A4D2B24AE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.RBACUnitTests", "ERService.RBACUnitTests\ERService.RBACUnitTests.csproj", "{96E5E087-6DA3-405F-8A26-2A1149927D79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{760DD7CC-474C-4386-BF15-71A4D2B24AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{760DD7CC-474C-4386-BF15-71A4D2B24AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{760DD7CC-474C-4386-BF15-71A4D2B24AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E5E087-6DA3-405F-8A26-2A1149927D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E5E087-6DA3-405F-8A26-2A1149927D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E5E087-6DA3-405F-8A26-2A1149927D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E5E087-6DA3-405F-8A26-2A1149927D79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

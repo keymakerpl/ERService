@@ -54,6 +54,7 @@
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />
+    <Compile Include="Events\AfterAuthorisedEvent.cs" />
     <Compile Include="Events\AfterCollectionSavedEvent.cs" />
     <Compile Include="Events\AfterDetailDeletedEvent.cs" />
     <Compile Include="Events\AfterDetailSavedEvent.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Base\IView.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\PasswordHasher.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -107,11 +109,14 @@
     <SplashScreen Include="Images\SplashScreen.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses">
+      <Version>1.2.9</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

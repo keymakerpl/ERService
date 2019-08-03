@@ -138,8 +138,6 @@ namespace ERService.CustomerModule.ViewModels
         }
         #endregion Navigation
 
-        protected override bool OnCancelEditCanExecute() => true;
-
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
