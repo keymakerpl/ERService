@@ -27,8 +27,8 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Label Content="W naprawie: " FontSize="14" FontStyle="Italic" VerticalContentAlignment="Center"/>
-            <Label  Grid.Column="1" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center"
+            <Label Content="W trakcie naprawy: " FontSize="14" FontStyle="Italic" VerticalContentAlignment="Center"/>
+            <Label  Grid.Column="1" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Foreground="Green"
                     Content="{Binding InProgressCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Label Content="Po terminie naprawy: " 
@@ -37,6 +37,7 @@
                    VerticalContentAlignment="Center"/>
             <Label  Grid.Column="1" Grid.Row="1"
                     FontSize="16" FontWeight="Bold"
+                    Foreground="Crimson"
                     VerticalContentAlignment="Center"
                     Content="{Binding ExpiredOrderCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 

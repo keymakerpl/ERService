@@ -16,23 +16,23 @@ namespace ERService.Settings.Wrapper
 
         public string Login
         {
-            get { return _login; }
+            get { return GetValue<string>(); }
             set { SetProperty(ref _login, value); }
         }
 
-        private string _password;
+        private string _passwordHash;
 
-        public string Password
+        public string PasswordHash
         {
-            get { return _password; }
-            set { SetProperty(ref _password, value); }
+            get { return GetValue<string>(); }
+            set { SetProperty(ref _passwordHash, value); }
         }
 
         private string _firstName;
 
         public string FirstName
         {
-            get { return _firstName; }
+            get { return GetValue<string>(); }
             set { SetProperty(ref _firstName, value); }
         }
 
@@ -40,7 +40,7 @@ namespace ERService.Settings.Wrapper
 
         public string LastName
         {
-            get { return _lastName; }
+            get { return GetValue<string>(); }
             set { SetProperty(ref _lastName, value); }
         }
 
@@ -48,7 +48,7 @@ namespace ERService.Settings.Wrapper
 
         public string PhoneNumber
         {
-            get { return _phoneNumber; }
+            get { return GetValue<string>(); }
             set { SetProperty(ref _phoneNumber, value); }
         }
 
@@ -56,17 +56,24 @@ namespace ERService.Settings.Wrapper
 
         public int IsActive
         {
-            get { return _isActive; }
+            get { return GetValue<int>(); }
             set { SetProperty(ref _isActive, value); }
         }
 
-        private int _isAdministrator;
+        private int _isAdmin;
 
-        public int IsAdministrator
+        public int IsAdmin
         {
-            get { return _isAdministrator; }
-            set { SetProperty(ref _isAdministrator, value); }
+            get { return GetValue<int>(); }
+            set { SetProperty(ref _isAdmin, value); }
         }
 
+        private string _salt;
+
+        public string Salt
+        {
+            get { return GetValue<string>(); }
+            set { SetProperty(ref _salt, value); }
+        }
     }
 }

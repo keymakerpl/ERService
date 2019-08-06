@@ -1,5 +1,8 @@
 ﻿using ERService.Business;
+using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Helpers;
 using ERService.RBAC.Data.Repository;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +12,15 @@ namespace ERService.RBAC
     public class RBACManager : IRBACManager
     {
         private IUserRepository _userRepository;
+        private IPasswordHasher _passwordHasher;
+        private IEventAggregator _eventAggregator;
         private IEnumerable<User> _users;
 
-        public RBACManager(IUserRepository userRepository)
+        public RBACManager(IUserRepository userRepository, IPasswordHasher passwordHasher, IEventAggregator eventAggregator)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
+            _eventAggregator = eventAggregator;
 
             LoadUsers();
         }
@@ -25,11 +32,20 @@ namespace ERService.RBAC
 
         public bool Authorize(string login, string password)
         {
-            //TODO: Null Guard 
-            //TODO: Password Hashing
-            var user = _users.SingleOrDefault(u => u.Login == login && u.Password == password);
+            //TODO: Null Guard
+            var user = _users.SingleOrDefault(u => u.Login == login);
+            if (user == null) return false;
+          
+            if (_passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt))
+            {
+                _eventAggregator.GetEvent<AfterAuthorisedEvent>()
+                    .Publish(new AfterAuthorisedEventArgs
+                                { UserID = user.Id, UserLogin = user.Login, UserName = user.FirstName, UserLastName = user.LastName });
 
-            return user != null;
+                return true;
+            }
+
+            return false;
         }
 
         public void AddUserToRole(User user, Role role)
@@ -71,5 +87,6 @@ namespace ERService.RBAC
         {
             return new Role();
         }
+
     }
 }

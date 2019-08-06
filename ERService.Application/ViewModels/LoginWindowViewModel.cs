@@ -1,8 +1,10 @@
 ﻿using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Helpers;
 using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using System.Windows.Input;
 
 namespace ERService.ViewModels
 {
@@ -27,7 +29,7 @@ namespace ERService.ViewModels
         private IEventAggregator _eventAggregator;
         private IRBACManager _rbacManager;
 
-        public DelegateCommand LoginCommand { get; private set; }
+        public ICommand LoginCommand { get; private set; }
 
         public LoginWindowViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator)
         {
@@ -39,10 +41,7 @@ namespace ERService.ViewModels
 
         private void OnLoginCommandExecute()
         {
-            if (_rbacManager.Authorize(Login, Password))
-            {
-                _eventAggregator.GetEvent<AfterAuthorisedEvent>().Publish(new AfterAuthorisedEventArgs { UserLogin = "administrator" });
-            }
+            _rbacManager.Authorize(Login, Password);
         }
     }
 }

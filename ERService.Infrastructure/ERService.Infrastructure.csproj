@@ -61,10 +61,12 @@
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
+    <Compile Include="Events\IAfterAuthorisedEventArgs.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\IPasswordHasher.cs" />
     <Compile Include="Helpers\PasswordHasher.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />

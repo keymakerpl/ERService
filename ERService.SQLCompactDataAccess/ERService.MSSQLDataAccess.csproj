@@ -164,6 +164,14 @@
     <Compile Include="Migrations\201908021630546_AddedPasswordSalt.Designer.cs">
       <DependentUpon>201908021630546_AddedPasswordSalt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908031714559_AddedNullRoleToUser.cs" />
+    <Compile Include="Migrations\201908031714559_AddedNullRoleToUser.Designer.cs">
+      <DependentUpon>201908031714559_AddedNullRoleToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908061237530_ChangedPasswordFieldName.cs" />
+    <Compile Include="Migrations\201908061237530_ChangedPasswordFieldName.Designer.cs">
+      <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -262,6 +270,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908021630546_AddedPasswordSalt.resx">
       <DependentUpon>201908021630546_AddedPasswordSalt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908031714559_AddedNullRoleToUser.resx">
+      <DependentUpon>201908031714559_AddedNullRoleToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908061237530_ChangedPasswordFieldName.resx">
+      <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

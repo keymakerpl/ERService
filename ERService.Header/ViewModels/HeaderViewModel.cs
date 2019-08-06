@@ -4,6 +4,7 @@ using Prism.Mvvm;
 using System;
 using System.Reflection;
 using System.Linq;
+using ERService.Infrastructure.Events;
 
 namespace ERService.Header.ViewModels
 {
@@ -12,9 +13,11 @@ namespace ERService.Header.ViewModels
         private int _inProgressCounter;
 
         private string _currentUserFullName;
+
         public string CurrentUserFullName
         {
-            get { return "Radosław Kurek"; }
+            get { return _currentUserFullName; }
+            set { SetProperty(ref _currentUserFullName, value); }
         }
 
         public int InProgressCounter
@@ -25,6 +28,7 @@ namespace ERService.Header.ViewModels
 
         private int _expiredOrderCounter;
         private IOrderRepository _orderRepository;
+        private IEventAggregator _eventAggregator;
 
         public int ExpiredOrderCounter
         {
@@ -34,8 +38,15 @@ namespace ERService.Header.ViewModels
 
         public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator)
         {
-            _orderRepository = orderRepository;            
+            _orderRepository = orderRepository;
+            _eventAggregator = eventAggregator;
 
+            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(OnUserLogged, true);           
+        }
+
+        private void OnUserLogged(AfterAuthorisedEventArgs args)
+        {
+            CurrentUserFullName = !String.IsNullOrEmpty(args.UserLastName) ? $"{args.UserName} {args.UserLastName}" : args.UserLogin;
             RefreshCounters();
         }
 

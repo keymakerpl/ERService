@@ -5,6 +5,7 @@ using ERService.HardwareModule.Data.Repository;
 using ERService.HardwareModule.Views;
 using ERService.Header;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Helpers;
 using ERService.Navigation;
 using ERService.OrderModule.Data.Repository;
 using ERService.OrderModule.Repository;
@@ -82,6 +83,7 @@ namespace ERService.Application
             containerRegistry.Register<IOrderTypeRepository, OrderTypeRepository>();
             containerRegistry.Register<IBlobRepository, BlobRepository>();
             containerRegistry.Register<INumerationRepository, NumerationRepository>();
+            containerRegistry.Register<IPasswordHasher, PasswordHasher>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);

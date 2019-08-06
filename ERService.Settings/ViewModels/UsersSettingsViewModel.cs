@@ -19,7 +19,14 @@ namespace ERService.Settings.ViewModels
         public ObservableCollection<User> Users { get; }
         public DelegateCommand AddUserCommand { get; }
         public DelegateCommand EditUserCommand { get; }
-        public User SelectedUser { get; set; }
+        private User _selectedUser;
+
+        public User SelectedUser
+        {
+            get { return _selectedUser; }
+            set { SetProperty(ref _selectedUser, value); EditUserCommand.RaiseCanExecuteChanged(); }
+        }
+
 
         public Role SelectedRole { get; set; }
 
@@ -71,7 +78,7 @@ namespace ERService.Settings.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return false;
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

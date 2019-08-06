@@ -22,11 +22,6 @@ namespace ERService.Header
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);
-        }
-
-        private void ContinueInitialization(AfterAuthorisedEventArgs obj)
-        {
             _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));
         }
 
