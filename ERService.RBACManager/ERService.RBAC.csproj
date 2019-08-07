@@ -49,6 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repository\IRoleRepository.cs" />
     <Compile Include="Data\Repository\IUserRepository.cs" />
     <Compile Include="Data\Repository\RBACRepository.cs" />
     <Compile Include="IRBACManager.cs" />

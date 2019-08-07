@@ -9,7 +9,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <Grid Background="White">
+    <Grid Background="White" x:Name="MainGrid">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -19,9 +19,10 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.RowSpan="2" Header="Użytkownicy" Margin="0 5 5 5">
+        <GroupBox Grid.RowSpan="3" Header="Użytkownicy" Margin="0 5 5 0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -33,19 +34,33 @@
                   SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <WrapPanel>
-                                    <TextBlock Text="Login:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
+                                <Border BorderThickness="1" BorderBrush="LightGray" Margin="2" CornerRadius="2">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <WrapPanel>
+                                            <TextBlock Text="Login:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                Margin="10 0 0 0"/>
-                                    <TextBlock Text="{Binding Login}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
+                                            <TextBlock Text="{Binding Login}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
                                                MinWidth="100"/>
-                                    <TextBlock Text="Imię:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
+                                        </WrapPanel>
+                                        <WrapPanel Grid.Row="1" Grid.Column="1">
+                                            <TextBlock Text="Imię:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                Margin="10 0 0 0"/>
-                                    <TextBlock Text="{Binding FirstName}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
+                                            <TextBlock Text="{Binding FirstName}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
                                                MinWidth="80"/>
-                                    <TextBlock Text="Nazwisko:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
+                                            <TextBlock Text="Nazwisko:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                Margin="10 0 0 0"/>
-                                    <TextBlock Text="{Binding LastName}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"/>
-                                </WrapPanel>
+                                            <TextBlock Text="{Binding LastName}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"/>
+                                        </WrapPanel>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -53,7 +68,8 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                             FlowDirection="RightToLeft"
                             Background="AliceBlue">
-                    <Button Content="Usuń" Margin="5 0 5 0"/>
+                    <Button Content="Usuń" Margin="5 0 5 0"
+                            Command="{Binding RemoveUserCommand}"/>
                     <Button Content="Edytuj" Margin="5 0 5 0"
                             Command="{Binding EditUserCommand}"/>
                     <Button Content="Dodaj" Margin="5 0 5 0"
@@ -71,7 +87,18 @@
                 <StackPanel>
                     <ListView  
                   ItemsSource="{Binding Roles}"
-                  SelectedItem="{Binding SelectedRole}"/>
+                  SelectedItem="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <WrapPanel>
+                                    <TextBlock Text="Nazwa roli:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
+                                               Margin="10 0 0 0"/>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
+                                               MinWidth="100"/>
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                             FlowDirection="RightToLeft"
@@ -83,7 +110,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Uprawnienia" Margin="0 5 0 5">
+        <GroupBox Grid.Column="1" Grid.Row="1" Header="Uprawnienia dla wybranej roli" Margin="0 5 0 5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -91,11 +118,33 @@
                 </Grid.RowDefinitions>
                 <StackPanel>
                     <ListView  
-                  ItemsSource="{Binding RoleACLs}"
-                  SelectedItem="{Binding SelectedACL}"/>
+                  ItemsSource="{Binding RoleACLs}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding AclVerb.Name}"/>
+                                    </WrapPanel>
+                                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                                        <CheckBox IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </WrapPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </Grid>
         </GroupBox>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"
+                    Grid.Column="1" Background="AliceBlue" FlowDirection="RightToLeft">
+            <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5 0 0 0"/>
+            <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5 0 5 0"/>
+        </StackPanel>
 
     </Grid>
 </UserControl>

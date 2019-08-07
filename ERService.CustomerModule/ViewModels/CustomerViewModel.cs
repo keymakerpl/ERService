@@ -125,7 +125,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             _navigationService = navigationContext.NavigationService;
 
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
+            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard"); //TODO: Można by się tu zastanowić czy nie skorzystać z State lub Strategy?
 
             if(WizardMode)
                 InitializeCustomers();

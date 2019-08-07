@@ -73,6 +73,7 @@
     <Compile Include="Views\UsersSettingsView.xaml.cs">
       <DependentUpon>UsersSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\AclWrapper.cs" />
     <Compile Include="Wrapper\NumerationWrapper.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StatusConfigViewModel.cs" />

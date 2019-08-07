@@ -22,6 +22,7 @@ using Prism.Modularity;
 using System;
 using System.Windows;
 using System.Windows.Threading;
+using static ERService.RBAC.Data.Repository.RBACRepository;
 
 namespace ERService.Application
 {
@@ -84,6 +85,7 @@ namespace ERService.Application
             containerRegistry.Register<IBlobRepository, BlobRepository>();
             containerRegistry.Register<INumerationRepository, NumerationRepository>();
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
+            containerRegistry.Register<IRoleRepository, RoleRepository>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
