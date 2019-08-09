@@ -9,7 +9,9 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"  
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit">
+             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}">
 
     <UserControl.Resources>
         <DataTemplate x:Key="AutoCompleteBoxItemTemplate">

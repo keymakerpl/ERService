@@ -1,4 +1,5 @@
 ﻿using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Data.Repository;
 using ERService.Settings.Wrapper;
 using Prism.Events;
@@ -23,13 +24,14 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _numeration, value); }
         }
 
-        public NumerationSettingsViewModel(IEventAggregator eventAggregator, INumerationRepository numerationRepository) : base(eventAggregator)
+        public NumerationSettingsViewModel(IEventAggregator eventAggregator, INumerationRepository numerationRepository, 
+            IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _repository = numerationRepository;
             Title = "Schemat numeracji";
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
@@ -59,12 +61,12 @@ namespace ERService.Settings.ViewModels
                 HasChanges = _repository.HasChanges();
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync();
         }

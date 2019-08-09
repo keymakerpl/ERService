@@ -1,7 +1,9 @@
-﻿using ERService.Infrastructure.Events;
+﻿using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -11,21 +13,20 @@ using System.Windows.Input;
 
 namespace ERService.Infrastructure.Base
 {
-    //TODO: Split to DetailViewModelBase and DetailModel?
-    public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase
+    public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase, IConfirmNavigationRequest, IRegionMemberLifetime
     {
-        protected readonly IEventAggregator EventAggregator;
+        protected readonly IEventAggregator _eventAggregator;
 
-        //protected readonly IMessageDialogService MessageDialogService;
+        protected readonly IMessageDialogService _messageDialogService;
         private bool _hasChanges;
 
         private bool _isReadOnly;
         private string _title;
 
-        public DetailViewModelBase(IEventAggregator eventAggregator)
+        public DetailViewModelBase(IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
         {
-            EventAggregator = eventAggregator;
-            //MessageDialogService = messageDialogService;
+            _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem?
             CancelCommand = new DelegateCommand(OnCancelEditExecute);
@@ -75,26 +76,15 @@ namespace ERService.Infrastructure.Base
             throw new NotImplementedException("Ogarnij się!");
         }
 
+        #region Events and Events Handlers
         protected virtual void OnCancelEditExecute()
         {
             throw new NotImplementedException();
         }
 
         protected virtual void OnCloseDetailViewExecute()
-        {
-            //TODO: MessageService
-            if (HasChanges)
-            {
-                //var result = await MessageDialogService.ShowOkCancelDialog("Continue and Cancel changes?", Title);
-                var result = MessageBox.Show("Leave changes?", "Continue?", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
-            }
-
-            EventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs()
+        {            
+            _eventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs()
             {
                 Id = this.ID,
                 ViewModelName = this.GetType().Name
@@ -113,7 +103,7 @@ namespace ERService.Infrastructure.Base
 
         protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
         {
-            EventAggregator.GetEvent<AfterDetailSavedEvent>()
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>()
                 .Publish(new AfterDetailSavedEventArgs()
                 {
                     Id = modelId,
@@ -121,6 +111,17 @@ namespace ERService.Infrastructure.Base
                     ViewModelName = this.GetType().Name
                 });
         }
+
+        protected virtual void RaiseDetailDeletedEvent(Guid modelId, string displayMember)
+        {
+            _eventAggregator.GetEvent<AfterDetailDeletedEvent>()
+                .Publish(new AfterDetailDeletedEventArgs()
+                {
+                    Id = modelId,
+                    ViewModelName = this.GetType().Name
+                });
+        }
+        #endregion
 
         /// <summary>
         /// Zapisuje optymistycznie, ze sprawdzaniem czy nadpisać
@@ -137,31 +138,63 @@ namespace ERService.Infrastructure.Base
             catch (DbUpdateConcurrencyException e) // rowversion się zmienił - ktoś inny zmienił dane
             {
                 var databaseValues = e.Entries.Single().GetDatabaseValues();
-                if (databaseValues == null) //sprawdzamy czy jest nadal w bazie
+                if (databaseValues == null) // sprawdzamy czy jest nadal w bazie
                 {
-                    //await MessageDialogService.ShowOkCancelDialog("The entity has been deleted by another user.", Title);
-                    //RaiseDetailDeletedEvent(ID);
+                    await _messageDialogService
+                        .ShowInformationMessageAsync(this, "Usunięty element...", "Element został w międzyczasie usunięty przez innego użytkownika.");
+                    RaiseDetailDeletedEvent(ID, Title);
                     return;
                 }
 
-                //var dialogResult =
-                //    await MessageDialogService.ShowOkCancelDialog(
-                //        "Someone else has made changes in database. Override data with yours?", Title);
+                var dialogResult =
+                    await _messageDialogService
+                    .ShowConfirmationMessageAsync(this, "Dane zmienione przez innego użytkownika...", "Dane zostały zmienione w międzyczasie przez innego użytkownika, czy nadpisać aktualne dane?");
 
-                //if (dialogResult == MessageDialogResult.OK)
-                //{
-                //    var entry = e.Entries.Single(); //pobierz krotkę której nie można zapisać
-                //    entry.OriginalValues.SetValues(entry.GetDatabaseValues()); //pobierz aktualne dane z db (aby zaktualizować rowversion w current row)
-                //    await saveFunc(); //zapisz
-                //}
-                //else
-                //{
-                //    await e.Entries.Single().ReloadAsync(); //przeładuj cache krotki z bazy
-                //    await LoadAsync(Id); //załaduj ponownie model
-                //}
+                if (dialogResult == DialogResult.OK)
+                {
+                    var entry = e.Entries.Single(); //pobierz krotkę której nie można zapisać
+                    entry.OriginalValues.SetValues(entry.GetDatabaseValues()); //pobierz aktualne dane z db (aby zaktualizować rowversion w current row)
+                    await saveFunc(); //zapisz
+                }
+                else
+                {
+                    await e.Entries.Single().ReloadAsync(); //przeładuj cache krotki z bazy
+                    await LoadAsync(ID); //załaduj ponownie model
+                }
             }
 
             afterSaveAction();
         }
+
+        #region Navigation
+        public virtual async void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            var dialogResult = true;
+            if (HasChanges)
+            {
+                dialogResult = await _messageDialogService.ShowConfirmationMessageAsync(this, "Nie zapisane dane...", "Nie zapisano zmienionych danych, kontynuować?")
+                    == DialogResult.OK;
+            }
+
+            continuationCallback(dialogResult);
+        }
+
+        public virtual void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool KeepAlive => false;
+        #endregion
     }
 }

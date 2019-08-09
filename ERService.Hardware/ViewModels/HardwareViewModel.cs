@@ -2,6 +2,7 @@
 using ERService.HardwareModule.Data.Repository;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -38,7 +39,7 @@ namespace ERService.HardwareModule.ViewModels
         private bool _wizardMode;
 
         public HardwareViewModel(IHardwareRepository repository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
-            IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
+            IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec Fasada? Aby wrzucić repo w jedno miejsce
             _regionManager = regionManager;
@@ -186,19 +187,19 @@ namespace ERService.HardwareModule.ViewModels
 
         #region Navigation
 
-        public bool KeepAlive => true;
+        public override bool KeepAlive => true;
 
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             continuationCallback(true);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             if (WizardMode)
             {
@@ -206,7 +207,7 @@ namespace ERService.HardwareModule.ViewModels
             }
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
             WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");

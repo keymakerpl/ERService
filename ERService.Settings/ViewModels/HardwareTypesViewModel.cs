@@ -11,6 +11,7 @@ using System.Linq;
 using System.ComponentModel;
 using ERService.Business;
 using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Dialogs;
 
 namespace ERService.Settings.ViewModels
 {
@@ -47,9 +48,9 @@ namespace ERService.Settings.ViewModels
         private HardwareTypeWrapper _selectedHardwareType;
         private CustomItemWrapper _selectedCustomItem;
 
-        public HardwareTypesViewModel(IEventAggregator eventAggregator, 
+        public HardwareTypesViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
             IHardwareTypeRepository hardwareTypeRepository, ICustomItemRepository customItemRepository) 
-            : base(eventAggregator)
+            : base(eventAggregator, messageDialogService)
         {
             Title = "Typy urządzeń";
 
@@ -223,17 +224,17 @@ namespace ERService.Settings.ViewModels
 
         #region Navigation
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync(Guid.Empty);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
 
         }

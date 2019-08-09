@@ -8,6 +8,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using ERService.Infrastructure.Dialogs;
 
 namespace ERService.Settings.ViewModels
 {
@@ -19,7 +20,7 @@ namespace ERService.Settings.ViewModels
         private OrderTypeWrapper _selectedOrderType;
 
         public StatusConfigViewModel(IEventAggregator eventAggregator, IOrderStatusRepository orderStatusRepository,
-             IOrderTypeRepository orderTypeRepository) : base(eventAggregator)
+             IOrderTypeRepository orderTypeRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Title = "Konfiguracja statusów";
 
@@ -183,16 +184,16 @@ namespace ERService.Settings.ViewModels
         }
         #region Navigation
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync(Guid.Empty);
         }

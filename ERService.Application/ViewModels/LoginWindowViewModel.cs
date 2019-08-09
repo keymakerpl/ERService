@@ -1,4 +1,5 @@
-﻿using ERService.Infrastructure.Events;
+﻿using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Helpers;
 using ERService.RBAC;
 using Prism.Commands;
@@ -28,20 +29,25 @@ namespace ERService.ViewModels
 
         private IEventAggregator _eventAggregator;
         private IRBACManager _rbacManager;
+        private IMessageDialogService _messageDialogService;
 
         public ICommand LoginCommand { get; private set; }
 
-        public LoginWindowViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator)
+        public LoginWindowViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
             _rbacManager = iRBACManager;
+            _messageDialogService = messageDialogService;
 
             LoginCommand = new DelegateCommand(OnLoginCommandExecute);
         }
 
         private void OnLoginCommandExecute()
         {
-            _rbacManager.Authorize(Login, Password);
+            if (!_rbacManager.Authorize(Login, Password))
+            {
+                _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
+            }
         }
     }
 }

@@ -6,19 +6,23 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.RBAC
 {
     public class RBACManager : IRBACManager
     {
         private IUserRepository _userRepository;
+        private IRoleRepository _roleRepository;
         private IPasswordHasher _passwordHasher;
         private IEventAggregator _eventAggregator;
         private IEnumerable<User> _users;
 
-        public RBACManager(IUserRepository userRepository, IPasswordHasher passwordHasher, IEventAggregator eventAggregator)
+        public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, 
+            IPasswordHasher passwordHasher, IEventAggregator eventAggregator)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _passwordHasher = passwordHasher;
             _eventAggregator = eventAggregator;
 
@@ -63,9 +67,16 @@ namespace ERService.RBAC
             return false;
         }
 
+        public async Task<bool> RoleExistsAsync(string roleName)
+        {
+            var role = await _roleRepository.FindByAsync(r => r.Name == roleName);
+
+            return role != null;
+        }
+
         public bool RoleExists(string roleName)
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool UserIsInRole(string login, Role role)
@@ -86,7 +97,6 @@ namespace ERService.RBAC
         public Role GetUserRole(User user)
         {
             return new Role();
-        }
-
+        }        
     }
 }

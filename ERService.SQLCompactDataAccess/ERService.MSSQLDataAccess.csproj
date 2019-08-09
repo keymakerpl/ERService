@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201908061237530_ChangedPasswordFieldName.Designer.cs">
       <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908090930136_AddedIsSystemToUserARole.cs" />
+    <Compile Include="Migrations\201908090930136_AddedIsSystemToUserARole.Designer.cs">
+      <DependentUpon>201908090930136_AddedIsSystemToUserARole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -276,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908061237530_ChangedPasswordFieldName.resx">
       <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908090930136_AddedIsSystemToUserARole.resx">
+      <DependentUpon>201908090930136_AddedIsSystemToUserARole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

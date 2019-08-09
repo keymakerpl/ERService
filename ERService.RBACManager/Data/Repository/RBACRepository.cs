@@ -29,9 +29,24 @@ namespace ERService.RBAC.Data.Repository
                 return await Context.Set<Role>().Include(a => a.ACLs.Select(v => v.AclVerb)).AsNoTracking().ToListAsync();
             }
 
+            //TODO: Move to generic
             public void SetEntityStatus(object entity, EntityState entityState)
             {
                 Context.Entry(entity).State = entityState;
+            }
+        }
+
+        public class AclRepository : GenericRepository<Acl, ERServiceDbContext>, IAclRepository
+        {
+            public AclRepository(ERServiceDbContext context) : base(context)
+            {
+            }
+        }
+
+        public class AclVerbRepository : GenericRepository<AclVerb, ERServiceDbContext>, IAclVerbRepository
+        {
+            public AclVerbRepository(ERServiceDbContext context) : base(context)
+            {
             }
         }
     }

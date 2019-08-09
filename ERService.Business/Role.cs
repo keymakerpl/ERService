@@ -26,6 +26,8 @@ namespace ERService.Business
         [MaxLength(50)]
         public string Name { get; set; }
 
+        public bool IsSystem { get; set; }
+
         public ICollection<Acl> ACLs { get; set; }
 
         [Timestamp]

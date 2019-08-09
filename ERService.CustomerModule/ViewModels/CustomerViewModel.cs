@@ -3,6 +3,7 @@ using ERService.CustomerModule.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -15,7 +16,7 @@ using System.Windows.Controls;
 namespace ERService.CustomerModule.ViewModels
 {
     //TODO: Refactor Interface
-    public class CustomerViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
+    public class CustomerViewModel : DetailViewModelBase
     {
         private CustomerWrapper _customer;
         private CustomerAddress _customerAddress;
@@ -29,7 +30,7 @@ namespace ERService.CustomerModule.ViewModels
         private Customer _selectedCustomer;
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
-            IEventAggregator eventAggregator) : base(eventAggregator)
+            IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
@@ -94,34 +95,19 @@ namespace ERService.CustomerModule.ViewModels
 
         #region Navigation
 
-        public bool KeepAlive { get { return true; } }
+        public override bool KeepAlive { get { return true; } }
 
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        {
-            //TODO: Refactor to dialog service
-            var result = true;
-            if (HasChanges)
-            {
-                //result = MessageBox.Show("Continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
-            }
-
-            continuationCallback(result);
-        }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            if (WizardMode)
-            {
-                AllowLoadAsync = false;
-            }
+            if (WizardMode) AllowLoadAsync = false;                
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
@@ -140,7 +126,7 @@ namespace ERService.CustomerModule.ViewModels
 
         protected override void OnCancelEditExecute()
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            _navigationService.Journal.GoBack();
         }
 
         protected override bool OnSaveCanExecute()
@@ -155,7 +141,7 @@ namespace ERService.CustomerModule.ViewModels
             await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
             {
                 HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id wrappera
+                ID = Customer.Id; //odśwież Id z wrappera
 
                 //Powiadom agregator eventów, że zapisano
                 RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");

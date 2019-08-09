@@ -1,4 +1,5 @@
-﻿using Prism.Services.Dialogs;
+﻿using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Dialogs
 {
-    public class DialogModel : IDialogAware
+    public class DialogModel : BindableBase, IDialogAware
     {
         public string Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

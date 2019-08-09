@@ -14,6 +14,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 using ERService.OrderModule.OrderNumeration;
+using ERService.Infrastructure.Dialogs;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -38,7 +39,7 @@ namespace ERService.OrderModule.ViewModels
         private bool _wizardMode;
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator,
-            INumerationRepository numerationRepository) : base(eventAggregator)
+            INumerationRepository numerationRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
@@ -150,23 +151,23 @@ namespace ERService.OrderModule.ViewModels
 
         #region Navigation
 
-        public bool KeepAlive => false;
+        public override bool KeepAlive => false;
 
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             continuationCallback(true);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
             WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");

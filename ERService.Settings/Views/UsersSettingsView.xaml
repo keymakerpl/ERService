@@ -7,7 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True">
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}">
 
     <Grid Background="White" x:Name="MainGrid">
 
@@ -103,9 +105,9 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                             FlowDirection="RightToLeft"
                             Background="AliceBlue">
-                    <Button Content="Usuń" Margin="5 0 5 0"/>
-                    <Button Content="Edytuj" Margin="5 0 5 0"/>
-                    <Button Content="Dodaj" Margin="5 0 5 0"/>
+                    <Button Content="Usuń" Margin="5 0 5 0" Command="{Binding RemoveRoleCommand}"/>
+                    <Button Content="Edytuj" Margin="5 0 5 0" Command="{Binding EditRoleCommand}"/>
+                    <Button Content="Dodaj" Margin="5 0 5 0" Command="{Binding AddRoleCommand}"/>
                 </StackPanel>
             </Grid>
         </GroupBox>

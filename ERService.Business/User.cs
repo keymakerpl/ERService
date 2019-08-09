@@ -12,6 +12,7 @@ namespace ERService.Business
 
         [Required]
         [MaxLength(50)]
+        [Index(IsUnique = true)]
         public string Login { get; set; }
         
         public string PasswordHash { get; set; }
@@ -31,6 +32,8 @@ namespace ERService.Business
         public int IsActive { get; set; }
 
         public int IsAdmin { get; set; }
+
+        public bool IsSystem { get; set; }
 
         public Guid? RoleId { get; set; }
 

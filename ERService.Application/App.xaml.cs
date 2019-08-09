@@ -23,16 +23,15 @@ using System;
 using System.Windows;
 using System.Windows.Threading;
 using static ERService.RBAC.Data.Repository.RBACRepository;
+using MahApps.Metro.Controls.Dialogs;
+using ERService.Infrastructure.Dialogs;
 
 namespace ERService.Application
 {
     public partial class App
     {
-        //TODO: App unexpected error handler
         protected override Window CreateShell()
-        {
-            //TODO: Login Window
-            
+        {            
             return Container.Resolve<Shell>();
         }
 
@@ -86,6 +85,8 @@ namespace ERService.Application
             containerRegistry.Register<INumerationRepository, NumerationRepository>();
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
             containerRegistry.Register<IRoleRepository, RoleRepository>();
+            containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
+            containerRegistry.Register<IMessageDialogService, MessageDialogService>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);

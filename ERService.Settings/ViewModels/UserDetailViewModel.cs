@@ -1,6 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Helpers;
 using ERService.RBAC.Data.Repository;
 using ERService.Settings.Wrapper;
@@ -30,7 +31,8 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _user, value); }
         }
 
-        public UserDetailViewModel(IUserRepository userRepository, IEventAggregator eventAggregator, IRegionManager regionManager, IPasswordHasher passwordHasher) : base(eventAggregator)
+        public UserDetailViewModel(IUserRepository userRepository, IEventAggregator eventAggregator, IRegionManager regionManager, 
+            IPasswordHasher passwordHasher, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;
             _userRepository = userRepository;
@@ -39,17 +41,17 @@ namespace ERService.Settings.ViewModels
             SaveCommand = new DelegateCommand<object>(OnSaveExecute, OnSaveCanExecute);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 

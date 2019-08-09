@@ -54,6 +54,8 @@
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />
+    <Compile Include="Dialogs\IMessageDialogService.cs" />
+    <Compile Include="Dialogs\MessageDialogService.cs" />
     <Compile Include="Events\AfterAuthorisedEvent.cs" />
     <Compile Include="Events\AfterCollectionSavedEvent.cs" />
     <Compile Include="Events\AfterDetailDeletedEvent.cs" />
@@ -113,6 +115,9 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses">
       <Version>1.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
       <Version>7.2.0.1367</Version>
