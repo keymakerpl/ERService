@@ -20,7 +20,7 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await Context.Set<TEntity>().ToListAsync();
         }
 
         public virtual async Task<TEntity> GetByIdAsync(Guid id)
@@ -30,8 +30,7 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> result = await Context.Set<TEntity>().AsNoTracking()
-                .Where(predicate).ToListAsync();
+            IEnumerable<TEntity> result = await Context.Set<TEntity>().Where(predicate).ToListAsync();
 
             return result;
         }
@@ -47,7 +46,7 @@ namespace ERService.Infrastructure.Repositories
 
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
         {
-            IQueryable<TEntity> queryable = Context.Set<TEntity>().AsNoTracking();
+            IQueryable<TEntity> queryable = Context.Set<TEntity>();
 
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }

@@ -8,10 +8,6 @@ namespace ERService.Infrastructure.Events
 
     public class AfterCollectionSavedEventArgs
     {
-        public AfterCollectionSavedEventArgs()
-        {
-        }
-
         public string ViewModelName { get; set; }
     }
 }

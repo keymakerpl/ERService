@@ -1,7 +1,4 @@
-﻿using System;
-using ERService.Infrastructure.Constants;
-using ERService.Settings.Views;
-using Prism.Ioc;
+﻿using ERService.Infrastructure.Constants;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -27,6 +24,7 @@ namespace ERService.Settings.ViewModels
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.NumerationSettingsView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.UserSettingsView);
+            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

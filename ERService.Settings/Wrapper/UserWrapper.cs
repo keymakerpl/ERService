@@ -52,19 +52,19 @@ namespace ERService.Settings.Wrapper
             set { SetProperty(ref _phoneNumber, value); }
         }
 
-        private int _isActive;
+        private bool _isActive;
 
-        public int IsActive
+        public bool IsActive
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<bool>(); }
             set { SetProperty(ref _isActive, value); }
         }
 
-        private int _isAdmin;
+        private bool _isAdmin;
 
-        public int IsAdmin
+        public bool IsAdmin
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<bool>(); }
             set { SetProperty(ref _isAdmin, value); }
         }
 

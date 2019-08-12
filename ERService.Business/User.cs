@@ -29,9 +29,9 @@ namespace ERService.Business
         [MaxLength(50)]
         public string PhoneNumber { get; set; }
 
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public int IsAdmin { get; set; }
+        public bool IsAdmin { get; set; }
 
         public bool IsSystem { get; set; }
 

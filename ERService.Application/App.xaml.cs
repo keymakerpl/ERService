@@ -73,7 +73,9 @@ namespace ERService.Application
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
             containerRegistry.Register<IUserRepository, RBACRepository.UserRepository>();
-            containerRegistry.Register<IRBACManager, RBACManager>();
+            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();
+            containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
+            //containerRegistry.Register<IAclRepository, AclRepository>();
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();

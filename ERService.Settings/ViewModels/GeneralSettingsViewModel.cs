@@ -1,36 +1,20 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Dialogs;
+using Prism.Events;
 
 namespace ERService.Settings.ViewModels
 {
-    public class GeneralSettingsViewModel : BindableBase, INavigationAware
+    public class GeneralSettingsViewModel : DetailViewModelBase
     {
-        public string Title { get { return "Ogólne"; } }
+        public GeneralSettingsViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+        {
+            Title = "Ogólne";
+        }        
 
         public string Content { get { return "Ustawienia ogólne"; } }
 
-        public GeneralSettingsViewModel()
-        {
-
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            
-        }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return false;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            
-        }
+        #region Navigation
+        public override bool KeepAlive => true;
+        #endregion
     }
 }

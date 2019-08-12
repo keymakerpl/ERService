@@ -10,19 +10,18 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
-    public class UsersSettingsViewModel : DetailViewModelBase, INavigationAware
+    public class UsersSettingsViewModel : DetailViewModelBase
     {
-        private IRegionManager _regionManager;
         private IRBACManager _rbacManager;
+        private IRegionManager _regionManager;
         private IRoleRepository _roleRepository;
+        private IUserRepository _userRepository;
         private Role _selectedRole;
         private User _selectedUser;
-        private IUserRepository _userRepository;
 
         public UsersSettingsViewModel(IEventAggregator eventAggregator, IUserRepository userRepository,
             IRoleRepository roleRepository, IRegionManager regionManager, IRBACManager rBACManager,
@@ -42,25 +41,27 @@ namespace ERService.Settings.ViewModels
             AddUserCommand = new DelegateCommand(OnAddUserExecute);
             EditUserCommand = new DelegateCommand(OnEditUserExecute, OnEditUserCanExecute);
             RemoveUserCommand = new DelegateCommand(OnRemoveUserExecute, OnRemoveUserCanExecute);
-            AddRoleCommand = new DelegateCommand(OnAddRoleCommand);
-            EditRoleCommand = new DelegateCommand(OnEditRoleCommand);
-            RemoveRoleCommand = new DelegateCommand(OnRemoveRoleCommand, OnRemoveRoleCanExecute);
-        }        
+            AddRoleCommand = new DelegateCommand(OnAddRoleExecute);
+            EditRoleCommand = new DelegateCommand(OnEditRoleExecute);
+            RemoveRoleCommand = new DelegateCommand(OnRemoveRoleExecute, OnRemoveRoleCanExecute);
+        }
 
-        public DelegateCommand AddUserCommand { get; }
-        public DelegateCommand EditUserCommand { get; }
-        public DelegateCommand RemoveUserCommand { get; }
         public DelegateCommand AddRoleCommand { get; }
+        public DelegateCommand AddUserCommand { get; }
         public DelegateCommand EditRoleCommand { get; }
+        public DelegateCommand EditUserCommand { get; }
         public DelegateCommand RemoveRoleCommand { get; }
-        public ObservableCollection<User> Users { get; }
-        public ObservableCollection<Role> Roles { get; }
+        public DelegateCommand RemoveUserCommand { get; }
         public ObservableCollection<AclWrapper> RoleACLs { get; }
+        public ObservableCollection<Role> Roles { get; }
+        public ObservableCollection<User> Users { get; }
+
         public Role SelectedRole
         {
             get { return _selectedRole; }
             set { SetProperty(ref _selectedRole, value); LoadRoleAcls(value); RemoveRoleCommand.RaiseCanExecuteChanged(); }
         }
+
         public User SelectedUser
         {
             get { return _selectedUser; }
@@ -68,29 +69,6 @@ namespace ERService.Settings.ViewModels
             {
                 SetProperty(ref _selectedUser, value);
                 EditUserCommand.RaiseCanExecuteChanged(); RemoveUserCommand.RaiseCanExecuteChanged();
-            }
-        }        
-
-        public override bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            await LoadAsync();
-        }
-       
-        private void LoadRoleAcls(Role role)
-        {
-            RoleACLs.Clear();
-            foreach (var acl in role.ACLs)
-            {
-                RoleACLs.Add(new AclWrapper(acl));
             }
         }
 
@@ -100,9 +78,21 @@ namespace ERService.Settings.ViewModels
             await LoadRoles();
         }
 
+        private void LoadRoleAcls(Role role)
+        {
+            if (role == null) return;
+
+            RoleACLs.Clear();
+            foreach (var acl in role.ACLs)
+            {
+                RoleACLs.Add(new AclWrapper(acl));
+            }
+        }
+
         private async Task LoadRoles()
         {
-            var roles = await _roleRepository.GetAllAsync();
+            Roles.Clear();
+            var roles = await _rbacManager.GetAllRolesAsync();
 
             foreach (var role in roles)
             {
@@ -120,6 +110,8 @@ namespace ERService.Settings.ViewModels
             }
         }
 
+        #region Events and Event Handlers
+
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
@@ -133,22 +125,42 @@ namespace ERService.Settings.ViewModels
 
         protected override async void OnSaveExecute()
         {
-            foreach (var acl in RoleACLs)
-            {
-                _roleRepository.SetEntityStatus(acl.Model, EntityState.Modified);
-            }
-
             await SaveWithOptimisticConcurrencyAsync(_userRepository.SaveAsync, () => { });
-            await SaveWithOptimisticConcurrencyAsync(_roleRepository.SaveAsync, () =>
+            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
+
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
+        }
+
+        private async void OnAddRoleExecute()
+        {
+            var dialogResult = await _messageDialogService
+                .ShowInputMessageAsync(this, "Nowa rola", "Podaj nazwę dla nowej roli:");
+
+            if (!String.IsNullOrWhiteSpace(dialogResult))
             {
-                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
-            });
+                if (await _rbacManager.RoleExistsAsync(dialogResult))
+                {
+                    await _messageDialogService
+                        .ShowInformationMessageAsync(this, "Rola już istnieje...", "Rola o podanej nazwie już istnieje.");
+                    return;
+                }
+                else
+                {
+                    var role = await _rbacManager.GetNewRole(dialogResult);
+                    _rbacManager.AddRole(role);
+                    Roles.Add(role);
+                }
+            }
         }
 
         private void OnAddUserExecute()
         {
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView);
+        }
+
+        private void OnEditRoleExecute()
+        {
+            throw new NotImplementedException();
         }
 
         private bool OnEditUserCanExecute()
@@ -164,9 +176,25 @@ namespace ERService.Settings.ViewModels
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
         }
 
+        private bool OnRemoveRoleCanExecute()
+        {
+            return SelectedRole != null && !SelectedRole.IsSystem;
+        }
+
+        private async void OnRemoveRoleExecute()
+        {
+            var dialogResult = await _messageDialogService
+                .ShowConfirmationMessageAsync(this, "Czy usunąć rolę?", $"Czy usunąć rolę {SelectedRole.Name}?");
+
+            if (dialogResult == DialogResult.Cancel) return;
+
+            _rbacManager.RemoveRole(SelectedRole);
+            Roles.Remove(SelectedRole);
+        }
+
         private bool OnRemoveUserCanExecute()
         {
-            return SelectedUser != null && SelectedUser.IsAdmin == 0;
+            return SelectedUser != null && !SelectedUser.IsSystem;
         }
 
         private async void OnRemoveUserExecute()
@@ -176,49 +204,21 @@ namespace ERService.Settings.ViewModels
 
             if (dialogResult == DialogResult.Cancel) return;
 
-            Users.Remove(SelectedUser);
             _userRepository.Remove(SelectedUser);
+            Users.Remove(SelectedUser);
         }
 
-        private void OnEditRoleCommand()
+        #endregion Events and Event Handlers
+
+        #region Navigation
+
+        public override bool KeepAlive => true;
+
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            await LoadAsync();
         }
 
-        private async void OnAddRoleCommand()
-        {
-            var dialogResult = await _messageDialogService
-                .ShowInputMessageAsync(this, "Nowa rola", "Podaj nazwę dla nowej roli:");
-
-            if (!String.IsNullOrWhiteSpace(dialogResult))
-            {
-                if (await _rbacManager.RoleExistsAsync(dialogResult))
-                {
-                    await _messageDialogService
-                        .ShowInformationMessageAsync(this, "Rola już istnieje...", "Rola o podanej nazwie już istnieje.");
-                    return;
-                }
-                else
-                {
-                     //TODO: RBAC
-                }
-            }
-        }
-
-        private async void OnRemoveRoleCommand()
-        {
-            var dialogResult = await _messageDialogService
-                .ShowConfirmationMessageAsync(this, "Czy usunąć rolę?", $"Czy usunąć rolę {SelectedRole.Name}?");
-
-            if (dialogResult == DialogResult.Cancel) return;
-
-            Roles.Remove(SelectedRole);
-            _roleRepository.Remove(SelectedRole);
-        }
-
-        private bool OnRemoveRoleCanExecute()
-        {
-            return SelectedRole != null;
-        }
+        #endregion Navigation
     }
 }

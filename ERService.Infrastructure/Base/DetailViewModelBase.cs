@@ -181,20 +181,21 @@ namespace ERService.Infrastructure.Base
 
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            
         }
 
         public virtual bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            
         }
 
         public virtual bool KeepAlive => false;
         #endregion
+
     }
 }

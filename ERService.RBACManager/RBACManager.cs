@@ -14,19 +14,28 @@ namespace ERService.RBAC
     {
         private IUserRepository _userRepository;
         private IRoleRepository _roleRepository;
+        private IAclVerbRepository _aclVerbRepository;
         private IPasswordHasher _passwordHasher;
         private IEventAggregator _eventAggregator;
         private IEnumerable<User> _users;
+        private IEnumerable<Role> _roles;
 
         public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, 
-            IPasswordHasher passwordHasher, IEventAggregator eventAggregator)
+            IPasswordHasher passwordHasher, IEventAggregator eventAggregator, IAclVerbRepository aclVerbRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _aclVerbRepository = aclVerbRepository;
             _passwordHasher = passwordHasher;
             _eventAggregator = eventAggregator;
 
             LoadUsers();
+            LoadRoles();
+        }
+
+        private async void LoadRoles()
+        {
+            _roles = await _roleRepository.GetAllAsync();
         }
 
         private async void LoadUsers()
@@ -57,6 +66,39 @@ namespace ERService.RBAC
 
         }
 
+        /// <summary>
+        /// Add role to repository
+        /// </summary>
+        /// <param name="roleName">Role</param>
+        public void AddRole(Role role)
+        {
+            _roleRepository.Add(role);
+        }
+
+        public async Task<Role> GetNewRole(string roleName)
+        {
+            var aclVerbs = await GetAclVerbsAsync();
+            var acls = new List<Acl>();
+            foreach (var verb in aclVerbs)
+            {
+                acls.Add(new Acl { AclVerbId = verb.Id, Value = 0 });
+            }
+
+            var role = new Role { Name = roleName, IsSystem = false, ACLs = acls };            
+
+            return role;
+        }
+
+        public void RemoveRole(Role role)
+        {
+            _roleRepository.Remove(role);
+        }
+
+        public async Task<IEnumerable<Role>> GetAllRolesAsync()
+        {
+            return await _roleRepository.GetAllAsync();
+        }
+
         public void AddAclToRole(AclVerb aclVerb)
         {
 
@@ -71,7 +113,7 @@ namespace ERService.RBAC
         {
             var role = await _roleRepository.FindByAsync(r => r.Name == roleName);
 
-            return role != null;
+            return role.Any();
         }
 
         public bool RoleExists(string roleName)
@@ -82,6 +124,13 @@ namespace ERService.RBAC
         public bool UserIsInRole(string login, Role role)
         {
             return false;
+        }
+
+        public async Task<List<AclVerb>> GetAclVerbsAsync()
+        {
+            var aclVerbs = await _aclVerbRepository.GetAllAsync();
+
+            return aclVerbs.ToList();
         }
 
         public List<Acl> GetRolePermissions(Role role)
@@ -98,5 +147,10 @@ namespace ERService.RBAC
         {
             return new Role();
         }        
+
+        public async Task SaveAsync()
+        {
+            await _roleRepository.SaveAsync();
+        }
     }
 }
