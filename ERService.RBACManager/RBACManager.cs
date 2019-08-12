@@ -94,9 +94,19 @@ namespace ERService.RBAC
             _roleRepository.Remove(role);
         }
 
+        public void RemoveUser(User user)
+        {
+            _userRepository.Remove(user);
+        }
+
         public async Task<IEnumerable<Role>> GetAllRolesAsync()
         {
             return await _roleRepository.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _userRepository.GetAllAsync();
         }
 
         public void AddAclToRole(AclVerb aclVerb)
@@ -151,6 +161,7 @@ namespace ERService.RBAC
         public async Task SaveAsync()
         {
             await _roleRepository.SaveAsync();
+            await _userRepository.SaveAsync();
         }
     }
 }

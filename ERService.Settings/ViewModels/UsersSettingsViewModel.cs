@@ -3,7 +3,6 @@ using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.RBAC;
-using ERService.RBAC.Data.Repository;
 using ERService.Settings.Wrapper;
 using Prism.Commands;
 using Prism.Events;
@@ -18,19 +17,15 @@ namespace ERService.Settings.ViewModels
     {
         private IRBACManager _rbacManager;
         private IRegionManager _regionManager;
-        private IRoleRepository _roleRepository;
-        private IUserRepository _userRepository;
         private Role _selectedRole;
         private User _selectedUser;
 
-        public UsersSettingsViewModel(IEventAggregator eventAggregator, IUserRepository userRepository,
-            IRoleRepository roleRepository, IRegionManager regionManager, IRBACManager rBACManager,
+        public UsersSettingsViewModel(IEventAggregator eventAggregator, 
+            IRegionManager regionManager, IRBACManager rBACManager,
             IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Title = "Użytkownicy";
 
-            _userRepository = userRepository; //TODO: Zamienić na RBACManager
-            _roleRepository = roleRepository; //
             _regionManager = regionManager;
             _rbacManager = rBACManager;
 
@@ -102,7 +97,7 @@ namespace ERService.Settings.ViewModels
 
         private async Task LoadUsers()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _rbacManager.GetAllUsersAsync();
 
             foreach (var user in users)
             {
@@ -125,7 +120,6 @@ namespace ERService.Settings.ViewModels
 
         protected override async void OnSaveExecute()
         {
-            await SaveWithOptimisticConcurrencyAsync(_userRepository.SaveAsync, () => { });
             await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
 
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
@@ -204,7 +198,7 @@ namespace ERService.Settings.ViewModels
 
             if (dialogResult == DialogResult.Cancel) return;
 
-            _userRepository.Remove(SelectedUser);
+            _rbacManager.RemoveUser(SelectedUser);
             Users.Remove(SelectedUser);
         }
 

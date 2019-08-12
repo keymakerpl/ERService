@@ -21,6 +21,8 @@ namespace ERService.RBAC
         bool RoleExists(string roleName);
         bool UserExists(string login);
         bool UserIsInRole(string login, Role role);
+        void RemoveUser(User user);
+        Task<IEnumerable<User>> GetAllUsersAsync();        
         Task SaveAsync();
     }
 }
