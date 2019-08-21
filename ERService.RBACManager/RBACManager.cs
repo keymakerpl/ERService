@@ -137,7 +137,7 @@ namespace ERService.RBAC
             throw new NotImplementedException();
         }
 
-        public bool LoggedUserHasAccess(string verbName)
+        public bool LoggedUserHasPermission(string verbName)
         {
             var acl = LoggedUser.Role.ACLs.SingleOrDefault(a => a.AclVerb.Name == verbName);
 

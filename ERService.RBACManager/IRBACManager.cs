@@ -35,7 +35,7 @@ namespace ERService.RBAC
 
         Task<bool> RoleExistsAsync(string roleName);
 
-        bool LoggedUserHasAccess(string verbName);
+        bool LoggedUserHasPermission(string verbName);
 
         Task SaveAsync();
 

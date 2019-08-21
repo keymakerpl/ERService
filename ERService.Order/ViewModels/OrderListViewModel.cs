@@ -1,23 +1,24 @@
-﻿using ERService.Infrastructure.Base;
-using ERService.MSSQLDataAccess;
-using ERService.Business;
-using Prism.Regions;
-using Prism.Commands;
-using System;
+﻿using ERService.Business;
+using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
-using System.Collections.ObjectModel;
-using ERService.OrderModule.Wrapper;
-using System.Collections.Specialized;
-using ERService.RBAC;
 using ERService.Infrastructure.Dialogs;
+using ERService.MSSQLDataAccess;
+using ERService.OrderModule.Wrapper;
+using ERService.RBAC;
+using Prism.Commands;
+using Prism.Regions;
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ERService.OrderModule.ViewModels
 {
     public class OrderListViewModel : ListModelBase<Order, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
-    {           
-        public OrderWrapper SelectedOrder { get; set; }
+    {
+        private IMessageDialogService _dialogService;
+        private IRBACManager _rbacManager;
 
-        public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager, 
+        public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
             IMessageDialogService messageDialogService) : base(context, regionManager)
         {
             _rbacManager = rBACManager;
@@ -27,13 +28,18 @@ namespace ERService.OrderModule.ViewModels
             Models.CollectionChanged += Models_CollectionChanged;
 
             AddCommand = new DelegateCommand(OnAddExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);            
-        }        
+            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
+        }
+
+        public OrderWrapper SelectedOrder { get; set; }
+        public ObservableCollection<OrderWrapper> Orders { get; private set; }
+        public bool KeepAlive => true;
+
+        #region Events
 
         public async override void OnAddExecute()
         {
-            //TODO: Trzeba to uprościć
-            if(!_rbacManager.LoggedUserHasAccess(AclVerbNames.NewOrderPermission))
+            if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanAddOrder))
             {
                 await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
                 return;
@@ -45,6 +51,20 @@ namespace ERService.OrderModule.ViewModels
             parameters.Add("ViewFullName", ViewNames.CustomerView);
 
             ShowDetail(parameters);
+        }
+
+        public override bool OnDeleteCanExecute()
+        {
+            return SelectedOrder != null;
+        }
+
+        public async override void OnDeleteExecute()
+        {
+            if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanDeleteOrder))
+            {
+                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                return;
+            }
         }
 
         public override void OnMouseDoubleClickExecute()
@@ -59,16 +79,9 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
+        #endregion
+
         #region Navigation
-
-        public bool KeepAlive => true;
-
-        private IACLVerbCollection _verbCollection;
-        private IRBACManager _rbacManager;
-        private IMessageDialogService _dialogService;
-
-        public ObservableCollection<OrderWrapper> Orders { get; private set; }
-
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             continuationCallback(true);
@@ -81,12 +94,11 @@ namespace ERService.OrderModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            LoadAsync();            
+            LoadAsync();
         }
 
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -97,6 +109,6 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        #endregion
+        #endregion Navigation
     }
 }

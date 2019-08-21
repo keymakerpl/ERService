@@ -14,7 +14,9 @@ namespace ERService.Business
         public Guid AclVerbId { get; set; }
 
         public AclVerb AclVerb { get; set; }
-        
+
+        public Guid RoleId { get; set; }
+
         public int Value { get; set; }
 
         [Timestamp]
