@@ -108,6 +108,10 @@
       <Project>{3E121EEF-DAE9-4799-99DF-0802D6C644BB}</Project>
       <Name>ERService.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
+      <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
+      <Name>ERService.RBAC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
       <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
       <Name>ERService.MSSQLDataAccess</Name>

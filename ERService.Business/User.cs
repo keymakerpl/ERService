@@ -14,17 +14,17 @@ namespace ERService.Business
         [MaxLength(50)]
         [Index(IsUnique = true)]
         public string Login { get; set; }
-        
+
         public string PasswordHash { get; set; }
 
         public string Salt { get; set; }
 
         [MaxLength(50)]
         public string FirstName { get; set; }
-        
+
         [MaxLength(50)]
         public string LastName { get; set; }
-        
+
         [Phone]
         [MaxLength(50)]
         public string PhoneNumber { get; set; }

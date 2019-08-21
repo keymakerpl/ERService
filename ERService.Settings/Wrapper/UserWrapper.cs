@@ -75,5 +75,16 @@ namespace ERService.Settings.Wrapper
             get { return GetValue<string>(); }
             set { SetProperty(ref _salt, value); }
         }
+
+        private Guid? _roleId;
+        public Guid? RoleId { get { return GetValue<Guid>(); } set { SetProperty(ref _roleId, value); } }
+
+
+        private Role _role;
+        public Role Role
+        {
+            get { return GetValue<Role>(); }
+            set { SetProperty(ref _role, value); }
+        }
     }
 }

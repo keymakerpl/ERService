@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq.Expressions;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> 
+    public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
         where TContext : DbContext
         where TEntity : class
     {
@@ -15,7 +15,7 @@ namespace ERService.Infrastructure.Repositories
 
         protected GenericRepository(TContext context)
         {
-            this.Context = context;            
+            this.Context = context;
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -35,7 +35,7 @@ namespace ERService.Infrastructure.Repositories
             return result;
         }
 
-        public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, 
+        public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
             var query = GetAllIncluding(includeProps);
@@ -53,7 +53,6 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task SaveAsync()
         {
-
 #if DEBUG
             Context.Database.Log = Console.Write;
 #endif
@@ -72,7 +71,7 @@ namespace ERService.Infrastructure.Repositories
 
         public void Remove(TEntity model)
         {
-            Context.Set<TEntity>().Remove(model);            
-        }                
-    }   
+            Context.Set<TEntity>().Remove(model);
+        }
+    }
 }

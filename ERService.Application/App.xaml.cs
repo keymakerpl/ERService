@@ -75,7 +75,7 @@ namespace ERService.Application
             containerRegistry.Register<IUserRepository, RBACRepository.UserRepository>();
             containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();
             containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
-            //containerRegistry.Register<IAclRepository, AclRepository>();
+            containerRegistry.Register<IAclRepository, AclRepository>();
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
@@ -89,6 +89,7 @@ namespace ERService.Application
             containerRegistry.Register<IRoleRepository, RoleRepository>();
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
+            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ERService.Business;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using ERService.Business;
 
 namespace ERService.RBAC
 {
@@ -8,21 +8,41 @@ namespace ERService.RBAC
     public interface IRBACManager
     {
         void AddAclToRole(AclVerb aclVerb);
-        void AddUserToRole(User user, Role role);
+
         void AddRole(Role role);
-        Task<Role> GetNewRole(string roleName);
-        void RemoveRole(Role role);
-        Task<IEnumerable<Role>> GetAllRolesAsync();
+
+        void AddUserToRole(User user, Role role);
+
         bool Authorize(string login, string password);
+
         List<Acl> GetAclList();
+
+        Task<IEnumerable<Role>> GetAllRolesAsync();
+
+        Task<IEnumerable<User>> GetAllUsersAsync();
+
+        Task<Role> GetNewRole(string roleName);
+
         List<Acl> GetRolePermissions(Role role);
+
         Role GetUserRole(User user);
-        Task<bool> RoleExistsAsync(string roleName);
-        bool RoleExists(string roleName);
-        bool UserExists(string login);
-        bool UserIsInRole(string login, Role role);
+
+        void RemoveRole(Role role);
+
         void RemoveUser(User user);
-        Task<IEnumerable<User>> GetAllUsersAsync();        
+
+        bool RoleExists(string roleName);
+
+        Task<bool> RoleExistsAsync(string roleName);
+
+        bool LoggedUserHasAccess(string verbName);
+
         Task SaveAsync();
+
+        bool UserExists(string login);
+
+        bool UserIsInRole(string login, Role role);
+
+        User LoggedUser { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using ERService.Infrastructure.Repositories;
 
 namespace ERService.RBAC.Data.Repository
 {
-    interface IAclRepository : IGenericRepository<Acl>
+    public interface IAclRepository : IGenericRepository<Acl>
     {
     }
 }

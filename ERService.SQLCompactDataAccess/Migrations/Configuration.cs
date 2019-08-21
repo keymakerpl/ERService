@@ -48,7 +48,7 @@ namespace ERService.MSSQLDataAccess.Migrations
             context.SaveChanges();
 
             context.Users.AddOrUpdate(u => u.Login,
-                new User() { Login = "administrator", IsActive = true, IsAdmin = true, PasswordHash = "123123",
+                new User() { Login = "administrator", IsActive = true, IsAdmin = true,
                     RoleId = context.Roles.Single(r => r.Name == "Administrator").Id }
                 );
 

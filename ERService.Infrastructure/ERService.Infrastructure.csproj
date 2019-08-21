@@ -51,6 +51,7 @@
     <Compile Include="Base\IDetailViewModelBase.cs" />
     <Compile Include="Base\ListModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
+    <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />

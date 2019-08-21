@@ -1,19 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ERService.Business;
+﻿using ERService.Business;
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.RBAC.Data.Repository
 {
-    public class RBACRepository 
+    public class RBACRepository
     {
         public class UserRepository : GenericRepository<User, ERServiceDbContext>, IUserRepository
         {
             public UserRepository(ERServiceDbContext context) : base(context)
             {
+            }
+
+            public override async Task<IEnumerable<User>> GetAllAsync()
+            {
+                return await Context.Set<User>().Include(u => u.Role.ACLs).Include(r => r.Role).ToListAsync();
             }
         }
 
@@ -21,7 +27,6 @@ namespace ERService.RBAC.Data.Repository
         {
             public RoleRepository(ERServiceDbContext context) : base(context)
             {
-                
             }
 
             public override async Task<IEnumerable<Role>> GetAllAsync()

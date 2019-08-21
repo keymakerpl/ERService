@@ -8,6 +8,8 @@ using ERService.Infrastructure.Constants;
 using System.Collections.ObjectModel;
 using ERService.OrderModule.Wrapper;
 using System.Collections.Specialized;
+using ERService.RBAC;
+using ERService.Infrastructure.Dialogs;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -15,8 +17,12 @@ namespace ERService.OrderModule.ViewModels
     {           
         public OrderWrapper SelectedOrder { get; set; }
 
-        public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager) : base(context, regionManager)
+        public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager, 
+            IMessageDialogService messageDialogService) : base(context, regionManager)
         {
+            _rbacManager = rBACManager;
+            _dialogService = messageDialogService;
+
             Orders = new ObservableCollection<OrderWrapper>();
             Models.CollectionChanged += Models_CollectionChanged;
 
@@ -24,8 +30,15 @@ namespace ERService.OrderModule.ViewModels
             DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);            
         }        
 
-        public override void OnAddExecute()
+        public async override void OnAddExecute()
         {
+            //TODO: Trzeba to uprościć
+            if(!_rbacManager.LoggedUserHasAccess(AclVerbNames.NewOrderPermission))
+            {
+                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                return;
+            }
+
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);
@@ -49,6 +62,10 @@ namespace ERService.OrderModule.ViewModels
         #region Navigation
 
         public bool KeepAlive => true;
+
+        private IACLVerbCollection _verbCollection;
+        private IRBACManager _rbacManager;
+        private IMessageDialogService _dialogService;
 
         public ObservableCollection<OrderWrapper> Orders { get; private set; }
 

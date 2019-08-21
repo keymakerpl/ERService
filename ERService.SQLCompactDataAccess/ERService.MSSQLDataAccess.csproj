@@ -180,6 +180,10 @@
     <Compile Include="Migrations\201908091629590_ChangedIntToBoolInUser.Designer.cs">
       <DependentUpon>201908091629590_ChangedIntToBoolInUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908191647037_AddedRoleNaviToUser.cs" />
+    <Compile Include="Migrations\201908191647037_AddedRoleNaviToUser.Designer.cs">
+      <DependentUpon>201908191647037_AddedRoleNaviToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -290,6 +294,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908091629590_ChangedIntToBoolInUser.resx">
       <DependentUpon>201908091629590_ChangedIntToBoolInUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908191647037_AddedRoleNaviToUser.resx">
+      <DependentUpon>201908191647037_AddedRoleNaviToUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

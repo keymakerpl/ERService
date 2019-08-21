@@ -20,7 +20,7 @@ namespace ERService.Settings.ViewModels
         private Role _selectedRole;
         private User _selectedUser;
 
-        public UsersSettingsViewModel(IEventAggregator eventAggregator, 
+        public UsersSettingsViewModel(IEventAggregator eventAggregator,
             IRegionManager regionManager, IRBACManager rBACManager,
             IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
@@ -172,31 +172,48 @@ namespace ERService.Settings.ViewModels
 
         private bool OnRemoveRoleCanExecute()
         {
-            return SelectedRole != null && !SelectedRole.IsSystem;
+            return SelectedRole != null;
         }
 
         private async void OnRemoveRoleExecute()
         {
-            var dialogResult = await _messageDialogService
+            if (SelectedUser.IsSystem)
+            {
+                var dialogResult = await _messageDialogService
+                    .ShowInformationMessageAsync(this, "Nie można usunąć roli...", "Nie można usunąć roli systemowej.");
+
+                return;
+            }
+
+            var confirmDialogResult = await _messageDialogService
                 .ShowConfirmationMessageAsync(this, "Czy usunąć rolę?", $"Czy usunąć rolę {SelectedRole.Name}?");
 
-            if (dialogResult == DialogResult.Cancel) return;
+            if (confirmDialogResult == DialogResult.Cancel) return;
 
             _rbacManager.RemoveRole(SelectedRole);
             Roles.Remove(SelectedRole);
+            RoleACLs.Clear();
         }
 
         private bool OnRemoveUserCanExecute()
         {
-            return SelectedUser != null && !SelectedUser.IsSystem;
+            return SelectedUser != null;
         }
 
         private async void OnRemoveUserExecute()
         {
-            var dialogResult = await _messageDialogService
+            if (SelectedUser.IsSystem)
+            {
+                var dialogResult = await _messageDialogService
+                    .ShowInformationMessageAsync(this, "Nie można usunąć użytkownika...", "Nie można usunąć użytkownika systemowego.");
+
+                return;
+            }
+
+            var confirmDialogResult = await _messageDialogService
                 .ShowConfirmationMessageAsync(this, "Czy usunąć użytkownika?", $"Czy usunąć użytkownika {SelectedUser.FirstName} {SelectedUser.LastName}?");
 
-            if (dialogResult == DialogResult.Cancel) return;
+            if (confirmDialogResult == DialogResult.Cancel) return;
 
             _rbacManager.RemoveUser(SelectedUser);
             Users.Remove(SelectedUser);

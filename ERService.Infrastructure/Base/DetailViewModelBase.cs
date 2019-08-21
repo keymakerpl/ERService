@@ -27,6 +27,7 @@ namespace ERService.Infrastructure.Base
         {
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
+
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem?
             CancelCommand = new DelegateCommand(OnCancelEditExecute);
@@ -64,6 +65,16 @@ namespace ERService.Infrastructure.Base
                 _title = value;
                 RaisePropertyChanged();
             }
+        }
+
+        public virtual void Load()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Load(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual Task LoadAsync()
@@ -142,7 +153,7 @@ namespace ERService.Infrastructure.Base
                 {
                     await _messageDialogService
                         .ShowInformationMessageAsync(this, "Usunięty element...", "Element został w międzyczasie usunięty przez innego użytkownika.");
-                    RaiseDetailDeletedEvent(ID, Title);
+                    RaiseDetailSavedEvent(ID, Title);
                     return;
                 }
 
