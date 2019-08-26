@@ -4,6 +4,7 @@ using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -22,6 +23,7 @@ namespace ERService.CustomerModule.ViewModels
         private CustomerAddress _customerAddress;
         private IRegionNavigationService _navigationService;
         private IRegionManager _regionManager;
+        private readonly IRBACManager _rBACManager;
 
         public ObservableCollection<Customer> Customers { get; private set; }
 
@@ -30,11 +32,12 @@ namespace ERService.CustomerModule.ViewModels
         private Customer _selectedCustomer;
 
         public CustomerViewModel(ICustomerRepository customerRepository, IRegionManager regionManager,
-            IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+            IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IRBACManager rBACManager) 
+            : base(eventAggregator, messageDialogService)
         {
             _repository = customerRepository;
             _regionManager = regionManager;
-
+            _rBACManager = rBACManager;
             Customers = new ObservableCollection<Customer>();
 
             GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
@@ -121,6 +124,9 @@ namespace ERService.CustomerModule.ViewModels
             {
                 await LoadAsync(Guid.Parse(id));
             }
+
+            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditCustomer))
+                IsReadOnly = true;
         }
         #endregion Navigation
 

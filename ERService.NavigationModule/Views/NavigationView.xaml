@@ -22,7 +22,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               FontSize="16"
+                               FontSize="18"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontFamily="Segoe MDL2 Assets"
@@ -30,7 +30,7 @@
                                Text="{Binding Glyph}" />
                     <TextBlock Grid.Column="1"
                                VerticalAlignment="Center"
-                               FontSize="16"
+                               FontSize="18"
                                Foreground="Black"
                                Text="{Binding Label}" />
                 </Grid>
@@ -40,7 +40,7 @@
         
         <Controls:HamburgerMenu x:Name="HamburgerMenuControl"
                         Foreground="Black"
-                        PaneBackground="WhiteSmoke"
+                        PaneBackground="Gainsboro"
                         IsPaneOpen="True"
                         ItemTemplate="{StaticResource MenuItemTemplate}"
                         OptionsItemTemplate="{StaticResource MenuItemTemplate}"
@@ -60,7 +60,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="24"
-                            Foreground="White"
+                            Foreground="Black"
                             Text="{Binding Label}" />
                         </Border>
                         <ContentControl x:Name="TheContent"
@@ -79,7 +79,7 @@
                                                      CommandParameter="StartPageView"/>
 
 
-                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Klienci"
+                    <Controls:HamburgerMenuGlyphItem Glyph="" Label="Klienci"
                                                      Command="{Binding OpenDetailViewCommand}"
                                                      CommandParameter="CustomerListView"/>
 

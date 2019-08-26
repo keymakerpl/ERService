@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -13,6 +14,9 @@ namespace ERService.Infrastructure.Base
         T SelectedModel { get; set; }
 
         void LoadAsync();
+        void Load(Expression<Func<T, bool>> predicate,
+            params Expression<Func<T, object>>[] includeProps);
+
         void ShowDetail(NavigationParameters parameters);
         void OnMouseDoubleClickExecute();
         void OnAddExecute();

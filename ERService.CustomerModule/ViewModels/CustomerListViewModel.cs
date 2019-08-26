@@ -3,12 +3,12 @@ using ERService.Business;
 using Prism.Events;
 using System;
 using Prism.Regions;
-using ERService.CustomerModule.Views;
 using Prism.Commands;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Constants;
 using ERService.RBAC;
 using ERService.Infrastructure.Dialogs;
+using System.Windows;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -32,7 +32,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanAddCustomer))
             {
-                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                await _dialogService.ShowAccessDeniedMessageAsync(this);
                 return;
             }
 
@@ -47,13 +47,26 @@ namespace ERService.CustomerModule.ViewModels
         {
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanDeleteCustomer))
             {
-                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                await _dialogService.ShowAccessDeniedMessageAsync(this);
                 return;
             }
 
-            //TODO: Confirm dialog
+            var confirmDialogResult = await _dialogService.ShowConfirmationMessageAsync(this, "Usuwanie klienta..."
+                , $"Czy usunąć klienta {SelectedModel.FirstName} {SelectedModel.LastName}?");
 
-            base.OnDeleteExecute();
+            if (confirmDialogResult == DialogResult.OK)
+            {
+                try
+                {
+                    base.OnDeleteExecute();
+                }
+                catch (Exception ex)
+                {
+                    //TODO: exception hunter
+                    MessageBox.Show("Ups... " + Environment.NewLine +
+                    Environment.NewLine + ex.Message);
+                }
+            }
         }
 
         public override void OnMouseDoubleClickExecute()
@@ -77,7 +90,7 @@ namespace ERService.CustomerModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            LoadAsync();
+            Load(c => c.Id != Guid.Empty, o => o.Orders);
         }
 
         public bool KeepAlive => false;

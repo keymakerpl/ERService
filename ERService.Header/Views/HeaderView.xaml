@@ -13,61 +13,73 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1" HorizontalAlignment="Right"
-              VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="5">
+            <Border HorizontalAlignment="Right"
+                VerticalAlignment="Center" BorderThickness="3"
+                BorderBrush="DarkGray"
+                CornerRadius="5"
+                Background="GhostWhite"
+                    Margin="5 0 0 0"
+                    MinHeight="80">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <Label Content="W trakcie naprawy: " FontSize="14" FontStyle="Italic" VerticalContentAlignment="Center"/>
-            <Label  Grid.Column="1" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Foreground="Green"
+                    <Label Content="W trakcie naprawy: " FontSize="14" FontStyle="Italic" VerticalContentAlignment="Center"/>
+                    <Label  Grid.Column="1" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Foreground="Green"
                     Content="{Binding InProgressCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Label Content="Po terminie naprawy: " 
+                    <Label Content="Po terminie naprawy: " 
                    Grid.Row="1"
                    FontSize="14" FontStyle="Italic"
                    VerticalContentAlignment="Center"/>
-            <Label  Grid.Column="1" Grid.Row="1"
+                    <Label  Grid.Column="1" Grid.Row="1"
                     FontSize="16" FontWeight="Bold"
                     Foreground="Crimson"
                     VerticalContentAlignment="Center"
                     Content="{Binding ExpiredOrderCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        </Grid>
-
-        <StackPanel Grid.Column="2" HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Margin="0 0 25 0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Zalogowany jako:" FontStyle="Italic"
+                </Grid>
+            </Border>
+            <Border HorizontalAlignment="Right"
+                VerticalAlignment="Center" BorderThickness="3"
+                BorderBrush="DarkGray"
+                CornerRadius="5"
+                Background="GhostWhite"
+                    Margin="5 0 5 0"
+                    MinHeight="80"
+                    MinWidth="170">
+                <Grid Margin="7">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Zalogowany jako:" FontStyle="Italic"
                        VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
-                <Label Grid.Row="1" Content="{Binding CurrentUserFullName}"
-                       FontSize="16" FontWeight="Bold" Foreground="White"
+                    <Label Grid.Row="1" Content="{Binding CurrentUserFullName}"
+                       FontSize="16" FontWeight="Bold" Foreground="Black"
                        Margin="10 0 0 0"/>
-                <Label Grid.Column="1" Content="" Grid.Row="1"
+                    <Label Grid.Column="1" Content="" Grid.Row="1"
                        FontFamily="Segoe MDL2 Assets"
                        FontSize="16"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center">
-                </Label>
-            </Grid>
+                    </Label>
+                </Grid>
+            </Border>
         </StackPanel>
 
     </Grid>

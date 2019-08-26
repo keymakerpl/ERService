@@ -10,9 +10,11 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Windows;
 
 namespace ERService.OrderModule.ViewModels
 {
+    // Oj ListModelBase musi być bindable. Może go Wrappować? ListWrapper
     public class OrderListViewModel : ListModelBase<Order, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         private IMessageDialogService _dialogService;
@@ -31,7 +33,13 @@ namespace ERService.OrderModule.ViewModels
             DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
         }
 
-        public OrderWrapper SelectedOrder { get; set; }
+        private OrderWrapper _selectedOrder;
+        public OrderWrapper SelectedOrder
+        {
+            get { return _selectedOrder; }
+            set {_selectedOrder = value; DeleteCommand.RaiseCanExecuteChanged(); }
+        }
+
         public ObservableCollection<OrderWrapper> Orders { get; private set; }
         public bool KeepAlive => true;
 
@@ -41,7 +49,7 @@ namespace ERService.OrderModule.ViewModels
         {
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanAddOrder))
             {
-                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                await _dialogService.ShowAccessDeniedMessageAsync(this);
                 return;
             }
 
@@ -62,10 +70,29 @@ namespace ERService.OrderModule.ViewModels
         {
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanDeleteOrder))
             {
-                await _dialogService.ShowInformationMessageAsync(this, "Brak dostępu...", "Nie masz uprawnień do tej funkcji");
+                await _dialogService.ShowAccessDeniedMessageAsync(this);
                 return;
             }
-        }
+
+            var confirmDialogResult = await _dialogService.ShowConfirmationMessageAsync(this, "Usuwanie zlecenia..."
+                , $"Czy usunąć zlecenie numer: {SelectedOrder.Number}?");
+
+            if (confirmDialogResult == DialogResult.OK)
+            {
+                try
+                {
+                    Remove(SelectedOrder.Model);
+                    Orders.Remove(SelectedOrder);
+                    await SaveAsync();
+                }
+                catch (Exception ex)
+                {
+                    //TODO: exception hunter
+                    MessageBox.Show("Ups... " + Environment.NewLine +
+                    Environment.NewLine + ex.Message);
+                }
+            }
+        } 
 
         public override void OnMouseDoubleClickExecute()
         {
@@ -98,7 +125,7 @@ namespace ERService.OrderModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            LoadAsync();
+            Load(o => o.CustomerId.HasValue, h => h.Hardwares);
         }
 
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

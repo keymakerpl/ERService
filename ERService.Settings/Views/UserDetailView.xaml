@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ERService.Settings.Views"
+             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Background="White" Margin="10">
+    
+    <Grid Background="White" Margin="10" helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

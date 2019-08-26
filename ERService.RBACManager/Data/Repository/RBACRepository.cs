@@ -34,7 +34,9 @@ namespace ERService.RBAC.Data.Repository
 
             public override async Task<IEnumerable<Role>> GetAllAsync()
             {
-                return await Context.Set<Role>().Include(a => a.ACLs.Select(v => v.AclVerb)).ToListAsync();
+                return await Context.Set<Role>()
+                    .Include(a => a.ACLs.Select(v => v.AclVerb))
+                    .ToListAsync();
             }
         }
 

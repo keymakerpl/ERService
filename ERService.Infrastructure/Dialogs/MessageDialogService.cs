@@ -3,7 +3,6 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace ERService.Infrastructure.Dialogs
 {
-    //TODO: Może przerobić to na Fabrykę, Strategię?
     public class MessageDialogService : IMessageDialogService
     {
         private IDialogCoordinator _dialogCoordinator;
@@ -27,10 +26,17 @@ namespace ERService.Infrastructure.Dialogs
             return await _dialogCoordinator.ShowInputAsync(context, title, message, _confirmDialogSettings);
         }
 
-        public async Task<DialogResult> ShowInformationMessageAsync(object context, string title, string message)
+        public async Task ShowInformationMessageAsync(object context, string title, string message)
         {
-            return await _dialogCoordinator.ShowMessageAsync(context, title, message, MessageDialogStyle.Affirmative) == MessageDialogResult.Affirmative
-                ? DialogResult.OK : DialogResult.Cancel;
+            await _dialogCoordinator.ShowMessageAsync(context, title, message);
+        }
+
+        public async Task ShowAccessDeniedMessageAsync(object context, string title = null, string message = null)
+        {
+            var dialogTitle = title != null ? title : "Brak uprawnień...";
+            var dialogMessage = message != null ? message : "Nie masz uprawnień do wykonania tej czynności.";
+
+            await _dialogCoordinator.ShowMessageAsync(context, dialogTitle, dialogMessage);
         }
     }
 

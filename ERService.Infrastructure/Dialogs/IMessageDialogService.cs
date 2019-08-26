@@ -7,6 +7,8 @@ namespace ERService.Infrastructure.Dialogs
     {
         Task<DialogResult> ShowConfirmationMessageAsync(object context, string title, string message);
         Task<string> ShowInputMessageAsync(object context, string title, string message);
-        Task<DialogResult> ShowInformationMessageAsync(object context, string title, string message);
+        Task ShowInformationMessageAsync(object context, string title, string message);
+        Task ShowAccessDeniedMessageAsync(object context, string title = null, string message = null);
+
     }
 }

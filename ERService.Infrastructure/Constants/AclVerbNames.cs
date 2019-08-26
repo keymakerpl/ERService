@@ -2,8 +2,6 @@
 {
     public class AclVerbNames
     {
-        public const string FullAccess = "Pełen dostęp";
-
         public const string PrintConfiguration = "Dostęp do konfiguracji wydruków";
         public const string NumerationConfiguration = "Dostęp do konfiguracji numeracji";
         public const string ApplicationConfiguration = "Dostęp do konfiguracji aplikacji";

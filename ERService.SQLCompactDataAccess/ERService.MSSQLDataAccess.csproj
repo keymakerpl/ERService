@@ -188,6 +188,18 @@
     <Compile Include="Migrations\201908211427338_AddedRoleIdToAcl.Designer.cs">
       <DependentUpon>201908211427338_AddedRoleIdToAcl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908241648347_AddedOrdersToCustomer.cs" />
+    <Compile Include="Migrations\201908241648347_AddedOrdersToCustomer.Designer.cs">
+      <DependentUpon>201908241648347_AddedOrdersToCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908250538497_AddedNullableIdsToOrder.cs" />
+    <Compile Include="Migrations\201908250538497_AddedNullableIdsToOrder.Designer.cs">
+      <DependentUpon>201908250538497_AddedNullableIdsToOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908250932188_AddedNullableToOrder.cs" />
+    <Compile Include="Migrations\201908250932188_AddedNullableToOrder.Designer.cs">
+      <DependentUpon>201908250932188_AddedNullableToOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -304,6 +316,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908211427338_AddedRoleIdToAcl.resx">
       <DependentUpon>201908211427338_AddedRoleIdToAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908241648347_AddedOrdersToCustomer.resx">
+      <DependentUpon>201908241648347_AddedOrdersToCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908250538497_AddedNullableIdsToOrder.resx">
+      <DependentUpon>201908250538497_AddedNullableIdsToOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908250932188_AddedNullableToOrder.resx">
+      <DependentUpon>201908250932188_AddedNullableToOrder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

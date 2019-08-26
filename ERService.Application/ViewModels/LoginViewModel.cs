@@ -1,15 +1,15 @@
 ﻿using ERService.Infrastructure.Dialogs;
-using ERService.Infrastructure.Events;
-using ERService.Infrastructure.Helpers;
 using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using System;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ERService.ViewModels
 {
-    public class LoginWindowViewModel : BindableBase
+    public class LoginViewModel : BindableBase
     {
         private string _login = "administrator";
 
@@ -21,6 +21,7 @@ namespace ERService.ViewModels
 
         private string _password;
 
+        [Obsolete]
         public string Password
         {
             get { return _password; }
@@ -33,21 +34,25 @@ namespace ERService.ViewModels
 
         public ICommand LoginCommand { get; private set; }
 
-        public LoginWindowViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
+        public LoginViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
             _rbacManager = iRBACManager;
             _messageDialogService = messageDialogService;
 
-            LoginCommand = new DelegateCommand(OnLoginCommandExecute);
+            LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
         }
 
-        private void OnLoginCommandExecute()
+        private void OnLoginCommandExecute(object parameter)
         {
-            if (!_rbacManager.Authorize(Login, Password))
+            var passwordBox = parameter as PasswordBox;
+            if (passwordBox != null)
             {
-                _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
-            }
+                if (!_rbacManager.Authorize(Login, passwordBox.Password))
+                {
+                    _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
+                }
+            }            
         }
     }
 }

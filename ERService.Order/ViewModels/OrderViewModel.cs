@@ -15,10 +15,11 @@ using System.Threading.Tasks;
 using System.Linq;
 using ERService.OrderModule.OrderNumeration;
 using ERService.Infrastructure.Dialogs;
+using ERService.RBAC;
 
 namespace ERService.OrderModule.ViewModels
 {
-    public class OrderViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
+    public class OrderViewModel : DetailViewModelBase
     {
         private string _cost;
         private string _externalNumber;
@@ -31,21 +32,23 @@ namespace ERService.OrderModule.ViewModels
         private IRegionManager _regionManager;
         private IBlobRepository _blobRepository;
         private IOrderRepository _orderRepository;
+        private readonly IRBACManager _rBACManager;
         private IOrderTypeRepository _typeRepository;
         private IOrderStatusRepository _statusRepository;
         private IRegionNavigationService _navigationService;
         private INumerationRepository _numerationRepository;
-
         private bool _wizardMode;
+
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator,
-            INumerationRepository numerationRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+            INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
             _statusRepository = statusRepository;
             _blobRepository = blobRepository;
             _numerationRepository = numerationRepository;
+            _rBACManager = rBACManager;
             _regionManager = regionManager;
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
@@ -205,6 +208,9 @@ namespace ERService.OrderModule.ViewModels
                     await LoadAsync(Guid.Parse(id));
                 }
             }
+
+            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditOrder))
+                IsReadOnly = true;
         }
 
         private void OnGoBackExecute()
@@ -243,14 +249,9 @@ namespace ERService.OrderModule.ViewModels
             Hardware = Order.Model.Hardwares.FirstOrDefault();
         }
 
-        protected override void OnCancelEditExecute()
-        {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
         protected override bool OnSaveCanExecute()
         {
-            return true;
+            return Order != null && !Order.HasErrors && HasChanges && !WizardMode;
         }
 
         protected async override void OnSaveExecute()

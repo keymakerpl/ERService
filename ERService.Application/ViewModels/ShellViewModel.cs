@@ -19,14 +19,14 @@ namespace ERService.Application.ViewModels
             _regionManager = regionManager;
 
             var assembly = Assembly.GetEntryAssembly();
-            _applicationName = assembly.GetName().Name;
+            _applicationName = $"{assembly.GetName().Name}";
 
             ShowLoginWindow();
         }
 
         private void ShowLoginWindow()
         {
-            _regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(LoginWindowView));
+            _regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(LoginView));
         }
     }
 }

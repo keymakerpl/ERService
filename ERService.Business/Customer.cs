@@ -15,7 +15,8 @@ namespace ERService.Business
 
         private void Init()
         {
-            CustomerAddresses = new Collection<CustomerAddress>();            
+            CustomerAddresses = new Collection<CustomerAddress>();
+            Orders = new Collection<Order>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -58,6 +59,7 @@ namespace ERService.Business
         #region Relacje
 
         public ICollection<CustomerAddress> CustomerAddresses { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
         #endregion
 

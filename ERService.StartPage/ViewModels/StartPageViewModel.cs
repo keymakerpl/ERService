@@ -1,5 +1,7 @@
 ﻿using System;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
+using ERService.RBAC;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -11,15 +13,19 @@ namespace ERService.StartPage.ViewModels
         public bool KeepAlive => false;
 
         private IRegionManager _regionManager;
+        private readonly IRBACManager _rBACManager;
+        private readonly IMessageDialogService _dialogService;
 
         public DelegateCommand OrdersCommand { get; private set; }
         public DelegateCommand CustomersCommand { get; private set; }
         public DelegateCommand SettingsCommand { get; private set; }
         public DelegateCommand AddOrderCommand { get; private set; }
 
-        public StartPageViewModel(IRegionManager regionManager)
+        public StartPageViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
             _regionManager = regionManager;
+            _rBACManager = rBACManager;
+            _dialogService = dialogService;
 
             OrdersCommand = new DelegateCommand(OnOrdersCommandExecute);
             CustomersCommand = new DelegateCommand(OnCustomersCommandExecute);
@@ -27,8 +33,14 @@ namespace ERService.StartPage.ViewModels
             AddOrderCommand = new DelegateCommand(OnAddOrderExecute);
         }
 
-        private void OnAddOrderExecute()
+        private async void OnAddOrderExecute()
         {
+            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanAddOrder))
+            {
+                await _dialogService.ShowAccessDeniedMessageAsync(this);
+                return;
+            }
+
             var parameters = new NavigationParameters();
             parameters.Add("ID", Guid.Empty);
             parameters.Add("Wizard", true);

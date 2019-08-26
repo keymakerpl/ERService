@@ -127,6 +127,12 @@ namespace ERService.Settings.ViewModels
 
         private async void OnAddRoleExecute()
         {
+            if (!_rbacManager.LoggedUser.IsAdmin && !_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+            {
+                await _messageDialogService.ShowAccessDeniedMessageAsync(this);
+                return;
+            }
+
             var dialogResult = await _messageDialogService
                 .ShowInputMessageAsync(this, "Nowa rola", "Podaj nazwę dla nowej roli:");
 
@@ -147,8 +153,14 @@ namespace ERService.Settings.ViewModels
             }
         }
 
-        private void OnAddUserExecute()
+        private async void OnAddUserExecute()
         {
+            if (!_rbacManager.LoggedUser.IsAdmin && !_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+            {
+                await _messageDialogService.ShowAccessDeniedMessageAsync(this);
+                return;
+            }
+
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView);
         }
 
@@ -177,12 +189,24 @@ namespace ERService.Settings.ViewModels
 
         private async void OnRemoveRoleExecute()
         {
-            if (SelectedUser.IsSystem)
+            if (!_rbacManager.LoggedUser.IsAdmin && !_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
             {
-                var dialogResult = await _messageDialogService
+                await _messageDialogService.ShowAccessDeniedMessageAsync(this);
+                return;
+            }
+
+            if (SelectedRole.IsSystem)
+            {
+                await _messageDialogService
                     .ShowInformationMessageAsync(this, "Nie można usunąć roli...", "Nie można usunąć roli systemowej.");
 
                 return;
+            }
+
+            if (SelectedRole.Id == _rbacManager.LoggedUser.RoleId)
+            {
+                await _messageDialogService
+                    .ShowInformationMessageAsync(this, "Nie można usunąć roli...", "Nie można usunąć obecnie używanej roli.");
             }
 
             var confirmDialogResult = await _messageDialogService
@@ -202,12 +226,24 @@ namespace ERService.Settings.ViewModels
 
         private async void OnRemoveUserExecute()
         {
+            if (!_rbacManager.LoggedUser.IsAdmin && !_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+            {
+                await _messageDialogService.ShowAccessDeniedMessageAsync(this);
+                return;
+            }
+
             if (SelectedUser.IsSystem)
             {
-                var dialogResult = await _messageDialogService
+                await _messageDialogService
                     .ShowInformationMessageAsync(this, "Nie można usunąć użytkownika...", "Nie można usunąć użytkownika systemowego.");
 
                 return;
+            }
+
+            if (SelectedUser.Id == _rbacManager.LoggedUser.Id)
+            {
+                await _messageDialogService
+                    .ShowInformationMessageAsync(this, "Nie można usunąć użytkownika...", "Nie można usunąć użytkownika z którego obecnie korzystasz.");
             }
 
             var confirmDialogResult = await _messageDialogService
@@ -228,6 +264,9 @@ namespace ERService.Settings.ViewModels
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync();
+
+            if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+                IsReadOnly = true;
         }
 
         #endregion Navigation

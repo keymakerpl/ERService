@@ -76,6 +76,9 @@ namespace ERService.Settings.ViewModels
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
 
             Load(id);
+
+            if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+                IsReadOnly = true;
         }
 
         protected override void OnCancelEditExecute()

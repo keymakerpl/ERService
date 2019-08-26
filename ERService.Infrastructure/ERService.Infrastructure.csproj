@@ -71,6 +71,7 @@
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\IPasswordHasher.cs" />
     <Compile Include="Helpers\PasswordHasher.cs" />
+    <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

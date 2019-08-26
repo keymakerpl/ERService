@@ -14,12 +14,9 @@ using System.Windows.Shapes;
 
 namespace ERService.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginWindowView.xaml
-    /// </summary>
-    public partial class LoginWindowView : UserControl
+    public partial class LoginView : UserControl
     {
-        public LoginWindowView()
+        public LoginView()
         {
             InitializeComponent();
         }
