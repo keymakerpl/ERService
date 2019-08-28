@@ -5,14 +5,72 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="600" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid Background="PaleTurquoise">
-        <TextBlock Text="{Binding Message}"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             prism:ViewModelLocator.AutoWireViewModel="True" 
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}">
+
+    <UserControl.Resources>
+        <Style x:Key="LargeTileStyle" TargetType="controls:Tile">
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Height" Value="200" />
+            <Setter Property="TitleFontSize" Value="15" />
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="SmallTileStyle" TargetType="controls:Tile">
+            <Setter Property="Width" Value="125" />
+            <Setter Property="Height" Value="125" />
+            <Setter Property="TitleFontSize" Value="15" />
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid Background="White">
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Border BorderBrush="LightGray" Margin="10"
+                BorderThickness="1"  >
+            <WrapPanel Grid.Row="0"
+                       Orientation="Horizontal" 
+                       VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center" 
-                   Foreground="Black"
-                   FontSize="35"/>
+                       Margin="15">
+
+
+                <controls:Tile Title="Dodaj nową naprawę"
+                               Style="{StaticResource SmallTileStyle}"
+                               Background="CadetBlue"
+                               Command="{Binding AddOrderCommand}"/>
+
+                <controls:Tile Title="Naprawy" 
+                               Style="{StaticResource SmallTileStyle}"
+                               Background="Gray"
+                               Command="{Binding OrdersCommand}"/>
+
+                <controls:Tile Title="Klienci"
+                               Style="{StaticResource SmallTileStyle}"
+                               Background="SteelBlue"
+                               Command="{Binding CustomersCommand}"/>
+
+                <controls:Tile Title="Ustawienia"
+                               Style="{StaticResource SmallTileStyle}"
+                               Background="LightSlateGray"
+                               Command="{Binding SettingsCommand}"/>
+
+
+            </WrapPanel>
+        </Border>
+        
+
     </Grid>
 </UserControl>

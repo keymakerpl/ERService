@@ -64,17 +64,9 @@
     <Compile Include="Migrations\201905161504231_AddedCustomerColumns.Designer.cs">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.cs" />
-    <Compile Include="Migrations\201905231431133_AddedPhoneRequired.Designer.cs">
-      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201905231441288_InitialDatabase1.cs" />
     <Compile Include="Migrations\201905231441288_InitialDatabase1.Designer.cs">
       <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905231620319_InitialDatabase2.cs" />
-    <Compile Include="Migrations\201905231620319_InitialDatabase2.Designer.cs">
-      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201905231644212_InitialDatabase3.cs" />
     <Compile Include="Migrations\201905231644212_InitialDatabase3.Designer.cs">
@@ -116,6 +108,102 @@
     <Compile Include="Migrations\201907100621088_AddedOrderStatusTypeId.Designer.cs">
       <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907111322481_AddedBlobsAttachments.cs" />
+    <Compile Include="Migrations\201907111322481_AddedBlobsAttachments.Designer.cs">
+      <DependentUpon>201907111322481_AddedBlobsAttachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907111724175_AddedBlobsSize.cs" />
+    <Compile Include="Migrations\201907111724175_AddedBlobsSize.Designer.cs">
+      <DependentUpon>201907111724175_AddedBlobsSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907111852282_AddedBlobOrderId.cs" />
+    <Compile Include="Migrations\201907111852282_AddedBlobOrderId.Designer.cs">
+      <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.cs" />
+    <Compile Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.Designer.cs">
+      <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907131858442_AddedNumeration6.cs" />
+    <Compile Include="Migrations\201907131858442_AddedNumeration6.Designer.cs">
+      <DependentUpon>201907131858442_AddedNumeration6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907140856104_AddedOrderId.cs" />
+    <Compile Include="Migrations\201907140856104_AddedOrderId.Designer.cs">
+      <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907181051166_AddedOrderCusId.cs" />
+    <Compile Include="Migrations\201907181051166_AddedOrderCusId.Designer.cs">
+      <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907221830081_AddedUserAndAcl.cs" />
+    <Compile Include="Migrations\201907221830081_AddedUserAndAcl.Designer.cs">
+      <DependentUpon>201907221830081_AddedUserAndAcl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251650310_ChangedAcl.cs" />
+    <Compile Include="Migrations\201907251650310_ChangedAcl.Designer.cs">
+      <DependentUpon>201907251650310_ChangedAcl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251838069_AddedAclVerbs.cs" />
+    <Compile Include="Migrations\201907251838069_AddedAclVerbs.Designer.cs">
+      <DependentUpon>201907251838069_AddedAclVerbs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251919536_AddedAclVerbs1.cs" />
+    <Compile Include="Migrations\201907251919536_AddedAclVerbs1.Designer.cs">
+      <DependentUpon>201907251919536_AddedAclVerbs1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251931127_AddedAclVerbs2.cs" />
+    <Compile Include="Migrations\201907251931127_AddedAclVerbs2.Designer.cs">
+      <DependentUpon>201907251931127_AddedAclVerbs2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311805099_AclLogin.cs" />
+    <Compile Include="Migrations\201907311805099_AclLogin.Designer.cs">
+      <DependentUpon>201907311805099_AclLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908021630546_AddedPasswordSalt.cs" />
+    <Compile Include="Migrations\201908021630546_AddedPasswordSalt.Designer.cs">
+      <DependentUpon>201908021630546_AddedPasswordSalt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908031714559_AddedNullRoleToUser.cs" />
+    <Compile Include="Migrations\201908031714559_AddedNullRoleToUser.Designer.cs">
+      <DependentUpon>201908031714559_AddedNullRoleToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908061237530_ChangedPasswordFieldName.cs" />
+    <Compile Include="Migrations\201908061237530_ChangedPasswordFieldName.Designer.cs">
+      <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908090930136_AddedIsSystemToUserARole.cs" />
+    <Compile Include="Migrations\201908090930136_AddedIsSystemToUserARole.Designer.cs">
+      <DependentUpon>201908090930136_AddedIsSystemToUserARole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908091629590_ChangedIntToBoolInUser.cs" />
+    <Compile Include="Migrations\201908091629590_ChangedIntToBoolInUser.Designer.cs">
+      <DependentUpon>201908091629590_ChangedIntToBoolInUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908191647037_AddedRoleNaviToUser.cs" />
+    <Compile Include="Migrations\201908191647037_AddedRoleNaviToUser.Designer.cs">
+      <DependentUpon>201908191647037_AddedRoleNaviToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908211427338_AddedRoleIdToAcl.cs" />
+    <Compile Include="Migrations\201908211427338_AddedRoleIdToAcl.Designer.cs">
+      <DependentUpon>201908211427338_AddedRoleIdToAcl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908241648347_AddedOrdersToCustomer.cs" />
+    <Compile Include="Migrations\201908241648347_AddedOrdersToCustomer.Designer.cs">
+      <DependentUpon>201908241648347_AddedOrdersToCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908250538497_AddedNullableIdsToOrder.cs" />
+    <Compile Include="Migrations\201908250538497_AddedNullableIdsToOrder.Designer.cs">
+      <DependentUpon>201908250538497_AddedNullableIdsToOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908250932188_AddedNullableToOrder.cs" />
+    <Compile Include="Migrations\201908250932188_AddedNullableToOrder.Designer.cs">
+      <DependentUpon>201908250932188_AddedNullableToOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908261559197_AddedUsersToRoleEntry.cs" />
+    <Compile Include="Migrations\201908261559197_AddedUsersToRoleEntry.Designer.cs">
+      <DependentUpon>201908261559197_AddedUsersToRoleEntry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -140,14 +228,8 @@
     <EmbeddedResource Include="Migrations\201905161504231_AddedCustomerColumns.resx">
       <DependentUpon>201905161504231_AddedCustomerColumns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905231431133_AddedPhoneRequired.resx">
-      <DependentUpon>201905231431133_AddedPhoneRequired.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905231441288_InitialDatabase1.resx">
       <DependentUpon>201905231441288_InitialDatabase1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905231620319_InitialDatabase2.resx">
-      <DependentUpon>201905231620319_InitialDatabase2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905231644212_InitialDatabase3.resx">
       <DependentUpon>201905231644212_InitialDatabase3.cs</DependentUpon>
@@ -179,6 +261,78 @@
     <EmbeddedResource Include="Migrations\201907100621088_AddedOrderStatusTypeId.resx">
       <DependentUpon>201907100621088_AddedOrderStatusTypeId.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111322481_AddedBlobsAttachments.resx">
+      <DependentUpon>201907111322481_AddedBlobsAttachments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111724175_AddedBlobsSize.resx">
+      <DependentUpon>201907111724175_AddedBlobsSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907111852282_AddedBlobOrderId.resx">
+      <DependentUpon>201907111852282_AddedBlobOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907121742375_AddedNullableOrderdIdToBlob.resx">
+      <DependentUpon>201907121742375_AddedNullableOrderdIdToBlob.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907131858442_AddedNumeration6.resx">
+      <DependentUpon>201907131858442_AddedNumeration6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907140856104_AddedOrderId.resx">
+      <DependentUpon>201907140856104_AddedOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907181051166_AddedOrderCusId.resx">
+      <DependentUpon>201907181051166_AddedOrderCusId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907221830081_AddedUserAndAcl.resx">
+      <DependentUpon>201907221830081_AddedUserAndAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251650310_ChangedAcl.resx">
+      <DependentUpon>201907251650310_ChangedAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251838069_AddedAclVerbs.resx">
+      <DependentUpon>201907251838069_AddedAclVerbs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251919536_AddedAclVerbs1.resx">
+      <DependentUpon>201907251919536_AddedAclVerbs1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251931127_AddedAclVerbs2.resx">
+      <DependentUpon>201907251931127_AddedAclVerbs2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311805099_AclLogin.resx">
+      <DependentUpon>201907311805099_AclLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908021630546_AddedPasswordSalt.resx">
+      <DependentUpon>201908021630546_AddedPasswordSalt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908031714559_AddedNullRoleToUser.resx">
+      <DependentUpon>201908031714559_AddedNullRoleToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908061237530_ChangedPasswordFieldName.resx">
+      <DependentUpon>201908061237530_ChangedPasswordFieldName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908090930136_AddedIsSystemToUserARole.resx">
+      <DependentUpon>201908090930136_AddedIsSystemToUserARole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908091629590_ChangedIntToBoolInUser.resx">
+      <DependentUpon>201908091629590_ChangedIntToBoolInUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908191647037_AddedRoleNaviToUser.resx">
+      <DependentUpon>201908191647037_AddedRoleNaviToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908211427338_AddedRoleIdToAcl.resx">
+      <DependentUpon>201908211427338_AddedRoleIdToAcl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908241648347_AddedOrdersToCustomer.resx">
+      <DependentUpon>201908241648347_AddedOrdersToCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908250538497_AddedNullableIdsToOrder.resx">
+      <DependentUpon>201908250538497_AddedNullableIdsToOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908250932188_AddedNullableToOrder.resx">
+      <DependentUpon>201908250932188_AddedNullableToOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908261559197_AddedUsersToRoleEntry.resx">
+      <DependentUpon>201908261559197_AddedUsersToRoleEntry.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -204,9 +358,9 @@
       <Version>6.2.0</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
-    <PackageReference Include="Prism.Wpf" Version="7.2.0.1233-pre" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

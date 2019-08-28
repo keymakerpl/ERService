@@ -16,7 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatSlider.xaml" />
 
                 <!-- Accent and AppTheme setting -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Steel.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
                 <!-- Standard resource, zdefiniowane style -->
@@ -27,9 +27,9 @@
                         <Setter Property="Foreground" Value="Black"/>
                     </Style>
 
-                    <!--<Style TargetType="xctk:DateTimePicker">
+                    <Style TargetType="xctk:DateTimePicker">
                         <Setter Property="Foreground" Value="AliceBlue"/>
-                    </Style>-->
+                    </Style>
 
                     <Style TargetType="Button"
                            BasedOn="{StaticResource {x:Type Button}}">
@@ -46,6 +46,7 @@
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
                     <!-->Konwerter booli na enum visibility w xaml</-->
                     <helper:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+                    <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
                     <!-- Zadefiniowane style dla pól tekstowych</-->
                     <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">

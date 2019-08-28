@@ -15,7 +15,13 @@ namespace ERService.OrderModule.Repository
 
         public override async Task<Order> GetByIdAsync(Guid id)
         {
-            return await Context.Set<Order>().Include(c => c.Customer).SingleAsync(o => o.Id == id);
+            return await Context.Set<Order>()
+                                .Include(c => c.Customer)
+                                .Include(h => h.Hardwares)
+                                .Include(a => a.Attachments)
+                                .Include(os => os.OrderStatus)
+                                .Include(ot => ot.OrderType)
+                                .SingleAsync(o => o.Id == id);
         }
     }
 }

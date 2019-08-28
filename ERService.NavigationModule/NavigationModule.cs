@@ -1,5 +1,8 @@
-﻿using ERService.Infrastructure.Constants;
+﻿using System;
+using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Events;
 using ERService.Navigation.Views;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;

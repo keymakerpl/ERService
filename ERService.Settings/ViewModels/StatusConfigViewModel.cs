@@ -1,17 +1,17 @@
 ﻿using ERService.Business;
-using ERService.HardwareModule.Data.Repository;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Dialogs;
+using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
-    public class StatusConfigViewModel : DetailViewModelBase, INavigationAware
+    public class StatusConfigViewModel : DetailViewModelBase
     {
         private IOrderStatusRepository _orderStatusRepository;
         private IOrderTypeRepository _orderTypeRepository;
@@ -19,7 +19,7 @@ namespace ERService.Settings.ViewModels
         private OrderTypeWrapper _selectedOrderType;
 
         public StatusConfigViewModel(IEventAggregator eventAggregator, IOrderStatusRepository orderStatusRepository,
-             IOrderTypeRepository orderTypeRepository) : base(eventAggregator)
+             IOrderTypeRepository orderTypeRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Title = "Konfiguracja statusów";
 
@@ -55,32 +55,10 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _selectedOrderType, value); }
         }
 
-        public async override Task LoadAsync(Guid id)
+        public async override Task LoadAsync()
         {
             await LoadStatuses();
             await LoadTypes();
-        }
-
-        protected override bool OnCancelEditCanExecute()
-        {
-            return false;
-        }
-
-        protected override void OnCancelEditExecute()
-        {
-        }
-
-        protected override bool OnSaveCanExecute()
-        {
-            return (_orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges());
-        }
-
-        protected async override void OnSaveExecute()
-        {
-            await _orderStatusRepository.SaveAsync();
-            await _orderTypeRepository.SaveAsync();
-
-            HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }
 
         private async Task LoadStatuses()
@@ -115,6 +93,20 @@ namespace ERService.Settings.ViewModels
                 wrappedType.PropertyChanged += WrappedType_PropertyChanged;
                 OrderTypes.Add(wrappedType);
             }
+        }
+
+        #region Events and Event Hanlers
+        protected override bool OnSaveCanExecute()
+        {
+            return (_orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges());
+        }
+
+        protected async override void OnSaveExecute()
+        {
+            await _orderStatusRepository.SaveAsync();
+            await _orderTypeRepository.SaveAsync();
+
+            HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }
 
         private void OnAddOrderStatusExecute()
@@ -186,22 +178,17 @@ namespace ERService.Settings.ViewModels
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
         }
+
+        #endregion Events and Event Hanlers
+
         #region Navigation
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        public override bool KeepAlive => true;
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            await LoadAsync();
         }
-
-        public async void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            await LoadAsync(Guid.Empty);
-        }
-
         #endregion Navigation
     }
 }

@@ -1,55 +1,28 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using ERService.Business;
 using ERService.HardwareModule.Data.Repository;
 using ERService.HardwareModule.Wrapper;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System.Linq;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using ERService.Business;
-using ERService.Infrastructure.Events;
+using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
-    public class HardwareTypesViewModel : DetailViewModelBase, INavigationAware
+    public class HardwareTypesViewModel : DetailViewModelBase
     {
-        public CustomItemWrapper SelectedCustomItem
-        {
-            get {return _selectedCustomItem; }
-            set
-            {
-                SetProperty(ref _selectedCustomItem, value);
-                RemoveCustomItemCommand.RaiseCanExecuteChanged();
-            }
-        }
-        public HardwareTypeWrapper SelectedHardwareType
-        {
-            get { return _selectedHardwareType; }
-            set
-            {
-                SetProperty(ref _selectedHardwareType, value);
-                RemoveCommand.RaiseCanExecuteChanged();
-                AddCustomItemCommand.RaiseCanExecuteChanged();
-            }
-        }
-        public DelegateCommand AddCommand { get; private set; }
-        public DelegateCommand RemoveCommand { get; private set; }
-        public DelegateCommand AddCustomItemCommand { get; private set; }
-        public DelegateCommand RemoveCustomItemCommand { get; private set; }
-        public ObservableCollection<HardwareTypeWrapper> HardwareTypes { get; set; }
-        public ObservableCollection<CustomItemWrapper> CustomItems { get; set; }
-
-        private IHardwareTypeRepository _hardwareTypeRepository;
         private ICustomItemRepository _customItemRepository;
-        private HardwareTypeWrapper _selectedHardwareType;
+        private IHardwareTypeRepository _hardwareTypeRepository;
         private CustomItemWrapper _selectedCustomItem;
-
-        public HardwareTypesViewModel(IEventAggregator eventAggregator, 
-            IHardwareTypeRepository hardwareTypeRepository, ICustomItemRepository customItemRepository) 
-            : base(eventAggregator)
+        private HardwareTypeWrapper _selectedHardwareType;
+        
+        public HardwareTypesViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
+            IHardwareTypeRepository hardwareTypeRepository, ICustomItemRepository customItemRepository)
+            : base(eventAggregator, messageDialogService)
         {
             Title = "Typy urządzeń";
 
@@ -68,74 +41,47 @@ namespace ERService.Settings.ViewModels
             InitializeEvents();
         }
 
-        private bool OnAddCustomItemCanExecute()
+        public DelegateCommand AddCommand { get; private set; }
+
+        public DelegateCommand AddCustomItemCommand { get; private set; }
+
+        public ObservableCollection<CustomItemWrapper> CustomItems { get; set; }
+
+        public ObservableCollection<HardwareTypeWrapper> HardwareTypes { get; set; }
+
+        public DelegateCommand RemoveCommand { get; private set; }
+
+        public DelegateCommand RemoveCustomItemCommand { get; private set; }
+
+        public CustomItemWrapper SelectedCustomItem
         {
-            return SelectedHardwareType != null;
+            get { return _selectedCustomItem; }
+            set
+            {
+                SetProperty(ref _selectedCustomItem, value);
+                RemoveCustomItemCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public HardwareTypeWrapper SelectedHardwareType
+        {
+            get { return _selectedHardwareType; }
+            set
+            {
+                SetProperty(ref _selectedHardwareType, value);
+                RemoveCommand.RaiseCanExecuteChanged();
+                AddCustomItemCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public async override Task LoadAsync()
+        {
+            await LoadHardwareTypes();
         }
 
         private void InitializeEvents()
         {
             PropertyChanged += HardwareTypesViewModel_PropertyChangedAsync;
-        }
-
-        private async void HardwareTypesViewModel_PropertyChangedAsync(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectedHardwareType")
-            {
-                await LoadCustomItems();
-            }
-        }
-
-        private bool OnCanRemoveCustomItemExecute()
-        {
-            return SelectedCustomItem != null;
-        }
-
-        private void OnRemoveCustomItemExecute()
-        {
-            SelectedCustomItem.PropertyChanged -= WrappedCustomItem_PropertyChanged;
-            _customItemRepository.Remove(SelectedCustomItem.Model);
-            CustomItems.Remove(_selectedCustomItem);
-            SelectedCustomItem = null;
-            HasChanges = _customItemRepository.HasChanges();
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-        }
-
-        private void OnAddCustomItemExecute()
-        {
-            var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });
-            wrappedCustomItem.PropertyChanged += WrappedCustomItem_PropertyChanged;
-            _customItemRepository.Add(wrappedCustomItem.Model);
-            CustomItems.Add(wrappedCustomItem);
-
-            wrappedCustomItem.Key = "";
-        }
-
-        private bool OnRemoveCanExecute()
-        {
-            return SelectedHardwareType != null;
-        }
-
-        private void OnRemoveExecute()
-        {
-            
-        }
-
-        private void OnAddExecute()
-        {
-            var wrappedHardwareType = new HardwareTypeWrapper(new HardwareType());
-            wrappedHardwareType.PropertyChanged += WrappedHardwareType_PropertyChanged;
-            _hardwareTypeRepository.Add(wrappedHardwareType.Model);
-            HardwareTypes.Add(wrappedHardwareType);
-
-            wrappedHardwareType.Name = "";
-        }
-
-        public async override Task LoadAsync(Guid id)
-        {
-            ID = id;
-
-            await LoadHardwareTypes();
         }
 
         private async Task LoadCustomItems()
@@ -159,19 +105,6 @@ namespace ERService.Settings.ViewModels
             }
         }
 
-        private void WrappedCustomItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
-            {
-                HasChanges = _customItemRepository.HasChanges();
-            }
-
-            if (e.PropertyName == nameof(CustomItemWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
-            {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            }
-        }
-
         private async Task LoadHardwareTypes()
         {
             foreach (var wrappedType in HardwareTypes)
@@ -190,6 +123,91 @@ namespace ERService.Settings.ViewModels
             }
         }
 
+        #region Events and Event Handlers
+
+        protected override bool OnSaveCanExecute()
+        {
+            return (_hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges()) && SelectedHardwareType != null;
+        }
+
+        protected async override void OnSaveExecute()
+        {
+            await _hardwareTypeRepository.SaveAsync();
+            await _customItemRepository.SaveAsync();
+
+            HasChanges = _hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges();
+        }
+
+        private async void HardwareTypesViewModel_PropertyChangedAsync(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectedHardwareType")
+            {
+                await LoadCustomItems();
+            }
+        }
+
+        private bool OnAddCustomItemCanExecute()
+        {
+            return SelectedHardwareType != null;
+        }
+
+        private void OnAddCustomItemExecute()
+        {
+            var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });
+            wrappedCustomItem.PropertyChanged += WrappedCustomItem_PropertyChanged;
+            _customItemRepository.Add(wrappedCustomItem.Model);
+            CustomItems.Add(wrappedCustomItem);
+
+            wrappedCustomItem.Key = "";
+        }
+
+        private void OnAddExecute()
+        {
+            var wrappedHardwareType = new HardwareTypeWrapper(new HardwareType());
+            wrappedHardwareType.PropertyChanged += WrappedHardwareType_PropertyChanged;
+            _hardwareTypeRepository.Add(wrappedHardwareType.Model);
+            HardwareTypes.Add(wrappedHardwareType);
+
+            wrappedHardwareType.Name = "";
+        }
+
+        private bool OnCanRemoveCustomItemExecute()
+        {
+            return SelectedCustomItem != null;
+        }
+
+        private bool OnRemoveCanExecute()
+        {
+            return SelectedHardwareType != null;
+        }
+
+        private void OnRemoveCustomItemExecute()
+        {
+            SelectedCustomItem.PropertyChanged -= WrappedCustomItem_PropertyChanged;
+            _customItemRepository.Remove(SelectedCustomItem.Model);
+            CustomItems.Remove(_selectedCustomItem);
+            SelectedCustomItem = null;
+            HasChanges = _customItemRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+
+        private void OnRemoveExecute()
+        {
+            throw new NotImplementedException();
+        }
+        private void WrappedCustomItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            {
+                HasChanges = _customItemRepository.HasChanges();
+            }
+
+            if (e.PropertyName == nameof(CustomItemWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         private void WrappedHardwareType_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
@@ -202,47 +220,16 @@ namespace ERService.Settings.ViewModels
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
         }
-
-        protected async override void OnSaveExecute()
-        {
-            await _hardwareTypeRepository.SaveAsync();
-            await _customItemRepository.SaveAsync();
-
-            HasChanges = _hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges();
-        }
-
-        protected override bool OnSaveCanExecute()
-        {
-            return (_hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges()) && SelectedHardwareType != null;
-        }
-
-        protected override void OnCancelEditExecute()
-        {
-            
-        }
-
-        protected override bool OnCancelEditCanExecute()
-        {
-            return true;
-        }
+        #endregion Events and Event Handlers
 
         #region Navigation
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public override bool KeepAlive => true;
+
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            await LoadAsync(Guid.Empty);
+            await LoadAsync();
         }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-
-        }
-
-        #endregion
+        #endregion Navigation
     }
 }

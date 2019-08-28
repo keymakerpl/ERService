@@ -2,13 +2,39 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ERService.CustomerModule.Views"
+             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="1280"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
+             prism:ViewModelLocator.AutoWireViewModel="True"  
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="AutoCompleteBoxItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding FirstName}"
+                       Width="Auto"/>
+                <Label Content="{Binding LastName}"
+                       Width="Auto"/>
+                <Label Content="tel. "
+                       FontStyle="Italic"
+                       Width="Auto"
+                       Foreground="SlateGray"/>
+                <Label Content="{Binding PhoneNumber}"
+                       Width="Auto"
+                       FontStyle="Italic"
+                       Foreground="SlateGray"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <Grid Background="White">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -70,7 +96,8 @@
             <ScrollViewer  
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
-                <Grid>
+
+                <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -96,61 +123,73 @@
                     <Label Content="Dane klienta:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
 
                     <Label Grid.Row="1" Content="Imię" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="2" Margin="10 0 10 10"
-                 Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                    <TextBox Grid.Row="2" Margin="10 0 10 10"                             
+                             Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Row="3" Content="Nazwisko" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="4" Margin="10 0 10 10"
-                 Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                    <controls:AutoCompleteBox Grid.Row="4" Margin="10 0 10 10" 
+                                              x:Name="AutoBox"
+                                              ItemsSource="{Binding Customers}"
+                                              SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                              ValueMemberPath="LastName"
+                                              ItemTemplate="{StaticResource AutoCompleteBoxItemTemplate}"
+                                              Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"                                              >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownClosed">
+                                <i:InvokeCommandAction Command="{Binding DropDownCloseCommand}" CommandParameter="{Binding ElementName=AutoBox}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </controls:AutoCompleteBox>
 
                     <Label Grid.Row="5" Content="Firma" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="6" Margin="10 0 10 10"
+                    <TextBox Grid.Row="6" Margin="10 0 10 10"                             
                  Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="7" Content="NIP" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
+                    <TextBox Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"                             
                  Text="{Binding Customer.NIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="1" Grid.Column="2" Content="Email" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0 10 10"
+                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0 10 10"                             
                  Text="{Binding Customer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="3" Grid.Column="2" Content="Email 2" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="4" Grid.Column="2" Margin="10 0 10 10"
+                    <TextBox Grid.Row="4" Grid.Column="2" Margin="10 0 10 10"                             
                  Text="{Binding Customer.Email2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="5" Grid.Column="2" Content="Numer telefonu" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="6" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"
+                    <TextBox Grid.Row="6" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"                             
                  Text="{Binding Customer.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="7" Grid.Column="2" Content="Numer telefonu 2" Margin="10 10 0 0"/>
-                    <TextBox Grid.Row="8" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"
+                    <TextBox Grid.Row="8" Grid.Column="2" Margin="10 0 10 10" Width="180" HorizontalAlignment="Left"                             
                  Text="{Binding Customer.PhoneNumber2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Row="9" Grid.Column="2" Content="Opis" Margin="10 10 0 0"/>
                     <TextBox Grid.Row="10" Grid.Column="2" Margin="10 0 10 10" AcceptsReturn="True"
-                             MinLines="5" Grid.ColumnSpan="3"
+                             MinLines="5" Grid.ColumnSpan="3"                             
                  Text="{Binding Customer.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Column="4" Content="Adres:" FontSize="18" FontWeight="Bold" Margin="10 10 10 10"/>
                     
                     <Label Grid.Column="4" Grid.Row="1" Content="Ulica:" Margin="10 10 0 0"/>
-                    <TextBox Grid.Column="4" Grid.Row="2" Margin="10 0 10 10"
+                    <TextBox Grid.Column="4" Grid.Row="2" Margin="10 0 10 10"                             
                  Text="{Binding CustomerAddress.Street, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Column="4" Grid.Row="3" Content="Numer budynku:" Margin="10 10 0 0"/>
-                    <TextBox Grid.Column="4" Grid.Row="4" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
+                    <TextBox Grid.Column="4" Grid.Row="4" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"                             
                  Text="{Binding CustomerAddress.HouseNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Column="4" Grid.Row="5" Content="Miasto:" Margin="10 10 0 0"/>
-                    <TextBox Grid.Column="4" Grid.Row="6" Margin="10 0 10 10"
+                    <TextBox Grid.Column="4" Grid.Row="6" Margin="10 0 10 10"                             
                  Text="{Binding CustomerAddress.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                     <Label Grid.Column="4" Grid.Row="7" Content="Kod pocztowy:" Margin="10 10 0 0"/>
-                    <TextBox Grid.Column="4" Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"
+                    <TextBox Grid.Column="4" Grid.Row="8" Margin="10 0 10 10" Width="125" HorizontalAlignment="Left"                             
                  Text="{Binding CustomerAddress.Postcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
 
                 </Grid>
+                
             </ScrollViewer>
         </Border>
     </Grid>

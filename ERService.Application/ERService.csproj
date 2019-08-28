@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -56,10 +57,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
@@ -97,14 +102,21 @@
       <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
     <PackageReference Include="Prism.Unity" Version="7.2.0.1233-pre" />
     <PackageReference Include="Prism.Wpf">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
+    </PackageReference>
+    <PackageReference Include="WPFToolkit">
+      <Version>3.5.50211.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -139,6 +151,10 @@
       <Project>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</Project>
       <Name>ERService.Order</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
+      <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
+      <Name>ERService.RBAC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Settings\ERService.Settings.csproj">
       <Project>{406E7194-6493-4031-9FC3-B341E84C9D1A}</Project>
       <Name>ERService.Settings</Name>
@@ -153,4 +169,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>; Move all assemblies and related files to lib folder
+ROBOCOPY "$(TargetDir) " "$(TargetDir)lib\ " /XF *.exe *.config *.manifest /XD lib logs data /E /IS /MOVE
+if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
+  </PropertyGroup>
 </Project>

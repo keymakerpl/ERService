@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ERService.Infrastructure.Constants
+﻿namespace ERService.Infrastructure.Constants
 {
     public static class ViewNames
     {
@@ -18,5 +12,10 @@ namespace ERService.Infrastructure.Constants
         public const string CustomItemsView = "CustomItemsView";
         public const string GeneralSettingsView = "GeneralSettingsView";
         public const string HardwareTypesView = "HardwareTypesView";
+        public const string StartPageView = "StartPageView";
+        public const string StatusConfigView = "StatusConfigView";
+        public const string NumerationSettingsView = "NumerationSettingsView";
+        public const string UserSettingsView = "UserSettingsView";
+        public const string UserDetailView = "UserDetailView";
     }
 }

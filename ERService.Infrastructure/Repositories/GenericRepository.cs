@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq.Expressions;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> 
+    public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
         where TContext : DbContext
         where TEntity : class
     {
@@ -20,7 +20,7 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await Context.Set<TEntity>().ToListAsync();
         }
 
         public virtual async Task<TEntity> GetByIdAsync(Guid id)
@@ -30,13 +30,12 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> result = await Context.Set<TEntity>().AsNoTracking()
-                .Where(predicate).ToListAsync();
+            IEnumerable<TEntity> result = await Context.Set<TEntity>().Where(predicate).ToListAsync();
 
             return result;
         }
 
-        public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, 
+        public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
             var query = GetAllIncluding(includeProps);
@@ -47,18 +46,16 @@ namespace ERService.Infrastructure.Repositories
 
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
         {
-            IQueryable<TEntity> queryable = Context.Set<TEntity>().AsNoTracking();
+            IQueryable<TEntity> queryable = Context.Set<TEntity>();
 
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public async Task SaveAsync()
+        public virtual async Task SaveAsync()
         {
-
 #if DEBUG
             Context.Database.Log = Console.Write;
 #endif
-
             await Context.SaveChangesAsync();
         }
 
@@ -74,7 +71,33 @@ namespace ERService.Infrastructure.Repositories
 
         public void Remove(TEntity model)
         {
-            Context.Set<TEntity>().Remove(model);            
-        }        
-    }   
+            Context.Set<TEntity>().Remove(model);
+        }
+
+        public void RollBackChanges()
+        {
+            var changedEntries = Context.ChangeTracker
+                                    .Entries()
+                                    .Where(e => e.State != EntityState.Unchanged).ToList();
+
+            foreach (var entry in changedEntries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Unchanged;
+                        break;
+                    case EntityState.Modified:
+                        entry.CurrentValues.SetValues(entry.OriginalValues);
+                        entry.State = EntityState.Unchanged;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }

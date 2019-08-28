@@ -6,40 +6,70 @@ namespace ERService.MSSQLDataAccess.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ERService.MSSQLDataAccess.ERServiceDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ERServiceDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(ERService.MSSQLDataAccess.ERServiceDbContext context)
+        protected override void Seed(ERServiceDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
 
-            //context.Customers.AddOrUpdate(e => e.Id,
-            //    new Customer() { Id = new Guid(), FirstName = "Jan", LastName = "Nowak" },
-            //    new Customer() { Id = new Guid(), FirstName = "Marek", LastName = "Kawa³ek" },
-            //    new Customer() { Id = new Guid(), FirstName = "Anna", LastName = "Nowak" });            
+            context.Database.Log = Console.Write;
 
-            //context.HardwareTypes.AddOrUpdate(n => n.Name ,new HardwareType() { Name = "Laptop" });
-            //context.SaveChanges();
+            context.AclVerbs.AddOrUpdate(a => a.Name,
+                new AclVerb() { Id = new Guid("{60FF3DB2-DBB4-4B4D-90D0-DFCE413E1935}"), Name = "Dostêp do konfiguracji aplikacji", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{D060FFBD-4188-443E-862D-8A637CC395D3}"), Name = "Dostêp do konfiguracji wydruków", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dostêp do konfiguracji numeracji", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Zarz¹dzanie u¿ytkownikami", DefaultValue = 0 },
 
-            //context.CustomItems.AddOrUpdate(k => k.Key, new CustomItem() { HardwareType = context.HardwareTypes.First(), Key = "Procesor" });
-            //context.SaveChanges();
+                new AclVerb() { Id = new Guid("{7B129DC6-B78B-4521-AAC9-1282912279E9}"), Name = "Dodawanie nowych napraw", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie napraw", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie napraw", DefaultValue = 0 },
 
-            //context.Hardwares.AddOrUpdate(n => n.Name, new Hardware() { Name = "Samsung"});
-            //context.SaveChanges();
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dodawanie nowych klientów", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie klientów", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie klientów", DefaultValue = 0 }
+                );
 
-            //context.HardwareCustomItems
-            //    .AddOrUpdate(v => v.Value, new HwCustomItem() {CustomItemId = context.CustomItems.First().Id, Hardware = context.Hardwares.First(), Value = "Intel Core i5" });
-            //context.SaveChanges();
+            context.SaveChanges(); // Zapisz verby
 
+            context.Roles.AddOrUpdate(n => n.Name,
+                new Role() { Name = "Administrator", IsSystem = true
+                });
 
-            //context.SaveChanges();
+            context.SaveChanges(); // Przypisz Acle do roli admina
+
+            var roleId = context.Roles.FirstOrDefault(r => r.Name == "Administrator").Id;
+            var acls = context.ACLs.Where(a => a.RoleId == roleId);
+            foreach (var acl in acls)
+            {
+                context.ACLs.Remove(acl);
+            }
+            context.SaveChanges();
+
+            foreach (var verb in context.AclVerbs)
+            {
+                context.ACLs.Add(
+                    new Acl() { AclVerbId = verb.Id, Value = 1, RoleId = roleId });
+            }
+
+            context.SaveChanges(); // Przypisz Verby do Acli
+
+            context.Users.AddOrUpdate(u => u.Login,
+                new User() { Login = "administrator", IsActive = true, IsAdmin = true, IsSystem = true, 
+                    RoleId = context.Roles.Single(r => r.Name == "Administrator").Id,
+                    PasswordHash = "/HMO54rRxNa+SBxAH3Mamqn2gbiaydN80pO9BNyPxcB5LMCPTobg6fR9rTTLgo8w9lV4IFdnR0QyKUTfMgFdRvTxQMGIK0zOKXdDT3uQg86Qa7DPAMkiAYv/ipg+9mUbuGwhvSCTEAfA8yQ4JXKiNo6acqWKlSsHN9Ezh48dwX1D4GupU4DsSRigeGZ0eIMoLuH0ofPwCMWeLo/tzaJirGwzeBHvECqWeLjhLaBKQaXPvvrMxzAOaaYSFmFmiSmJoM4hxaj0Y9Sg/vyritqkmN6cjvcPFj71bJTk79Jh8t7rFSR4qUNzqfKC6t6X3lHL2Xh3VAarhxJ+h5P5AsbYMQ==",
+                    Salt = "ScbGvPwGi2xjUD5wfe0/Ty3Rot3e6G4NRpXbrIpJ8tf4U6H+dQe414sbeJey3NPifszbOpI0BxSa1O/npi32AQ=="
+                }
+                );
+
+            context.SaveChanges(); // Dodaj usera i przypisz rolê
         }
 
     }

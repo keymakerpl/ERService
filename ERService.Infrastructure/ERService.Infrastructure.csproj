@@ -51,18 +51,29 @@
     <Compile Include="Base\IDetailViewModelBase.cs" />
     <Compile Include="Base\ListModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
+    <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />
+    <Compile Include="Dialogs\IMessageDialogService.cs" />
+    <Compile Include="Dialogs\MessageDialogService.cs" />
+    <Compile Include="Events\AfterAuthorisedEvent.cs" />
     <Compile Include="Events\AfterCollectionSavedEvent.cs" />
     <Compile Include="Events\AfterDetailDeletedEvent.cs" />
     <Compile Include="Events\AfterDetailSavedEvent.cs" />
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
+    <Compile Include="Events\AfterLogedoutEvent.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
+    <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Helpers\DropDownButtonBehavior.cs" />
+    <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\IPasswordHasher.cs" />
+    <Compile Include="Helpers\PasswordHasher.cs" />
+    <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -106,11 +117,17 @@
     <SplashScreen Include="Images\SplashScreen.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses">
+      <Version>1.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro">
+      <Version>1.6.5</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
-      <Version>7.2.0.1233-pre</Version>
+      <Version>7.2.0.1367</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

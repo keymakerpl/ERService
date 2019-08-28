@@ -8,7 +8,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="590" d:DesignWidth="1410"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
+             prism:ViewModelLocator.AutoWireViewModel="True" 
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -51,7 +53,7 @@
                 <Grid Margin="1 1 1 1">
                     <DataGrid
                   ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectionMode="Single"  
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"

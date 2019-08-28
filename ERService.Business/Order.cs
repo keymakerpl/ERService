@@ -16,12 +16,18 @@ namespace ERService.Business
         private void Init()
         {
             Hardwares = new Collection<Hardware>();
+            Attachments = new Collection<Blob>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public int OrderId { get; set; }
+
+        public Guid? CustomerId { get; set; }
         public Customer Customer { get; set; }
 
         [StringLength(50)]
@@ -33,10 +39,10 @@ namespace ERService.Business
         [Column(TypeName = "datetime2")]
         public DateTime DateEnded { get; set; }
 
-        public Guid OrderStatusId { get; set; }
+        public Guid? OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; }
 
-        public Guid OrderTypeId { get; set; }
+        public Guid? OrderTypeId { get; set; }
         public OrderType OrderType { get; set; }
 
         [StringLength(50)]
@@ -57,6 +63,8 @@ namespace ERService.Business
         public int Progress { get; set; }
 
         public ICollection<Hardware> Hardwares { get; set; }
+
+        public ICollection<Blob> Attachments { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

@@ -30,8 +30,36 @@
         <DockPanel Grid.Row="0" 
                    Grid.Column="0" 
                    LastChildFill="True"
-                   Grid.ColumnSpan="2">
-            <ContentControl DockPanel.Dock="Left" 
+                   Grid.ColumnSpan="2" Background="LightSlateGray">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+
+            <Border Grid.Column="0"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    CornerRadius="3"
+                    Background="GhostWhite"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="15">
+                <Border.Effect>
+                    <DropShadowEffect />
+                </Border.Effect>
+                <TextBlock Text="{Binding ApplicationName}"  
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Foreground="Black"
+                           FontSize="28"
+                           FontFamily="Source Code Pro"
+                           Margin="15 5 15 5 "/>
+            </Border>
+            
+            <ContentControl DockPanel.Dock="Left" Grid.Column="1" 
                             prism:RegionManager.RegionName="HeaderRegion"/>
         </DockPanel>
 
@@ -46,8 +74,8 @@
         <DockPanel Grid.Row="1" 
                    Grid.Column="0" 
                    LastChildFill="True"
-                   Grid.RowSpan="3">
-            <ContentControl DockPanel.Dock="Left" 
+                   Grid.RowSpan="3" Background="Gainsboro">
+            <ContentControl DockPanel.Dock="Left"
                             prism:RegionManager.RegionName="NavigationRegion"/>
         </DockPanel>
 
