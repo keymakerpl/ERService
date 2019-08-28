@@ -36,6 +36,7 @@ namespace ERService.RBAC.Data.Repository
             {
                 return await Context.Set<Role>()
                     .Include(a => a.ACLs.Select(v => v.AclVerb))
+                    .Include(u => u.Users)
                     .ToListAsync();
             }
         }

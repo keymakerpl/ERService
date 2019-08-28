@@ -16,6 +16,7 @@ namespace ERService.Business
         private void Init()
         {
             ACLs = new Collection<Acl>();
+            Users = new Collection<User>();
         }
 
         [Key]
@@ -29,6 +30,8 @@ namespace ERService.Business
         public bool IsSystem { get; set; }
 
         public ICollection<Acl> ACLs { get; set; }
+
+        public ICollection<User> Users { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

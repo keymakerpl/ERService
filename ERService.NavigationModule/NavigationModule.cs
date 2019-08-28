@@ -22,10 +22,16 @@ namespace ERService.Navigation
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);            
+            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);
+            _eventAggregator.GetEvent<AfterLogedoutEvent>().Subscribe(OnUserLoggedout, true);
         }
 
-        private void ContinueInitialization(AfterAuthorisedEventArgs arg)
+        private void OnUserLoggedout(UserAuthorizationEventArgs args)
+        {
+            _regionManager.Regions[RegionNames.NavigationRegion].RemoveAll();
+        }
+
+        private void ContinueInitialization(UserAuthorizationEventArgs args)
         {
             _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
         }

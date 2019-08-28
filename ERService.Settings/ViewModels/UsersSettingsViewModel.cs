@@ -10,6 +10,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ERService.Settings.ViewModels
 {
@@ -97,6 +98,7 @@ namespace ERService.Settings.ViewModels
 
         private async Task LoadUsers()
         {
+            Users.Clear();
             var users = await _rbacManager.GetAllUsersAsync();
 
             foreach (var user in users)
@@ -109,6 +111,9 @@ namespace ERService.Settings.ViewModels
 
         protected override void OnCancelEditExecute()
         {
+            //TODO: _navigationservice
+            _rbacManager.RollBackChanges();
+
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
         }
@@ -208,6 +213,12 @@ namespace ERService.Settings.ViewModels
                 await _messageDialogService
                     .ShowInformationMessageAsync(this, "Nie można usunąć roli...", "Nie można usunąć obecnie używanej roli.");
             }
+
+            if (SelectedRole.Users.Any())
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Rola w użyciu...", "Wybrana rola jest w użyciu, nie można jej usunąć.");
+                return;
+            }                
 
             var confirmDialogResult = await _messageDialogService
                 .ShowConfirmationMessageAsync(this, "Czy usunąć rolę?", $"Czy usunąć rolę {SelectedRole.Name}?");

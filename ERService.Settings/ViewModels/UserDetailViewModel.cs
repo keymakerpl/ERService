@@ -171,7 +171,7 @@ namespace ERService.Settings.ViewModels
                 UserRoles.Add(role);
             }
 
-            if (ID != Guid.Empty)
+            if (ID != Guid.Empty && User.Model.Role != null)
                 SelectedRole = User.Model.Role;
         }
     }

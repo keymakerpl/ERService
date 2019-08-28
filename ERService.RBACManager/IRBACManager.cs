@@ -13,7 +13,9 @@ namespace ERService.RBAC
 
         void AddUserToRole(User user, Role role);
 
-        bool Authorize(string login, string password);
+        bool Login(string login, string password);
+
+        void Logout();
 
         List<Acl> GetAclList();
 
@@ -44,5 +46,8 @@ namespace ERService.RBAC
         bool UserIsInRole(string login, Role role);
 
         User LoggedUser { get; set; }
+
+        void RollBackChanges();
+        
     }
 }

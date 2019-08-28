@@ -63,10 +63,12 @@
     <Compile Include="Events\AfterDetailSavedEvent.cs" />
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
+    <Compile Include="Events\AfterLogedoutEvent.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
-    <Compile Include="Events\IAfterAuthorisedEventArgs.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
+    <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\IPasswordHasher.cs" />

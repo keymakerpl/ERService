@@ -5,6 +5,10 @@ using System;
 using System.Reflection;
 using System.Linq;
 using ERService.Infrastructure.Events;
+using ERService.RBAC;
+using Prism.Commands;
+using Prism.Regions;
+using ERService.Infrastructure.Constants;
 
 namespace ERService.Header.ViewModels
 {
@@ -29,6 +33,11 @@ namespace ERService.Header.ViewModels
         private int _expiredOrderCounter;
         private IOrderRepository _orderRepository;
         private IEventAggregator _eventAggregator;
+        private readonly IRBACManager _rBACManager;
+        private readonly IRegionManager _regionManager;
+
+        public DelegateCommand UserLogoutCommand { get; private set; }
+        public DelegateCommand UserSettingsCommand { get; private set; }
 
         public int ExpiredOrderCounter
         {
@@ -36,15 +45,41 @@ namespace ERService.Header.ViewModels
             set { SetProperty(ref _expiredOrderCounter, value); }
         }        
 
-        public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator)
+        public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator, IRBACManager rBACManager, IRegionManager regionManager)
         {
             _orderRepository = orderRepository;
             _eventAggregator = eventAggregator;
+            _rBACManager = rBACManager;
+            _regionManager = regionManager;
 
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(OnUserLogged, true);           
+            UserLogoutCommand = new DelegateCommand(OnUserLogoutExecute);
+            UserSettingsCommand = new DelegateCommand(OnUserSettingsExecute);
+
+            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(OnUserLogged, true);
+            _eventAggregator.GetEvent<AfterLogedoutEvent>().Subscribe(OnUserLoggedout, true);
         }
 
-        private void OnUserLogged(AfterAuthorisedEventArgs args)
+        private void OnUserSettingsExecute()
+        {
+            if (_rBACManager.LoggedUser == null) return;
+
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", _rBACManager.LoggedUser.Id);
+
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
+        }
+
+        private void OnUserLogoutExecute()
+        {
+            _rBACManager.Logout();
+        }
+
+        private void OnUserLoggedout(UserAuthorizationEventArgs obj)
+        {
+            CurrentUserFullName = String.Empty;
+        }
+
+        private void OnUserLogged(UserAuthorizationEventArgs args)
         {
             CurrentUserFullName = !String.IsNullOrEmpty(args.UserLastName) ? $"{args.UserName} {args.UserLastName}" : args.UserLogin;
             RefreshCounters();

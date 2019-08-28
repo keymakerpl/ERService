@@ -16,9 +16,13 @@
         <Border HorizontalAlignment="Center" VerticalAlignment="Center"
                 BorderThickness="1"
                 BorderBrush="LightGray"
-                CornerRadius="3">
+                CornerRadius="3"
+                Background="GhostWhite">
+            <Border.Effect>
+                <DropShadowEffect/>
+            </Border.Effect>
             <StackPanel Margin="10 20 10 15">
-                <Grid>
+                <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />

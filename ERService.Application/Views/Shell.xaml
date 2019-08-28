@@ -47,6 +47,9 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="15">
+                <Border.Effect>
+                    <DropShadowEffect />
+                </Border.Effect>
                 <TextBlock Text="{Binding ApplicationName}"  
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"

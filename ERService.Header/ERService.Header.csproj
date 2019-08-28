@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -89,6 +90,10 @@
     <ProjectReference Include="..\ERService.Order\ERService.Order.csproj">
       <Project>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</Project>
       <Name>ERService.Order</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
+      <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
+      <Name>ERService.RBAC</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

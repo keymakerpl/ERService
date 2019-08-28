@@ -25,7 +25,7 @@ namespace ERService.StartPage
             _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);
         }
 
-        private void ContinueInitialization(AfterAuthorisedEventArgs obj)
+        private void ContinueInitialization(UserAuthorizationEventArgs obj)
         {
             _regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(StartPageView).FullName);
         }

@@ -16,5 +16,6 @@ namespace ERService.Infrastructure.Repositories
         bool HasChanges();
         void Add(TEntity model);
         void Remove(TEntity model);
+        void RollBackChanges();
     }
 }

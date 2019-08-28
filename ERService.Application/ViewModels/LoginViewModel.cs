@@ -45,14 +45,22 @@ namespace ERService.ViewModels
 
         private void OnLoginCommandExecute(object parameter)
         {
+            if (String.IsNullOrWhiteSpace(Login))
+                ShowWrongLoginDataMessage();
+
             var passwordBox = parameter as PasswordBox;
             if (passwordBox != null)
             {
-                if (!_rbacManager.Authorize(Login, passwordBox.Password))
+                if (!_rbacManager.Login(Login, passwordBox.Password))
                 {
-                    _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
+                    ShowWrongLoginDataMessage();
                 }
             }            
+        }
+
+        private void ShowWrongLoginDataMessage()
+        {
+            _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
         }
     }
 }

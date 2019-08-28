@@ -56,7 +56,7 @@ namespace ERService.RBAC
         {
         }
 
-        public bool Authorize(string login, string password)
+        public bool Login(string login, string password)
         {
             //TODO: Null Guard
             var user = _users.SingleOrDefault(u => u.Login == login);
@@ -65,7 +65,7 @@ namespace ERService.RBAC
             if (_passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt))
             {
                 _eventAggregator.GetEvent<AfterAuthorisedEvent>()
-                    .Publish(new AfterAuthorisedEventArgs
+                    .Publish(new UserAuthorizationEventArgs
                     { UserID = user.Id, UserLogin = user.Login, UserName = user.FirstName, UserLastName = user.LastName });
 
                 LoggedUser = user;
@@ -73,6 +73,16 @@ namespace ERService.RBAC
             }
 
             return false;
+        }
+
+        public void Logout()
+        {
+            if (LoggedUser == null) return;
+
+            _eventAggregator.GetEvent<AfterLogedoutEvent>()
+                .Publish(new UserAuthorizationEventArgs { UserID = LoggedUser.Id, UserLogin = LoggedUser.Login });
+
+            LoggedUser = null;            
         }
 
         public List<Acl> GetAclList()
@@ -196,6 +206,12 @@ namespace ERService.RBAC
             {
                 _aclRepository.Remove(acl);
             }
+        }
+
+        public void RollBackChanges()
+        {
+            _roleRepository.RollBackChanges();
+            _userRepository.RollBackChanges();
         }
     }
 
