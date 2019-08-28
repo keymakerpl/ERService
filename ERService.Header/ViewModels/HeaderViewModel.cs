@@ -55,8 +55,8 @@ namespace ERService.Header.ViewModels
             UserLogoutCommand = new DelegateCommand(OnUserLogoutExecute);
             UserSettingsCommand = new DelegateCommand(OnUserSettingsExecute);
 
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(OnUserLogged, true);
-            _eventAggregator.GetEvent<AfterLogedoutEvent>().Subscribe(OnUserLoggedout, true);
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(OnUserLogged, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLoggedout, true);
         }
 
         private void OnUserSettingsExecute()

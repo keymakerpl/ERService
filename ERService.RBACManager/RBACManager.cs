@@ -64,7 +64,7 @@ namespace ERService.RBAC
 
             if (_passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt))
             {
-                _eventAggregator.GetEvent<AfterAuthorisedEvent>()
+                _eventAggregator.GetEvent<AfterUserLoggedinEvent>()
                     .Publish(new UserAuthorizationEventArgs
                     { UserID = user.Id, UserLogin = user.Login, UserName = user.FirstName, UserLastName = user.LastName });
 
@@ -79,7 +79,7 @@ namespace ERService.RBAC
         {
             if (LoggedUser == null) return;
 
-            _eventAggregator.GetEvent<AfterLogedoutEvent>()
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>()
                 .Publish(new UserAuthorizationEventArgs { UserID = LoggedUser.Id, UserLogin = LoggedUser.Login });
 
             LoggedUser = null;            

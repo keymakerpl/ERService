@@ -39,13 +39,14 @@
         
         
         <Controls:HamburgerMenu x:Name="HamburgerMenuControl"
-                        Foreground="Black"
-                        PaneBackground="Gainsboro"
-                        IsPaneOpen="True"
-                        ItemTemplate="{StaticResource MenuItemTemplate}"
-                        OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-                        DisplayMode="CompactInline"
-                        HamburgerVisibility="Collapsed">
+                                Foreground="Black"
+                                PaneBackground="Gainsboro"
+                                IsPaneOpen="True"
+                                ItemTemplate="{StaticResource MenuItemTemplate}"
+                                OptionsItemTemplate="{StaticResource MenuItemTemplate}"
+                                DisplayMode="CompactInline"
+                                HamburgerVisibility="Collapsed"
+                                IsEnabled="{Binding IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
 
             <Controls:HamburgerMenu.ContentTemplate>
                 <DataTemplate DataType="{x:Type Controls:HamburgerMenuItem}">
@@ -55,19 +56,19 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0"
-                    Background="#FF444444">
+                                Background="#FF444444">
                             <TextBlock x:Name="Header"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="24"
-                            Foreground="Black"
-                            Text="{Binding Label}" />
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="24"
+                                       Foreground="Black"
+                                       Text="{Binding Label}" />
                         </Border>
                         <ContentControl x:Name="TheContent"
-                            Grid.Row="1"
-                            Focusable="False"
-                            Foreground="{DynamicResource BlackBrush}"
-                            Content="{Binding Tag}" />
+                                        Grid.Row="1"
+                                        Focusable="False"
+                                        Foreground="{DynamicResource BlackBrush}"
+                                        Content="{Binding Tag}" />
                     </Grid>
                 </DataTemplate>
             </Controls:HamburgerMenu.ContentTemplate>

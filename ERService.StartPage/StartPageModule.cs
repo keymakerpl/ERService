@@ -22,7 +22,7 @@ namespace ERService.StartPage
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(ContinueInitialization, true);
         }
 
         private void ContinueInitialization(UserAuthorizationEventArgs obj)

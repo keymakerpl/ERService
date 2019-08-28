@@ -2,7 +2,7 @@
 
 namespace ERService.Infrastructure.Events
 {
-    public class AfterLogedoutEvent : PubSubEvent<UserAuthorizationEventArgs>
+    public class AfterUserLoggedoutEvent : PubSubEvent<UserAuthorizationEventArgs>
     {
     }
 }

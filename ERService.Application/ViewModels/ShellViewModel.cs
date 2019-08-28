@@ -21,7 +21,7 @@ namespace ERService.Application.ViewModels
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<AfterLogedoutEvent>().Subscribe(OnUserLogedout, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout, true);
 
             var assembly = Assembly.GetEntryAssembly();
             _applicationName = $"{assembly.GetName().Name}";

@@ -12,26 +12,13 @@ namespace ERService.Navigation
     public class NavigationModule : IModule
     {
         private IRegionManager _regionManager;
-        private IEventAggregator _eventAggregator;
 
-        public NavigationModule(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public NavigationModule(IRegionManager regionManager)
         {
-            _eventAggregator = eventAggregator;
             _regionManager = regionManager;
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
-        {
-            _eventAggregator.GetEvent<AfterAuthorisedEvent>().Subscribe(ContinueInitialization, true);
-            _eventAggregator.GetEvent<AfterLogedoutEvent>().Subscribe(OnUserLoggedout, true);
-        }
-
-        private void OnUserLoggedout(UserAuthorizationEventArgs args)
-        {
-            _regionManager.Regions[RegionNames.NavigationRegion].RemoveAll();
-        }
-
-        private void ContinueInitialization(UserAuthorizationEventArgs args)
         {
             _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
         }
