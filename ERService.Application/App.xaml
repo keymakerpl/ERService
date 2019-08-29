@@ -33,9 +33,13 @@
 
                     <Style TargetType="Button"
                            BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="FontSize" Value="14"/>
-                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontWeight" Value="Medium"/>
                     </Style>
+
+                    <!--<Style TargetType="Border"
+                           BasedOn="{StaticResource {x:Type Border}}">
+                        <Setter Property="BorderBrush" Value="#FF83919F"/>
+                    </Style>-->
 
                     <Style TargetType="ComboBox"
                            BasedOn="{StaticResource {x:Type ComboBox}}">

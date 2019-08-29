@@ -10,7 +10,8 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" 
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-             Dialog:DialogParticipation.Register="{Binding}">
+             Dialog:DialogParticipation.Register="{Binding}"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -21,29 +22,29 @@
         <Border Grid.Row="0" x:Name="ToolbarBorder" Margin="10 10 10 0"
                 BorderBrush="LightGray" BorderThickness="1">
             <DockPanel 
-                   FlowDirection="RightToLeft"
-                   HorizontalAlignment="Right">
-                <Button Content="Usuń"
+                FlowDirection="RightToLeft"
+                HorizontalAlignment="Right">
+                <Button 
                     Command="{Binding DeleteCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
-                <Button Content="Szukaj"
+                    Width="50" Height="50"
+                    Foreground="SlateGray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
+                </Button>
+                <Button 
                     Command="{Binding SearchCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
-                <Button Content="Dodaj"
+                    Width="50" Height="50"
+                    Foreground="SlateGray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    <iconPacks:PackIconFontAwesome Kind="SearchSolid" />
+                </Button>
+                <Button 
                     Command="{Binding AddCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
+                    Width="50" Height="50"
+                    Foreground="SlateGray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    <iconPacks:PackIconFontAwesome Kind="PlusSolid" />
+                </Button>
             </DockPanel>
         </Border>
 
@@ -52,51 +53,51 @@
             <ScrollViewer Grid.Row="1">
                 <Grid Margin="1 1 1 1">
                     <DataGrid
-                  ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectionMode="Single"  
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  IsReadOnly="True"
-                  helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
+                        ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectionMode="Single"  
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        IsReadOnly="True"
+                        helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
 
                         <DataGrid.Resources>
-                        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                               TargetType="{x:Type DataGridColumnHeader}">                            
-                            <Setter Property="Foreground" Value="Black"/>
-                        </Style>
-                    </DataGrid.Resources>
+                            <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                                   TargetType="{x:Type DataGridColumnHeader}">                            
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGrid.Resources>
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Imię" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding FirstName}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Nazwisko" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding LastName}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding LastName}"/>
                             <DataGridTextColumn Header="Firma" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding CompanyName}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding CompanyName}"/>
                             <DataGridTextColumn Header="NIP" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding NIP}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding NIP}"/>
                             <DataGridTextColumn Header="Telefon" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding PhoneNumber}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding PhoneNumber}"/>
                             <DataGridTextColumn Header="Telefon 2" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding PhoneNumber2}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding PhoneNumber2}"/>
                             <DataGridTextColumn Header="E-mail" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding Email}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding Email}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

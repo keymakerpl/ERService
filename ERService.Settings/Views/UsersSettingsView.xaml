@@ -10,9 +10,10 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-             Dialog:DialogParticipation.Register="{Binding}">
+             Dialog:DialogParticipation.Register="{Binding}"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
-    <Grid Background="White" x:Name="MainGrid">
+    <Grid x:Name="MainGrid">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -57,20 +58,20 @@
                                                        Text="" />
                                             <TextBlock Text="Login:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                        Margin="5" />
-                                            <TextBlock Text="{Binding Login}" FontWeight="Bold" Margin="5" FontSize="14"
+                                            <TextBlock Text="{Binding Login}" FontWeight="Bold" Margin="5" FontSize="12"
                                                        MinWidth="100" />
                                         </WrapPanel>
                                         <WrapPanel Grid.Row="1" Grid.Column="0" Margin="0 0 5 0">
                                             <TextBlock Text="Imię:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                        Margin="5" />
-                                            <TextBlock Text="{Binding FirstName}" FontWeight="Bold" Margin="5" FontSize="14"
+                                            <TextBlock Text="{Binding FirstName}" FontWeight="Bold" Margin="5" FontSize="12"
                                                        MinWidth="100" />
                                             <TextBlock Text="Nazwisko:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                        Margin="5" />
-                                            <TextBlock Text="{Binding LastName}" FontWeight="Bold" Margin="5" FontSize="14" MinWidth="80"/>
+                                            <TextBlock Text="{Binding LastName}" FontWeight="Bold" Margin="5" FontSize="12" MinWidth="80"/>
                                             <TextBlock Text="Rola:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                        Margin="5" />
-                                            <TextBlock Text="{Binding Role.Name}" FontWeight="Bold" Margin="5" FontSize="14" />
+                                            <TextBlock Text="{Binding Role.Name}" FontWeight="Bold" Margin="5" FontSize="12" />
                                         </WrapPanel>
                                     </Grid>
                                 </Border>
@@ -79,14 +80,32 @@
                     </ListView>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
-                            FlowDirection="RightToLeft"
-                            Background="Gainsboro">
-                    <Button Content="Usuń" Margin="5 0 5 0"
-                            Command="{Binding RemoveUserCommand}" />
-                    <Button Content="Edytuj" Margin="5 0 5 0"
-                            Command="{Binding EditUserCommand}" />
-                    <Button Content="Dodaj" Margin="5 0 5 0"
-                            Command="{Binding AddUserCommand}" />
+                            FlowDirection="RightToLeft">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="White" Offset="0.25"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <Button Margin="5"
+                            Foreground="SlateGray"
+                            Width="20" Height="20"
+                            Command="{Binding RemoveUserCommand}" 
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
+                    </Button>
+                    <Button Margin="5"
+                            Command="{Binding EditUserCommand}"
+                            Foreground="SlateGray" 
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconMaterial Kind="AccountEdit" />
+                    </Button>
+                    <Button Margin="5" Width="20" Height="20"
+                            Command="{Binding AddUserCommand}"
+                            Foreground="SlateGray" 
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconOcticons Kind="PlusSmall" />
+                    </Button>
                 </StackPanel>
             </Grid>
         </GroupBox>
@@ -104,9 +123,9 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
-                                    <TextBlock Text="Nazwa roli:" Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
+                                    <TextBlock Text="Nazwa roli: " Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
                                                Margin="10 0 0 0" />
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="5 0 5 0" FontSize="14"
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="5 0 5 0" FontSize="12"
                                                MinWidth="100" />
                                 </WrapPanel>
                             </DataTemplate>
@@ -114,10 +133,23 @@
                     </ListView>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal"
-                            FlowDirection="RightToLeft"
-                            Background="Gainsboro">
-                    <Button Content="Usuń" Margin="5 0 5 0" Command="{Binding RemoveRoleCommand}" />
-                    <Button Content="Dodaj" Margin="5 0 5 0" Command="{Binding AddRoleCommand}" />
+                            FlowDirection="RightToLeft">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="White" Offset="0.25"/>
+                            <GradientStop Color="Gainsboro" Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <Button Margin="5" Command="{Binding RemoveRoleCommand}" Width="20" Height="20"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
+                    </Button>
+                    <Button Margin="5" Command="{Binding AddRoleCommand}" Width="20" Height="20"
+                            Foreground="SlateGray" 
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconOcticons Kind="PlusSmall" />
+                    </Button>
                 </StackPanel>
             </Grid>
         </GroupBox>
@@ -153,10 +185,24 @@
         </GroupBox>
 
         <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"
-                    Grid.Column="1" Background="Gainsboro" FlowDirection="RightToLeft"
+                    Grid.Column="1" FlowDirection="RightToLeft"
                     helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
-            <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5 0 0 0" />
-            <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5 0 5 0" />
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="White" Offset="0.25"/>
+                    <GradientStop Color="Gainsboro" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5" />
+            <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5" />
         </StackPanel>
     </Grid>
 </UserControl>

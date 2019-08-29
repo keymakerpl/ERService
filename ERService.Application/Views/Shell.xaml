@@ -45,13 +45,11 @@
                     CornerRadius="3"
                     Background="GhostWhite"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
                     Margin="15">
                 <Border.Effect>
                     <DropShadowEffect />
                 </Border.Effect>
                 <TextBlock Text="{Binding ApplicationName}"  
-                           HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Foreground="Black"
                            FontSize="28"
@@ -59,7 +57,7 @@
                            Margin="15 5 15 5 "/>
             </Border>
             
-            <ContentControl DockPanel.Dock="Left" Grid.Column="1" 
+            <ContentControl DockPanel.Dock="Right" Grid.Column="1" 
                             prism:RegionManager.RegionName="HeaderRegion"/>
         </DockPanel>
 

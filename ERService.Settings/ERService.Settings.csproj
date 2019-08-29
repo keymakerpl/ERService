@@ -66,7 +66,11 @@
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
+    <Compile Include="ViewModels\PrintTemplateSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
+    <Compile Include="Views\PrintTemplateSettingsView.xaml.cs">
+      <DependentUpon>PrintTemplateSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserDetailView.xaml.cs">
       <DependentUpon>UserDetailView.xaml</DependentUpon>
     </Compile>
@@ -139,6 +143,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PrintTemplateSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +165,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MahApps.Metro.IconPacks">
+      <Version>3.0.0-alpha0206</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Core">
       <Version>7.2.0.1367</Version>
     </PackageReference>

@@ -1,4 +1,6 @@
-﻿using Prism.Ioc;
+﻿using ERService.Infrastructure.Constants;
+using ERService.Settings.Views;
+using Prism.Ioc;
 using Prism.Modularity;
 
 namespace ERService.Settings
@@ -11,7 +13,13 @@ namespace ERService.Settings
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
+            containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
+            containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);
+            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.NumerationSettingsView);
+            containerRegistry.RegisterForNavigation<UsersSettingsView>(ViewNames.UserSettingsView);
+            containerRegistry.RegisterForNavigation<UserDetailView>(ViewNames.UserDetailView);
+            containerRegistry.RegisterForNavigation<PrintTemplateSettingsView>(ViewNames.PrintTemplateSettingsView);
         }
     }
 }

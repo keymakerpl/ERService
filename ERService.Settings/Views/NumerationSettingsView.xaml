@@ -8,32 +8,35 @@
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Background="White">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+    <Grid >
+        <GroupBox Header="Numeracja" Margin="0 5 0 0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-                <Label Content="Schemat numeracji:" FontSize="14"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Width="180"
+                    <Label Content="Schemat numeracji:" FontSize="14"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="180"
                          Margin="5 0 5 0"
                          Text="{Binding Numeration.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right"
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right"
                     Grid.ColumnSpan="4">
-                    <Button Content="Zapisz" Command="{Binding SaveCommand}" Width="125"
+                        <Button Content="Zapisz" Command="{Binding SaveCommand}" Width="125"
                             Margin="10"/>
-                </StackPanel>
+                    </StackPanel>
 
-                <Label Grid.Row="1" Content="[MM][RRRR]" VerticalAlignment="Center"/>
+                    <Label Grid.Row="1" Content="[MM][RRRR]" VerticalAlignment="Center"/>
 
-            </Grid>
-        </StackPanel>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+        
     </Grid>
 </UserControl>

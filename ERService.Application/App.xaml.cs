@@ -97,13 +97,7 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
-            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);
-            containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
-            containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
-            containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);
-            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.NumerationSettingsView);
-            containerRegistry.RegisterForNavigation<UsersSettingsView>(ViewNames.UserSettingsView);
-            containerRegistry.RegisterForNavigation<UserDetailView>(ViewNames.UserDetailView);
+            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);            
         }
     }
 }
