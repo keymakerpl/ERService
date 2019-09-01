@@ -90,7 +90,7 @@ namespace ERService.Infrastructure.Base
         #region Events and Events Handlers
         protected virtual void OnCancelEditExecute()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Not implemented");
         }
 
         protected virtual void OnCloseDetailViewExecute()

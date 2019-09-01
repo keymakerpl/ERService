@@ -66,8 +66,12 @@
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
+    <Compile Include="ViewModels\PrintTemplateEditorViewModel.cs" />
     <Compile Include="ViewModels\PrintTemplateSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
+    <Compile Include="Views\PrintTemplateEditorView.xaml.cs">
+      <DependentUpon>PrintTemplateEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PrintTemplateSettingsView.xaml.cs">
       <DependentUpon>PrintTemplateSettingsView.xaml</DependentUpon>
     </Compile>
@@ -129,6 +133,10 @@
       <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
       <Name>ERService.RBAC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\HtmlEditor.csproj">
+      <Project>{84badda1-ab3a-4064-b87e-178d7446901d}</Project>
+      <Name>HtmlEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\GeneralSettingsView.xaml">
@@ -140,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NumerationSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintTemplateEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

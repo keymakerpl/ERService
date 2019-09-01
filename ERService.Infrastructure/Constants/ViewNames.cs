@@ -18,5 +18,6 @@
         public const string UserSettingsView = "UserSettingsView";
         public const string UserDetailView = "UserDetailView";
         public const string PrintTemplateSettingsView = "PrintTemplateSettingsView";
+        public const string PrintTemplateEditorView = "PrintTemplateEditorView";
     }
 }

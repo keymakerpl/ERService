@@ -40,16 +40,8 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisibilityStates">
                 <VisualStateGroup.Transitions>
-                    <VisualTransition GeneratedDuration="0:0:1" To="Normal">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <CubicEase EasingMode="EaseInOut"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
-                    <VisualTransition GeneratedDuration="0:0:1" To="Blured">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <CubicEase EasingMode="EaseInOut"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0:0:1" To="Normal"/>
+                    <VisualTransition GeneratedDuration="0:0:1" To="Blured"/>
                 </VisualStateGroup.Transitions>
                 <VisualState x:Name="Normal">
                     <Storyboard>
