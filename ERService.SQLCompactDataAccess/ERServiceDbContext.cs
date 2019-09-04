@@ -47,6 +47,8 @@ namespace ERService.MSSQLDataAccess
 
         public DbSet<AclVerb> AclVerbs { get; set; }
 
+        public DbSet<PrintTemplate> PrintTemplates { get; set; }
+
         /// <summary>
         /// Tutaj ustawiamy jak ma być tworzona baza
         /// </summary>

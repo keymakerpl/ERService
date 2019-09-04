@@ -75,6 +75,8 @@
     <Compile Include="Helpers\PasswordHasher.cs" />
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
+    <Compile Include="HtmlEditor\Data\Repository\IPrintTempleteRepository.cs" />
+    <Compile Include="HtmlEditor\Data\Repository\PrintTemplateRepository.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

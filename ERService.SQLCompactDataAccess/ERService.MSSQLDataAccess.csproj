@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201908261559197_AddedUsersToRoleEntry.Designer.cs">
       <DependentUpon>201908261559197_AddedUsersToRoleEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908301022058_AddedPrintTemplateTable.cs" />
+    <Compile Include="Migrations\201908301022058_AddedPrintTemplateTable.Designer.cs">
+      <DependentUpon>201908301022058_AddedPrintTemplateTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -332,6 +336,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908261559197_AddedUsersToRoleEntry.resx">
       <DependentUpon>201908261559197_AddedUsersToRoleEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908301022058_AddedPrintTemplateTable.resx">
+      <DependentUpon>201908301022058_AddedPrintTemplateTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
