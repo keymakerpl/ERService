@@ -9,8 +9,10 @@ using Moq;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.Threading.Tasks;
 using Unity;
 using Xunit;
+using CustomerLibTestsXUnit.Extensions;
 
 namespace CustomerLibTestsXUnit
 {
@@ -22,7 +24,10 @@ namespace CustomerLibTestsXUnit
         {
             var container = new UnityContainer();
 
+            //var customerMock = new Mock<Customer>(); //TODO: hmmmm?
             var customerRepositoryMock = new Mock<ICustomerRepository>();
+            customerRepositoryMock.Setup(c => c.GetByIdAsync(It.IsAny<Guid>()))
+                .Returns<Guid>(id => Task.FromResult(new Customer { Id = id, FirstName = "Radek", LastName = "Kurek" }));
 
             var regionManagerMock = new Mock<IRegionManager>();
 
@@ -60,17 +65,13 @@ namespace CustomerLibTestsXUnit
         [Fact]
         public void ShouldRaisePropertyChengedEventForCustomer()
         {
-            var fired = false;
-            _customerViewModel.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(_customerViewModel.Customer))
-                {
-                    fired = true;
-                }
-            };
-
             var customerWrapperMock = new Mock<ICustomerWrapper>();
-            _customerViewModel.Customer = customerWrapperMock.Object;
+            var fired = _customerViewModel.IsPropertyChangedFired(() =>
+            {
+                _customerViewModel.Customer = customerWrapperMock.Object;
+            }, nameof(_customerViewModel.Customer));
+
+            Assert.True(fired);
         }
     }
 }
