@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CC555453
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBACLibTestsXUnit", "RBACLibTestsXUnit\RBACLibTestsXUnit.csproj", "{C3457E38-51A5-4FC0-AB43-9E70766F0C6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerLibTestsXUnit", "CustomerLibTestsXUnit\CustomerLibTestsXUnit.csproj", "{63896403-EF5A-40CE-80BE-188F63C57DF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{C3457E38-51A5-4FC0-AB43-9E70766F0C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3457E38-51A5-4FC0-AB43-9E70766F0C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3457E38-51A5-4FC0-AB43-9E70766F0C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63896403-EF5A-40CE-80BE-188F63C57DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63896403-EF5A-40CE-80BE-188F63C57DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63896403-EF5A-40CE-80BE-188F63C57DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63896403-EF5A-40CE-80BE-188F63C57DF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +136,7 @@ Global
 		{296667E4-9991-4F81-9CB9-B81FC9485825} = {0C20AB8C-1916-4C68-9C55-0515B1841408}
 		{760DD7CC-474C-4386-BF15-71A4D2B24AE6} = {0C20AB8C-1916-4C68-9C55-0515B1841408}
 		{C3457E38-51A5-4FC0-AB43-9E70766F0C6D} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
+		{63896403-EF5A-40CE-80BE-188F63C57DF7} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71A6DA07-2ECD-47A2-A2FE-37111201A1E6}

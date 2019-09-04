@@ -74,6 +74,7 @@
       <DependentUpon>CustomerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrapper\CustomerWrapper.cs" />
+    <Compile Include="Wrapper\ICustomerWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

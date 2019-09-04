@@ -4,7 +4,7 @@ using System;
 
 namespace ERService.CustomerModule.Wrapper
 {
-    public class CustomerWrapper : ModelWrapper<Customer>
+    public class CustomerWrapper : ModelWrapper<Customer>, ICustomerWrapper
     {
         public CustomerWrapper(Customer model) : base(model)
         {

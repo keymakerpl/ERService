@@ -19,7 +19,7 @@ namespace ERService.CustomerModule.ViewModels
     //TODO: Refactor Interface
     public class CustomerViewModel : DetailViewModelBase
     {
-        private CustomerWrapper _customer;
+        private ICustomerWrapper _customer;
         private CustomerAddress _customerAddress;
         private IRegionNavigationService _navigationService;
         private IRegionManager _regionManager;
@@ -38,6 +38,7 @@ namespace ERService.CustomerModule.ViewModels
             _repository = customerRepository;
             _regionManager = regionManager;
             _rBACManager = rBACManager;
+
             Customers = new ObservableCollection<Customer>();
 
             GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
@@ -59,7 +60,7 @@ namespace ERService.CustomerModule.ViewModels
             }
         }
 
-        public CustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+        public ICustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
         public Customer SelectedCustomer
         {
             get => _selectedCustomer;
