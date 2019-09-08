@@ -97,7 +97,7 @@ namespace Smith.WPF.HtmlEditor
             var range = msHtmlDocInterface.selection.createRange() as IHTMLTxtRange;
             range.pasteHTML(content);
             RaiseContentChanged();
-        }        
+        }
 
         /// <summary>
         /// 获取文档状态

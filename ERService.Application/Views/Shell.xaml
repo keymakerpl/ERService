@@ -58,7 +58,14 @@
             </Border>
             
             <ContentControl DockPanel.Dock="Right" Grid.Column="1" 
-                            prism:RegionManager.RegionName="HeaderRegion"/>
+                            prism:RegionManager.RegionName="HeaderRegion">
+                <ContentControl.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FF878787" Offset="0.007"/>
+                        <GradientStop Color="LightGray" Offset="1"/>
+                    </RadialGradientBrush>
+                </ContentControl.Background>
+            </ContentControl>
         </DockPanel>
 
         <DockPanel Grid.Row="1" 

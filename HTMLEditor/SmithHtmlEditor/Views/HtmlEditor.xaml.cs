@@ -523,9 +523,15 @@ namespace Smith.WPF.HtmlEditor
 
         private static void OnBindingContentChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            HtmlEditor editor = (HtmlEditor)sender;
-            editor.myBindingContent = (string)e.NewValue;
-            editor.ContentHtml = editor.myBindingContent;            
+            var editor = sender as HtmlEditor;
+            if (editor != null)
+            {
+                editor.myBindingContent = (string)e.NewValue;
+                if (editor.ContentHtml != editor.myBindingContent)
+                {
+                    editor.ContentHtml = editor.myBindingContent;
+                }                
+            }
         }
 
         private void NotifyBindingContentChanged()
@@ -979,7 +985,12 @@ namespace Smith.WPF.HtmlEditor
         private void InsertCodeBlockExecuted(object sender, ExecutedRoutedEventArgs e)
         {
 
-        } 
+        }
+        
+        public void InsertText(string text)
+        {
+            htmldoc.InsertHTML(text);
+        }
 
         #endregion
     }
