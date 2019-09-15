@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -206,11 +207,11 @@ namespace Smith.WPF.HtmlEditor
         private void OnVisualEditorDocumentNavigated(object sender, System.Windows.Forms.WebBrowserNavigatedEventArgs e)
         {            
             VisualEditor.Document.ContextMenuShowing += this.OnDocumentContextMenuShowing;
-            htmldoc = new HtmlDocument(VisualEditor.Document);
+            htmldoc = new HtmlDocument(VisualEditor.Document);            
             //((IHTMLDocument2)VisualEditor.Document.DomDocument).designMode = "ON";
             SetStylesheet();
-            SetInitialContent();
-            VisualEditor.Document.Body.SetAttribute("contenteditable", "true");
+            SetInitialContent();            
+            VisualEditor.Document.Body.SetAttribute("contenteditable", IsReadOnly ? "false" : "true");
             VisualEditor.Document.Focus();
         }
 
@@ -402,11 +403,12 @@ namespace Smith.WPF.HtmlEditor
             }
             catch (Exception)
             {
+                
             }            
         }
 
-        private static readonly string ConfigPath = "smithhtmleditor.config.xml";
-        private static readonly string StylesheetPath = "smithhtmleditor.stylesheet.css";
+        private static readonly string ConfigPath = AppDomain.CurrentDomain.BaseDirectory + @"/lib/smithhtmleditor.config.xml";
+        private static readonly string StylesheetPath = AppDomain.CurrentDomain.BaseDirectory + @"/lib/smithhtmleditor.stylesheet.css";
         private static readonly string VisualFontFamiliesPath = @"/smithhtmleditor/visualmode/fontfamilies/add/@value";
         private static readonly string SourceFontFamilyPath = @"/smithhtmleditor/sourcemode/fontfamily/@value";
         private static readonly string SourceFontSizePath = @"/smithhtmleditor/sourcemode/fontsize/@value";
@@ -526,7 +528,7 @@ namespace Smith.WPF.HtmlEditor
             var editor = sender as HtmlEditor;
             if (editor != null)
             {
-                editor.myBindingContent = (string)e.NewValue;
+                editor.myBindingContent = (string)e.NewValue ?? "";
                 if (editor.ContentHtml != editor.myBindingContent)
                 {
                     editor.ContentHtml = editor.myBindingContent;
@@ -703,6 +705,8 @@ namespace Smith.WPF.HtmlEditor
                     htmldoc.QueryCommandEnabled("Delete");
             }
         }
+
+        public bool IsReadOnly { get; set; } = false;
 
         #endregion
 

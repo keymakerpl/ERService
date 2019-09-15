@@ -1,7 +1,7 @@
-﻿using System;
+﻿using mshtml;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using Smith.WPF.HtmlEditor;
 
 namespace ERService.Infrastructure.Helpers
 {
@@ -59,6 +59,58 @@ namespace ERService.Infrastructure.Helpers
             {
                 editor.Focus();
                 editor.InsertText((string)e.NewValue);
+            }
+        }
+    }
+
+    public static class WebBrowserUtility
+    {
+        public static string GetContent(DependencyObject obj)
+        {
+            return (string)obj.GetValue(ContentProperty);
+        }
+
+        public static void SetContent(DependencyObject obj, string value)
+        {
+            obj.SetValue(ContentProperty, value);
+        }
+
+        public static readonly DependencyProperty ContentProperty =
+            DependencyProperty.RegisterAttached("Content", typeof(string), typeof(WebBrowserUtility),
+                new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.Inherits, OnContentChanged));
+
+        private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var webBrowser = d as WebBrowser;
+            if (webBrowser != null)
+            {                
+                webBrowser.NavigateToString((string)e.NewValue);
+            }
+        }
+    }
+
+    public static class HtmlEditorUtility
+    {
+        public static bool GetReadOnlyProperty(UIElement obj)
+        {
+            return (bool)obj.GetValue(ReadOnlyProperty);
+        }
+
+        public static void SetReadOnlyProperty(UIElement obj, bool value)
+        {
+            obj.SetValue(ReadOnlyProperty, value);
+        }
+
+        public static readonly DependencyProperty ReadOnlyProperty =
+            DependencyProperty.RegisterAttached("ReadOnly", typeof(bool), typeof(HtmlEditorUtility),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits, OnReadOnlyChanged));
+
+        private static void OnReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = d as Smith.WPF.HtmlEditor.HtmlEditor;
+            if (editor != null)
+            {
+                editor.IsReadOnly = (bool)e.NewValue;
             }
         }
     }

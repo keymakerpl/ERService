@@ -30,94 +30,93 @@
     </UserControl.Resources>
 
     <Grid>
-        <GroupBox Grid.RowSpan="3" Header="Edycja szablonu" Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"/>
-                    <ColumnDefinition Width="75*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*" Name="col1"/>
+                <ColumnDefinition Width="75*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                <GroupBox Header="Znaczniki" Margin="5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView
+            <GroupBox Header="Znaczniki" Margin="5" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView
                         ItemsSource="{Binding Indexes}"
                         SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <ListView.ItemTemplate >
-                                <DataTemplate>
-                                    <Border BorderThickness="1" BorderBrush="LightGray" Margin="2" CornerRadius="2">
-                                        <Grid Margin="5">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <WrapPanel>
-                                                    <TextBlock Text="{Binding DisplayableName}"/>
-                                                </WrapPanel>
-                                                <WrapPanel Grid.Row="1">
-                                                    <TextBlock Text="{Binding IndexPattern}" FontStyle="Italic"
+                        <ListView.ItemTemplate >
+                            <DataTemplate>
+                                <Border BorderThickness="1" BorderBrush="LightGray" Margin="2" CornerRadius="2">
+                                    <Grid Margin="5">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <WrapPanel>
+                                                <TextBlock Text="{Binding DisplayableName}"/>
+                                            </WrapPanel>
+                                            <WrapPanel Grid.Row="1">
+                                                <TextBlock Text="{Binding IndexPattern}" FontStyle="Italic"
                                                                    Foreground="DimGray" Margin="5 1 5 0 "/>
-                                                </WrapPanel>
-                                                <Button Grid.Column="1" Grid.RowSpan="2" Foreground="DimGray"                                                      
+                                            </WrapPanel>
+                                            <Button Grid.Column="1" Grid.RowSpan="2" Foreground="DimGray"                                                      
                                                         VerticalAlignment="Center" HorizontalAlignment="Center"
                                                         Command="{Binding RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView, Mode=FindAncestor}, 
                                                             Path=DataContext.AddIndexToEditorCommand}"
                                                         CommandParameter="{Binding IndexPattern}"
                                                         Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
-                                                    <iconPacks:PackIconMaterialLight Kind="ArrowRightCircle" />
-                                                </Button>
-                                            </Grid>
+                                                <iconPacks:PackIconMaterialLight Kind="ArrowRightCircle" />
+                                            </Button>
                                         </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollViewer>
-                </GroupBox>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </GroupBox>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                    <Label Content="Nazwa szblonu:" Margin="5"/>
-                    <TextBox Margin="5" MinWidth="200"/>
-                </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                <Label Content="Nazwa szblonu:" Margin="5"/>
+                <TextBox Margin="5" Width="150" 
+                             Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
 
-                <Border Grid.Column="1" BorderBrush="SlateGray" 
+            <Border Grid.Column="1" BorderBrush="SlateGray" 
                         BorderThickness="1"  Margin="5"
                         FocusManager.FocusedElement="{Binding ElementName=Editor}">
-                    <editor:HtmlEditor x:Name="Editor"
-                                       BindingContent="{Binding TemplateText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <editor:HtmlEditor x:Name="Editor" helpers:HtmlEditorUtility.ReadOnlyProperty="False"
+                                       BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        helpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </Border>
+            </Border>
 
-                <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"
+            <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"
                     Grid.Column="1" FlowDirection="RightToLeft"
                     helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <LinearGradientBrush.RelativeTransform>
-                                <TransformGroup>
-                                    <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                    <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                    <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </LinearGradientBrush.RelativeTransform>
-                            <GradientStop Color="White" Offset="0.25"/>
-                            <GradientStop Color="Gainsboro" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5" MaxHeight="30"/>
-                    <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5" MaxHeight="30"/>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
+                <StackPanel.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="White" Offset="0.25"/>
+                        <GradientStop Color="Gainsboro" Offset="1"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5" MaxHeight="30"/>
+                <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5" MaxHeight="30"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 
 </UserControl>

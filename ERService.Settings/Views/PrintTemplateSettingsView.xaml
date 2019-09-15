@@ -10,7 +10,10 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              Dialog:DialogParticipation.Register="{Binding}"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
+             xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
+             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure">
+    
     <Grid>
         <Border>
             <Grid>
@@ -22,17 +25,18 @@
                     <RowDefinition Height="85*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <GroupBox Header="Szablon" 
+                <GroupBox Header="Szablon" Grid.RowSpan="2"
                               Margin="0 5 5 0">
-                    <ScrollViewer>
-
-                    </ScrollViewer>
+                    
+                        <editor:HtmlEditor x:Name="Editor" IsToolbarVisible="False" helpers:HtmlEditorUtility.ReadOnlyProperty="True"
+                                           BindingContent="{Binding SelectedTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
                 </GroupBox>
                 <GroupBox Grid.Column="1" 
                               Header="Wybrany szablon:"
                               Margin="0 5 0 0">
                     <ScrollViewer>
-                        <ListView
+                        <ListView Name="TemplatesList"
                         ItemsSource="{Binding Templates}"
                         SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ListView.ItemTemplate>
@@ -49,7 +53,7 @@
                     </ScrollViewer>
                 </GroupBox>
                 <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Orientation="Horizontal"
-                    Grid.Column="0" FlowDirection="RightToLeft"
+                    Grid.Column="1" FlowDirection="RightToLeft"
                             Margin="0 5 0 0" Grid.ColumnSpan="2">
                     <StackPanel.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -65,7 +69,14 @@
                             <GradientStop Color="#FFDBDBDB" Offset="1"/>
                         </LinearGradientBrush>
                     </StackPanel.Background>
-                    <Button Content="Edytuj szablon" Command="{Binding EditTemplateCommand}" Margin="2" />
+                    <Button Command="{Binding EditTemplateCommand}" Margin="5" 
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconMaterial Kind="PlaylistEdit" />
+                    </Button>
+                    <Button Command="{Binding AddTemplateCommand}" Margin="5"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        <iconPacks:PackIconMaterial Kind="PlaylistPlus" />
+                    </Button >
                 </StackPanel>
             </Grid>
         </Border>

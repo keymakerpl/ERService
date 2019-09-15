@@ -58,6 +58,12 @@ namespace ERService.OrderModule.ViewModels
             AddAttachmentCommand = new DelegateCommand(OnAddAttachmentExecute);
             RemoveAttachmentCommand = new DelegateCommand(OnRemoveAttachmentExecute, OnRemoveAttachmentCanExecute);
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
+            PrintCommand = new DelegateCommand(OnPrintExecute);
+        }
+
+        private void OnPrintExecute()
+        {
+            
         }
 
         public DelegateCommand AddAttachmentCommand { get; private set; }
@@ -71,6 +77,7 @@ namespace ERService.OrderModule.ViewModels
         public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
 
         public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand PrintCommand { get; }
 
         public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
 

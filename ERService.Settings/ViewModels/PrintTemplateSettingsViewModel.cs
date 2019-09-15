@@ -6,12 +6,7 @@ using ERService.Infrastructure.HtmlEditor.Data.Repository;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
@@ -33,13 +28,34 @@ namespace ERService.Settings.ViewModels
 
             Templates = new ObservableCollection<PrintTemplate>();
 
-            EditTemplateCommand = new DelegateCommand(OnEditTemplateExecute);
+            EditTemplateCommand = new DelegateCommand(OnEditTemplateExecute, OnEditTemplateCanExecute);
+            AddTemplateCommand = new DelegateCommand(OnAddTemplateExecute);
+        }
+
+        private bool OnEditTemplateCanExecute()
+        {
+            return SelectedTemplate != null;
+        }
+
+        private void OnAddTemplateExecute()
+        {
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView);
+        }
+
+        private PrintTemplate _selectedTemplate;
+
+        public PrintTemplate SelectedTemplate
+        {
+            get { return _selectedTemplate; }
+            set { SetProperty(ref _selectedTemplate, value); EditTemplateCommand.RaiseCanExecuteChanged(); }
         }
 
         #region Events
         private void OnEditTemplateExecute()
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView);
+            var navigationParameters = new NavigationParameters();
+            navigationParameters.Add("ID", SelectedTemplate.Id);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, navigationParameters);
         }
         #endregion
 
@@ -63,5 +79,6 @@ namespace ERService.Settings.ViewModels
         #endregion
 
         public DelegateCommand EditTemplateCommand { get; }
+        public DelegateCommand AddTemplateCommand { get; }
     }
 }
