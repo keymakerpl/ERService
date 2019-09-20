@@ -1,4 +1,4 @@
-﻿namespace ERService.Infrastructure.HtmlEditor.Interpreter
+﻿namespace ERService.TemplateEditor.Interpreter
 {
     public class Context
     {

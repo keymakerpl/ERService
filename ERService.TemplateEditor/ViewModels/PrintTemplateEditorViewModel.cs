@@ -2,9 +2,9 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
-using ERService.Infrastructure.HtmlEditor.Data.Repository;
-using ERService.Infrastructure.PrintTemplateEditor.Interpreter;
-using ERService.Settings.Wrapper;
+using ERService.TemplateEditor.Data.Repository;
+using ERService.TemplateEditor.Interpreter;
+using ERService.TemplateEditor.Wrapper;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -12,7 +12,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace ERService.Settings.ViewModels
+namespace ERService.TemplateEditor.ViewModels
 {
     public class IndexLookupItem
     {
@@ -43,6 +43,8 @@ namespace ERService.Settings.ViewModels
             get { return _template; }
             set { SetProperty(ref _template, value); }
         }
+
+        public override bool KeepAlive => false;
 
         public DelegateCommand<object> AddIndexToEditorCommand { get; private set; }
         public ObservableCollection<IndexLookupItem> Indexes { get; }
@@ -81,6 +83,9 @@ namespace ERService.Settings.ViewModels
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
+            IsReadOnly = navigationContext.Parameters.GetValue<bool>("IsReadOnly");
+            IsToolbarVisible = navigationContext.Parameters.GetValue<bool>("IsToolbarVisible");            
+
             await LoadAsync(id);
         }
 
@@ -114,12 +119,20 @@ namespace ERService.Settings.ViewModels
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.SettingsView);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
         }
 
         protected override bool OnSaveCanExecute()
         {
             return !String.IsNullOrWhiteSpace(PrintTemplate?.Name) && HasChanges;
+        }        
+
+        private bool _isToolbarVisible;
+
+        public bool IsToolbarVisible
+        {
+            get { return _isToolbarVisible; }
+            set { SetProperty(ref _isToolbarVisible, value); }
         }
     }
 }

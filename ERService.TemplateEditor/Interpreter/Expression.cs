@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ERService.Infrastructure.HtmlEditor.Interpreter
+namespace ERService.TemplateEditor.Interpreter
 {
     public abstract class Expression<TKey, TValue> 
         where TKey : class

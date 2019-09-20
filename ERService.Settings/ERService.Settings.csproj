@@ -67,12 +67,8 @@
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
-    <Compile Include="ViewModels\PrintTemplateEditorViewModel.cs" />
     <Compile Include="ViewModels\PrintTemplateSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
-    <Compile Include="Views\PrintTemplateEditorView.xaml.cs">
-      <DependentUpon>PrintTemplateEditorView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\PrintTemplateSettingsView.xaml.cs">
       <DependentUpon>PrintTemplateSettingsView.xaml</DependentUpon>
     </Compile>
@@ -102,7 +98,6 @@
     <Compile Include="Views\StatusConfigView.xaml.cs">
       <DependentUpon>StatusConfigView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Wrapper\PrintTemplateWrapper.cs" />
     <Compile Include="Wrapper\UserWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -135,9 +130,13 @@
       <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
       <Name>ERService.RBAC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\HtmlEditor.csproj">
+    <ProjectReference Include="..\ERService.TemplateEditor\ERService.TemplateEditor.csproj">
+      <Project>{D5879452-68C7-4990-8776-0861594528C4}</Project>
+      <Name>ERService.TemplateEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\ERService.HtmlEditor.csproj">
       <Project>{84badda1-ab3a-4064-b87e-178d7446901d}</Project>
-      <Name>HtmlEditor</Name>
+      <Name>ERService.HtmlEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -150,10 +149,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NumerationSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PrintTemplateEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

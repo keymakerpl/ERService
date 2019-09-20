@@ -48,7 +48,6 @@
 
                     <!-->Konwerter booli na enum visibility w xaml</-->
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-                    <!-->Konwerter booli na enum visibility w xaml</-->
                     <helper:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
                     <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 

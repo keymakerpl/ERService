@@ -45,7 +45,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerLibTestsXUnit", "Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureLibTestXUnit", "InfrastructureLibTestXUnit\InfrastructureLibTestXUnit.csproj", "{1358F788-638F-4AE6-8159-3406E280EF44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlEditor", "HTMLEditor\SmithHtmlEditor\HtmlEditor.csproj", "{84BADDA1-AB3A-4064-B87E-178D7446901D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.HtmlEditor", "HTMLEditor\SmithHtmlEditor\ERService.HtmlEditor.csproj", "{84BADDA1-AB3A-4064-B87E-178D7446901D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.TemplateEditor", "ERService.TemplateEditor\ERService.TemplateEditor.csproj", "{D5879452-68C7-4990-8776-0861594528C4}"
 EndProject

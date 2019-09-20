@@ -1,7 +1,7 @@
-﻿using ERService.TemplateEditor.Views;
+﻿using ERService.Infrastructure.Constants;
+using ERService.TemplateEditor.Views;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 
 namespace ERService.TemplateEditor
 {
@@ -14,7 +14,7 @@ namespace ERService.TemplateEditor
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterForNavigation<PrintTemplateEditorView>(ViewNames.PrintTemplateEditorView);
         }
     }
 }

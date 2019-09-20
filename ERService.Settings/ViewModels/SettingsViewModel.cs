@@ -12,7 +12,7 @@ namespace ERService.Settings.ViewModels
         private readonly IRBACManager _rBACManager;
         private readonly IMessageDialogService _dialogService;
 
-        public bool KeepAlive => true;
+        public bool KeepAlive => false;
 
         public SettingsViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
@@ -31,6 +31,8 @@ namespace ERService.Settings.ViewModels
                 navigationContext.NavigationService.Journal.GoBack();
             }
 
+            navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.SettingsEditorViewRegion);
+
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
@@ -46,7 +48,7 @@ namespace ERService.Settings.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-
+            
         }
 
         #endregion

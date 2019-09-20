@@ -89,29 +89,4 @@ namespace ERService.Infrastructure.Helpers
         }
     }
 
-    public static class HtmlEditorUtility
-    {
-        public static bool GetReadOnlyProperty(UIElement obj)
-        {
-            return (bool)obj.GetValue(ReadOnlyProperty);
-        }
-
-        public static void SetReadOnlyProperty(UIElement obj, bool value)
-        {
-            obj.SetValue(ReadOnlyProperty, value);
-        }
-
-        public static readonly DependencyProperty ReadOnlyProperty =
-            DependencyProperty.RegisterAttached("ReadOnly", typeof(bool), typeof(HtmlEditorUtility),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits, OnReadOnlyChanged));
-
-        private static void OnReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = d as Smith.WPF.HtmlEditor.HtmlEditor;
-            if (editor != null)
-            {
-                editor.IsReadOnly = (bool)e.NewValue;
-            }
-        }
-    }
 }

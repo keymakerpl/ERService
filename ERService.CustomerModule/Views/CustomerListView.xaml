@@ -60,24 +60,25 @@
                         CanUserAddRows="False"
                         CanUserDeleteRows="False"
                         IsReadOnly="True"
-                        helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
+                        helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
+                        Style="{StaticResource AzureDataGrid}">
 
-                        <DataGrid.Resources>
-                            <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                                   TargetType="{x:Type DataGridColumnHeader}">                            
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Style>
-                        </DataGrid.Resources>
+                        <!--<DataGrid.Resources>
+                             <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                             TargetType="{x:Type DataGridColumnHeader}">                            
+                             <Setter Property="Foreground" Value="Black"/>
+                             </Style>
+                             </DataGrid.Resources>-->
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Imię" Width="*"
-                                                ElementStyle="{StaticResource DataGridColumnStyle}"
-                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                                Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Nazwisko" Width="*"
                                                 ElementStyle="{StaticResource DataGridColumnStyle}"
                                                 EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                                                 Binding="{Binding LastName}"/>
+                            <DataGridTextColumn Header="Imię" Width="*"
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Firma" Width="*"
                                                 ElementStyle="{StaticResource DataGridColumnStyle}"
                                                 EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"

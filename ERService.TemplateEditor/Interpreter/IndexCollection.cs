@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ERService.Infrastructure.PrintTemplateEditor.Interpreter
+namespace ERService.TemplateEditor.Interpreter
 {
     public static class IndexCollection
     {

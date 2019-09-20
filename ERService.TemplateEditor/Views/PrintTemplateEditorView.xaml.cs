@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ERService.Settings.Views
+namespace ERService.TemplateEditor.Views
 {
     public partial class PrintTemplateEditorView : UserControl
     {

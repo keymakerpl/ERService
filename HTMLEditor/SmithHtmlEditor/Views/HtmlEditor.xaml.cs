@@ -211,7 +211,7 @@ namespace Smith.WPF.HtmlEditor
             //((IHTMLDocument2)VisualEditor.Document.DomDocument).designMode = "ON";
             SetStylesheet();
             SetInitialContent();            
-            VisualEditor.Document.Body.SetAttribute("contenteditable", IsReadOnly ? "false" : "true");
+            VisualEditor.Document.Body.SetAttribute("contenteditable", ReadOnlyEditor ? "false" : "true");
             VisualEditor.Document.Focus();
         }
 
@@ -438,6 +438,30 @@ namespace Smith.WPF.HtmlEditor
         private void SetToolbarVisibility(bool newValue)
         {
             CommandBar.Visibility = newValue ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        #endregion
+
+        #region ReadOnly Dependency Property
+
+        #endregion
+        public bool ReadOnly
+        {
+            get { return (bool)GetValue(ReadOnlyProperty); }
+            set { SetValue(ReadOnlyProperty, value); }
+        }
+        
+        public static readonly DependencyProperty ReadOnlyProperty =
+            DependencyProperty.Register("ReadOnly", typeof(bool), typeof(HtmlEditor),
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(OnReadOnlyChanged)));
+
+        private static void OnReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = d as HtmlEditor;
+            if (editor != null)
+            {
+                editor.ReadOnlyEditor = (bool)e.NewValue;
+            }
         }
 
         #endregion
@@ -706,9 +730,7 @@ namespace Smith.WPF.HtmlEditor
             }
         }
 
-        public bool IsReadOnly { get; set; } = false;
-
-        #endregion
+        private bool ReadOnlyEditor { get; set; }        
 
         #region Execute Commands
 

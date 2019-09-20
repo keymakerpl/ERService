@@ -78,12 +78,7 @@
     <Compile Include="Helpers\PasswordHasher.cs" />
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
-    <Compile Include="PrintTemplateEditor\Data\Repository\IPrintTempleteRepository.cs" />
-    <Compile Include="PrintTemplateEditor\Data\Repository\PrintTemplateRepository.cs" />
-    <Compile Include="PrintTemplateEditor\Interpreter\Context.cs" />
-    <Compile Include="PrintTemplateEditor\Interpreter\Expression.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
-    <Compile Include="PrintTemplateEditor\Interpreter\IndexCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,9 +116,9 @@
       <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
       <Name>ERService.MSSQLDataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\HtmlEditor.csproj">
+    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\ERService.HtmlEditor.csproj">
       <Project>{84badda1-ab3a-4064-b87e-178d7446901d}</Project>
-      <Name>HtmlEditor</Name>
+      <Name>ERService.HtmlEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

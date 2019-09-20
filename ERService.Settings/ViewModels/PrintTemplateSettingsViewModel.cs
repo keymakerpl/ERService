@@ -2,7 +2,7 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
-using ERService.Infrastructure.HtmlEditor.Data.Repository;
+using ERService.TemplateEditor.Data.Repository;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -47,7 +47,22 @@ namespace ERService.Settings.ViewModels
         public PrintTemplate SelectedTemplate
         {
             get { return _selectedTemplate; }
-            set { SetProperty(ref _selectedTemplate, value); EditTemplateCommand.RaiseCanExecuteChanged(); }
+            set
+            {
+                SetProperty(ref _selectedTemplate, value);
+                NavigateToSelectedTemplate();
+                EditTemplateCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private void NavigateToSelectedTemplate()
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("ID", SelectedTemplate.Id);
+            parameters.Add("IsReadOnly", true);
+
+            _regionManager.Regions[RegionNames.SettingsEditorViewRegion].RemoveAll();
+            _regionManager.RequestNavigate(RegionNames.SettingsEditorViewRegion, ViewNames.PrintTemplateEditorView, parameters);
         }
 
         #region Events
@@ -55,6 +70,11 @@ namespace ERService.Settings.ViewModels
         {
             var navigationParameters = new NavigationParameters();
             navigationParameters.Add("ID", SelectedTemplate.Id);
+            navigationParameters.Add("IsReadOnly", false);
+            navigationParameters.Add("IsToolbarVisible", true);
+
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            _regionManager.Regions[RegionNames.SettingsEditorViewRegion].RemoveAll();
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, navigationParameters);
         }
         #endregion

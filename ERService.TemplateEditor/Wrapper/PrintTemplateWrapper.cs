@@ -1,7 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Wrapper;
 
-namespace ERService.Settings.Wrapper
+namespace ERService.TemplateEditor.Wrapper
 {
     public class PrintTemplateWrapper : ModelWrapper<PrintTemplate>
     {

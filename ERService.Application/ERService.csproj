@@ -167,6 +167,10 @@
       <Project>{E26D3ECE-1846-46A7-A570-FE2A969561BC}</Project>
       <Name>ERService.StatusBar</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.TemplateEditor\ERService.TemplateEditor.csproj">
+      <Project>{D5879452-68C7-4990-8776-0861594528C4}</Project>
+      <Name>ERService.TemplateEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

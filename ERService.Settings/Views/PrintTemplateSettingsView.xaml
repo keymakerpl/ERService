@@ -28,9 +28,9 @@
                 <GroupBox Header="Szablon" Grid.RowSpan="2"
                               Margin="0 5 5 0">
                     
-                        <editor:HtmlEditor x:Name="Editor" IsToolbarVisible="False" helpers:HtmlEditorUtility.ReadOnlyProperty="True"
-                                           BindingContent="{Binding SelectedTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    
+                        <!--<editor:HtmlEditor x:Name="Editor" IsToolbarVisible="False" helpers:HtmlEditorUtility.ReadOnlyProperty="True"
+                                           BindingContent="{Binding SelectedTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    <ContentControl prism:RegionManager.RegionName="SettingsEditorViewRegion"/>
                 </GroupBox>
                 <GroupBox Grid.Column="1" 
                               Header="Wybrany szablon:"

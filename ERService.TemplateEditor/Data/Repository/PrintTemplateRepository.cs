@@ -2,7 +2,7 @@
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
 
-namespace ERService.Infrastructure.HtmlEditor.Data.Repository
+namespace ERService.TemplateEditor.Data.Repository
 {
     public class PrintTemplateRepository : GenericRepository<PrintTemplate, ERServiceDbContext>, IPrintTemplateRepository
     {

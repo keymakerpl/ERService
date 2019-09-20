@@ -25,6 +25,7 @@ using System.Windows.Threading;
 using static ERService.RBAC.Data.Repository.RBACRepository;
 using MahApps.Metro.Controls.Dialogs;
 using ERService.Infrastructure.Dialogs;
+using ERService.TemplateEditor;
 
 namespace ERService.Application
 {
@@ -63,6 +64,7 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(SettingsModule));
             moduleCatalog.AddModule(typeof(StartPageModule));
             moduleCatalog.AddModule(typeof(RBACModule));
+            moduleCatalog.AddModule(typeof(TemplateEditorModule));
 
             //TODO: Assembly names refactor
             moduleCatalog.AddModule(typeof(OrderModule.OrderModule));

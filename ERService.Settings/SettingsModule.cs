@@ -1,6 +1,7 @@
 ﻿using ERService.Infrastructure.Constants;
-using ERService.Infrastructure.HtmlEditor.Data.Repository;
 using ERService.Settings.Views;
+using ERService.TemplateEditor.Data.Repository;
+using ERService.TemplateEditor.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 
@@ -23,7 +24,6 @@ namespace ERService.Settings
             containerRegistry.RegisterForNavigation<UsersSettingsView>(ViewNames.UserSettingsView);
             containerRegistry.RegisterForNavigation<UserDetailView>(ViewNames.UserDetailView);
             containerRegistry.RegisterForNavigation<PrintTemplateSettingsView>(ViewNames.PrintTemplateSettingsView);
-            containerRegistry.RegisterForNavigation<PrintTemplateEditorView>(ViewNames.PrintTemplateEditorView);
         }
     }
 }

@@ -21,29 +21,29 @@
         <Border Grid.Row="0" x:Name="ToolbarBorder" Margin="10 10 10 0"
                 BorderBrush="LightGray" BorderThickness="1">
             <DockPanel 
-                   FlowDirection="RightToLeft"
-                   HorizontalAlignment="Right">
+                FlowDirection="RightToLeft"
+                HorizontalAlignment="Right">
                 <Button Content="Usuń"
-                    Command="{Binding DeleteCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
+                        Command="{Binding DeleteCommand}"
+                        Margin="10 5 0 5"
+                        Foreground="Black"
+                        Background="GhostWhite"
+                        Height="30"
+                        Width="120"/>
                 <Button Content="Szukaj"
-                    Command="{Binding SearchCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
+                        Command="{Binding SearchCommand}"
+                        Margin="10 5 0 5"
+                        Foreground="Black"
+                        Background="GhostWhite"
+                        Height="30"
+                        Width="120"/>
                 <Button Content="Dodaj"
-                    Command="{Binding AddCommand}"
-                    Margin="10 5 0 5"
-                    Foreground="Black"
-                    Background="GhostWhite"
-                    Height="30"
-                    Width="120"/>
+                        Command="{Binding AddCommand}"
+                        Margin="10 5 0 5"
+                        Foreground="Black"
+                        Background="GhostWhite"
+                        Height="30"
+                        Width="120"/>
             </DockPanel>
         </Border>
 
@@ -52,47 +52,48 @@
             <ScrollViewer>
                 <Grid Margin="1 1 1 1">
                     <DataGrid
-                  ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
-                  SelectionMode="Single"  
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  IsReadOnly="True"
-                  helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute">
+                        ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
+                        SelectionMode="Single"  
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        IsReadOnly="True"
+                        helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
+                        Style="{StaticResource AzureDataGrid}">
 
-                        <DataGrid.Resources>
-                            <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                               TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Style>
-                        </DataGrid.Resources>
+                        <!--<DataGrid.Resources>
+                             <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                             TargetType="{x:Type DataGridColumnHeader}">
+                             <Setter Property="Foreground" Value="Black"/>
+                             </Style>
+                             </DataGrid.Resources>-->
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Numer" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding Number}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding Number}"/>
                             <DataGridTextColumn Header="Data dodania" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding DateAdded}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding DateAdded}"/>
                             <DataGridTextColumn Header="Data zakończenia" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding DateEnded}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding DateEnded}"/>
                             <DataGridTextColumn Header="Opis usterki" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding Fault}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding Fault}"/>
                             <DataGridTextColumn Header="Koszt" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding Cost}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding Cost}"/>
                             <DataGridTextColumn Header="Notatki" Width="*"
-                                    ElementStyle="{StaticResource DataGridColumnStyle}"
-                                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                                    Binding="{Binding Comment}"/>
+                                                ElementStyle="{StaticResource DataGridColumnStyle}"
+                                                EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                                Binding="{Binding Comment}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
