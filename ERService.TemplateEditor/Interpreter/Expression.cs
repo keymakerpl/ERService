@@ -2,25 +2,30 @@
 
 namespace ERService.TemplateEditor.Interpreter
 {
-    public abstract class Expression<TKey, TValue> 
+    public abstract class Expression<TKey, TValue> : IExpression<TKey, TValue>
         where TKey : class
         where TValue : class
     {
+        public Expression()
+        {
+
+        }
+
         public Expression(TKey key, TValue value)
         {
             Key = key;
             Value = value;
         }
 
-        public void Interpret(Context context)
+        public void Interpret(IContext context)
         {
             if (String.IsNullOrWhiteSpace(context.Input))
                 return;
 
             var key = Key as string;
 
-            if (key == null)
-                return;
+            if (key == null) return;
+            if (Value == null) return;
 
             var value = "";
             var valueType = Value.GetType();
@@ -37,26 +42,20 @@ namespace ERService.TemplateEditor.Interpreter
                     break;
             }
 
-            context.Output = context.Input.Replace(key, value ?? "");
+            context.Output = context.Output.Replace(key, value ?? "");
         }
 
         public abstract TKey Key { get; set; }
         public abstract TValue Value { get; set; }
     }
 
-    public sealed class StringExpression : Expression<string, string>
+    public sealed class IndexExpression : Expression<string, object>
     {
-        public StringExpression(string key, string value) : base(key, value)
+        public IndexExpression()
         {
         }
 
-        public override string Key { get; set; }
-        public override string Value { get; set; }
-    }
-
-    public sealed class DateTimeExpression : Expression<string, object>
-    {
-        public DateTimeExpression(string key, object value) : base(key, value)
+        public IndexExpression(string key, object value) : base(key, value)
         {
         }
 

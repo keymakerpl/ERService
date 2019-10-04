@@ -100,6 +100,10 @@
       <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
       <Name>ERService.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.CustomerModule\ERService.Customer.csproj">
+      <Project>{73229C43-9BB4-42B6-B7DF-A61A369CC85A}</Project>
+      <Name>ERService.Customer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Hardware\ERService.Hardware.csproj">
       <Project>{296667E4-9991-4F81-9CB9-B81FC9485825}</Project>
       <Name>ERService.Hardware</Name>
@@ -115,6 +119,10 @@
     <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
       <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
       <Name>ERService.MSSQLDataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.TemplateEditor\ERService.TemplateEditor.csproj">
+      <Project>{D5879452-68C7-4990-8776-0861594528C4}</Project>
+      <Name>ERService.TemplateEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

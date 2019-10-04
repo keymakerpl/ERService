@@ -50,6 +50,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\InterpreterAttribute.cs" />
     <Compile Include="Base\IListModelBase.cs" />
     <Compile Include="Base\IDetailViewModelBase.cs" />
     <Compile Include="Base\ListModelBase.cs" />

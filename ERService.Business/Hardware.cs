@@ -22,8 +22,11 @@ namespace ERService.Business
         [Key]
         public Guid Id { get; set; }
 
-        [StringLength(50)]
+        [StringLength(80)]
         public string Name { get; set; }
+
+        [StringLength(80)]
+        public string SerialNumber { get; set; }
 
         public ICollection<HwCustomItem> HardwareCustomItems { get; set; }
 

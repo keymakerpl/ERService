@@ -12,7 +12,8 @@
              Dialog:DialogParticipation.Register="{Binding}"             
              xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
              xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type Label}">
@@ -30,22 +31,66 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid >
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="75*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <GroupBox Header="Znaczniki" Margin="5" 
+            <DockPanel Grid.Column="1" HorizontalAlignment="Stretch"
+                       Margin="5 0 5 0" Visibility="{Binding IsNavigationBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <metroControls:DropDownButton
+                        Margin="5"
+                        VerticalContentAlignment="Center"
+                        Width="100"
+                        Height="30"
+                    DockPanel.Dock="Right"
+                        Content="Szablony"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{Binding PrintTemplates}">
+                    <metroControls:DropDownButton.ItemContainerStyle>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Command" Value="{Binding DataContext.SelectTemplateCommand, RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView}}"/>
+                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </metroControls:DropDownButton.ItemContainerStyle>
+                </metroControls:DropDownButton>
+
+                <Button 
+                    Command="{Binding GoBackCommand}"
+                    Foreground="Black"
+                    Background="GhostWhite"
+                    Height="25"
+                    Width="25" Margin="5 0 5 0" HorizontalAlignment="Left"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
+                </Button>
+
+                <Button 
+                    Command="{Binding PrintCommand}"
+                    Foreground="Black"
+                    Background="GhostWhite"
+                    Height="25"
+                    Width="25" Margin="5 0 5 0" HorizontalAlignment="Left"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    <iconPacks:PackIconMaterial Kind="Printer" />
+                </Button>
+
+            </DockPanel>
+
+            <GroupBox Header="Znaczniki" Margin="5" Grid.Row="1"
                       Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                
                     <ListView
                         ItemsSource="{Binding Indexes}"
                         SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    
                         <ListView.ItemTemplate >
                             <DataTemplate>
                                 <Border BorderThickness="1" BorderBrush="LightGray" Margin="2" CornerRadius="2">
@@ -80,17 +125,17 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </ScrollViewer>
+                
             </GroupBox>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch"  
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch"  
                         Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <Label Content="Nazwa szblonu:" Margin="5"/>
                 <TextBox Margin="5" Width="150" 
                          Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
-            <Border Grid.Column="1" BorderBrush="SlateGray" 
+            <Border Grid.Column="1" Grid.Row="1" BorderBrush="SlateGray" 
                     BorderThickness="1"  Margin="5"
                     FocusManager.FocusedElement="{Binding ElementName=Editor}">
                 <editor:HtmlEditor x:Name="Editor"
@@ -121,6 +166,7 @@
                 <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5" MaxHeight="30"/>
                 <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5" MaxHeight="30"/>
             </StackPanel>
+            
         </Grid>
     </Grid>
 

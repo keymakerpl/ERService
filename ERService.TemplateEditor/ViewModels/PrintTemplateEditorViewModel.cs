@@ -9,6 +9,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -25,29 +26,47 @@ namespace ERService.TemplateEditor.ViewModels
     {
         private readonly IPrintTemplateRepository _templeteRepository;
         private readonly IRegionManager _regionManager;
+        private readonly IInterpreter _interpreter;
         private string _patternToInsert;
+
         public PrintTemplateEditorViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
-            IPrintTemplateRepository templeteRepository, IRegionManager regionManager) : base(eventAggregator, messageDialogService)
+            IPrintTemplateRepository templeteRepository, IRegionManager regionManager, IInterpreter interpreter) : base(eventAggregator, messageDialogService)
         {
             _templeteRepository = templeteRepository;
             _regionManager = regionManager;
+            _interpreter = interpreter;
+
             Indexes = new ObservableCollection<IndexLookupItem>();
+            PrintTemplates = new ObservableCollection<PrintTemplate>();
 
             AddIndexToEditorCommand = new DelegateCommand<object>(OnAddIndexExecute);
+            SelectTemplateCommand = new DelegateCommand<object>(OnSelectTemplateExecute);
         }
 
-        private PrintTemplateWrapper _template;
+        private void OnSelectTemplateExecute(object arg)
+        {
+            var template = arg as PrintTemplate;
+            if (template != null)
+            {
+                InitializeTemplate(template);
+            }
+        }
+
+        private PrintTemplateWrapper _printTemplate;
 
         public PrintTemplateWrapper PrintTemplate
         {
-            get { return _template; }
-            set { SetProperty(ref _template, value); }
+            get { return _printTemplate; }
+            set { SetProperty(ref _printTemplate, value); }
         }
 
         public override bool KeepAlive => false;
 
         public DelegateCommand<object> AddIndexToEditorCommand { get; private set; }
+        public DelegateCommand<object> SelectTemplateCommand { get; private set; }
         public ObservableCollection<IndexLookupItem> Indexes { get; }
+        public ObservableCollection<PrintTemplate> PrintTemplates { get; }
+
         public string PatternToInsert { get { return _patternToInsert; } set { SetProperty(ref _patternToInsert, value); } }
         public IndexLookupItem SelectedIndex { get; set; }
 
@@ -55,13 +74,32 @@ namespace ERService.TemplateEditor.ViewModels
         {
             var template = id != Guid.Empty ? await _templeteRepository.GetByIdAsync(id) : GetNewDetail();
 
+            await LoadIndexList();
             InitializeTemplate(template);
-            LoadIndexList();
         }
 
-        private void InitializeTemplate(PrintTemplate template)
-        {
+        private async void InitializeTemplate(PrintTemplate template)
+        {            
             PrintTemplate = new PrintTemplateWrapper(template);
+
+            if (ModelWrappers != null)
+            {
+                _interpreter.Context = new Context(template.Template);
+                _interpreter.Expression = Expression.IndexExpression;
+                _interpreter.Wrappers = ModelWrappers;
+
+                var intepretedTemplate = _interpreter.GetInterpretedContext();
+
+                PrintTemplate.Template = intepretedTemplate.Output;
+                IsNavigationBarVisible = true;
+
+                PrintTemplates.Clear();
+                var templates = await _templeteRepository.GetAllAsync();
+                foreach (var temp in templates)
+                {
+                    PrintTemplates.Add(temp);
+                }
+            }
 
             PrintTemplate.PropertyChanged += (s, a) =>
             {
@@ -84,18 +122,27 @@ namespace ERService.TemplateEditor.ViewModels
         {
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
             IsReadOnly = navigationContext.Parameters.GetValue<bool>("IsReadOnly");
-            IsToolbarVisible = navigationContext.Parameters.GetValue<bool>("IsToolbarVisible");            
+            IsToolbarVisible = navigationContext.Parameters.GetValue<bool>("IsToolbarVisible");
+            ModelWrappers = navigationContext.Parameters.GetValue<object[]>("ModelWrappers");
 
-            await LoadAsync(id);
+            await LoadAsync(id);           
         }
 
-        private void LoadIndexList()
+        private async Task LoadIndexList()
         {
+            if (IsReadOnly) return;
+
             Indexes.Clear();
-            foreach (var indx in IndexCollection.IndexList)
+            IEnumerable<Index> indexes = await GetIndexes();
+            foreach (var indx in indexes)
             {
                 Indexes.Add(new IndexLookupItem { DisplayableName = indx.Name, IndexPattern = indx.Pattern });
             }
+        }
+
+        private async Task<IEnumerable<Index>> GetIndexes()
+        {
+            return await Task.FromResult(_interpreter.Indexes);
         }
 
         private void OnAddIndexExecute(object patternString)
@@ -134,5 +181,15 @@ namespace ERService.TemplateEditor.ViewModels
             get { return _isToolbarVisible; }
             set { SetProperty(ref _isToolbarVisible, value); }
         }
+
+        private bool _isNavigationBarVisible;
+
+        public bool IsNavigationBarVisible
+        {
+            get { return _isNavigationBarVisible; }
+            set { SetProperty(ref _isNavigationBarVisible, value); }
+        }
+
+        private object[] ModelWrappers;
     }
 }

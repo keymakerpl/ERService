@@ -2,11 +2,12 @@
 
 namespace ERService.TemplateEditor.Interpreter
 {
-    public static class IndexCollection
+    //TODO: Do wywalenia
+    public class IndexCollection
     {
-        static IEnumerable<Index> _indexList;
+        private IEnumerable<Index> _indexList;
 
-        static IndexCollection()
+        public IndexCollection()
         {
             _indexList = new List<Index>
                                 { new Index { Name = "Imię klienta", Pattern = "[%o_Cus_FirstName%]" },
@@ -24,7 +25,7 @@ namespace ERService.TemplateEditor.Interpreter
             };
         }
 
-        public static IEnumerable<Index> IndexList { get { return _indexList; } }
+        public IEnumerable<Index> IndexList { get { return _indexList; } }
     }
 
     public class Index

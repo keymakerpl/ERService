@@ -1,6 +1,6 @@
 ﻿namespace ERService.TemplateEditor.Interpreter
 {
-    public class Context
+    public class Context : IContext
     {
         private string _input;
 
@@ -9,6 +9,7 @@
         public Context(string input)
         {
             _input = input;
+            _output = input;
         }
 
         public string Input

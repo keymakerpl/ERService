@@ -53,6 +53,9 @@
     <Compile Include="Data\Repository\PrintTemplateRepository.cs" />
     <Compile Include="Interpreter\Context.cs" />
     <Compile Include="Interpreter\Expression.cs" />
+    <Compile Include="Interpreter\IContext.cs" />
+    <Compile Include="Interpreter\IExpression.cs" />
+    <Compile Include="Interpreter\IInterpreter.cs" />
     <Compile Include="Interpreter\IndexCollection.cs" />
     <Compile Include="TemplateEditorModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -68,6 +71,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="ViewModels\PrintTemplateEditorViewModel.cs" />
     <Compile Include="Views\PrintTemplateEditorView.xaml.cs">
       <DependentUpon>PrintTemplateEditorView.xaml</DependentUpon>
@@ -83,7 +87,9 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MahApps.Metro.IconPacks">
       <Version>3.0.0-alpha0206</Version>
