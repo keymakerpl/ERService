@@ -11,9 +11,12 @@
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              Dialog:DialogParticipation.Register="{Binding}"             
              xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
+             xmlns:editorhelpers="clr-namespace:Smith.WPF.HtmlEditor.Helpers;assembly=Smith.WPF.HtmlEditor"
              xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls">
+             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type Label}">
@@ -63,7 +66,7 @@
                 </metroControls:DropDownButton>
 
                 <Button 
-                    Command="{Binding GoBackCommand}"
+                    Command="{Binding CloseCommand}"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="25"
@@ -73,13 +76,14 @@
                 </Button>
 
                 <Button 
-                    Command="{Binding PrintCommand}"
                     Foreground="Black"
                     Background="GhostWhite"
                     Height="25"
                     Width="25" Margin="5 0 5 0" HorizontalAlignment="Left"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0"
+                    Command="{Binding PrintCommand}">
                     <iconPacks:PackIconMaterial Kind="Printer" />
+                    
                 </Button>
 
             </DockPanel>
@@ -142,7 +146,7 @@
                                    ReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    IsToolbarVisible="{Binding IsToolbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   helpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   editorhelpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
 
             <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"

@@ -2,6 +2,7 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
 using ERService.TemplateEditor.Data.Repository;
 using ERService.TemplateEditor.Interpreter;
 using ERService.TemplateEditor.Wrapper;
@@ -41,6 +42,13 @@ namespace ERService.TemplateEditor.ViewModels
 
             AddIndexToEditorCommand = new DelegateCommand<object>(OnAddIndexExecute);
             SelectTemplateCommand = new DelegateCommand<object>(OnSelectTemplateExecute);
+
+            PrintCommand = new DelegateCommand(OnPrintExecute);
+        }
+
+        private void OnPrintExecute()
+        {
+            _eventAggregator.GetEvent<PrintEvent>().Publish();
         }
 
         private void OnSelectTemplateExecute(object arg)
@@ -64,6 +72,7 @@ namespace ERService.TemplateEditor.ViewModels
 
         public DelegateCommand<object> AddIndexToEditorCommand { get; private set; }
         public DelegateCommand<object> SelectTemplateCommand { get; private set; }
+        public DelegateCommand PrintCommand { get; private set; }
         public ObservableCollection<IndexLookupItem> Indexes { get; }
         public ObservableCollection<PrintTemplate> PrintTemplates { get; }
 
@@ -120,6 +129,8 @@ namespace ERService.TemplateEditor.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            _navigatonContext = navigationContext;
+
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
             IsReadOnly = navigationContext.Parameters.GetValue<bool>("IsReadOnly");
             IsToolbarVisible = navigationContext.Parameters.GetValue<bool>("IsToolbarVisible");
@@ -172,7 +183,12 @@ namespace ERService.TemplateEditor.ViewModels
         protected override bool OnSaveCanExecute()
         {
             return !String.IsNullOrWhiteSpace(PrintTemplate?.Name) && HasChanges;
-        }        
+        }
+
+        protected override void OnCloseDetailViewExecute()
+        {
+            _navigatonContext.NavigationService.Journal.GoBack();
+        }
 
         private bool _isToolbarVisible;
 
@@ -191,5 +207,6 @@ namespace ERService.TemplateEditor.ViewModels
         }
 
         private object[] ModelWrappers;
+        private NavigationContext _navigatonContext;
     }
 }

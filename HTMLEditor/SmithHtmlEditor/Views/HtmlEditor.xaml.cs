@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.XPath;
+using CommonServiceLocator;
+using ERService.Infrastructure.Events;
 using mshtml;
+using Prism.Events;
+using Microsoft.Win32;
 
 namespace Smith.WPF.HtmlEditor
 {
@@ -25,8 +27,10 @@ namespace Smith.WPF.HtmlEditor
         private Dictionary<string, ImageObject> imageDic;
         private string stylesheet;
         bool isDocReady;
-        
+
         #endregion
+
+        IEventAggregator _eventAggregator { get; } = ServiceLocator.Current.GetInstance<IEventAggregator>();
 
         #region Constructor
 
@@ -39,7 +43,31 @@ namespace Smith.WPF.HtmlEditor
             InitTimer();
         }
 
-        #endregion       
+        private void OnPrintExecute()
+        {
+            SetHeaderAndFooter();
+            VisualEditor.ShowPrintDialog();
+            SetHeaderAndFooter(true);
+        }
+
+        private string _oldFooterValue;
+        private string _oldHeaderValue;
+        private void SetHeaderAndFooter(bool setOldValues = false)
+        {
+            string registryPath = "Software\\Microsoft\\Internet Explorer\\PageSetup";
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(registryPath, true);
+            
+            _oldHeaderValue = (string)registryKey.GetValue("header");
+            _oldFooterValue = (string)registryKey.GetValue("footer");
+
+            var headerNewValue = setOldValues ? _oldHeaderValue: "";
+            var footerNewValue = setOldValues ? _oldFooterValue : "";
+
+            registryKey.SetValue("header", headerNewValue);
+            registryKey.SetValue("footer", footerNewValue);
+        }
+
+        #endregion
 
         #region Events
 
@@ -93,6 +121,8 @@ namespace Smith.WPF.HtmlEditor
             LineColorContextMenu.Closed += new RoutedEventHandler(OnLineColorContextMenuClosed);
             FontColorPicker.SelectedColorChanged += new EventHandler<PropertyChangedEventArgs<Color>>(OnFontColorPickerSelectedColorChanged);
             LineColorPicker.SelectedColorChanged += new EventHandler<PropertyChangedEventArgs<Color>>(OnLineColorPickerSelectedColorChanged);
+
+            _eventAggregator.GetEvent<PrintEvent>().Subscribe(OnPrintExecute);
         }
 
         private void OnCodeModeChecked(object sender, RoutedEventArgs e)
@@ -211,8 +241,8 @@ namespace Smith.WPF.HtmlEditor
             //((IHTMLDocument2)VisualEditor.Document.DomDocument).designMode = "ON";
             SetStylesheet();
             SetInitialContent();            
-            VisualEditor.Document.Body.SetAttribute("contenteditable", ReadOnlyEditor ? "false" : "true");
-            VisualEditor.Document.Focus();
+            VisualEditor.Document.Body.SetAttribute("contenteditable", ReadOnlyEditor ? "false" : "true");            
+            VisualEditor.Document.Focus();            
         }
 
         private void OnDocumentContextMenuShowing(object sender, System.Windows.Forms.HtmlElementEventArgs e)

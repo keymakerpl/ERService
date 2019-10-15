@@ -71,6 +71,7 @@
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
+    <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
@@ -116,10 +117,6 @@
     <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
       <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
       <Name>ERService.MSSQLDataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\ERService.HtmlEditor.csproj">
-      <Project>{84badda1-ab3a-4064-b87e-178d7446901d}</Project>
-      <Name>ERService.HtmlEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
