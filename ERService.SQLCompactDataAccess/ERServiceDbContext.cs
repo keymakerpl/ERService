@@ -35,7 +35,7 @@ namespace ERService.MSSQLDataAccess
 
         public DbSet<OrderType> OrderTypes { get; set; }
 
-        public DbSet<Settings> Settings { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         public DbSet<Numeration> Numeration { get; set; }
 

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Settings
+    public class Setting
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -13,6 +13,12 @@ namespace ERService.Business
         public string Key { get; set; }
 
         public string Value { get; set; }
+
+        public string ValueType { get; set; }
+
+        public string Category { get; set; }
+
+        public string Description { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
