@@ -25,24 +25,24 @@ namespace ERService.TemplateEditor.Interpreter
             var key = Key as string;
 
             if (key == null) return;
-            if (Value == null) return;
 
-            var value = "";
-            var valueType = Value.GetType();
-            switch (Type.GetTypeCode(valueType))
+            var outputValue = "";
+            if (Value != null)
             {
-                case TypeCode.String:
-                    value = Value as string;
-                    break;
-                case TypeCode.DateTime:
-                    var dateTime = Value as DateTime?;
-                    if (dateTime.HasValue) value = dateTime.Value.ToString();
-                    break;
-                default:
-                    break;
+                var valueType = Value.GetType();
+                switch (Type.GetTypeCode(valueType))
+                {
+                    case TypeCode.String:
+                        outputValue = Value as string;
+                        break;
+                    case TypeCode.DateTime:
+                        var dateTime = Value as DateTime?;
+                        if (dateTime.HasValue) outputValue = dateTime.Value.ToString();
+                        break;
+                }
             }
 
-            context.Output = context.Output.Replace(key, value ?? "");
+            context.Output = context.Output.Replace(key, outputValue);
         }
 
         public abstract TKey Key { get; set; }

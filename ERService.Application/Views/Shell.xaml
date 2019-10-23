@@ -56,15 +56,9 @@
                            FontFamily="Source Code Pro"
                            Margin="15 5 15 5 "/>
             </Border>
-            
+
             <ContentControl DockPanel.Dock="Right" Grid.Column="1" 
                             prism:RegionManager.RegionName="HeaderRegion">
-                <ContentControl.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Color="#FF878787" Offset="0.007"/>
-                        <GradientStop Color="LightGray" Offset="1"/>
-                    </RadialGradientBrush>
-                </ContentControl.Background>
             </ContentControl>
         </DockPanel>
 

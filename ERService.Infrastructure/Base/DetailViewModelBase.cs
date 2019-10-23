@@ -181,7 +181,7 @@ namespace ERService.Infrastructure.Base
         public virtual async void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             var dialogResult = true;
-            if (HasChanges)
+            if (!IsReadOnly && HasChanges)
             {
                 dialogResult = await _messageDialogService.ShowConfirmationMessageAsync(this, "Nie zapisane dane...", "Nie zapisano zmienionych danych, kontynuować?")
                     == DialogResult.OK;

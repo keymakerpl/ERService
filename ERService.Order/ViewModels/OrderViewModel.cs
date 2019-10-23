@@ -72,12 +72,18 @@ namespace ERService.OrderModule.ViewModels
         {
             var template = parameter as PrintTemplate;
             if (template != null)
-            {
+            {                
                 var parameters = new NavigationParameters();
                 parameters.Add("ID", template.Id);
                 parameters.Add("IsReadOnly", true);
                 parameters.Add("IsToolbarVisible", false);
-                parameters.Add("ModelWrappers", new object[] { new CustomerWrapper(Customer), new HardwareWrapper(Hardware), Order });
+                parameters.Add("ModelWrappers", new object[] 
+                { 
+                    new CustomerWrapper(Customer), 
+                    new HardwareWrapper(Hardware), 
+                    Order,
+                    new AddressWrapper(Customer.CustomerAddresses.FirstOrDefault())
+                });
 
                 _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
             }

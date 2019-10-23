@@ -65,6 +65,8 @@ namespace ERService.TemplateEditor.Interpreter
         {
             foreach (var model in _modelWrappers)
             {
+                if (model == null) continue;
+
                 var properties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var prop in properties)
                 {
