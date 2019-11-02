@@ -32,6 +32,7 @@ namespace ERService.Settings.ViewModels
             }
 
             navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.SettingsEditorViewRegion);
+            navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.GeneralSettingsTabControlRegion);
 
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
             _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);

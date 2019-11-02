@@ -9,5 +9,6 @@
         public const string NavigationRegion = "NavigationRegion";
         public const string SettingsTabControlRegion = "SettingsTabControlRegion";
         public const string SettingsEditorViewRegion = "SettingsEditorViewRegion";
+        public const string GeneralSettingsTabControlRegion = "GeneralSettingsTabControlRegion";
     }
 }

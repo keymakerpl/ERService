@@ -124,11 +124,6 @@
     <PackageReference Include="MahApps.Metro.IconPacks">
       <Version>3.0.0-alpha0206</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.6</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Prism.Core">
       <Version>7.2.0.1367</Version>
     </PackageReference>

@@ -23,13 +23,14 @@
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"
                     Margin="5">
+            
             <Border HorizontalAlignment="Right"
                     VerticalAlignment="Center" BorderThickness="2"
-                    BorderBrush="DarkGray"
-                    CornerRadius="3"
+                    BorderBrush="CornflowerBlue"
+                    CornerRadius="1"
                     Background="GhostWhite"
                     Margin="5 0 0 0"
-                    MinHeight="80">
+                    MinHeight="40">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseEnter">
                         <ei:ChangePropertyAction PropertyName="BorderBrush">
@@ -59,29 +60,30 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Content="W trakcie naprawy: " FontSize="14" FontStyle="Italic" VerticalContentAlignment="Center"/>
-                    <Label  Grid.Column="1" FontSize="14" FontWeight="Bold" VerticalContentAlignment="Center" Foreground="Green"
+                    <Label Content="W trakcie naprawy: " FontSize="13" FontStyle="Italic" VerticalContentAlignment="Center"/>
+                    <Label  Grid.Column="1" FontSize="13" FontWeight="Bold" VerticalContentAlignment="Center" Foreground="Green"
                             Content="{Binding InProgressCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Content="Po terminie naprawy: " 
                            Grid.Row="1"
-                           FontSize="14" FontStyle="Italic"
+                           FontSize="13" FontStyle="Italic"
                            VerticalContentAlignment="Center"/>
                     <Label  Grid.Column="1" Grid.Row="1"
-                            FontSize="14" FontWeight="Bold"
+                            FontSize="13" FontWeight="Bold"
                             Foreground="Crimson"
                             VerticalContentAlignment="Center"
                             Content="{Binding ExpiredOrderCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 </Grid>
             </Border>
+            
             <Border HorizontalAlignment="Right"
                     VerticalAlignment="Center" BorderThickness="2"
                     BorderBrush="DarkGray"
-                    CornerRadius="3"
+                    CornerRadius="1"
                     Background="GhostWhite"
                     Margin="5 0 5 0"
-                    MinHeight="80"
+                    MinHeight="40"
                     MinWidth="170">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseEnter">
@@ -131,15 +133,16 @@
                     <Label Content="Zalogowany jako:" FontStyle="Italic"
                            VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
                     <Label Grid.Row="1" Content="{Binding CurrentUserFullName}"
-                           FontSize="14" FontWeight="Bold" Foreground="Black"
+                           FontSize="13" FontWeight="Bold" Foreground="Black"
                            Margin="10 0 0 0"/>
                     <Label Grid.Column="1" Content="&#xE77B;" Grid.Row="1"
                            FontFamily="Segoe MDL2 Assets"
-                           FontSize="16"
+                           FontSize="13"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
                 </Grid>
             </Border>
+            
         </StackPanel>
 
     </Grid>

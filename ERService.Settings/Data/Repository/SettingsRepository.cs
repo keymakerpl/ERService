@@ -1,14 +1,13 @@
-﻿using ERService.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ERService.Business;
+using ERService.Infrastructure.Repositories;
+using ERService.MSSQLDataAccess;
 
 namespace ERService.Settings.Data.Repository
 {
-    public class SettingsRepository
+    public class SettingsRepository : GenericRepository<Setting, ERServiceDbContext>, ISettingsRepository
     {
-
+        public SettingsRepository(ERServiceDbContext context) : base(context)
+        {
+        }
     }
 }

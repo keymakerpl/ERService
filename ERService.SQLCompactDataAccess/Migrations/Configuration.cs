@@ -70,6 +70,59 @@ namespace ERService.MSSQLDataAccess.Migrations
                 );
 
             context.SaveChanges(); // Dodaj usera i przypisz rolê
+
+            context.Settings.AddOrUpdate(s => s.Key,
+                new Setting()
+                {
+                    Key = "CompanyName",
+                    Category = "CompanyInfo",
+                    Value = "Test",
+                    ValueType = typeof(string).FullName,
+                    Description = "Nazwa firmy"
+                },
+                new Setting()
+                {
+                    Key = "CompanyStreet",
+                    Category = "CompanyInfo",
+                    Value = "",
+                    ValueType = typeof(string).FullName,
+                    Description = "Ulica przy jakiej prowadzona jest dzia³alnoœæ"
+                },
+                new Setting()
+                {
+                    Key = "CompanyNumber",
+                    Category = "CompanyInfo",
+                    Value = "",
+                    ValueType = typeof(string).FullName,
+                    Description = "Numer budynku"
+                },
+                new Setting()
+                {
+                    Key = "CompanyCity",
+                    Category = "CompanyInfo",
+                    Value = "",
+                    ValueType = typeof(string).FullName,
+                    Description = "Miasto prowadzenia dzia³alnoœci"
+                },
+                new Setting()
+                {
+                    Key = "CompanyPostCode",
+                    Category = "CompanyInfo",
+                    Value = "",
+                    ValueType = typeof(string).FullName,
+                    Description = "Kod pocztowy"
+                },
+                new Setting()
+                {
+                    Key = "CompanyNIP",
+                    Category = "CompanyInfo",
+                    Value = "",
+                    ValueType = typeof(string).FullName,
+                    Description = "NIP"
+                }
+                );
+
+            context.SaveChanges();
         }
 
     }
