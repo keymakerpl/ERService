@@ -32,6 +32,9 @@
                    Margin="10 10 10 5"
                    LastChildFill="True"
                    Grid.ColumnSpan="2" Background="Gainsboro">
+            <DockPanel.Effect>
+                <DropShadowEffect ShadowDepth="1"/>
+            </DockPanel.Effect>
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -65,6 +68,11 @@
                    Margin="10 5 0 10"
                    LastChildFill="True"
                    Grid.RowSpan="3" Background="Gainsboro">
+
+            <DockPanel.Effect>
+                <DropShadowEffect ShadowDepth="1"/>
+            </DockPanel.Effect>
+
             <ContentControl DockPanel.Dock="Left"
                             prism:RegionManager.RegionName="NavigationRegion"/>
         </DockPanel>
@@ -72,6 +80,11 @@
         <DockPanel Grid.Row="3" 
                    Grid.Column="1" 
                    LastChildFill="True">
+
+            <DockPanel.Effect>
+                <DropShadowEffect ShadowDepth="1"/>
+            </DockPanel.Effect>
+
             <ContentControl DockPanel.Dock="Left" 
                             prism:RegionManager.RegionName="StatusBarRegion"/>
         </DockPanel>

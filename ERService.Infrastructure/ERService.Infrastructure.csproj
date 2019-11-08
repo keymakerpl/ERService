@@ -56,6 +56,7 @@
     <Compile Include="Base\ListModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
+    <Compile Include="Constants\ConfigNames.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
+    <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

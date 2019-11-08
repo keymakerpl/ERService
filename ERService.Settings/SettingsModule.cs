@@ -1,9 +1,9 @@
 ﻿using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Interfaces;
 using ERService.Settings.Data.Repository;
 using ERService.Settings.Manager;
 using ERService.Settings.Views;
 using ERService.TemplateEditor.Data.Repository;
-using ERService.TemplateEditor.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 

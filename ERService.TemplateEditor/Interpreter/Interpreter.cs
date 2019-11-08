@@ -1,8 +1,11 @@
 ﻿using ERService.Infrastructure.Attributes;
+using ERService.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ERService.TemplateEditor.Interpreter
 {
@@ -11,6 +14,7 @@ namespace ERService.TemplateEditor.Interpreter
         private IContext _context;
         private object[] _modelWrappers;
         private IndexExpression _expression;
+        private readonly ISettingsManager _settingsManager;
 
         public IContext Context { set => _context = value; }
         public object[] Wrappers { set => _modelWrappers = value; }
@@ -30,13 +34,31 @@ namespace ERService.TemplateEditor.Interpreter
             } 
         }
 
-        public IEnumerable<Index> Indexes 
-        { 
-            get { return GetIndexesFromAssemblies(); } 
+        public Interpreter(ISettingsManager settingsManager)
+        {
+            _settingsManager = settingsManager;
         }
 
-        private IEnumerable<Index> GetIndexesFromAssemblies()
+        public async Task<IEnumerable<Index>> GetIndexesAsync()
         {
+            var result = new Collection<Index>();
+            var fromAssemblys = await GetIndexesFromAssemblies();
+
+            result.AddRange(fromAssemblys); 
+
+            return result;
+        }
+
+        private async Task<Collection<Index>> GetIndexesFromAssemblies()
+        {
+            var result = GetIndexes();
+
+            return await Task.FromResult(result);
+        }
+
+        private Collection<Index> GetIndexes()
+        {
+            var collection = new Collection<Index>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
@@ -52,13 +74,13 @@ namespace ERService.TemplateEditor.Interpreter
                                 var attribute = attributes[i] as InterpreterAttribute;
                                 if (attribute == null) continue;
 
-                                yield return new Index() { Name = attribute.Name, Pattern = attribute.Pattern };
+                                collection.Add(new Index() { Name = attribute.Name, Pattern = attribute.Pattern });
                             }
                         }
                     }
                 }
             }
-
+            return collection;
         }
 
         public IContext GetInterpretedContext()

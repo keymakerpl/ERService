@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ERService.TemplateEditor.Interpreter
 {
@@ -8,6 +9,6 @@ namespace ERService.TemplateEditor.Interpreter
         object[] Wrappers { set; }
         Expression Expression { set; }
         IContext GetInterpretedContext();
-        IEnumerable<Index> Indexes { get; }
+        Task<IEnumerable<Index>> GetIndexesAsync();
     }
 }

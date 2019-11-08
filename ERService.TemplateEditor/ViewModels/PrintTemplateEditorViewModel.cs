@@ -144,16 +144,11 @@ namespace ERService.TemplateEditor.ViewModels
             if (IsReadOnly) return;
 
             Indexes.Clear();
-            IEnumerable<Index> indexes = await GetIndexes();
+            IEnumerable<Index> indexes = await _interpreter.GetIndexesAsync();
             foreach (var indx in indexes)
             {
                 Indexes.Add(new IndexLookupItem { DisplayableName = indx.Name, IndexPattern = indx.Pattern });
             }
-        }
-
-        private async Task<IEnumerable<Index>> GetIndexes()
-        {
-            return await Task.FromResult(_interpreter.Indexes);
         }
 
         private void OnAddIndexExecute(object patternString)

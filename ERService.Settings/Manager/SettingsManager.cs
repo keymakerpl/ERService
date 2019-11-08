@@ -1,10 +1,12 @@
 ﻿using ERService.Settings.Data.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Dynamic;
+using ERService.Infrastructure.Interfaces;
+using ERService.Business;
+using System.Linq.Expressions;
+using ERService.Settings.Wrapper;
 
 namespace ERService.Settings.Manager
 {
@@ -17,6 +19,12 @@ namespace ERService.Settings.Manager
             _settingsRepository = settingsRepository;
         }
 
+        public async Task<IEnumerable<Setting>> FindSettingsAsync(Expression<Func<Setting, bool>> predicate)
+        {
+            var settings = await _settingsRepository.FindByAsync(predicate);
+            return settings;
+        }
+
         public async Task<dynamic> GetConfigAsync(string configCategory)
         {
             var settings = await _settingsRepository.FindByAsync(s => s.Category == configCategory);
@@ -24,10 +32,13 @@ namespace ERService.Settings.Manager
             dynamic config = new ExpandoObject();
             foreach (var setting in settings)
             {
-                ((IDictionary<string, object>)config).Add(setting.Key, setting);
+                var wrappedSetting = new SettingWrapper(setting);
+                ((IDictionary<string, object>)config).Add(setting.Key, wrappedSetting);
             }
 
-            return config;
+            var result = new ConfigFactory().GetConfig(configCategory, config);
+
+            return result;
         }
 
         public dynamic GetValue(string value, string valueType)

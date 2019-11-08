@@ -19,6 +19,7 @@ using ERService.RBAC;
 using ERService.TemplateEditor.Data.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.HardwareModule;
+using ERService.Infrastructure.Interfaces;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -33,7 +34,6 @@ namespace ERService.OrderModule.ViewModels
         private OrderType _selectedOrderType;
         private OrderStatus _selectedOrderStatus;
         private IRegionManager _regionManager;
-        private IBlobRepository _blobRepository;
         private IOrderRepository _orderRepository;
         private readonly IRBACManager _rBACManager;
         private IOrderTypeRepository _typeRepository;
@@ -41,20 +41,21 @@ namespace ERService.OrderModule.ViewModels
         private INumerationRepository _numerationRepository;
         private IRegionNavigationService _navigationService;
         private readonly IPrintTemplateRepository _templateRepository;
+        private readonly ISettingsManager _settingsManager;
         private bool _wizardMode;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
-            IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator,
+            IOrderStatusRepository statusRepository, IEventAggregator eventAggregator,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
-            IPrintTemplateRepository templateRepository) : base(eventAggregator, messageDialogService)
+            IPrintTemplateRepository templateRepository, ISettingsManager settingsManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
             _statusRepository = statusRepository;
-            _blobRepository = blobRepository;
             _numerationRepository = numerationRepository;
             _rBACManager = rBACManager;
             _templateRepository = templateRepository;
+            _settingsManager = settingsManager;
             _regionManager = regionManager;
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
@@ -68,11 +69,12 @@ namespace ERService.OrderModule.ViewModels
             PrintCommand = new DelegateCommand<object>(OnPrintExecute);
         }
 
-        private void OnPrintExecute(object parameter)
+        private async void OnPrintExecute(object parameter)
         {
             var template = parameter as PrintTemplate;
             if (template != null)
-            {                
+            {
+                var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
                 var parameters = new NavigationParameters();
                 parameters.Add("ID", template.Id);
                 parameters.Add("IsReadOnly", true);
@@ -82,6 +84,7 @@ namespace ERService.OrderModule.ViewModels
                     new CustomerWrapper(Customer), 
                     new HardwareWrapper(Hardware), 
                     Order,
+                    companyConfig,
                     new AddressWrapper(Customer.CustomerAddresses.FirstOrDefault())
                 });
 

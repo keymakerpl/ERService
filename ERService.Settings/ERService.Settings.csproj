@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="Data\Repository\ISettingsRepository.cs" />
     <Compile Include="Data\Repository\SettingsRepository.cs" />
-    <Compile Include="Manager\ISettingsManager.cs" />
+    <Compile Include="Manager\Config\CompanyInfoConfig.cs" />
+    <Compile Include="Manager\Config\Config.cs" />
+    <Compile Include="Manager\Config\ConfigFactory.cs" />
     <Compile Include="Manager\SettingsManager.cs" />
     <Compile Include="SettingsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -106,6 +108,7 @@
     <Compile Include="Views\StatusConfigView.xaml.cs">
       <DependentUpon>StatusConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\SettingWrapper.cs" />
     <Compile Include="Wrapper\UserWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -198,6 +201,8 @@
     </PackageReference>
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
