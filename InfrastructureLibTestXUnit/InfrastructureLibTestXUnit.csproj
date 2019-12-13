@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ImagesCollectionTests.cs" />
     <Compile Include="Helpers\SerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -96,6 +97,9 @@
       <Project>{D5879452-68C7-4990-8776-0861594528C4}</Project>
       <Name>ERService.TemplateEditor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

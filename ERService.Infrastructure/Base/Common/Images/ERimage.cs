@@ -7,6 +7,8 @@ namespace ERService.Infrastructure.Base.Common
     {
         public string FileName { get; set; }
 
+        public string Tag { get; set; }
+
         public string Description { get; set; }
 
         public string Checksum { get; set; }

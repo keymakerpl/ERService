@@ -29,6 +29,7 @@ namespace ERService.Settings.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             _regionManager.RequestNavigate(RegionNames.GeneralSettingsTabControlRegion, ViewNames.CompanySettingsView);
+            _regionManager.RequestNavigate(RegionNames.GeneralSettingsTabControlRegion, ViewNames.LicenseSettingsView);
         }
 
         public override bool KeepAlive => true;

@@ -20,5 +20,6 @@
         public const string PrintTemplateSettingsView = "PrintTemplateSettingsView";
         public const string PrintTemplateEditorView = "PrintTemplateEditorView";
         public const string CompanySettingsView = "CompanySettingsView";
+        public const string LicenseSettingsView = "LicenseSettingsView";
     }
 }

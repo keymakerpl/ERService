@@ -138,7 +138,7 @@ namespace ERService.CustomerModule.ViewModels
 
         protected override bool OnSaveCanExecute()
         {
-            return Customer != null && !Customer.HasErrors && HasChanges && !WizardMode;
+            return base.OnSaveCanExecute() && Customer != null && !Customer.HasErrors && !WizardMode;
         }
 
         protected override async void OnSaveExecute()
@@ -212,7 +212,7 @@ namespace ERService.CustomerModule.ViewModels
 
         private bool OnGoForwardCanExecute()
         {
-            return Customer != null && !Customer.HasErrors && HasChanges && WizardMode;
+            return base.HasChanges && Customer != null && !Customer.HasErrors && WizardMode;
         }
 
         private void OnGoForwardExecute()

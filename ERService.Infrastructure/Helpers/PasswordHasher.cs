@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Helpers
 {
+    //TODO: move to cryptography
     public class PasswordHasher : IPasswordHasher
     {
         public void GenerateSaltedHash(string password, out string hash, out string salt)

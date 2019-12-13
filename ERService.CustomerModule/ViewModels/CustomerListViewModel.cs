@@ -3,7 +3,6 @@ using ERService.Business;
 using Prism.Events;
 using System;
 using Prism.Regions;
-using Prism.Commands;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Constants;
 using ERService.RBAC;
@@ -17,14 +16,15 @@ namespace ERService.CustomerModule.ViewModels
         private IRBACManager _rbacManager;
         private IMessageDialogService _dialogService;
 
-        public CustomerListViewModel(ERServiceDbContext context, IRegionManager regionManager, 
-            IEventAggregator eventAggregator, IRBACManager rBACManager, IMessageDialogService dialogService) : base(context, regionManager)
+        public CustomerListViewModel(
+            ERServiceDbContext context,
+            IRegionManager regionManager,
+            IEventAggregator eventAggregator,
+            IRBACManager rBACManager,
+            IMessageDialogService dialogService) : base(context, regionManager, eventAggregator)
         {
             _rbacManager = rBACManager;
-            _dialogService = dialogService;
-
-            AddCommand = new DelegateCommand(OnAddExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);                        
+            _dialogService = dialogService;                                    
         }        
 
         //TODO: Refactor with OnMouseDoubleClick

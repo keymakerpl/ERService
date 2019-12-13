@@ -31,6 +31,9 @@ namespace ERService.Infrastructure.Base
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem?
             CancelCommand = new DelegateCommand(OnCancelEditExecute);
+
+            _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid, true);
+            _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();
         }
 
         public bool AllowLoadAsync { get; set; } = true; //TODO: czy da się z tego zrezygnować?
@@ -104,7 +107,7 @@ namespace ERService.Infrastructure.Base
 
         protected virtual bool OnSaveCanExecute()
         {
-            return false;
+            return HasChanges && !IsReadOnly;
         }
 
         protected virtual void OnSaveExecute()

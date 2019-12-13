@@ -59,6 +59,7 @@
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />
+    <Compile Include="Constants\PublicKeys.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
     <Compile Include="Dialogs\DialogModel.cs" />
@@ -70,13 +71,18 @@
     <Compile Include="Events\AfterDetailSavedEvent.cs" />
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
+    <Compile Include="Events\AfterLicenseValidationRequestEvent.cs" />
+    <Compile Include="Events\LicenseValidationRequestEvent.cs" />
     <Compile Include="Events\AfterLogedoutEvent.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
     <Compile Include="Events\OpenDetailViewEvent.cs" />
     <Compile Include="Base\IView.cs" />
     <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Helpers\Cryptography.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
+    <Compile Include="Helpers\FileUtils.cs" />
+    <Compile Include="Helpers\IImagesCollection.cs" />
     <Compile Include="Helpers\ImagesCollection.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />
@@ -85,6 +91,9 @@
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Helpers\Serializer.cs" />
+    <Compile Include="Interfaces\ILicenseManager.cs" />
+    <Compile Include="Interfaces\ILicenseProvider.cs" />
+    <Compile Include="Interfaces\ILicenseProviderFactory.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

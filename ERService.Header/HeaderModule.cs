@@ -1,7 +1,5 @@
-﻿using System;
-using ERService.Header.Views;
+﻿using ERService.Header.Views;
 using ERService.Infrastructure.Constants;
-using ERService.Infrastructure.Events;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;

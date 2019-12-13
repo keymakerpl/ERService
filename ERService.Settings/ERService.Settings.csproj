@@ -73,11 +73,15 @@
     <Compile Include="ViewModels\CompanySettingsViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
+    <Compile Include="ViewModels\LicenseSettingsViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
     <Compile Include="ViewModels\PrintTemplateSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
     <Compile Include="Views\CompanySettingsView.xaml.cs">
       <DependentUpon>CompanySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LicenseSettingsView.xaml.cs">
+      <DependentUpon>LicenseSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PrintTemplateSettingsView.xaml.cs">
       <DependentUpon>PrintTemplateSettingsView.xaml</DependentUpon>
@@ -164,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HardwareTypesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LicenseSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

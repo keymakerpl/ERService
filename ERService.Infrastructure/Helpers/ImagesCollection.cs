@@ -9,8 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Helpers
-{    
-    public class ImagesCollection : CollectionBase
+{
+    public class ImagesCollection : CollectionBase, IImagesCollection
     {
         private const string filePath = "images.dat";
 
@@ -21,8 +21,6 @@ namespace ERService.Infrastructure.Helpers
 
         private void Initialize()
         {
-            CreateFileIfNotExist();
-
             var images = Serializer.Deserialize(filePath) as Images;
             if (images != null)
             {
@@ -33,20 +31,20 @@ namespace ERService.Infrastructure.Helpers
             }
         }
 
-        private void CreateFileIfNotExist()
-        {
-            if (!File.Exists(filePath))
-            {
-                var images = new Images();
-                Serializer.Serialize(filePath, images);
-            }
-        }
-
-        public ERimage this[string imageName]
+        public ERimage this[string tag]
         {
             get
             {
-                return List.Cast<ERimage>().Single(i => i.FileName == imageName);
+                return List.Cast<ERimage>().SingleOrDefault(i => i.Tag == tag);
+            }
+            set
+            {
+                var image = List.Cast<ERimage>().SingleOrDefault(i => i.Tag == tag);
+                
+                if (image != null)
+                    List.Remove(image);
+                
+                List.Add(value);
             }
         }
 

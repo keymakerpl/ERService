@@ -26,6 +26,10 @@ using static ERService.RBAC.Data.Repository.RBACRepository;
 using MahApps.Metro.Controls.Dialogs;
 using ERService.Infrastructure.Dialogs;
 using ERService.TemplateEditor;
+using ERService.Licensing;
+using System.Threading;
+using System.Globalization;
+using System.Windows.Markup;
 
 namespace ERService.Application
 {
@@ -36,15 +40,23 @@ namespace ERService.Application
             return Container.Resolve<Shell>();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-        }
-
         protected override void OnInitialized()
         {
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             base.OnInitialized();
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("pl-PL");
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pl-PL");
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                         typeof(FrameworkElement),
+                         new FrameworkPropertyMetadata(
+                    XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -57,7 +69,8 @@ namespace ERService.Application
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             base.ConfigureModuleCatalog(moduleCatalog);
-            
+
+            moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
@@ -74,8 +87,8 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
-            containerRegistry.Register<IUserRepository, RBACRepository.UserRepository>();
-            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();
+            containerRegistry.Register<IUserRepository, UserRepository>();
+            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();            
             containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
             containerRegistry.Register<IAclRepository, AclRepository>();
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();

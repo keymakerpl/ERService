@@ -1,11 +1,13 @@
-﻿using System;
+﻿using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Repositories;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq.Expressions;
-using ERService.Infrastructure.Constants;
-using ERService.Infrastructure.Repositories;
-using Prism.Commands;
-using Prism.Regions;
 
 namespace ERService.Infrastructure.Base
 {
@@ -14,9 +16,22 @@ namespace ERService.Infrastructure.Base
         where TEntity : class
         where TContext : DbContext
     {
-        public ListModelBase(TContext context, IRegionManager regionManager) : base(context)
+        private IRegionManager _regionManager;
+        private readonly IEventAggregator _eventAggregator;
+        private TEntity _selectedModel;
+        private bool _isReadOnly;
+
+        public ListModelBase(TContext context, IRegionManager regionManager, IEventAggregator eventAggregator) : base(context)
         {
             _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
+
+            AddCommand = new DelegateCommand(OnAddExecute, OnAddCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
+
+            _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid);
+            _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();
+
             Models = new ObservableCollection<TEntity>();
         }
 
@@ -24,24 +39,18 @@ namespace ERService.Infrastructure.Base
 
         public DelegateCommand DeleteCommand { get; set; }
 
-        private IRegionManager _regionManager;
-
         public ObservableCollection<TEntity> Models { get; set; }
 
-        private TEntity _selectedModel;
         public virtual TEntity SelectedModel
         {
-            get {return _selectedModel; }
-            set {_selectedModel = value; DeleteCommand.RaiseCanExecuteChanged(); }
+            get { return _selectedModel; }
+            set { _selectedModel = value; DeleteCommand.RaiseCanExecuteChanged(); }
         }
 
-        public virtual async void LoadAsync()
+        public bool IsReadOnly
         {
-            var models = await GetAllAsync();
-            foreach (var model in models)
-            {
-                Models.Add(model);
-            }
+            get => _isReadOnly;
+            set { _isReadOnly = value; AddCommand.RaiseCanExecuteChanged(); }
         }
 
         public virtual void Load(Expression<Func<TEntity, bool>> predicate,
@@ -54,14 +63,25 @@ namespace ERService.Infrastructure.Base
             }
         }
 
-        public virtual void OnAddExecute()
+        public virtual async void LoadAsync()
         {
-            throw new NotImplementedException();
+            var models = await GetAllAsync();
+            foreach (var model in models)
+            {
+                Models.Add(model);
+            }
+        }
+
+        public abstract void OnAddExecute();        
+
+        private bool OnAddCanExecute()
+        {
+            return !IsReadOnly;
         }
 
         public virtual bool OnDeleteCanExecute()
         {
-            return SelectedModel != null;
+            return SelectedModel != null && !IsReadOnly;
         }
 
         public virtual async void OnDeleteExecute()

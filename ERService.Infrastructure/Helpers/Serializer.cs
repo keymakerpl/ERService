@@ -1,5 +1,4 @@
-﻿using ERService.Infrastructure.Base.Common;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ERService.Infrastructure.Helpers
@@ -15,13 +14,21 @@ namespace ERService.Infrastructure.Helpers
             }
         }
 
+        //TODO: make generic, return new obj type if note exist or 0 leng stream
         public static object Deserialize(string fileName)
         {
             object result = null;
-            var formatter = new BinaryFormatter();
-            using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read))
+            try
             {
-                result = formatter.Deserialize(stream);
+                var formatter = new BinaryFormatter();
+                using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read))
+                {
+                    result = formatter.Deserialize(stream);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                
             }
 
             return result;

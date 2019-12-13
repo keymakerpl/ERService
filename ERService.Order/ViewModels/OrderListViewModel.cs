@@ -2,10 +2,12 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Interfaces;
 using ERService.MSSQLDataAccess;
 using ERService.OrderModule.Wrapper;
 using ERService.RBAC;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
@@ -21,23 +23,20 @@ namespace ERService.OrderModule.ViewModels
         private IRBACManager _rbacManager;
 
         public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
-            IMessageDialogService messageDialogService) : base(context, regionManager)
+            IMessageDialogService messageDialogService, IEventAggregator eventAggregator) : base(context, regionManager, eventAggregator)
         {
             _rbacManager = rBACManager;
             _dialogService = messageDialogService;
 
             Orders = new ObservableCollection<OrderWrapper>();
             Models.CollectionChanged += Models_CollectionChanged;
-
-            AddCommand = new DelegateCommand(OnAddExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute, OnDeleteCanExecute);
         }
 
         private OrderWrapper _selectedOrder;
         public OrderWrapper SelectedOrder
         {
             get { return _selectedOrder; }
-            set {_selectedOrder = value; DeleteCommand.RaiseCanExecuteChanged(); }
+            set {_selectedOrder = value; SelectedModel = value.Model; DeleteCommand.RaiseCanExecuteChanged(); }
         }
 
         public ObservableCollection<OrderWrapper> Orders { get; private set; }
@@ -59,11 +58,6 @@ namespace ERService.OrderModule.ViewModels
             parameters.Add("ViewFullName", ViewNames.CustomerView);
 
             ShowDetail(parameters);
-        }
-
-        public override bool OnDeleteCanExecute()
-        {
-            return SelectedOrder != null;
         }
 
         public async override void OnDeleteExecute()

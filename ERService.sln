@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateEditorLibTestsXUnit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.SettingsUnitTests", "ERService.SettingsUnitTests\ERService.SettingsUnitTests.csproj", "{373720C3-09B2-4E02-B6EF-B48A28A94174}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.Licensing", "ERService.License\ERService.Licensing.csproj", "{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{373720C3-09B2-4E02-B6EF-B48A28A94174}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{373720C3-09B2-4E02-B6EF-B48A28A94174}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{373720C3-09B2-4E02-B6EF-B48A28A94174}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{E84924AB-7111-453D-807F-DED12F72DBC4} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
 		{0A9E2222-EB8A-4FC1-B788-E95E7AB9CBFC} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
 		{373720C3-09B2-4E02-B6EF-B48A28A94174} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
+		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7} = {0C20AB8C-1916-4C68-9C55-0515B1841408}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71A6DA07-2ECD-47A2-A2FE-37111201A1E6}

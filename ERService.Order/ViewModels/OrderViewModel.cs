@@ -20,6 +20,7 @@ using ERService.TemplateEditor.Data.Repository;
 using ERService.CustomerModule.Wrapper;
 using ERService.HardwareModule;
 using ERService.Infrastructure.Interfaces;
+using ERService.Infrastructure.Helpers;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -144,19 +145,6 @@ namespace ERService.OrderModule.ViewModels
 
         public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
-        //TODO: Move to Infrastructure helpers
-        private byte[] GetFileBinary(string fileName)
-        {
-            byte[] fileBytes;
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                fileBytes = new byte[fs.Length];
-                fs.Read(fileBytes, 0, Convert.ToInt32(fs.Length));
-            }
-
-            return fileBytes;
-        }
-
         private void OnAddAttachmentExecute()
         {
             //TODO: Make open file dialog service
@@ -164,11 +152,12 @@ namespace ERService.OrderModule.ViewModels
             var attachment = new Blob();
             if (openFileDialog.ShowDialog() == true)
             {
-                var fileBinary = GetFileBinary(openFileDialog.FileName);
+                var fileBinary = FileUtils.GetFileBinary(openFileDialog.FileName);
                 attachment.Data = fileBinary;
                 attachment.FileName = openFileDialog.SafeFileName;
                 attachment.Size = fileBinary.Length;
-                //attachment.Order = Order.Model;
+                attachment.Description = $"File attachment for order: {Order.Number}";
+                attachment.Checksum = Cryptography.CalculateMD5(openFileDialog.FileName);
 
                 Attachments.Add(attachment);
                 Order.Model.Attachments.Add(attachment);
