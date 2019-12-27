@@ -1,176 +1,218 @@
-﻿<UserControl x:Class="ERService.TemplateEditor.Views.PrintTemplateEditorView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ERService.TemplateEditor.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-             Dialog:DialogParticipation.Register="{Binding}"             
-             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
-             xmlns:editorhelpers="clr-namespace:Smith.WPF.HtmlEditor.Helpers;assembly=Smith.WPF.HtmlEditor"
-             xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions">
+﻿<UserControl
+    x:Class="ERService.TemplateEditor.Views.PrintTemplateEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
+    xmlns:editorhelpers="clr-namespace:Smith.WPF.HtmlEditor.Helpers;assembly=Smith.WPF.HtmlEditor"
+    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:ERService.TemplateEditor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:prism="http://prismlibrary.com/"
+    Dialog:DialogParticipation.Register="{Binding}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type Label}">
-            <Setter Property="Padding"
-                    Value="0" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="Center" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Padding"
-                    Value="4,2" />
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+            <Setter Property="Padding" Value="4,2" />
         </Style>
     </UserControl.Resources>
 
     <Grid>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="75*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="75*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Column="1" HorizontalAlignment="Stretch"
-                       Margin="5 0 5 0" Visibility="{Binding IsNavigationBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <DockPanel
+                Grid.Column="1"
+                Margin="5,0,5,0"
+                HorizontalAlignment="Stretch"
+                Visibility="{Binding IsNavigationBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <metroControls:DropDownButton
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        Width="100"
-                        Height="30"
+                    Width="100"
+                    Height="30"
+                    Margin="5"
+                    VerticalContentAlignment="Center"
+                    Content="Szablony"
+                    DisplayMemberPath="Name"
                     DockPanel.Dock="Right"
-                        Content="Szablony"
-                        DisplayMemberPath="Name"
-                        ItemsSource="{Binding PrintTemplates}">
+                    ItemsSource="{Binding PrintTemplates}">
                     <metroControls:DropDownButton.ItemContainerStyle>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                            <Setter Property="Command" Value="{Binding DataContext.SelectTemplateCommand, RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView}}"/>
-                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding DataContext.SelectTemplateCommand, RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView}}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
                         </Style>
                     </metroControls:DropDownButton.ItemContainerStyle>
                 </metroControls:DropDownButton>
 
-                <Button 
+                <Button
+                    Width="25"
+                    Height="25"
+                    Margin="5,0,5,0"
+                    HorizontalAlignment="Left"
+                    Background="GhostWhite"
+                    BorderThickness="0"
                     Command="{Binding CloseCommand}"
                     Foreground="Black"
-                    Background="GhostWhite"
-                    Height="25"
-                    Width="25" Margin="5 0 5 0" HorizontalAlignment="Left"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                     <iconPacks:PackIconMaterial Kind="ArrowLeft" />
                 </Button>
 
-                <Button 
-                    Foreground="Black"
-                    Background="GhostWhite"
+                <Button
+                    Width="25"
                     Height="25"
-                    Width="25" Margin="5 0 5 0" HorizontalAlignment="Left"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0"
-                    Command="{Binding PrintCommand}">
+                    Margin="5,0,5,0"
+                    HorizontalAlignment="Left"
+                    Background="GhostWhite"
+                    BorderThickness="0"
+                    Command="{Binding PrintCommand}"
+                    Foreground="Black"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                     <iconPacks:PackIconMaterial Kind="Printer" />
-                    
+
                 </Button>
 
             </DockPanel>
 
-            <GroupBox Header="Znaczniki" Margin="5" Grid.Row="1"
-                      Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                
-                    <ListView
-                        ItemsSource="{Binding Indexes}"
-                        SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    
-                        <ListView.ItemTemplate >
-                            <DataTemplate>
-                                <Border BorderThickness="1" BorderBrush="LightGray" Margin="2" CornerRadius="2">
-                                    <Grid Margin="5">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <WrapPanel>
-                                                <TextBlock Text="{Binding DisplayableName}"/>
-                                            </WrapPanel>
-                                            <WrapPanel Grid.Row="1">
-                                                <TextBlock Text="{Binding IndexPattern}" FontStyle="Italic"
-                                                           Foreground="DimGray" Margin="5 1 5 0 "/>
-                                            </WrapPanel>
-                                            <Button Grid.Column="1" Grid.RowSpan="2" Foreground="DimGray"                                                      
-                                                    VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView, Mode=FindAncestor}, 
-                                                    Path=DataContext.AddIndexToEditorCommand}"
-                                                    CommandParameter="{Binding IndexPattern}"
-                                                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
-                                                <iconPacks:PackIconMaterialLight Kind="ArrowRightCircle" /> 
-                                            </Button>
-                                        </Grid>
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Header="Znaczniki"
+                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                <ListView ItemsSource="{Binding Indexes}" SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="2"
+                                BorderBrush="LightGray"
+                                BorderThickness="1"
+                                CornerRadius="2">
+                                <Grid Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <WrapPanel>
+                                            <TextBlock Text="{Binding DisplayableName}" />
+                                        </WrapPanel>
+                                        <WrapPanel Grid.Row="1">
+                                            <TextBlock
+                                                Margin="5,1,5,0"
+                                                FontStyle="Italic"
+                                                Foreground="DimGray"
+                                                Text="{Binding IndexPattern}" />
+                                        </WrapPanel>
+                                        <Button
+                                            Grid.RowSpan="2"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            BorderThickness="0"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView, Mode=FindAncestor}, Path=DataContext.AddIndexToEditorCommand}"
+                                            CommandParameter="{Binding IndexPattern}"
+                                            Foreground="DimGray"
+                                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                            <iconPacks:PackIconMaterialLight Kind="ArrowRightCircle" />
+                                        </Button>
                                     </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
             </GroupBox>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch"  
-                        Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <Label Content="Nazwa szblonu:" Margin="5"/>
-                <TextBox Margin="5" Width="150" 
-                         Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal"
+                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <Label Margin="5" Content="Nazwa szblonu:" />
+                <TextBox
+                    Width="150"
+                    Margin="5"
+                    Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
-            <Border Grid.Column="1" Grid.Row="1" BorderBrush="SlateGray" 
-                    BorderThickness="1"  Margin="5"
-                    FocusManager.FocusedElement="{Binding ElementName=Editor}">
-                <editor:HtmlEditor x:Name="Editor"
-                                   ReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                   IsToolbarVisible="{Binding IsToolbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                   BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   editorhelpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="5"
+                BorderBrush="SlateGray"
+                BorderThickness="1"
+                FocusManager.FocusedElement="{Binding ElementName=Editor}">
+                <editor:HtmlEditor
+                    x:Name="Editor"
+                    editorhelpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    IsToolbarVisible="{Binding IsToolbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    ReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </Border>
 
-            <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" Orientation="Horizontal"
-                        Grid.Column="1" FlowDirection="RightToLeft" Margin="5 0 5 0"
-                        Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                        helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
+            <StackPanel
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="5,0,5,0"
+                HorizontalAlignment="Stretch"
+                helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}"
+                FlowDirection="RightToLeft"
+                Orientation="Horizontal"
+                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <StackPanel.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.RelativeTransform>
                             <TransformGroup>
-                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                                <TranslateTransform/>
+                                <ScaleTransform CenterX="0.5" CenterY="0.5" />
+                                <SkewTransform CenterX="0.5" CenterY="0.5" />
+                                <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5" />
+                                <TranslateTransform />
                             </TransformGroup>
                         </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Color="White" Offset="0.25"/>
-                        <GradientStop Color="Gainsboro" Offset="1"/>
+                        <GradientStop Offset="0.25" Color="White" />
+                        <GradientStop Offset="1" Color="Gainsboro" />
                     </LinearGradientBrush>
                 </StackPanel.Background>
-                <Button Content="Zapisz" Command="{Binding SaveCommand}" Margin="5" MaxHeight="30"/>
-                <Button Content="Anuluj" Command="{Binding CancelCommand}" Margin="5" MaxHeight="30"/>
+                <Button
+                    MaxHeight="30"
+                    Margin="5"
+                    Command="{Binding SaveCommand}"
+                    Content="Zapisz" />
+                <Button
+                    MaxHeight="30"
+                    Margin="5"
+                    Command="{Binding CancelCommand}"
+                    Content="Anuluj" />
             </StackPanel>
-            
+
         </Grid>
     </Grid>
 

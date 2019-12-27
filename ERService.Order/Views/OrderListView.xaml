@@ -24,13 +24,14 @@
         <Border
             x:Name="ToolbarBorder"
             Grid.Row="1"
+            Margin="20 0 20 0"
             BorderBrush="LightGray"
-            BorderThickness="0">
-            <DockPanel HorizontalAlignment="Center" FlowDirection="RightToLeft">
+            BorderThickness="0 1 0 0">
+            <DockPanel HorizontalAlignment="Right" Margin="10,0,25,5" FlowDirection="RightToLeft">
                 <Button
                     Width="35"
                     Height="35"
-                    Margin="5,0,5,10"
+                    Margin="5,10,5,10"
                     BorderThickness="1"
                     Command="{Binding DeleteCommand}"
                     Foreground="SlateGray"
@@ -40,7 +41,7 @@
                 <Button
                     Width="35"
                     Height="35"
-                    Margin="5,0,5,10"
+                    Margin="5,10,5,10"
                     BorderThickness="1"
                     Command="{Binding SearchCommand}"
                     Foreground="SlateGray"
@@ -50,7 +51,7 @@
                 <Button
                     Width="35"
                     Height="35"
-                    Margin="5,0,5,10"
+                    Margin="5,10,5,10"
                     BorderThickness="1"
                     Command="{Binding AddCommand}"
                     Foreground="SlateGray"

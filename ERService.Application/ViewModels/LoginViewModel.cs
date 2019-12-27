@@ -1,46 +1,136 @@
-﻿using ERService.Infrastructure.Dialogs;
-using ERService.RBAC;
+﻿using ERService.Infrastructure.Base.Common;
+using ERService.Infrastructure.Dialogs;
+using ERService.MSSQLDataAccess;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Unity;
+using ERService.Infrastructure.Helpers;
+using System.ComponentModel;
+using ERService.RBAC;
+using CommonServiceLocator;
 
 namespace ERService.ViewModels
 {
     public class LoginViewModel : BindableBase
     {
-        private string _login = "administrator";
+        private string _login;
 
         public string Login
         {
-            get { return _login; } 
-            set { SetProperty(ref _login, value); } 
+            get { return _login; }
+            set { SetProperty(ref _login, value); }
         }
 
-        private string _password;
-
-        [Obsolete]
-        public string Password
-        {
-            get { return _password; }
-            set { SetProperty(ref _password, value); }
-        }
-
+        private readonly IRBACManager _rBACManager;
         private IEventAggregator _eventAggregator;
-        private IRBACManager _rbacManager;
         private IMessageDialogService _messageDialogService;
+        private readonly IConfig _config;
+
+        private string _dbUser;
+
+        public string DbUser
+        {
+            get { return _dbUser; }
+            set { SetProperty(ref _dbUser, value); }
+        }
+
+        private string _dbPassword;
+        private string _dbServer;
+
+        public string DbPassword
+        {
+            get { return _dbPassword; }
+            set { SetProperty(ref _dbPassword, value); }
+        }
+
+        private DatabaseProvidersEnum _selectedProvider;
+
+        public DatabaseProvidersEnum SelectedProvider
+        {
+            get { return _selectedProvider; }
+            set { _selectedProvider = value; }
+        }
+
+        public List<KeyValuePair<DatabaseProvidersEnum, string>> Providers { get; set; }
 
         public ICommand LoginCommand { get; private set; }
+        public DelegateCommand ConnectCommand { get; }
+        public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }
 
-        public LoginViewModel(IRBACManager iRBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
+        public LoginViewModel(IRBACManager rBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
         {
+            _rBACManager = rBACManager;
             _eventAggregator = eventAggregator;
-            _rbacManager = iRBACManager;
             _messageDialogService = messageDialogService;
+            _config = config;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
+            ConnectCommand = new DelegateCommand(OnConnectExecute);
+
+            Providers = new List<KeyValuePair<DatabaseProvidersEnum, string>>();
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            Login = _config.LastLogin;
+            DbServer = _config.Server;
+            DbUser = _config.User;
+            DbPassword = _config.Password;
+            SelectedProvider = _config.SelectedDatabaseProvider;
+
+            FillProvidersCombo();
+        }
+
+        private void FillProvidersCombo()
+        {
+            Providers.Clear();
+            foreach (var provider in Enum.GetValues(typeof(DatabaseProvidersEnum)))
+            {
+                var desc = ((DatabaseProvidersEnum)provider).GetAttribute<DescriptionAttribute>();
+                Providers.Add(new KeyValuePair<DatabaseProvidersEnum, string>((DatabaseProvidersEnum)provider, desc.Description));
+            }
+        }
+
+        private void OnConnectExecute()
+        {
+            if (ServerHeartBeat())
+            {
+                _config.SaveConfig();
+                _messageDialogService.ShowInformationMessageAsync(this, "Połączenie poprawne...", "Połączono z bazą danych.");
+                return;
+            }            
+        }
+
+        private bool ServerHeartBeat()
+        {
+            _config.Server = DbServer;
+            _config.User = DbUser;
+            _config.Password = DbPassword;
+            _config.SelectedDatabaseProvider = SelectedProvider;            
+
+            using (SqlConnection connection = new SqlConnection(ConnectionStringBuilder.Construct()))
+            {
+                try
+                {
+                    connection.Open();
+                    return true;
+                }
+                catch (SqlException ex)
+                {
+                    //TODO: logger
+                    _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", "Nie udało się połączyć z bazą danych, więcej informacji znajduje się w pliku dziennika.");
+                    return false;
+                }
+            }
         }
 
         private void OnLoginCommandExecute(object parameter)
@@ -48,14 +138,21 @@ namespace ERService.ViewModels
             if (String.IsNullOrWhiteSpace(Login))
                 ShowWrongLoginDataMessage();
 
+            if (!ServerHeartBeat()) return;
+
+            _rBACManager.Load();
+
             var passwordBox = parameter as PasswordBox;
             if (passwordBox != null)
             {
-                if (!_rbacManager.Login(Login, passwordBox.Password))
+                if (!_rBACManager.Login(Login, passwordBox.Password))
                 {
                     ShowWrongLoginDataMessage();
                 }
-            }            
+
+                _config.LastLogin = Login;
+                _config.SaveConfig();
+            }
         }
 
         private void ShowWrongLoginDataMessage()
@@ -63,4 +160,5 @@ namespace ERService.ViewModels
             _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
         }
     }
+
 }

@@ -279,7 +279,7 @@ namespace ERService.Settings.ViewModels
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
                 IsReadOnly = true;
         }
-
+        
         #endregion Navigation
     }
 }

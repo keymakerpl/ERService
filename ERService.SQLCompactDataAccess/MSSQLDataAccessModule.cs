@@ -7,6 +7,7 @@ namespace ERService.MSSQLDataAccess
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
+            //var instance = System.Data.Entity.SqlServerCompact.SqlCeProviderServices.Instance;
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

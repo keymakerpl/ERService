@@ -18,10 +18,22 @@ namespace ERService.RBAC.Data.Repository
 
             public override async Task<IEnumerable<User>> GetAllAsync()
             {
-                return await Context.Set<User>()
+                var result = await Context.Set<User>()
                     .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
                     .Include(r => r.Role)
                     .ToListAsync();
+
+                return result;
+            }
+
+            public IEnumerable<User> GetAll()
+            {
+                var result = Context.Set<User>()
+                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
+                    .Include(r => r.Role)
+                    .ToList();
+
+                return result;
             }
         }
 
@@ -37,6 +49,14 @@ namespace ERService.RBAC.Data.Repository
                     .Include(a => a.ACLs.Select(v => v.AclVerb))
                     .Include(u => u.Users)
                     .ToListAsync();
+            }
+
+            public IEnumerable<Role> GetAll()
+            {
+                return Context.Set<Role>()
+                    .Include(a => a.ACLs.Select(v => v.AclVerb))
+                    .Include(u => u.Users)
+                    .ToList();
             }
         }
 

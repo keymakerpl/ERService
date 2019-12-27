@@ -1,0 +1,46 @@
+﻿Każdy wymieniony plik .exe instaluje załączone elementy w określonej lokalizacji na komputerze docelowym.  Pozwala to zagwarantować możliwość serwisowania i pomoc techniczną.  Pliki .dll, załączone do plików .exe, są także dostępne osobno w pliku redist.txt.  Jednak dystrybucja osobnych plików .dll może być przyczyną problemów z serwisowaniem.  Więcej informacji można uzyskać w witrynie http://go.microsoft.com/fwlink/?LinkId=94589.
+
+BreadCrumb wykrył prywatne wdrożenie: Prywatne wdrożenie wyłącznie macierzystych stosów i jawne ładowanie SQL Server Compact Assembly przy pomocy metody Assembly.LoadFrom(), .local file, lub użycie strategii przekierowywania DLL/COM nie jest obsługiwane i może być przyczyną problemów z serwisowaniem.  Więcej informacji można uzyskać w witrynie http://support.microsoft.com/kb/835322 and http://msdn2.microsoft.com/pl-pl/library/aa375142.aspx.
+
+
+Microsoft SQL Server Compact 4.0 
+------------------------------------
+SSCERuntime_x86-ENU.exe
+SSCERuntime_x86-DEU.exe
+SSCERuntime_x86-FRA.exe
+SSCERuntime_x86-JPN.exe
+SSCERuntime_x86-RUS.exe
+SSCERuntime_x86-ESN.exe
+SSCERuntime_x86-ITA.exe
+SSCERuntime_x86-KOR.exe
+SSCERuntime_x86-CHT.exe
+SSCERuntime_x86-CHS.exe
+SSCERuntime_x64-ENU.exe
+SSCERuntime_x64-DEU.exe
+SSCERuntime_x64-FRA.exe
+SSCERuntime_x64-JPN.exe
+SSCERuntime_x64-RUS.exe
+SSCERuntime_x64-ESN.exe
+SSCERuntime_x64-ITA.exe
+SSCERuntime_x64-KOR.exe
+SSCERuntime_x64-CHT.exe
+SSCERuntime_x64-CHS.exe
+sqlcese40.dll
+sqlceqp40.dll
+sqlceoledb40.dll
+sqlceca40.dll
+sqlceme40.dll
+sqlcecompact40.dll
+sqlceer40en.dll
+sqlceer40cn.dll/sqlceer40zh-CHS.dll
+sqlceer40de.dll 
+sqlceer40es.dll 
+sqlceer40fr.dll 
+sqlceer40it.dll 
+sqlceer40ja.dll 
+sqlceer40ko.dll 
+sqlceer40tw.dll/sqlceer40zh-CHT.dll 
+sqlceer40ru.dll
+System.Data.SqlServerCe.dll
+System.Data.SqlServerCe.Entity.dll
+

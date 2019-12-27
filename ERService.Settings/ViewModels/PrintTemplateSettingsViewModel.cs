@@ -96,6 +96,7 @@ namespace ERService.Settings.ViewModels
             var templates = await _templateRepository.GetAllAsync();
             Templates.AddRange(templates);
         }
+        
         #endregion
 
         public DelegateCommand EditTemplateCommand { get; }

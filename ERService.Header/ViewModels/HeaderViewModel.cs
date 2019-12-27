@@ -33,7 +33,7 @@ namespace ERService.Header.ViewModels
         private int _expiredOrderCounter;
         private IOrderRepository _orderRepository;
         private IEventAggregator _eventAggregator;
-        private readonly IRBACManager _rBACManager;
+        //private readonly IRBACManager _rBACManager;
         private readonly IRegionManager _regionManager;
 
         public DelegateCommand UserLogoutCommand { get; private set; }
@@ -45,11 +45,11 @@ namespace ERService.Header.ViewModels
             set { SetProperty(ref _expiredOrderCounter, value); }
         }        
 
-        public HeaderViewModel(IOrderRepository orderRepository, IEventAggregator eventAggregator, IRBACManager rBACManager, IRegionManager regionManager)
+        public HeaderViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
-            _orderRepository = orderRepository;
+            //_orderRepository = orderRepository;
             _eventAggregator = eventAggregator;
-            _rBACManager = rBACManager;
+            //_rBACManager = rBACManager;
             _regionManager = regionManager;
 
             UserLogoutCommand = new DelegateCommand(OnUserLogoutExecute);
@@ -61,17 +61,17 @@ namespace ERService.Header.ViewModels
 
         private void OnUserSettingsExecute()
         {
-            if (_rBACManager.LoggedUser == null) return;
+            //if (_rBACManager.LoggedUser == null) return;
 
             var parameters = new NavigationParameters();
-            parameters.Add("ID", _rBACManager.LoggedUser.Id);
+            //parameters.Add("ID", _rBACManager.LoggedUser.Id);
 
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
         }
 
         private void OnUserLogoutExecute()
         {
-            _rBACManager.Logout();
+            //_rBACManager.Logout();
         }
 
         private void OnUserLoggedout(UserAuthorizationEventArgs obj)
@@ -87,12 +87,12 @@ namespace ERService.Header.ViewModels
 
         public async void RefreshCounters()
         {
-            var orders = await _orderRepository.GetAllAsync();
-            if (orders != null)
-            {
-                InProgressCounter = orders.Count(o => DateTime.Now >= o.DateAdded && DateTime.Now <= o.DateEnded);
-                ExpiredOrderCounter = orders.Count(o => o.DateEnded < DateTime.Now);
-            }
+            //var orders = await _orderRepository.GetAllAsync();
+            //if (orders != null)
+            //{
+            //    InProgressCounter = orders.Count(o => DateTime.Now >= o.DateAdded && DateTime.Now <= o.DateEnded);
+            //    ExpiredOrderCounter = orders.Count(o => o.DateEnded < DateTime.Now);
+            //}
         }
     }
 }

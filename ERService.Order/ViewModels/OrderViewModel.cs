@@ -391,14 +391,14 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        private void SetTitle()
-        {
-            Title = $"{Order.Number}";
-        }
-
         public override Task LoadAsync()
         {
             throw new NotImplementedException();
+        }
+
+        private void SetTitle()
+        {
+            Title = $"{Order.Number}";
         }
 
         #endregion Overrides

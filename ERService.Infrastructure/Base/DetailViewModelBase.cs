@@ -8,7 +8,6 @@ using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ERService.Infrastructure.Base
@@ -33,7 +32,7 @@ namespace ERService.Infrastructure.Base
             CancelCommand = new DelegateCommand(OnCancelEditExecute);
 
             _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid, true);
-            _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();
+            _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();            
         }
 
         public bool AllowLoadAsync { get; set; } = true; //TODO: czy da się z tego zrezygnować?
@@ -66,6 +65,12 @@ namespace ERService.Infrastructure.Base
             protected set
             {
                 _title = value;
+                _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Publish(new AfterDetailOpenedEventArgs
+                {
+                    DisplayableName = value, Id = ID,
+                    ViewModelName = this.ToString()
+                });
+
                 RaisePropertyChanged();
             }
         }

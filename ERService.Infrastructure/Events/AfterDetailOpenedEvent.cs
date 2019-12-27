@@ -3,13 +3,14 @@ using System;
 
 namespace ERService.Infrastructure.Events
 {
-    public class OpenDetailViewEvent : PubSubEvent<OpenDetailViewEventArgs>
+    public class AfterDetailOpenedEvent : PubSubEvent<AfterDetailOpenedEventArgs>
     {
     }
 
-    public class OpenDetailViewEventArgs
+    public class AfterDetailOpenedEventArgs
     {
         public Guid Id { get; set; }
         public string ViewModelName { get; set; }
+        public string DisplayableName { get; set; }
     }
 }

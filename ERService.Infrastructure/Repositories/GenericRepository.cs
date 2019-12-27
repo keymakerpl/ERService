@@ -44,7 +44,7 @@ namespace ERService.Infrastructure.Repositories
             return result;
         }
 
-        private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
+        public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
         {
             IQueryable<TEntity> queryable = Context.Set<TEntity>();
 

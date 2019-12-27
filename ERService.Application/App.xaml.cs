@@ -30,6 +30,8 @@ using ERService.Licensing;
 using System.Threading;
 using System.Globalization;
 using System.Windows.Markup;
+using ERService.MSSQLDataAccess;
+using ERService.Infrastructure.Base.Common;
 
 namespace ERService.Application
 {
@@ -70,6 +72,7 @@ namespace ERService.Application
         {
             base.ConfigureModuleCatalog(moduleCatalog);
 
+            moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
             moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
@@ -87,10 +90,13 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
+            containerRegistry.RegisterSingleton<IConfig, Config>();
             containerRegistry.Register<IUserRepository, UserRepository>();
-            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();            
+            containerRegistry.Register<IRoleRepository, RoleRepository>();
+            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
             containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
             containerRegistry.Register<IAclRepository, AclRepository>();
+            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();            
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
@@ -101,10 +107,8 @@ namespace ERService.Application
             containerRegistry.Register<IBlobRepository, BlobRepository>();
             containerRegistry.Register<INumerationRepository, NumerationRepository>();
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
-            containerRegistry.Register<IRoleRepository, RoleRepository>();
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
-            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);

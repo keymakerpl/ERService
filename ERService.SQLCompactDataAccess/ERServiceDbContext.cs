@@ -1,4 +1,5 @@
 ﻿using ERService.Business;
+using ERService.MSSQLDataAccess.Migrations;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
@@ -6,12 +7,13 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace ERService.MSSQLDataAccess
 {
-    public class ERServiceDbContext : DbContext
+    [DbConfigurationType(typeof(ERServiceDbConfiguration))]
+    public class ERServiceDbContext : DbContext, IERServiceDbContext
     {
-        //TODO: Make db connection setting in entry login window
-        public ERServiceDbContext() : base("ERServiceDb")
+        //TODO: Make db connection setting in entry login window        
+        public ERServiceDbContext() : base(ConnectionStringBuilder.Construct())
         {
-
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
         }
 
         /// <summary>

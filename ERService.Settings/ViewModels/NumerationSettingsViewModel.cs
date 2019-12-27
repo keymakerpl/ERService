@@ -68,6 +68,7 @@ namespace ERService.Settings.ViewModels
         {
             await LoadAsync();
         }
+        
         #endregion Navigation
     }
 }

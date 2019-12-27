@@ -80,7 +80,7 @@
                 </Grid>
             </Border>-->
 
-            <Border
+            <!--<Border Visibility="Hidden"
                 MinWidth="170"
                 MinHeight="40"
                 Margin="5,0,5,0"
@@ -154,7 +154,7 @@
                         FontFamily="Segoe MDL2 Assets"
                         FontSize="13" />
                 </Grid>
-            </Border>
+            </Border>-->
 
         </StackPanel>
 

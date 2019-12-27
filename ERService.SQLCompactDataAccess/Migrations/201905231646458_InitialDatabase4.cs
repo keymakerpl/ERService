@@ -9,7 +9,7 @@ namespace ERService.MSSQLDataAccess.Migrations
         {
             DropForeignKey("dbo.CustomerAddress", "CustomerId", "dbo.Customer");
             DropPrimaryKey("dbo.Customer");
-            AlterColumn("dbo.Customer", "Id", c => c.Guid(nullable: false, identity: true, defaultValueSql: "newsequentialid()"));
+            AlterColumn("dbo.Customer", "Id", c => c.Guid(nullable: false, identity: true, defaultValueSql: "newsequentialid()")); //TODO: newsqid ?? newid
             AddPrimaryKey("dbo.Customer", "Id");
             AddForeignKey("dbo.CustomerAddress", "CustomerId", "dbo.Customer", "Id", cascadeDelete: true);
         }

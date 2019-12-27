@@ -57,6 +57,15 @@
                 <BlurEffect />
             </Controls:HamburgerMenu.Effect>
 
+            <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
+                <DataTemplate>
+                    <Grid Name="root" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentContentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                   VerticalAlignment="Center" Foreground="Black" FontStyle="Italic"/>
+                    </Grid>
+                </DataTemplate>
+            </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
+
             <Controls:HamburgerMenu.ContentTemplate>
                 <DataTemplate DataType="{x:Type Controls:HamburgerMenuItem}">
                     <Grid x:Name="TheContentGrid">

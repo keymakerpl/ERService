@@ -10,7 +10,7 @@ namespace ERService.MSSQLDataAccess.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = false;              
         }
 
         protected override void Seed(ERServiceDbContext context)

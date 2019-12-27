@@ -34,7 +34,10 @@ namespace ERService.RBAC
             _eventAggregator = eventAggregator;
 
             _aclsIDsToDelete = new List<Guid>();
+        }
 
+        public void Load()
+        {
             LoadUsers();
             LoadRoles();
         }
@@ -182,14 +185,14 @@ namespace ERService.RBAC
             return false;
         }
 
-        private async void LoadRoles()
+        private void LoadRoles()
         {
-            _roles = await _roleRepository.GetAllAsync();
+            _roles = _roleRepository.GetAll();
         }
 
-        private async void LoadUsers()
+        private void LoadUsers()
         {
-            _users = await _userRepository.GetAllAsync();
+            _users = _userRepository.GetAll();
         }        
 
         public User LoggedUser
