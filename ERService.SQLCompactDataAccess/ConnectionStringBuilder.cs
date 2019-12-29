@@ -1,4 +1,6 @@
 ﻿using ERService.Infrastructure.Base.Common;
+using ERService.Infrastructure.Helpers;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data.SqlClient;
 
@@ -13,20 +15,24 @@ namespace ERService.MSSQLDataAccess
             switch (_config.SelectedDatabaseProvider)
             {
                 case DatabaseProvidersEnum.MSSQLServer:
-                    var newConnStringBuilder = new SqlConnectionStringBuilder();
-                    newConnStringBuilder.DataSource = _config.Server;
-                    newConnStringBuilder.UserID = _config.User;
-                    newConnStringBuilder.Password = _config.Password;
-                    newConnStringBuilder.MultipleActiveResultSets = true;
-                    newConnStringBuilder.InitialCatalog = "ERService";
-                    return newConnStringBuilder.ToString();
+                    var mssqlConnStringBuilder = new SqlConnectionStringBuilder();
+                    mssqlConnStringBuilder.DataSource = _config.Server;
+                    mssqlConnStringBuilder.UserID = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
+                    mssqlConnStringBuilder.Password = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
+                    mssqlConnStringBuilder.MultipleActiveResultSets = true;
+                    mssqlConnStringBuilder.InitialCatalog = "ERService";
+                    return mssqlConnStringBuilder.ToString();
 
                 case DatabaseProvidersEnum.MSSQLServerLocalDb:
                     var path = AppDomain.CurrentDomain.BaseDirectory;
                     return $@"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=SSPI;AttachDBFilename={path}localdb.mdf";
 
                 case DatabaseProvidersEnum.MySQLServer:
-                    return "";
+                    var mysqlConnStringBuilder = new MySqlConnectionStringBuilder();
+                    mysqlConnStringBuilder.Server = _config.Server;
+                    mysqlConnStringBuilder.UserID = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
+                    mysqlConnStringBuilder.Password = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
+                    return mysqlConnStringBuilder.ToString();
 
                 default:
                     return "";

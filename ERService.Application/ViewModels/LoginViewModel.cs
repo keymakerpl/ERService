@@ -15,12 +15,26 @@ using ERService.Infrastructure.Helpers;
 using System.ComponentModel;
 using ERService.RBAC;
 using CommonServiceLocator;
+using MySql.Data.MySqlClient;
 
 namespace ERService.ViewModels
 {
     public class LoginViewModel : BindableBase
     {
         private string _login;
+
+        private bool _isExpanded;
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set { SetProperty(ref _isExpanded, value); }
+        }
+
+        public void ToggleIsExpanded()
+        {
+            IsExpanded = !IsExpanded;
+        }
 
         public string Login
         {
@@ -61,7 +75,7 @@ namespace ERService.ViewModels
         public List<KeyValuePair<DatabaseProvidersEnum, string>> Providers { get; set; }
 
         public ICommand LoginCommand { get; private set; }
-        public DelegateCommand ConnectCommand { get; }
+        public ICommand ConnectCommand { get; private set; }
         public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }
 
         public LoginViewModel(IRBACManager rBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
@@ -72,7 +86,7 @@ namespace ERService.ViewModels
             _config = config;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
-            ConnectCommand = new DelegateCommand(OnConnectExecute);
+            ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
 
             Providers = new List<KeyValuePair<DatabaseProvidersEnum, string>>();
 
@@ -81,11 +95,23 @@ namespace ERService.ViewModels
 
         private void Initialize()
         {
-            Login = _config.LastLogin;
-            DbServer = _config.Server;
-            DbUser = _config.User;
-            DbPassword = _config.Password;
-            SelectedProvider = _config.SelectedDatabaseProvider;
+            try
+            {
+                Login = _config.LastLogin;
+                DbServer = _config.Server;
+                DbUser = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
+                DbPassword = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
+                SelectedProvider = _config.SelectedDatabaseProvider;
+            }
+            catch (Exception ex)
+            {
+                Login = "";
+                DbServer = "";
+                DbUser = "";
+                DbPassword = "";
+                SelectedProvider = DatabaseProvidersEnum.MSSQLServerLocalDb;
+                //TODO: log
+            }
 
             FillProvidersCombo();
         }
@@ -100,8 +126,14 @@ namespace ERService.ViewModels
             }
         }
 
-        private void OnConnectExecute()
+        private void OnConnectExecute(object parameter)
         {
+            var passwordBox = parameter as PasswordBox;
+            if (passwordBox != null)
+            {
+                DbPassword = passwordBox.Password;
+            }
+
             if (ServerHeartBeat())
             {
                 _config.SaveConfig();
@@ -110,25 +142,46 @@ namespace ERService.ViewModels
             }            
         }
 
+        //TODO: move to helpers
         private bool ServerHeartBeat()
         {
             _config.Server = DbServer;
-            _config.User = DbUser;
-            _config.Password = DbPassword;
-            _config.SelectedDatabaseProvider = SelectedProvider;            
+            _config.User = Cryptography.StringCipher.Encrypt(DbUser, Cryptography.StringCipher.DbPassPhrase);
+            _config.Password = Cryptography.StringCipher.Encrypt(DbPassword, Cryptography.StringCipher.DbPassPhrase);
+            _config.SelectedDatabaseProvider = SelectedProvider;
+            _config.SaveConfig();
 
-            using (SqlConnection connection = new SqlConnection(ConnectionStringBuilder.Construct()))
+            if (SelectedProvider != DatabaseProvidersEnum.MySQLServer)
             {
-                try
+                using (SqlConnection connection = new SqlConnection(ConnectionStringBuilder.Construct()))
                 {
-                    connection.Open();
-                    return true;
+                    try
+                    {
+                        connection.Open();
+                        return true;
+                    }
+                    catch (SqlException ex)
+                    {
+                        //TODO: logger
+                        _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", "Nie udało się połączyć z bazą danych, więcej informacji znajduje się w pliku dziennika.");
+                        return false;
+                    }
                 }
-                catch (SqlException ex)
+            }
+            else
+            {
+                using (var connection = new MySqlConnection(ConnectionStringBuilder.Construct()))
                 {
-                    //TODO: logger
-                    _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", "Nie udało się połączyć z bazą danych, więcej informacji znajduje się w pliku dziennika.");
-                    return false;
+                    try
+                    {
+                        connection.Open();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", ex.Message);
+                        return false;
+                    }
                 }
             }
         }
@@ -137,6 +190,9 @@ namespace ERService.ViewModels
         {
             if (String.IsNullOrWhiteSpace(Login))
                 ShowWrongLoginDataMessage();
+
+            _config.LastLogin = Login;
+            _config.SaveConfig();
 
             if (!ServerHeartBeat()) return;
 
@@ -149,9 +205,6 @@ namespace ERService.ViewModels
                 {
                     ShowWrongLoginDataMessage();
                 }
-
-                _config.LastLogin = Login;
-                _config.SaveConfig();
             }
         }
 

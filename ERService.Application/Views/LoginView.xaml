@@ -18,6 +18,57 @@
     mc:Ignorable="d">
 
     <Grid x:Name="grid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CollapsedStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Normal">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Expanded">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Normal">
+                    <Storyboard>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="button">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="-180"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="serverGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="packIconMaterialLight">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="180"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="serverGrid">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="serverGrid">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="130"/>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Expanded">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="serverGrid">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="serverGrid">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="250"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="serverGrid">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="205"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="packIconMaterialLight">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="-180"/>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Border
             x:Name="border"
             HorizontalAlignment="Center"
@@ -30,7 +81,7 @@
                 <DropShadowEffect Opacity="0.85" ShadowDepth="3" />
             </Border.Effect>
             <StackPanel Margin="10,20,10,15" Orientation="Horizontal">
-                <Grid>
+                <Grid x:Name="loginGrid" Height="130">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -39,7 +90,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Label
@@ -54,7 +105,7 @@
                     <Label
                         Grid.Column="1"
                         Margin="5"
-                        Content="Login:"
+                        Content="Użytkownik:"
                         FontSize="14" />
                     <TextBox
                         Grid.Column="2"
@@ -78,28 +129,75 @@
                     <Button
                         Grid.Row="2"
                         Grid.Column="2"
-                        Width="80"
-                        Height="35"
-                        Margin="15,10,15,0"
+                        Width="90"
+                        Height="40"
+                        Margin="0,2,5,0"
                         HorizontalAlignment="Right"
                         Command="{Binding LoginCommand}"
-                        CommandParameter="{Binding ElementName=PasswordBox}"
-                        Content="Zaloguj" />
+                        CommandParameter="{Binding ElementName=PasswordBox}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialLight Kind="Login" Margin="3 0 5 0"
+                                                    Width="17"
+                                                    Height="17"
+                                                    VerticalAlignment="Center" />
+                            <TextBlock  Text="Zaloguj" Margin="2 4 4 4"
+                                    VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
 
                 </Grid>
                 <Grid>
-                    <Button
-                        Width="35"
-                        Height="35"
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
+                        <Button x:Name="button"
+                        Width="20"
+                        Height="20"
                         BorderThickness="0"
                         Foreground="Gray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconMaterial Kind="ArrowRight" />
-                    </Button>
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" RenderTransformOrigin="0.5,0.5">
+                            <i:Interaction.Triggers>
+                                <ei:DataTrigger Binding="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LoginView}}}" Value="True">
+                                    <ei:GoToStateAction StateName="Expanded"/>
+                                </ei:DataTrigger>
+                                <ei:DataTrigger Binding="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LoginView}}}" Value="False">
+                                    <ei:GoToStateAction StateName="Normal"/>
+                                </ei:DataTrigger>
+                                <i:EventTrigger EventName="Click">
+                                    <ei:CallMethodAction TargetObject="{Binding Mode=OneWay}" MethodName="ToggleIsExpanded"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                            <iconPacks:PackIconMaterialLight x:Name="packIconMaterialLight" Kind="ArrowRightCircle" RenderTransformOrigin="0.5,0.5" >
+                                <iconPacks:PackIconMaterialLight.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </iconPacks:PackIconMaterialLight.RenderTransform>
+                            </iconPacks:PackIconMaterialLight>
+                        </Button>
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
                 </Grid>
-                <Grid>
+                <Grid x:Name="serverGrid" Width="0" Height="130">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -130,7 +228,7 @@
                     <Label
                         Grid.Row="2"
                         Margin="5"
-                        Content="User:" />
+                        Content="Użytkownik:" />
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -140,19 +238,33 @@
                         Grid.Row="3"
                         Margin="5"
                         Content="Hasło:" />
-                    <TextBox
+                    <PasswordBox
+                        x:Name="DbPasswordBox"
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="5" 
-                        Text="{Binding DbPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        Margin="5"
+                        metroControls:PasswordBoxHelper.CapsLockIcon="true"
+                        metroControls:PasswordBoxHelper.CapsLockWarningToolTip="true"
+                        
+                        />
                     <Button
                         Grid.Row="4"
                         Grid.Column="1"
-                        Width="80"
-                        Height="35"
-                        HorizontalAlignment="Right"
-                        Content="Połącz" 
-                        Command="{Binding ConnectCommand}"/>
+                        Width="90"
+                        Height="40"
+                        Margin="0, 0, 5, 0"
+                        HorizontalAlignment="Right"                        
+                        Command="{Binding ConnectCommand}"
+                        CommandParameter="{Binding ElementName=DbPasswordBox}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconOcticons Kind="Link" Margin="3 0 5 0"
+                                                    Width="17"
+                                                    Height="17"
+                                                    VerticalAlignment="Center" />
+                            <TextBlock  Text="Połącz" Margin="2 4 4 4"
+                                    VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </StackPanel>
         </Border>

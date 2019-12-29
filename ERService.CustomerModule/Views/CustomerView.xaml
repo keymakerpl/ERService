@@ -127,7 +127,7 @@
                              Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Label Grid.Row="3" Content="Nazwisko" Margin="10 10 0 0"/>
-                    <controls:AutoCompleteBox Grid.Row="4" Margin="10 0 10 10" 
+                    <!--<controls:AutoCompleteBox Grid.Row="4" Margin="10 0 10 10" 
                                               x:Name="AutoBox"
                                               ItemsSource="{Binding Customers}"
                                               SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
@@ -139,7 +139,7 @@
                                 <i:InvokeCommandAction Command="{Binding DropDownCloseCommand}" CommandParameter="{Binding ElementName=AutoBox}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                    </controls:AutoCompleteBox>
+                    </controls:AutoCompleteBox>-->
 
                     <Label Grid.Row="5" Content="Firma" Margin="10 10 0 0"/>
                     <TextBox Grid.Row="6" Margin="10 0 10 10"                             

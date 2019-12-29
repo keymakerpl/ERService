@@ -30,7 +30,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="180" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -49,7 +49,7 @@
             Background="Gainsboro"
             LastChildFill="True">
             <DockPanel.Effect>
-                <DropShadowEffect ShadowDepth="1" />
+                <DropShadowEffect ShadowDepth="2" Direction="200" />
             </DockPanel.Effect>
 
             <Grid>
@@ -86,12 +86,12 @@
             Grid.Row="1"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Margin="0,10,0,15"
+            Margin="0,15,0,20"
             Background="Gainsboro"
             LastChildFill="True">
 
             <DockPanel.Effect>
-                <DropShadowEffect ShadowDepth="1" />
+                <DropShadowEffect ShadowDepth="2" />
             </DockPanel.Effect>
 
             <ContentControl prism:RegionManager.RegionName="NavigationRegion" DockPanel.Dock="Left" />
