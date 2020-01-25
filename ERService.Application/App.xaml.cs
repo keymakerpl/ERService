@@ -25,6 +25,15 @@ using System.Windows.Threading;
 using static ERService.RBAC.Data.Repository.RBACRepository;
 using MahApps.Metro.Controls.Dialogs;
 using ERService.Infrastructure.Dialogs;
+using ERService.TemplateEditor;
+using ERService.Licensing;
+using System.Threading;
+using System.Globalization;
+using System.Windows.Markup;
+using ERService.MSSQLDataAccess;
+using ERService.Infrastructure.Base.Common;
+using System.IO;
+using System.Text;
 
 namespace ERService.Application
 {
@@ -33,17 +42,21 @@ namespace ERService.Application
         protected override Window CreateShell()
         {            
             return Container.Resolve<Shell>();
-        }
+        }        
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);            
-        }
+            //DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-        protected override void OnInitialized()
-        {
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
-            base.OnInitialized();
+            base.OnStartup(e);
+
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("pl-PL");
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pl-PL");
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                         typeof(FrameworkElement),
+                         new FrameworkPropertyMetadata(
+                    XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -56,13 +69,16 @@ namespace ERService.Application
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             base.ConfigureModuleCatalog(moduleCatalog);
-            
+
+            moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
+            moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
             moduleCatalog.AddModule(typeof(SettingsModule));
             moduleCatalog.AddModule(typeof(StartPageModule));
             moduleCatalog.AddModule(typeof(RBACModule));
+            moduleCatalog.AddModule(typeof(TemplateEditorModule));
 
             //TODO: Assembly names refactor
             moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
@@ -72,10 +88,13 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
-            containerRegistry.Register<IUserRepository, RBACRepository.UserRepository>();
-            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();
+            containerRegistry.RegisterSingleton<IConfig, Config>();
+            containerRegistry.Register<IUserRepository, UserRepository>();
+            containerRegistry.Register<IRoleRepository, RoleRepository>();
+            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
             containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
             containerRegistry.Register<IAclRepository, AclRepository>();
+            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();            
             containerRegistry.Register<ICustomerRepository, CustomerRepository>();
             containerRegistry.Register<IOrderRepository, OrderRepository>();
             containerRegistry.Register<IHardwareRepository, HardwareRepository>();
@@ -86,10 +105,8 @@ namespace ERService.Application
             containerRegistry.Register<IBlobRepository, BlobRepository>();
             containerRegistry.Register<INumerationRepository, NumerationRepository>();
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
-            containerRegistry.Register<IRoleRepository, RoleRepository>();
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
-            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
 
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
@@ -97,13 +114,7 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
-            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);
-            containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
-            containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
-            containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);
-            containerRegistry.RegisterForNavigation<NumerationSettingsView>(ViewNames.NumerationSettingsView);
-            containerRegistry.RegisterForNavigation<UsersSettingsView>(ViewNames.UserSettingsView);
-            containerRegistry.RegisterForNavigation<UserDetailView>(ViewNames.UserDetailView);
+            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);            
         }
     }
 }

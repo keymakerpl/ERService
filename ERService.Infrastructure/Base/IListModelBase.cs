@@ -12,6 +12,7 @@ namespace ERService.Infrastructure.Base
         DelegateCommand DeleteCommand { get; set; }
         ObservableCollection<T> Models { get; set; }
         T SelectedModel { get; set; }
+        bool IsReadOnly { get; set; }
 
         void LoadAsync();
         void Load(Expression<Func<T, bool>> predicate,

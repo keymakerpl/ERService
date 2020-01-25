@@ -10,8 +10,8 @@
              prism:ViewModelLocator.AutoWireViewModel="True" >
 
     <Border Grid.Row="1" x:Name="ListBorder" Margin="10 0 10 10"
-                BorderBrush="LightGray" BorderThickness="1">
-        <Grid >
+            BorderThickness="0" BorderBrush="#FF83919F">
+        <Grid Background="Gainsboro">
             <TextBlock Text="{Binding Message}"
                    Margin="10 0 10 0"
                    HorizontalAlignment="Right"

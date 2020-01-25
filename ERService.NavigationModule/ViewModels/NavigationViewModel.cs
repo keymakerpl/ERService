@@ -1,4 +1,5 @@
-﻿using ERService.Infrastructure.Constants;
+﻿using System;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Events;
 using Prism.Commands;
 using Prism.Events;
@@ -23,16 +24,31 @@ namespace ERService.Navigation.ViewModels
             set { SetProperty(ref _isEnabled, value); }
         }
 
+        private string _currentContentName;
+
+        public string CurrentContentName
+        {
+            get { return _currentContentName; }
+            set { SetProperty(ref _currentContentName, value); }
+        }
+
         public NavigationViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
+
             IsEnabled = false;
 
             _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((o) => { IsEnabled = true; }, true);
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((o) => { IsEnabled = false; }, true);
+            _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Subscribe(OnContentChanged, true);
 
             OpenDetailViewCommand = new DelegateCommand<object>(OnOpenDetailViewExecute);
+        }
+
+        private void OnContentChanged(AfterDetailOpenedEventArgs args)
+        {
+            CurrentContentName = args.DisplayableName;
         }
 
         private void OnOpenDetailViewExecute(object viewName)

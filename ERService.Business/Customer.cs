@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Customer
+    public class Customer 
     {
         public Customer()
         {
@@ -53,7 +54,7 @@ namespace ERService.Business
         [MaxLength(20)]
         public string PhoneNumber2 { get; set; }
 
-        [StringLength(50)]
+        [StringLength(500)]
         public string Description { get; set; }
 
         #region Relacje
@@ -62,8 +63,6 @@ namespace ERService.Business
         public ICollection<Order> Orders { get; set; }
 
         #endregion
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

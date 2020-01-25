@@ -1,0 +1,532 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8" /><META NAME="save" CONTENT="history" /><title>Plik Readme programu Microsoft SQL Server Compact 4.0</title><style TYPE="text/css">
+      body
+      {
+      background: #FFFFFF;
+      color: #000000;
+      font-family:    Verdana;
+      font-size: medium;
+      font-style: normal;
+      font-weight: normal;
+      margin-top: 0;
+      margin-bottom:  0;
+      margin-left:    0;
+      margin-right:   0;
+      width:  100%;
+      }
+
+      div.#mainSection
+      {
+      font-size: 70%;
+      width: 100%;
+      padding-left:    10;
+      margin-right: 10;
+      }
+
+      div.#mainBody
+      {
+      font-size: 90%;
+      margin-top: 10;
+      padding-bottom: 20;
+      }
+
+      div.#header
+      {
+      background-color: #D2D2D2;
+      padding-top:    0;
+      padding-bottom: 0;
+      padding-left:   10;
+      padding-right:  0;
+      width:          100%;
+      }
+
+      div.#header table
+      {
+      border-bottom-color: #C8CDDE;
+      border-bottom-style: solid;
+      border-bottom-width: 1;
+      width:  100%;
+      }
+
+      span.#runningHeaderText
+      {
+      color: #003399;
+      font-size: 90%;
+      }
+
+      span.#nsrTitle
+      {
+      /*    color: #003399;*/
+      font-size: 120%;
+      font-weight: 600;
+      }
+
+      div.#header table td
+      {
+      color: #000000;
+      font-size: 70%;
+      margin-top: 0;
+      margin-bottom:  0;
+      padding-right: 20;
+      }
+
+      div.#header table tr.#headerTableRow3 td
+      {
+      padding-bottom: 2;
+      padding-top: 5;
+      }
+
+      div.#header table.#bottomTable
+      {
+      border-top-color: #FFFFFF;
+      border-top-style: solid;
+      border-top-width: 1;
+      text-align: left;
+      }
+
+      div.#footer
+      {
+      font-size: 90%;
+      margin-top: 0;
+      margin-bottom:  0;
+      margin-left:    -5;
+      margin-right:   0;
+      padding-top:    2;
+      padding-bottom: 2;
+      padding-left:   0;
+      padding-right:  0;
+      width:  100%;
+      }
+
+      hr.#footerHR
+      {
+      border-bottom-color: #EEEEFF;
+      border-bottom-style: solid;
+      border-bottom-width: 1;
+      border-top-color: C8CDDE;
+      border-top-style: solid;
+      border-top-width: 1;
+      height: 3;
+      color: #D2D2D2;
+      }
+
+      div.section
+      {
+      padding-top:    2;
+      padding-bottom: 2;
+      padding-right:  15;
+      width:  100%;
+      }
+
+      .heading
+      {
+      color:          #000000;
+      font-weight:    bold;
+      margin-top:     18;
+      margin-bottom:  8;
+      }
+
+      h1.heading
+      {
+      color: #000000;
+      font-size:  150%;
+      }
+
+      .subHeading
+      {
+      color:          #000000;
+      font-weight:    bold;
+      font-size:      150%;
+      margin-bottom:  4;
+      }
+
+      h2.subHeading
+      {
+      color:          #000000;
+      font-weight:    bold;
+      font-size:      130%;
+      }
+      h3.subHeading
+      {
+      color:  #000000;
+      font-size: 125%;
+      font-weight: bold;
+      }
+
+      h4.subHeading
+      {
+      color: #000000;
+      font-size: 110%;
+      font-weight: bold;
+      }
+
+      h4.procedureHeading
+      {
+      color: #000080;
+      font-size: 110%;
+      font-weight: bold;
+      }
+
+      h5.subHeading
+      {
+      color: #000000;
+      font-size: 100%;
+      font-weight: bold;
+      }
+
+      img
+      {
+      padding-bottom: 10;
+      }
+
+      img.toggle
+      {
+      border: 0;
+      margin-right: 5;
+      padding-bottom: 10;
+      }
+
+      img.copyCodeImage
+      {
+      border: 0;
+      margin: 1;
+      margin-right: 3;
+      padding-bottom: 10;
+      }
+
+      img.downloadCodeImage
+      {
+      border: 0;
+      margin-right: 3;
+      padding-bottom: 10;
+      }
+
+      img.viewCodeImage
+      {
+      border: 0;
+      margin-right: 3;
+      padding-bottom: 10;
+      }
+
+      img.note
+      {
+      border: 0;
+      margin-right: 3;
+      padding-bottom: 10;
+      }
+
+      img.#membersOptionsFilterImage
+      {
+      border: 0;
+      margin-left: 10;
+      vertical-align: middle;
+      padding-bottom: 10;
+      }
+
+      img.#toggleAllImage
+      {
+      margin-left: 4;
+      vertical-align: middle;
+      padding-bottom: 10;
+      }
+
+      div.#mainSection table
+      {
+      border: 0;
+      font-size: 100%;
+      width:  100%;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      }
+
+      div.#mainSection table tr
+      {
+      vertical-align: top;
+      }
+
+      div.#mainSection table th
+      {
+      text-align: left;
+      background: #D8D8D8;
+      border-bottom-color: #D8D8D8;
+      border-bottom-style: solid;
+      border-bottom-width: 1;
+      color: #000000;
+      padding-left: 5;
+      padding-right: 5;
+      }
+
+      div.#mainSection table td
+      {
+      background: #F2F2F2;
+      border-top-color: #D8D8D8;
+      border-top-style: solid;
+      border-top-width: 1;
+      padding-left: 5;
+      padding-right: 5;
+      }
+
+      div.#mainSection table td.imageCell
+      {
+      white-space: nowrap;
+      }
+
+      div.code
+      {
+      width: 98%;
+      }
+
+      div.code table
+      {
+      border: 0;
+      font-size: 95%;
+      margin-bottom: 5;
+      width: 100%
+      }
+
+      div.code table th
+      {
+      text-align: left;
+      background: #D8D8D8;
+      border-bottom-color: #D8D8D8;
+      border-bottom-style: solid;
+      border-bottom-width: 1;
+      color: #000000;
+      font-weight: bold;
+      padding-left: 5;
+      padding-right: 5;
+      }
+
+      div.code table td
+      {
+      background: #CCCCCC;
+      border-top-color: #D8D8D8;
+      border-top-style: solid;
+      border-top-width: 1;
+      padding-left: 5;
+      padding-right: 5;
+      padding-top: 5;
+      }
+
+      div.alert
+      {
+      margin-left: 10;
+      width: 98%;
+      }
+
+      div.alert table
+      {
+      border: 1;
+      font-size: 100%;
+      width:  100%;
+      border: solid 1 #DEDFEF;
+      }
+
+      div.alert table th
+      {
+      text-align: left;
+      background: #D8D8D8;
+      border-bottom-width: 0;
+      color: #000000;
+      padding-left: 5;
+      padding-right: 5;
+      border: solid 1 #DEDFEF;
+      }
+
+      div.alert table td
+      {
+      background: #FFFFFF;
+      border-top-color: #D8D8D8;
+      border-top-style: solid;
+      border-top-width: 1;
+      padding-left: 5;
+      padding-right: 5;
+      border: solid 1 #DEDFEF;
+      }
+
+      span.copyCode
+      {
+      color: #0000ff;
+      font-size: 90%;
+      font-weight: normal;
+      cursor: hand;
+      float: right;
+      display: inline;
+      text-align: right;
+      }
+
+      .downloadCode
+      {
+      color: #0000ff;
+      font-size: 90%;
+      font-weight: normal;
+      cursor: hand;
+      }
+
+      .viewCode
+      {
+      color: #0000ff;
+      font-size: 90%;
+      font-weight: normal;
+      cursor: hand;
+      }
+
+      div.code pre
+      {
+      font-family:    Monospace, Courier New, Courier;
+      font-size: 105%;
+      color:  #000000;
+      }
+
+      code
+      {
+      font-family:    Monospace, Courier New, Courier;
+      font-size: 105%;
+      color:  #000000;
+      }
+
+      dl
+      {
+      margin-top: 0;
+      padding-left:   1;
+      }
+
+      dd
+      {
+      margin-bottom:  0;
+      margin-left:    0;
+      padding-left:   20;
+      }
+
+      dd p
+      {
+      margin-top: 5;
+      }
+
+      ul
+      {
+      margin-left: 17;
+      list-style-type: disc;
+      }
+
+      ul ul
+      {
+      margin-bottom: 4;
+      margin-left: 17;
+      margin-top: 3;
+      list-style-type: disc;
+      }
+
+      ol
+      {
+      margin-left: 24;
+      list-style-type: decimal;
+      }
+
+      ol ol
+      {
+      margin-left: 24;
+      margin-top: 3;
+      list-style-type: lower-alpha;
+      }
+
+      li
+      {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      padding-top: 0;
+      margin-left: 5;
+      }
+
+      li p
+      {
+      margin-top: 0;
+      margin-bottom: 0;
+      }
+
+      p
+      {
+      margin-bottom: 15;
+      }
+
+      .tip
+      {
+      color:  #0000FF;
+      font-style: italic;
+      cursor:hand;
+      text-decoration:underline;
+      }
+
+      .math
+      {
+      font-family: Times New Roman;
+      font-size: 125%
+      }
+      .sourceCodeList
+      {
+      font-family: Verdana;
+      font-size: 90%;
+      }
+
+      pre.viewCode
+      {
+      width: 100%;
+      overflow: auto;
+      }
+
+      li:hover table, li.over table
+      {
+      background-color: #C0C0C0;
+      }
+
+      li:hover ul, li.over ul
+      {
+      background-color: #d2d2d2;
+      border: 1px solid #000;
+      display: block;
+      }
+    </style></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="nsrTitle">Plik Readme programu Microsoft SQL Server Compact 4.0</span></td></tr></table></div><div id="mainSection"><div id="mainBody"><p>11/06/2010 17:55:22</p><div class="introduction"><p>Najbardziej aktualna wersja tego pliku jest dostępna w trybie online w <a href="http://go.microsoft.com/fwlink/?LinkId=204986">Centrum pobierania Microsoft</a></p><p>Zespół ds. dokumentacji oprogramowania SQL Server czeka na <a href="mailto:sqldocfb@microsoft.com?subject=Plik%20Readme%20programu%20SQL%20Server%20Compact%204.0%20(\1:SQL\2:3.5.5386.0\3:SSC_RTW\4:readme_ssc\5:ReadmeSSC35.htm\6:\7:h\8:pl-pl\9:2007)&amp;body=---Tu%20wpisz%20uwagi,%20nie%20zmieniając%20położenia%20wiersza%20tematu.---">opinie dotyczące dokumentacji</a>. Przeglądamy i sprawdzamy wszystkie uwagi dotyczące dokumentacji, ale nie odpowiadamy tu na pytania z zakresu pomocy technicznej. Aby uzyskać pomoc w przypadku problemów technicznych niezwiązanych z dokumentacją, zobacz <a href="http://go.microsoft.com/fwlink/?LinkId=204987">Uzyskiwanie pomocy dotyczącej programu SQL Server Compact</a>. W miarę możliwości prosimy o przesyłanie opinii w języku angielskim.</p></div><a name="BKMK_Contents" /><h1 class="heading">Spis treści</h1><div id="sectionSection0" class="section" name="collapseableSection" style=""><p><span sdata="link"><a href="#BKMK_1.0Introduction">1.0 Wprowadzenie</a></span></p><p><span sdata="link"><a href="#BKMK_1.1ObtainingSQLServerCompact4.0">1.1 Nabywanie programu SQL Server Compact 4.0</a></span></p><p><span sdata="link"><a href="#BKMK_1.2SQLServerCompact4.0BooksOnline">1.2 SQL Server Compact 4.0 — książki online</a></span></p><p><span sdata="link"><a href="#BKMK_2.0SupportedOperatingSystemsandPlatformsforSQLServerCompact4.0">2.0 Systemy operacyjne i platformy obsługiwane przez program SQL Server Compact 4.0</a></span></p><p><span sdata="link"><a href="#BKMK_3.0KnownIssues">3.0 Znane problemy</a></span></p><p><span sdata="link"><a href="#BKMK_4.0AdditionalInformation">4.0 Dodatkowe informacje</a></span></p><p><span sdata="link"><a href="#BKMK_4.1GettingSQLServerCompactAssistance">4.1 Uzyskiwanie pomocy dotyczącej programu SQL Server Compact</a></span></p><p><span sdata="link"><a href="#BKMK_4.2ProvidingFeedbackonSQLServerCompact">4.2 Przekazywanie opinii na temat programu SQL Server Compact</a></span></p><p>[Powrót do <span sdata="link"><a href="#BKMK_Contents">Spisu treści</a></span>]</p></div><a name="BKMK_1.0Introduction" /><h1 class="heading">1.0 Wprowadzenie</h1><div id="sectionSection1" class="section" name="collapseableSection" style=""><p>Microsoft® SQL Server™ Compact 4.0 to zajmujący niewiele miejsca na dysku wewnątrzprocesowy aparat bazy danych, który umożliwia deweloperom tworzenie niezawodnych aplikacji dla komputerów stacjonarnych z systemem Windows oraz witryn zaprojektowanych za pomocą pakietu startowego ASP.NET.</p><a name="BKMK_1.1ObtainingSQLServerCompact4.0" /><h3 class="subHeading">1.1 Nabywanie programu SQL Server Compact 4.0</h3><div class="subsection"><p>Program SQL Server Compact 4.0 jest dostępny do pobrania z sieci Web w następujących lokalizacjach:</p><ul><li><p><a href="http://go.microsoft.com/fwlink/?LinkId=204988">SQL Server Compact 4.0</a></p></li></ul><div class="alert"><table width="100%" cellspacing="0" cellpadding="0"><tr><th align="left"><b>Ważne:</b></th></tr><tr><td><p>W trakcie instalacji w 32- i 64-bitowych systemach operacyjnych program SQL Server Compact 4.0 zachowuje się inaczej niż jego poprzednie wersje. Opis instalacji programu SQL Server Compact 4.0 w 32- i 64-bitowych systemach operacyjnych znajduje się poniżej:</p></td></tr></table></div><div class="caption" /><div class="tableSection"><table width="50%" cellspacing="2" cellpadding="5" frame="lhs"><tr><td><p>Wersja</p></td><td><p>System operacyjny</p></td><td><p>Wynik</p></td></tr><tr><td><p>32-bitowa, program SQL Server Compact 4.0 </p></td><td><p>32-bitowy</p></td><td><p>Sukces</p></td></tr><tr><td><p>64-bitowa, program SQL Server Compact 4.0 </p></td><td><p>64-bitowy</p></td><td><p>Sukces</p></td></tr><tr><td><p>32-bitowa, program SQL Server Compact 4.0 </p></td><td><p>64-bitowy</p></td><td><p>Błąd</p></td></tr><tr><td><p>64-bitowa, program SQL Server Compact 4.0 </p></td><td><p>32-bitowy</p></td><td><p>Błąd</p></td></tr></table></div><p>[Powrót do <span sdata="link"><a href="#BKMK_Contents">Spisu treści</a></span>]</p></div><a name="BKMK_1.2SQLServerCompact4.0BooksOnline" /><h3 class="subHeading">1.2 SQL Server Compact 4.0 — książki online</h3><div class="subsection"><p>Dokumentacja SQL Server Compact 4.0 — książki online zawiera szczegółowe informacje dotyczące projektowania i wdrażania za pomocą programu SQL Server Compact 4.0 oraz zarządzania nim na komputerach stacjonarnych z systemem Windows i w witrynach utworzonych za pomocą pakietu startowego ASP.NET. Dokumentacja SQL Server Compact 4.0 — książki online nie instaluje się razem z dokumentacją programu Visual Studio 2010 ani dokumentacją SQL Server 2008 R2 — książki online. Jest ona dostępna tylko jako <a href="http://go.microsoft.com/fwlink/?LinkId=205581">plik do pobrania w Centrum pobierania Microsoft</a>. </p></div></div><a name="BKMK_2.0SupportedOperatingSystemsandPlatformsforSQLServerCompact4.0" /><h1 class="heading">2.0 Systemy operacyjne i platformy obsługiwane przez program SQL Server Compact 4.0</h1><div id="sectionSection2" class="section" name="collapseableSection" style=""><p>Program SQL Server Compact 4.0 obsługuje następujące systemy operacyjne.</p><div class="subsection"><h4 class="subHeading">Komputery stacjonarne z systemem Windows</h4><div class="subsection"><ul><li><p>Microsoft Windows XP Professional z dodatkiem SP3</p></li><li><p>Microsoft Windows XP Home Edition z dodatkiem SP3</p></li><li><p>Microsoft Windows XP Media Center Edition 2004 z dodatkiem SP3</p></li><li><p>Microsoft Windows XP Media Center Edition 2005</p></li><li><p>Microsoft Windows XP Tablet PC Edition z dodatkiem SP3</p></li><li><p>Microsoft Windows XP Embedded z dodatkiem SP3</p></li><li><p>Microsoft Windows XP Professional x64 z dodatkiem SP3</p></li><li><p>Windows Embedded for Point of Service z dodatkiem SP3</p></li><li><p>Microsoft Windows Server 2003, Standard Edition z dodatkiem SP2</p></li><li><p>Microsoft Windows Server 2003, Enterprise Edition z dodatkiem SP2</p></li><li><p>Microsoft Windows Server 2003, Datacenter Edition z dodatkiem SP2</p></li><li><p>Microsoft Windows Server 2003 R2, Standard Edition</p></li><li><p>Microsoft Windows Server 2003 R2, Enterprise Edition</p></li><li><p>Microsoft Windows Server 2003 R2, Datacenter Edition</p></li><li><p>Microsoft Windows Server 2003 x64, Standard Edition</p></li><li><p>Microsoft Windows Server 2003 x64, Enterprise x64 Edition </p></li><li><p>Microsoft Windows Server 2003 x64, Datacenter Edition</p></li><li><p>Microsoft Windows Server 2003 R2 x64, Standard Edition</p></li><li><p>Microsoft Windows Server 2003 R2 x64, Enterprise Edition</p></li><li><p>Microsoft Windows Server 2003 R2 x64, Datacenter Edition </p></li><li><p>Windows Vista Home Basic z dodatkiem SP2</p></li><li><p>Windows Vista Home Premium z dodatkiem SP2</p></li><li><p>Windows Vista Business z dodatkiem SP2</p></li><li><p>Windows Vista Enterprise z dodatkiem SP2</p></li><li><p>Windows Vista Ultimate z dodatkiem SP2</p></li><li><p>Windows Vista Starter Edition z dodatkiem SP2</p></li><li><p>Windows Vista Home Basic x64 z dodatkiem SP2</p></li><li><p>Windows Vista Home Premium x64 z dodatkiem SP2</p></li><li><p>Windows Vista Business x64 z dodatkiem SP2</p></li><li><p>Windows Vista Enterprise x64 z dodatkiem SP2</p></li><li><p>Windows Vista Ultimate x64 z dodatkiem SP2</p></li><li><p>Windows Server 2008 Standard Server z dodatkiem SP2</p></li><li><p>Windows Server 2008 Standard Server z dodatkiem SP2 (bez funkcji Hyper-V) </p></li><li><p>Windows Server 2008 Enterprise z dodatkiem SP2</p></li><li><p>Windows Server 2008 Enterprise z dodatkiem SP2 (bez funkcji Hyper-V)</p></li><li><p>Windows Server 2008 Data Center z dodatkiem SP2</p></li><li><p>Windows Server 2008 Data Center z dodatkiem SP2 (bez funkcji Hyper-V)</p></li><li><p>Windows Server 2008 Web Edition z dodatkiem SP2</p></li><li><p>Windows Server 2008 Standard Server z dodatkiem SP2 x64</p></li><li><p>Windows Server 2008 Standard Server z dodatkiem SP2 x64 (bez funkcji Hyper-V) </p></li><li><p>Windows Server 2008 Enterprise z dodatkiem SP2 x64</p></li><li><p>Windows Server 2008 Enterprise z dodatkiem SP2 x64 (bez funkcji Hyper-V) </p></li><li><p>Windows Server 2008 Data Center z dodatkiem SP2 x64</p></li><li><p>Windows Server 2008 Data Center z dodatkiem SP2 x64 (bez funkcji Hyper-V) </p></li><li><p>Windows Server 2008 Web Edition z dodatkiem SP2 x64</p></li><li><p>Windows 7 Starter</p></li><li><p>Windows 7 Starter x64</p></li><li><p>Windows 7 Home Premium</p></li><li><p>Windows 7 Home Premium x64</p></li><li><p>Windows 7 Professional</p></li><li><p>Windows 7 Professional x64</p></li><li><p>Windows 7 Ultimate</p></li><li><p>Windows 7 Ultimate x64</p></li><li><p>Windows Server 2008 R2 Foundation x64</p></li><li><p>Windows Server 2008 R2 Standard x64</p></li><li><p>Windows Server 2008 R2 Enterprise x64</p></li><li><p>Windows Server 2008 R2 Datacenter x64</p></li><li><p>Windows Web Server 2008 R2 x64</p></li></ul></div><h4 class="subHeading">.NET Framework</h4><div class="subsection"><ul><li><p>.NET Framework 3.5 z dodatkiem SP1 Client Profile</p></li><li><p>.NET Framework 3.5 z dodatkiem SP1</p></li><li><p>.NET Framework 4 — wersja autonomiczna</p></li><li><p>.NET Framework 4 Client Profile</p></li><li><p>.NET Framework 4 Client Profile — wersja autonomiczna</p></li></ul><p>[Powrót do <span sdata="link"><a href="#BKMK_Contents">Spisu treści</a></span>]</p></div></div></div><a name="BKMK_3.0KnownIssues" /><h1 class="heading">3.0 Znane problemy</h1><div id="sectionSection3" class="section" name="collapseableSection" style=""><h3 class="subHeading">3.1</h3><div class="subsection"><p>Macierzyste biblioteki DLL programu SQL Server Compact 4.0 wymagają obecności bibliotek wykonawczych programu Microsoft Visual C++ 2008 (x86 i x64) z dodatkiem Service Pack 1. W przypadku instalacji programu SQL Server Compact 4.0 za pomocą pliku instalatora instalowane są również biblioteki wykonawcze programu Visual C++ 2008 z dodatkiem SP1. Jeśli program SQL Server Compact 4.0 jest wdrażany prywatnie w folderze aplikacji, w celu zapewnienia prawidłowego działania tego programu na komputerze muszą być zainstalowane następujące aplikacje:</p><ol><li><p>Instalacja programu .NET Framework 3.5 z dodatkiem SP1 powoduje zainstalowanie bibliotek wykonawczych programu Visual C++ 2008 z dodatkiem SP1.</p></li><li><p>Biblioteki wykonawcze programu Visual C++ 2008 z dodatkiem SP1 można pobrać i zainstalować z poniższej lokalizacji: <br/><a href="http://go.microsoft.com/fwlink/?LinkId=204989">Visual C++ 2008</a></p></li></ol><p>Należy zauważyć, że instalacja programu .NET Framework 2.0, .NET Framework 3.0 lub .NET Framework 4 nie powoduje zainstalowania bibliotek wykonawczych programu Visual C++ 2008 (x86 i x64) z dodatkiem Service Pack 1.</p></div><h3 class="subHeading">3.2</h3><div class="subsection"><p>W przypadku uruchomienia plików wykonywalnych instalatora programu SQL Server Compact na komputerze, na którym nie zainstalowano programu .Net Framework, instalacja odbywa się bez błędów, jednak niektóre kroki są pomijane. Może to spowodować wystąpienie błędów na takim komputerze. Pomijane są następujące kroki:</p><ul><li><p>Wpis w pliku machine.config programu .NET nie będzie uwzględniał programu SQL Server Compact jako dostawcy danych.</p></li><li><p>Odpowiednie zestawy plików wykonywalnych programu Compact nie są umieszczane w pamięci Global Assembly Cache.</p></li></ul><p>Może się tak również zdarzyć, gdy użytkownik wykona następujące czynności:</p><ul><li><p>Zainstalowanie pliku wykonywalnego programu SQL Server Compact 4.0</p></li><li><p>Zainstalowanie programu .NET Framework 3.5 z dodatkiem SP1 lub .NET Framework 4.0</p></li></ul><p>W celu rozwiązania tego problemu należy ponownie zainstalować/naprawić pliki wykonywalne programu SQL Server Compact po zainstalowaniu programu .NET Framework.</p></div><h3 class="subHeading">3.3</h3><div class="subsection"><p>Program SQL Server Compact 4.0 nie rozpoznaje właściwości <span sdata="langKeyword" value="Encrypt"><span class="keyword">Encrypt</span></span> klasy <span sdata="langKeyword" value="SqlCeConnection"><span class="keyword">SqlCeConnection</span></span>, dlatego nie należy używać tej właściwości do szyfrowania plików bazy danych. </p><div class="alert"><table width="100%" cellspacing="0" cellpadding="0"><tr><th align="left"><b>Uwaga:</b></th></tr><tr><td><p>Właściwość <span sdata="langKeyword" value="Encrypt"><span class="keyword">Encrypt</span></span> została zastąpiona w programie SQL Server Compact w wersji 3.5. Właściwość ta została zachowana w programie SQL Server Compact 4.0 tylko w celu zapewnienia zgodności z poprzednimi wersjami.</p></td></tr></table></div><p>W celu szyfrowania plików bazy danych programu SQL Server Compact 4.0 należy używać właściwości <span sdata="langKeyword" value="Encryption Mode"><span class="keyword">Encryption Mode</span></span> klasy <span sdata="langKeyword" value="SqlCeConnection"><span class="keyword">SqlCeConnection</span></span>. Następujące przykłady ilustrują sposób korzystania z właściwości <span sdata="langKeyword" value="Encryption Mode"><span class="keyword">Encryption Mode</span></span>.</p><ul><li><p>Aby utworzyć nową zaszyfrowaną bazę danych programu SQL Server Compact 4.0:</p><p>C#:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>SqlCeEngine engine = new SqlCeEngine("Data Source=Northwind.sdf;encryption mode=platform default;Password=&lt;enterStrongPasswordHere&gt;;");
+engine.CreateDatabase();</pre></td></tr></table></span></div><p>Visual Basic:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>Dim engine As SqlCeEngine = New SqlCeEngine("Data Source=Northwind.sdf;encryption mode=platform default;Password=&lt;enterStrongPasswordHere&gt;;")
+engine.CreateDatabase()</pre></td></tr></table></span></div></li><li><p>Aby zmienić tryb szyfrowania istniejącej bazy danych programu SQL Server Compact 4.0:</p><p>C#:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>SqlCeEngine engine = new SqlCeEngine("Data Source=Northwind.sdf;Password=&lt;enterStrongPasswordHere&gt;;");
+engine.Compact("Data Source=Northwind.sdf;encryption mode= enginedefault;Password=&lt;enterStrongPasswordHere&gt;;");</pre></td></tr></table></span></div><p>Visual Basic:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>Dim engine As SqlCeEngine = New SqlCeEngine("Data Source=Northwind.sdf;Password=&lt;enterStrongPasswordHere&gt;;") 
+engine.Compact("Data Source=Northwind.sdf;encryption mode= engine default;Password=&lt;enterStrongPasswordHere&gt;;")</pre></td></tr></table></span></div></li><li><p>Aby zaszyfrować niezaszyfrowaną bazę danych programu SQL Server Compact 4.0:
+</p><p>C#:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>SqlCeEngine engine = new SqlCeEngine("Data Source=Northwind.sdf");
+engine.Compact("Data Source=Northwind.sdf;encryption mode=platform default;Password=&lt;enterStrongPasswordHere&gt;;");</pre></td></tr></table></span></div><p>Visual Basic:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>Dim engine As SqlCeEngine = New SqlCeEngine("Data Source=Northwind.sdf;") 
+engine.Compact("Data Source=Northwind.sdf;encryption mode=platform default;Password=&lt;enterStrongPasswordHere&gt;;"</pre></td></tr></table></span></div></li></ul></div><h3 class="subHeading">3.4</h3><div class="subsection"><p>Należy jawnie określić typy danych programu SQL Server Compact 4.0 dla parametrów takich jak <span class="parameter" sdata="paramReference">SqlDbType</span> i <span class="parameter" sdata="paramReference">DbType</span>.
+</p><p>Jeśli typy danych dla parametrów takich jak <span class="parameter" sdata="paramReference">SqlDbType</span> i <span class="parameter" sdata="paramReference">DbType</span> nie zostaną jawnie określone, zwracany jest wyjątek. W celu rozwiązania tego problemu należy jawnie określić typ danych dla parametrów takich jak <span class="parameter" sdata="paramReference">SqlDbType</span> i <span class="parameter" sdata="paramReference">DbType</span>. Ma to decydujące znaczenie w przypadku typów danych BLOB (obraz i ntext). Przykład kodu znajduje się poniżej:</p><p>C#:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>SqlCeEngine engine = new SqlCeEngine(connString);
+engine.CreateDatabase();
+engine.Dispose();
+
+SqlCeConnection conn = new SqlCeConnection(connString);
+conn.Open();
+
+SqlCeCommand cmd = conn.CreateCommand();
+cmd.CommandText = "CREATE TABLE BlobTable(name nvarchar(128), blob ntext);";
+cmd.ExecuteNonQuery();
+
+cmd.CommandText = "INSERT INTO BlobTable(name, blob) VALUES (@name, @blob);";
+SqlCeParameter paramName = cmd.Parameters.Add("name", SqlDbType.NVarChar, 128);
+SqlCeParameter paramBlob = cmd.Parameters.Add("blob", SqlDbType.NText);
+paramName.Value = "Name1";
+paramBlob.Value = "Name1".PadLeft(4001);
+
+cmd.ExecuteNonQuery();</pre></td></tr></table></span></div><p>Visual Basic:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th></tr><tr><td colspan="2"><pre>Dim engine As SqlCeEngine = New SqlCeEngine(connString)
+engine.CreateDatabase()
+engine.Dispose()
+
+Dim conn As SqlCeConnection = New SqlCeConnection(connString)
+conn.Open()
+
+Dim cmd As SqlCeCommand = conn.CreateCommand()
+cmd.CommandText = "CREATE TABLE BlobTable(name nvarchar(128), blob ntext);"
+cmd.ExecuteNonQuery() 
+
+cmd.CommandText = "INSERT INTO BlobTable(name, blob) VALUES (@name, @blob);"
+Dim paramName As SqlCeParameter
+Dim paramBlob As SqlCeParameter
+paramName = cmd.Parameters.Add("name", SqlDbType.NVarChar, 128)
+paramBlob = cmd.Parameters.Add("blob", SqlDbType.NText)
+paramName.Value = "Name1"
+paramBlob.Value = "Name1".PadLeft(4001)
+
+cmd.ExecuteNonQuery()</pre></td></tr></table></span></div></div><h3 class="subHeading">3.5</h3><div class="subsection"><p>To wydanie programu SQL Server Compact 4.0 nie obsługuje synchronizacji danych z programem SQL Server za pomocą technologii takich jak Microsoft Sync Framework, replikacja scalająca czy zdalny dostęp do danych (RDA).</p></div><h3 class="subHeading">3.6</h3><div class="subsection"><p>Generowanie modelu Entity Data Model dla programu SQL Server Compact nie powiedzie się, jeśli w schemacie programu wystąpią zduplikowane nazwy ograniczeń.</p><p>W programie SQL Server Compact nazwy ograniczeń są unikatowe w ramach tabeli, dzięki czemu mogą one być zduplikowane w bazie danych. Inaczej jest w przypadku programu SQL Server, gdzie nazwy ograniczeń są unikatowe w ramach bazy danych. Jeśli w schemacie programu SQL Server Compact występują zduplikowane nazwy ograniczeń integralności referencyjnej (relacja klucz podstawowy — klucz obcy), generowanie modelu Entity Data Model za pomocą kreatora tego modelu w programie ADO.NET Entity Framework nie powiedzie się. Problem można obejść, zmieniając nazwę zduplikowanej nazwy ograniczenia na nazwę unikatową w całej bazie danych, na przykład przez dodanie nazwy tabeli do nazwy ograniczenia.</p><p>[Powrót do <span sdata="link"><a href="#BKMK_Contents">Spisu treści</a></span>]</p></div></div><a name="BKMK_4.0AdditionalInformation" /><h1 class="heading">4.0 Dodatkowe informacje</h1><div id="sectionSection4" class="section" name="collapseableSection" style=""><p>W tej sekcji opisano, jak uzyskać pomoc i przekazać opinię na temat programu SQL Server Compact.</p><a name="BKMK_4.1GettingSQLServerCompactAssistance" /><h3 class="subHeading">4.1 Uzyskiwanie pomocy dotyczącej programu SQL Server Compact</h3><div class="subsection"><p>Więcej informacji można uzyskać na <a href="http://go.microsoft.com/fwlink/?LinkId=205142">Forum użytkowników programu SQL Server Compact</a> oraz na <a href="http://go.microsoft.com/fwlink/?LinkId=205143">Blogu zespołu programu SQL Server Compact</a>. </p></div><a name="BKMK_4.2ProvidingFeedbackonSQLServerCompact" /><h3 class="subHeading">4.2 Przekazywanie opinii na temat programu SQL Server Compact</h3><div class="subsection"><p>Aby zgłosić sugestie na temat programu SQL Server Compact lub raporty o jego usterkach:</p><ul><li><p>Przekaż sugestie i raporty o usterkach dotyczące funkcji lub interfejsu użytkownika programu SQL Server Compact za pośrednictwem <a href="http://go.microsoft.com/fwlink/?LinkId=205144">witryny MSDN do gromadzenia opinii o produktach</a>.</p></li><li><p>Prześlij sugestie lub informacje o nieścisłościach w dokumentacji, korzystając z funkcji opinii w witrynie SQL Server Compact — książki online.</p></li></ul><p>[Powrót do <span sdata="link"><a href="#BKMK_Contents">Spisu treści</a></span>]</p><p>© 2011 Microsoft Corporation. Wszelkie prawa zastrzeżone. </p></div></div></div><div id="footer" /></div></body></html>

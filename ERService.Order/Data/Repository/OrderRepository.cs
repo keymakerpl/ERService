@@ -4,6 +4,7 @@ using ERService.MSSQLDataAccess;
 using System.Data.Entity;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ERService.OrderModule.Repository
 {
@@ -17,6 +18,7 @@ namespace ERService.OrderModule.Repository
         {
             return await Context.Set<Order>()
                                 .Include(c => c.Customer)
+                                .Include(c => c.Customer.CustomerAddresses)
                                 .Include(h => h.Hardwares)
                                 .Include(a => a.Attachments)
                                 .Include(os => os.OrderStatus)

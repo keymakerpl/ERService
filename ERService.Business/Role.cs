@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -32,8 +33,6 @@ namespace ERService.Business
         public ICollection<Acl> ACLs { get; set; }
 
         public ICollection<User> Users { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

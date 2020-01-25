@@ -8,7 +8,6 @@ using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ERService.Infrastructure.Base
@@ -31,6 +30,9 @@ namespace ERService.Infrastructure.Base
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             CloseCommand = new DelegateCommand(OnCloseDetailViewExecute); //TODO: Czy możemy zrobić refactor cancel i close do jednego przycisku z enumem?
             CancelCommand = new DelegateCommand(OnCancelEditExecute);
+
+            _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid, true);
+            _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();            
         }
 
         public bool AllowLoadAsync { get; set; } = true; //TODO: czy da się z tego zrezygnować?
@@ -63,6 +65,12 @@ namespace ERService.Infrastructure.Base
             protected set
             {
                 _title = value;
+                _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Publish(new AfterDetailOpenedEventArgs
+                {
+                    DisplayableName = value, Id = ID,
+                    ViewModelName = this.ToString()
+                });
+
                 RaisePropertyChanged();
             }
         }
@@ -90,7 +98,7 @@ namespace ERService.Infrastructure.Base
         #region Events and Events Handlers
         protected virtual void OnCancelEditExecute()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Not implemented");
         }
 
         protected virtual void OnCloseDetailViewExecute()
@@ -104,7 +112,7 @@ namespace ERService.Infrastructure.Base
 
         protected virtual bool OnSaveCanExecute()
         {
-            return false;
+            return HasChanges && !IsReadOnly;
         }
 
         protected virtual void OnSaveExecute()
@@ -181,7 +189,7 @@ namespace ERService.Infrastructure.Base
         public virtual async void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             var dialogResult = true;
-            if (HasChanges)
+            if (!IsReadOnly && HasChanges)
             {
                 dialogResult = await _messageDialogService.ShowConfirmationMessageAsync(this, "Nie zapisane dane...", "Nie zapisano zmienionych danych, kontynuować?")
                     == DialogResult.OK;

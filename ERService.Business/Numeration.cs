@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ERService.Business
 {
-    public class Numeration
+    public class Numeration 
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -18,8 +15,6 @@ namespace ERService.Business
         public string Name { get; set; }
 
         public string Pattern { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

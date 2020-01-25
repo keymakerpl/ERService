@@ -8,9 +8,9 @@ namespace ERService.Infrastructure.Wrapper
     /// Klasa opakowująca model. Wywołuje walidację. SetProperty ustawia i informuje subskrybentów o zmianie.
     /// </summary>
     /// <typeparam name="T">Model który chcemy opakować</typeparam>
-    public class ModelWrapper<T> : NotifyDataErrorInfoBase
+    public class ModelWrapper<T> : NotifyDataErrorInfoBase, IModelWrapper<T>
     {
-        public T Model;
+        public T Model { get; set; }
 
         public ModelWrapper(T model)
         {

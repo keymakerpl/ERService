@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class CustomerAddress
+    public class CustomerAddress 
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -21,8 +22,6 @@ namespace ERService.Business
         public string Postcode { get; set; }
 
         public Customer Customer { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ERService.Business
 {
-    public class HwCustomItem
+    public class HwCustomItem 
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -24,8 +21,6 @@ namespace ERService.Business
         public Guid HardwareId { get; set; }
 
         public Hardware Hardware { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

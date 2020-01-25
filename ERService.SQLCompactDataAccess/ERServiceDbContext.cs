@@ -1,22 +1,44 @@
-﻿using ERService.Business;
-using System;
+﻿using CommonServiceLocator;
+using ERService.Business;
+using ERService.Infrastructure.Base.Common;
+using ERService.MSSQLDataAccess.Migrations;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace ERService.MSSQLDataAccess
 {
-    public class ERServiceDbContext : DbContext
+    [DbConfigurationType(typeof(ERServiceDbConfiguration))]
+    public class ERServiceDbContext : DbContext, IERServiceDbContext
     {
-        //TODO: Make db connection setting in entry login window
-        public ERServiceDbContext() : base("ERServiceDb")
+        private static IConfig _config
         {
-
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
+                }
+                catch (System.Exception)
+                {
+#if DEBUG
+                    return new Config();
+#endif
+                }
+            }
         }
 
-        /// <summary>
-        /// Lista
-        /// </summary>
+        public ERServiceDbContext() : base(ConnectionStringProvider.Current)
+        {
+            Database.SetInitializer(new ERSCreateDatabaseIfNotExists());            
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
+
+            if (_config.DatabaseProvider == DatabaseProviders.MySQLServer && !Database.Exists())
+            {
+                //Database.Initialize(false);
+            }
+        }
+        
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<CustomerAddress> CustomerAddresses { get; set; }
@@ -35,7 +57,7 @@ namespace ERService.MSSQLDataAccess
 
         public DbSet<OrderType> OrderTypes { get; set; }
 
-        public DbSet<Settings> Settings { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         public DbSet<Numeration> Numeration { get; set; }
 
@@ -46,6 +68,8 @@ namespace ERService.MSSQLDataAccess
         public DbSet<Acl> ACLs { get; set; }
 
         public DbSet<AclVerb> AclVerbs { get; set; }
+
+        public DbSet<PrintTemplate> PrintTemplates { get; set; }
 
         /// <summary>
         /// Tutaj ustawiamy jak ma być tworzona baza
@@ -58,10 +82,8 @@ namespace ERService.MSSQLDataAccess
 
             //Fluent API - zakomentowane bo użyjemy atrybutów, a następnie update-migration
             //modelBuilder.Configurations.Add(new CustomerConfiguration());
-
         }
     }
-
 
     /// <summary>
     /// Fluent Api cfg example

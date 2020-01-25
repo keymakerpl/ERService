@@ -8,7 +8,32 @@
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Margin="10 10 10 10">
-        <Label Content="{Binding Content}" Foreground="Black"/>
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource MetroTabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem" >
+                        <TextBlock Text="{Binding DataContext.Title}" Padding="10" Margin="1 0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Gainsboro"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <TabControl prism:RegionManager.RegionName="GeneralSettingsTabControlRegion" />
+
     </Grid>
 </UserControl>

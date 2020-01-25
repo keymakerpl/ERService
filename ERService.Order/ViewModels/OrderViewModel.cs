@@ -16,6 +16,11 @@ using System.Linq;
 using ERService.OrderModule.OrderNumeration;
 using ERService.Infrastructure.Dialogs;
 using ERService.RBAC;
+using ERService.TemplateEditor.Data.Repository;
+using ERService.CustomerModule.Wrapper;
+using ERService.HardwareModule;
+using ERService.Infrastructure.Interfaces;
+using ERService.Infrastructure.Helpers;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -27,42 +32,71 @@ namespace ERService.OrderModule.ViewModels
         private Hardware _hardware;
         private OrderWrapper _order;
         private Blob _selectedAttachment;
-        private OrderStatus _selectedOrderStatus;
         private OrderType _selectedOrderType;
+        private OrderStatus _selectedOrderStatus;
         private IRegionManager _regionManager;
-        private IBlobRepository _blobRepository;
         private IOrderRepository _orderRepository;
         private readonly IRBACManager _rBACManager;
         private IOrderTypeRepository _typeRepository;
         private IOrderStatusRepository _statusRepository;
-        private IRegionNavigationService _navigationService;
         private INumerationRepository _numerationRepository;
+        private IRegionNavigationService _navigationService;
+        private readonly IPrintTemplateRepository _templateRepository;
+        private readonly ISettingsManager<Setting> _settingsManager;
         private bool _wizardMode;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
-            IOrderStatusRepository statusRepository, IBlobRepository blobRepository, IEventAggregator eventAggregator,
-            INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager) : base(eventAggregator, messageDialogService)
+            IOrderStatusRepository statusRepository, IEventAggregator eventAggregator,
+            INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
+            IPrintTemplateRepository templateRepository, ISettingsManager<Setting> settingsManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
             _statusRepository = statusRepository;
-            _blobRepository = blobRepository;
             _numerationRepository = numerationRepository;
             _rBACManager = rBACManager;
+            _templateRepository = templateRepository;
+            _settingsManager = settingsManager;
             _regionManager = regionManager;
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
             Attachments = new ObservableCollection<Blob>();
+            PrintTemplates = new ObservableCollection<PrintTemplate>();
 
             AddAttachmentCommand = new DelegateCommand(OnAddAttachmentExecute);
             RemoveAttachmentCommand = new DelegateCommand(OnRemoveAttachmentExecute, OnRemoveAttachmentCanExecute);
             GoBackCommand = new DelegateCommand(OnGoBackExecute);
+            PrintCommand = new DelegateCommand<object>(OnPrintExecute);
+        }
+
+        private async void OnPrintExecute(object parameter)
+        {
+            var template = parameter as PrintTemplate;
+            if (template != null)
+            {
+                var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", template.Id);
+                parameters.Add("IsReadOnly", true);
+                parameters.Add("IsToolbarVisible", false);
+                parameters.Add("ModelWrappers", new object[] 
+                { 
+                    new CustomerWrapper(Customer), 
+                    new HardwareWrapper(Hardware), 
+                    Order,
+                    companyConfig,
+                    new AddressWrapper(Customer.CustomerAddresses.FirstOrDefault())
+                });
+
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
+            }
         }
 
         public DelegateCommand AddAttachmentCommand { get; private set; }
 
         public ObservableCollection<Blob> Attachments { get; private set; }
+        public ObservableCollection<PrintTemplate> PrintTemplates { get; private set; }
 
         public string Cost { get => _cost; set { SetProperty(ref _cost, value); } }
 
@@ -71,6 +105,7 @@ namespace ERService.OrderModule.ViewModels
         public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
 
         public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand<object> PrintCommand { get; }
 
         public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
 
@@ -110,19 +145,6 @@ namespace ERService.OrderModule.ViewModels
 
         public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
 
-        //TODO: Move to Infrastructure helpers
-        private byte[] GetFileBinary(string fileName)
-        {
-            byte[] fileBytes;
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                fileBytes = new byte[fs.Length];
-                fs.Read(fileBytes, 0, Convert.ToInt32(fs.Length));
-            }
-
-            return fileBytes;
-        }
-
         private void OnAddAttachmentExecute()
         {
             //TODO: Make open file dialog service
@@ -130,11 +152,12 @@ namespace ERService.OrderModule.ViewModels
             var attachment = new Blob();
             if (openFileDialog.ShowDialog() == true)
             {
-                var fileBinary = GetFileBinary(openFileDialog.FileName);
+                var fileBinary = FileUtils.GetFileBinary(openFileDialog.FileName);
                 attachment.Data = fileBinary;
                 attachment.FileName = openFileDialog.SafeFileName;
                 attachment.Size = fileBinary.Length;
-                //attachment.Order = Order.Model;
+                attachment.Description = $"File attachment for order: {Order.Number}";
+                attachment.Checksum = Cryptography.CalculateMD5(openFileDialog.FileName);
 
                 Attachments.Add(attachment);
                 Order.Model.Attachments.Add(attachment);
@@ -235,6 +258,17 @@ namespace ERService.OrderModule.ViewModels
             InitializeCustomer();
             InitializeComboBoxes();
             InitializeAttachments();
+            InitializePrintTemplates();
+        }
+
+        private async void InitializePrintTemplates()
+        {
+            PrintTemplates.Clear();
+            var templates = await _templateRepository.GetAllAsync();
+            foreach (var template in templates)
+            {
+                PrintTemplates.Add(template);
+            }
         }
 
         private void InitializeCustomer()
@@ -267,7 +301,7 @@ namespace ERService.OrderModule.ViewModels
             });
         }
 
-        //TODO: Refactor?
+        //TODO: Refactor? Może zrobić tu fabrykę w bazowym?
         private async Task<Order> GetNewDetail()
         {
             var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
@@ -357,14 +391,14 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        private void SetTitle()
-        {
-            Title = $"{Order.Number}";
-        }
-
         public override Task LoadAsync()
         {
             throw new NotImplementedException();
+        }
+
+        private void SetTitle()
+        {
+            Title = $"{Order.Number}";
         }
 
         #endregion Overrides

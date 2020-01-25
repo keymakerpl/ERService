@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class AclVerb
+    public class AclVerb 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,8 +20,6 @@ namespace ERService.Business
         
         [MaxLength(50)]
         public string Description { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

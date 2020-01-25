@@ -7,6 +7,8 @@ namespace ERService.RBAC
     //TODO: Podzielić interfejs na mniejsze?
     public interface IRBACManager
     {
+        void Load();
+
         void AddAclToRole(AclVerb aclVerb);
 
         void AddRole(Role role);

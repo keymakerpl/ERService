@@ -14,6 +14,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repository\ISettingsRepository.cs" />
+    <Compile Include="Data\Repository\SettingsRepository.cs" />
+    <Compile Include="Manager\Config\CompanyInfoConfig.cs" />
+    <Compile Include="Manager\Config\Config.cs" />
+    <Compile Include="Manager\Config\ConfigFactory.cs" />
+    <Compile Include="Manager\SettingsManager.cs" />
     <Compile Include="SettingsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -63,10 +70,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\CompanySettingsViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\HardwareTypesViewModel.cs" />
+    <Compile Include="ViewModels\LicenseSettingsViewModel.cs" />
     <Compile Include="ViewModels\NumerationSettingsViewModel.cs" />
+    <Compile Include="ViewModels\PrintTemplateSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
+    <Compile Include="Views\CompanySettingsView.xaml.cs">
+      <DependentUpon>CompanySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LicenseSettingsView.xaml.cs">
+      <DependentUpon>LicenseSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintTemplateSettingsView.xaml.cs">
+      <DependentUpon>PrintTemplateSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserDetailView.xaml.cs">
       <DependentUpon>UserDetailView.xaml</DependentUpon>
     </Compile>
@@ -93,6 +112,7 @@
     <Compile Include="Views\StatusConfigView.xaml.cs">
       <DependentUpon>StatusConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\SettingWrapper.cs" />
     <Compile Include="Wrapper\UserWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -125,8 +145,24 @@
       <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
       <Name>ERService.RBAC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
+      <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>
+      <Name>ERService.MSSQLDataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.TemplateEditor\ERService.TemplateEditor.csproj">
+      <Project>{D5879452-68C7-4990-8776-0861594528C4}</Project>
+      <Name>ERService.TemplateEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HTMLEditor\SmithHtmlEditor\ERService.HtmlEditor.csproj">
+      <Project>{84badda1-ab3a-4064-b87e-178d7446901d}</Project>
+      <Name>ERService.HtmlEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\CompanySettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GeneralSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -135,7 +171,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\LicenseSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NumerationSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintTemplateSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -157,11 +201,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1367</Version>
+    <PackageReference Include="MahApps.Metro.IconPacks">
+      <Version>3.0.0-alpha0206</Version>
     </PackageReference>
-    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
+    <PackageReference Include="Prism.Core">
+      <Version>7.2.0.1422</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1422" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
