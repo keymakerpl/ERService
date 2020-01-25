@@ -178,7 +178,7 @@ namespace ERService.ViewModels
             }
 
             var passwordBox = parameter as PasswordBox;
-            if (passwordBox != null)
+            if (passwordBox != null && _rBACManager != null)
             {
                 if (!_rBACManager.Login(Login, passwordBox.Password))
                 {

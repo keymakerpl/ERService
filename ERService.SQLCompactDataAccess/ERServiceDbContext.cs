@@ -1,4 +1,6 @@
-﻿using ERService.Business;
+﻿using CommonServiceLocator;
+using ERService.Business;
+using ERService.Infrastructure.Base.Common;
 using ERService.MSSQLDataAccess.Migrations;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
@@ -8,12 +10,33 @@ namespace ERService.MSSQLDataAccess
 {
     [DbConfigurationType(typeof(ERServiceDbConfiguration))]
     public class ERServiceDbContext : DbContext, IERServiceDbContext
-    {     
+    {
+        private static IConfig _config
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
+                }
+                catch (System.Exception)
+                {
+#if DEBUG
+                    return new Config();
+#endif
+                }
+            }
+        }
+
         public ERServiceDbContext() : base(ConnectionStringProvider.Current)
         {
-            Database.SetInitializer(new ERSCreateDatabaseIfNotExists());
-            Database.Initialize(false);
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
+            Database.SetInitializer(new ERSCreateDatabaseIfNotExists());            
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
+
+            if (_config.DatabaseProvider == DatabaseProviders.MySQLServer && !Database.Exists())
+            {
+                //Database.Initialize(false);
+            }
         }
         
         public DbSet<Customer> Customers { get; set; }

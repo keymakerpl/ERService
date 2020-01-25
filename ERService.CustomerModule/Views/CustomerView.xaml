@@ -249,7 +249,8 @@
                         Margin="10,0,10,10"
                         AcceptsReturn="True"
                         MinLines="5"
-                        Text="{Binding Customer.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        Text="{Binding Customer.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                        TextWrapping="Wrap" />
 
                     <Label
                         Grid.Column="4"

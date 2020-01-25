@@ -54,7 +54,7 @@ namespace ERService.Business
         [MaxLength(20)]
         public string PhoneNumber2 { get; set; }
 
-        [StringLength(50)]
+        [StringLength(500)]
         public string Description { get; set; }
 
         #region Relacje

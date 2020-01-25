@@ -34,7 +34,7 @@ namespace ERService.MSSQLDataAccess
             {
                 ms.Sql = ms.Sql.Replace("dbo.", "").Replace("default ''", String.Empty).Replace("newsequentialid()", "(uuid())");
 #if DEBUG
-                Console.WriteLine($"[DEBUG] Generated statement AFTER replace: {ms.Sql}");
+                Console.WriteLine($"[DEBUG] Generated statement: {ms.Sql}");
 #endif
             }
 

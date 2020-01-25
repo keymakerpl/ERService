@@ -6,7 +6,23 @@ namespace ERService.MSSQLDataAccess
 {
     public static class ConnectionStringProvider
     {
-        private static IConfig _config { get; } = ServiceLocator.Current.GetInstance<IConfig>();
+        private static IConfig _config
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<IConfig>();
+                }
+                catch (System.Exception)
+                {
+#if DEBUG
+                    //TODO: Log
+                    return new Config();
+#endif
+                }
+            }
+        }
 
         public static string Current
         {

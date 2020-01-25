@@ -18,9 +18,9 @@ namespace ERService.RBAC
         private IEventAggregator _eventAggregator;
         private IPasswordHasher _passwordHasher;
         private IRoleRepository _roleRepository;
-        private IEnumerable<Role> _roles;
+        private List<Role> _roles;
+        private List<User> _users;
         private IUserRepository _userRepository;
-        private IEnumerable<User> _users;
         private User _loggedUser;
 
         public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, IAclRepository aclRepository,
@@ -34,6 +34,9 @@ namespace ERService.RBAC
             _eventAggregator = eventAggregator;
 
             _aclsIDsToDelete = new List<Guid>();
+
+            _users = new List<User>();
+            _roles = new List<Role>();
         }
 
         public void Load()
@@ -187,12 +190,20 @@ namespace ERService.RBAC
 
         private void LoadRoles()
         {
-            _roles = _roleRepository.GetAll();
+            var roles = _roleRepository.GetAll();
+            if (roles != null)
+            {
+                _roles.AddRange(roles);
+            }
         }
 
         private void LoadUsers()
         {
-            _users = _userRepository.GetAll();
+            var users = _userRepository.GetAll();
+            if (users != null)
+            {
+                _users.AddRange(users);
+            }
         }        
 
         public User LoggedUser

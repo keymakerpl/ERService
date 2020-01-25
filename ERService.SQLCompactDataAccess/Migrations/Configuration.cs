@@ -16,6 +16,7 @@ namespace ERService.MSSQLDataAccess.Migrations
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
             {
                 SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());
+                AutomaticMigrationDataLossAllowed = true;
             }
         }
 
@@ -43,21 +44,23 @@ namespace ERService.MSSQLDataAccess.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
+#if DEBUG
             context.Database.Log = Console.Write;
+#endif
 
             context.AclVerbs.AddOrUpdate(a => a.Name,
-                new AclVerb() { Id = new Guid("{60FF3DB2-DBB4-4B4D-90D0-DFCE413E1935}"), Name = "Dostêp do konfiguracji aplikacji", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{D060FFBD-4188-443E-862D-8A637CC395D3}"), Name = "Dostêp do konfiguracji wydruków", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dostêp do konfiguracji numeracji", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Zarz¹dzanie u¿ytkownikami", DefaultValue = 0 },
+                new AclVerb() { Name = "Dostêp do konfiguracji aplikacji", DefaultValue = 0 },
+                new AclVerb() { Name = "Dostêp do konfiguracji wydruków", DefaultValue = 0 },
+                new AclVerb() { Name = "Dostêp do konfiguracji numeracji", DefaultValue = 0 },
+                new AclVerb() { Name = "Zarz¹dzanie u¿ytkownikami", DefaultValue = 0 },
 
-                new AclVerb() { Id = new Guid("{7B129DC6-B78B-4521-AAC9-1282912279E9}"), Name = "Dodawanie nowych napraw", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie napraw", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie napraw", DefaultValue = 0 },
+                new AclVerb() { Name = "Dodawanie nowych napraw", DefaultValue = 0 },
+                new AclVerb() { Name = "Usuwanie napraw", DefaultValue = 0 },
+                new AclVerb() { Name = "Edytowanie napraw", DefaultValue = 0 },
 
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dodawanie nowych klientów", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie klientów", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie klientów", DefaultValue = 0 }
+                new AclVerb() { Name = "Dodawanie nowych klientów", DefaultValue = 0 },
+                new AclVerb() { Name = "Usuwanie klientów", DefaultValue = 0 },
+                new AclVerb() { Name = "Edytowanie klientów", DefaultValue = 0 }
                 );
 
             context.SaveChanges(); // Zapisz verby
@@ -151,6 +154,32 @@ namespace ERService.MSSQLDataAccess.Migrations
                     ValueType = typeof(string).FullName,
                     Description = "NIP"
                 }
+                );
+
+            context.HardwareTypes.AddOrUpdate(ht => ht.Name,
+                new HardwareType() { Name = "Laptop" },
+                new HardwareType() { Name = "Komputer PC" },
+                new HardwareType() { Name = "Telefon" },
+                new HardwareType() { Name = "Drukarka" },
+                new HardwareType() { Name = "Konsola" },
+                new HardwareType() { Name = "Nawigacja" },
+                new HardwareType() { Name = "Aparat" },
+                new HardwareType() { Name = "Monitor" },
+                new HardwareType() { Name = "Telewizor" }
+                );
+
+            context.OrderStatuses.AddOrUpdate(os => os.Name,
+                new OrderStatus() { Name = "Nowa naprawa" },
+                new OrderStatus() { Name = "W trakcie naprawy" },
+                new OrderStatus() { Name = "Oczekuje na czêœci" },
+                new OrderStatus() { Name = "Naprawa zakoñczona" },
+                new OrderStatus() { Name = "Naprawa niewykonana" }
+                );
+
+            context.OrderTypes.AddOrUpdate(ot => ot.Name,
+                new OrderType() { Name = "Gwarancyjna" },
+                new OrderType() { Name = "Niegwarancyjna" },
+                new OrderType() { Name = "Pogwarancyjna" }
                 );
 
             context.SaveChanges();
