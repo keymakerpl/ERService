@@ -1,4 +1,5 @@
-﻿using ERService.Infrastructure.Constants;
+﻿using ERService.Business;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Helpers;
 using ERService.Infrastructure.Interfaces;
 using ERService.Settings.Data.Repository;
@@ -20,7 +21,7 @@ namespace ERService.Settings
         {
             containerRegistry.Register<IPrintTemplateRepository, PrintTemplateRepository>();
             containerRegistry.Register<ISettingsRepository, SettingsRepository>();
-            containerRegistry.Register<ISettingsManager, SettingsManager>();
+            containerRegistry.Register<ISettingsManager<Setting>, SettingsManager>();
             containerRegistry.Register<IImagesCollection, ImagesCollection>();
 
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);

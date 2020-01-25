@@ -3,6 +3,6 @@
     public static class PublicKeys
     {
         //TODO: move to db as config
-        public const string PublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEje+rAOrXjSfFTNRn09KWiEcMi+Qvx6Ygq1SxA28ZrNnEGvcR7UHybPveR17cl7dCYKbTinKZBmtKNxyw7Mz8Rg==";
+        public const string PublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzCj/c82g+O5rvDMGvwfxOvYrQraV+hVFGYajh5E+zeWyNE/pTf1r/7raoRlBe61UT89BdhEEbl6/MiyhSHQvTA==";
     }
 }

@@ -42,13 +42,13 @@ namespace ERService.OrderModule.ViewModels
         private INumerationRepository _numerationRepository;
         private IRegionNavigationService _navigationService;
         private readonly IPrintTemplateRepository _templateRepository;
-        private readonly ISettingsManager _settingsManager;
+        private readonly ISettingsManager<Setting> _settingsManager;
         private bool _wizardMode;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
-            IPrintTemplateRepository templateRepository, ISettingsManager settingsManager) : base(eventAggregator, messageDialogService)
+            IPrintTemplateRepository templateRepository, ISettingsManager<Setting> settingsManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;

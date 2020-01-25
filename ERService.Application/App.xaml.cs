@@ -32,6 +32,8 @@ using System.Globalization;
 using System.Windows.Markup;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Base.Common;
+using System.IO;
+using System.Text;
 
 namespace ERService.Application
 {
@@ -40,16 +42,12 @@ namespace ERService.Application
         protected override Window CreateShell()
         {            
             return Container.Resolve<Shell>();
-        }
-
-        protected override void OnInitialized()
-        {
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
-            base.OnInitialized();
-        }
+        }        
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            //DispatcherUnhandledException += App_DispatcherUnhandledException;
+
             base.OnStartup(e);
 
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("pl-PL");

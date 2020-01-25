@@ -1,63 +1,32 @@
-namespace ERService.MSSQLDataAccess.Migrations
+Ôªøusing ERService.Business;
+using System;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
+
+namespace ERService.MSSQLDataAccess
 {
-    using CommonServiceLocator;
-    using ERService.Business;
-    using ERService.Infrastructure.Base.Common;
-    using System;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<ERServiceDbContext>
+    public class ERSCreateDatabaseIfNotExists : CreateDatabaseIfNotExists<ERServiceDbContext>
     {
-        public Configuration()
-        {
-            AutomaticMigrationsEnabled = true;
-            
-            if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
-            {
-                SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());
-            }
-        }
-
-        private static IConfig _config
-        {
-            get
-            {
-                try
-                {
-                    return ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
-                }
-                catch (System.Exception)
-                {
-#if DEBUG
-                    return new Config();
-#endif
-                }
-            }
-        }
-
         protected override void Seed(ERServiceDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
-            //  to avoid creating duplicate seed data.
-
+#if DEBUG
             context.Database.Log = Console.Write;
+#endif
 
             context.AclVerbs.AddOrUpdate(a => a.Name,
-                new AclVerb() { Id = new Guid("{60FF3DB2-DBB4-4B4D-90D0-DFCE413E1935}"), Name = "DostÍp do konfiguracji aplikacji", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{D060FFBD-4188-443E-862D-8A637CC395D3}"), Name = "DostÍp do konfiguracji wydrukÛw", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "DostÍp do konfiguracji numeracji", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Zarzπdzanie uøytkownikami", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{60FF3DB2-DBB4-4B4D-90D0-DFCE413E1935}"), Name = "Dostƒôp do konfiguracji aplikacji", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{D060FFBD-4188-443E-862D-8A637CC395D3}"), Name = "Dostƒôp do konfiguracji wydruk√≥w", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dostƒôp do konfiguracji numeracji", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "ZarzƒÖdzanie u≈ºytkownikami", DefaultValue = 0 },
 
                 new AclVerb() { Id = new Guid("{7B129DC6-B78B-4521-AAC9-1282912279E9}"), Name = "Dodawanie nowych napraw", DefaultValue = 0 },
                 new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie napraw", DefaultValue = 0 },
                 new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie napraw", DefaultValue = 0 },
 
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dodawanie nowych klientÛw", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie klientÛw", DefaultValue = 0 },
-                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie klientÛw", DefaultValue = 0 }
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Dodawanie nowych klient√≥w", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Usuwanie klient√≥w", DefaultValue = 0 },
+                new AclVerb() { Id = new Guid("{C463591E-C323-4DC8-8A2D-F79EEF7D1624}"), Name = "Edytowanie klient√≥w", DefaultValue = 0 }
                 );
 
             context.SaveChanges(); // Zapisz verby
@@ -100,7 +69,7 @@ namespace ERService.MSSQLDataAccess.Migrations
                 }
                 );
 
-            context.SaveChanges(); // Dodaj usera i przypisz rolÍ
+            context.SaveChanges(); // Dodaj usera i przypisz rolƒô
 
             context.Settings.AddOrUpdate(s => s.Key,
                 new Setting()
@@ -117,7 +86,7 @@ namespace ERService.MSSQLDataAccess.Migrations
                     Category = "CompanyInfo",
                     Value = "",
                     ValueType = typeof(string).FullName,
-                    Description = "Ulica przy jakiej prowadzona jest dzia≥alnoúÊ"
+                    Description = "Ulica przy jakiej prowadzona jest dzia≈Çalno≈õƒá"
                 },
                 new Setting()
                 {
@@ -133,7 +102,7 @@ namespace ERService.MSSQLDataAccess.Migrations
                     Category = "CompanyInfo",
                     Value = "",
                     ValueType = typeof(string).FullName,
-                    Description = "Miasto prowadzenia dzia≥alnoúci"
+                    Description = "Miasto prowadzenia dzia≈Çalno≈õci"
                 },
                 new Setting()
                 {

@@ -46,10 +46,10 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,10,0,5"
-            Background="Gainsboro"
+            Background="DarkOrange"
             LastChildFill="True">
             <DockPanel.Effect>
-                <DropShadowEffect ShadowDepth="2" Direction="200" />
+                <DropShadowEffect Direction="200" ShadowDepth="2" />
             </DockPanel.Effect>
 
             <Grid>
@@ -62,9 +62,9 @@
             <TextBlock
                 Margin="15,5,15,5"
                 VerticalAlignment="Center"
-                FontFamily="Source Code Pro"
+                FontFamily="Comfortaa"
                 FontSize="18"
-                FontWeight="SemiBold"
+                FontWeight="ExtraBold"
                 Foreground="Black"
                 Text="{Binding ApplicationName}" />
 

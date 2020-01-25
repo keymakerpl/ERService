@@ -1,4 +1,5 @@
-﻿using ERService.Infrastructure.Base;
+﻿using ERService.Business;
+using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Base.Common;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
@@ -19,7 +20,7 @@ namespace ERService.Settings.ViewModels
     public class CompanySettingsViewModel : DetailViewModelBase
     {
         private readonly IRegionManager _regionManager;
-        private readonly ISettingsManager _settingsManager;
+        private readonly ISettingsManager<Setting> _settingsManager;
         private readonly IImagesCollection _imagesCollection;
 
         public DelegateCommand LoadLogoCommand { get; }
@@ -30,7 +31,7 @@ namespace ERService.Settings.ViewModels
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IRegionManager regionManager,
-            ISettingsManager settingsManager,
+            ISettingsManager<Setting> settingsManager,
             IImagesCollection imagesCollection) : base(eventAggregator, messageDialogService)
         {
             Title = "Dane firmy";

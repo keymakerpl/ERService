@@ -1,20 +1,20 @@
-﻿using ERService.Infrastructure.Base.Common;
+﻿using CommonServiceLocator;
+using ERService.Infrastructure.Base.Common;
 using MySql.Data.EntityFramework;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.SqlServer;
 
 namespace ERService.MSSQLDataAccess
 {
     public class ERServiceDbConfiguration : DbConfiguration
     {
-        private object _config { get; } = CommonServiceLocator.ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
-
         public ERServiceDbConfiguration()
         {
-            if (((IConfig)_config).SelectedDatabaseProvider == DatabaseProvidersEnum.MySQLServer)
+            if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
             {
                 try
                 {
@@ -29,6 +29,9 @@ namespace ERService.MSSQLDataAccess
                 catch (System.Exception ex)
                 {
                     //TODO: log
+#if DEBUG
+                    System.Console.WriteLine("[DEBUG] Provider already in machine.config");
+#endif
                 }
 
                 SetDefaultConnectionFactory(new MySqlConnectionFactory());
@@ -36,9 +39,27 @@ namespace ERService.MSSQLDataAccess
             }
             else
             {
-                SetDefaultConnectionFactory(new SqlConnectionFactory());
-                SetProviderServices("System.Data.SqlClient", System.Data.Entity.SqlServer.SqlProviderServices.Instance);
+                SetProviderServices("System.Data.SqlClient", SqlProviderServices.Instance);
+                SetExecutionStrategy("System.Data.SqlClient", () => new DefaultExecutionStrategy());
+                SetDefaultConnectionFactory(new LocalDbConnectionFactory("mssqllocaldb"));
             }
-        }        
+        }
+
+        private IConfig _config
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
+                }
+                catch (System.Exception)
+                {
+#if DEBUG
+                    return new Config();
+#endif
+                }
+            }
+        }
     }
 }

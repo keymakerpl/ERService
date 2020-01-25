@@ -52,16 +52,22 @@
             IsPaneOpen="True"
             ItemTemplate="{StaticResource MenuItemTemplate}"
             OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-            PaneBackground="Gainsboro">
+            PaneBackground="SkyBlue">
             <Controls:HamburgerMenu.Effect>
                 <BlurEffect />
             </Controls:HamburgerMenu.Effect>
 
             <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                 <DataTemplate>
-                    <Grid Name="root" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding CurrentContentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                   VerticalAlignment="Center" Foreground="Black" FontStyle="Italic"/>
+                    <Grid
+                        Name="root"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Foreground="Black"
+                            Text="{Binding CurrentContentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </DataTemplate>
             </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>

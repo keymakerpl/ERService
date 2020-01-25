@@ -1,6 +1,9 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -53,9 +56,23 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task SaveAsync()
         {
+
 #if DEBUG
             Context.Database.Log = Console.Write;
 #endif
+
+            var objectContextAdapter = Context as IObjectContextAdapter;
+            if (objectContextAdapter != null)
+            {
+                objectContextAdapter.ObjectContext.DetectChanges();
+                foreach (ObjectStateEntry entry in objectContextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Modified))
+                {
+                    var v = entry.Entity as IVersionedRow;
+                    if (v != null)
+                        v.RowVersion++;
+                }
+            }
+
             await Context.SaveChangesAsync();
         }
 

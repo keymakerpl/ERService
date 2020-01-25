@@ -18,57 +18,6 @@
     mc:Ignorable="d">
 
     <Grid x:Name="grid">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="CollapsedStates">
-                <VisualStateGroup.Transitions>
-                    <VisualTransition GeneratedDuration="0:0:0.5" To="Normal">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <CubicEase EasingMode="EaseInOut"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
-                    <VisualTransition GeneratedDuration="0:0:0.5" To="Expanded">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <CubicEase EasingMode="EaseInOut"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
-                </VisualStateGroup.Transitions>
-                <VisualState x:Name="Normal">
-                    <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="button">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="-180"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="serverGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="packIconMaterialLight">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="180"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="serverGrid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="serverGrid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="130"/>
-                        </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="Expanded">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="serverGrid">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="serverGrid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="250"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="serverGrid">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="205"/>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="packIconMaterialLight">
-                            <EasingDoubleKeyFrame KeyTime="0" Value="-180"/>
-                        </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Border
             x:Name="border"
             HorizontalAlignment="Center"
@@ -90,7 +39,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Label
@@ -136,50 +85,64 @@
                         Command="{Binding LoginCommand}"
                         CommandParameter="{Binding ElementName=PasswordBox}">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialLight Kind="Login" Margin="3 0 5 0"
-                                                    Width="17"
-                                                    Height="17"
-                                                    VerticalAlignment="Center" />
-                            <TextBlock  Text="Zaloguj" Margin="2 4 4 4"
-                                    VerticalAlignment="Center" FontSize="13"/>
+                            <iconPacks:PackIconMaterialLight
+                                Width="17"
+                                Height="17"
+                                Margin="3,0,5,0"
+                                VerticalAlignment="Center"
+                                Kind="Login" />
+                            <TextBlock
+                                Margin="2,4,4,4"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Text="Zaloguj" />
                         </StackPanel>
                     </Button>
 
                 </Grid>
                 <Grid>
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
-                        <Button x:Name="button"
-                        Width="20"
-                        Height="20"
-                        BorderThickness="0"
-                        Foreground="Gray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" RenderTransformOrigin="0.5,0.5">
+                    <Grid
+                        Width="Auto"
+                        Height="Auto"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Button
+                            x:Name="button"
+                            Width="20"
+                            Height="20"
+                            BorderThickness="0"
+                            Foreground="Gray"
+                            RenderTransformOrigin="0.5,0.5"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                             <i:Interaction.Triggers>
                                 <ei:DataTrigger Binding="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LoginView}}}" Value="True">
-                                    <ei:GoToStateAction StateName="Expanded"/>
+                                    <ei:GoToStateAction StateName="Expanded" />
                                 </ei:DataTrigger>
                                 <ei:DataTrigger Binding="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LoginView}}}" Value="False">
-                                    <ei:GoToStateAction StateName="Normal"/>
+                                    <ei:GoToStateAction StateName="Normal" />
                                 </ei:DataTrigger>
                                 <i:EventTrigger EventName="Click">
-                                    <ei:CallMethodAction TargetObject="{Binding Mode=OneWay}" MethodName="ToggleIsExpanded"/>
+                                    <ei:CallMethodAction MethodName="ToggleIsExpanded" TargetObject="{Binding Mode=OneWay}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <Button.RenderTransform>
                                 <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform />
+                                    <TranslateTransform />
                                 </TransformGroup>
                             </Button.RenderTransform>
-                            <iconPacks:PackIconMaterialLight x:Name="packIconMaterialLight" Kind="ArrowRightCircle" RenderTransformOrigin="0.5,0.5" >
+                            <iconPacks:PackIconMaterialLight
+                                x:Name="packIconMaterialLight"
+                                Kind="ArrowRightCircle"
+                                RenderTransformOrigin="0.5,0.5">
                                 <iconPacks:PackIconMaterialLight.RenderTransform>
                                     <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
+                                        <ScaleTransform />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
                                     </TransformGroup>
                                 </iconPacks:PackIconMaterialLight.RenderTransform>
                             </iconPacks:PackIconMaterialLight>
@@ -188,16 +151,19 @@
                             <Style TargetType="{x:Type Grid}">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="Cursor" Value="Hand" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
                     </Grid>
                 </Grid>
-                <Grid x:Name="serverGrid" Width="0" Height="130">
+                <Grid
+                    x:Name="serverGrid"
+                    Width="0"
+                    Height="130">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -211,11 +177,11 @@
                     <ComboBox
                         Grid.Column="1"
                         MinWidth="150"
-                        Margin="5" 
+                        Margin="5"
+                        DisplayMemberPath="Value"
                         ItemsSource="{Binding Providers}"
-                        SelectedValuePath="Key"
-                        SelectedValue="{Binding SelectedProvider}"
-                        DisplayMemberPath="Value"/>
+                        SelectedValue="{Binding DatabaseProvider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValuePath="Key" />
                     <Label
                         Grid.Row="1"
                         Margin="5"
@@ -223,8 +189,8 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="5" 
-                        Text="{Binding DbServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        Margin="5"
+                        Text="{Binding DbServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Label
                         Grid.Row="2"
                         Margin="5"
@@ -232,8 +198,8 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="5" 
-                        Text="{Binding DbUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        Margin="5"
+                        Text="{Binding DbUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Label
                         Grid.Row="3"
                         Margin="5"
@@ -244,30 +210,83 @@
                         Grid.Column="1"
                         Margin="5"
                         metroControls:PasswordBoxHelper.CapsLockIcon="true"
-                        metroControls:PasswordBoxHelper.CapsLockWarningToolTip="true"
-                        
-                        />
+                        metroControls:PasswordBoxHelper.CapsLockWarningToolTip="true" />
                     <Button
                         Grid.Row="4"
                         Grid.Column="1"
                         Width="90"
                         Height="40"
-                        Margin="0, 0, 5, 0"
-                        HorizontalAlignment="Right"                        
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Right"
                         Command="{Binding ConnectCommand}"
                         CommandParameter="{Binding ElementName=DbPasswordBox}">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconOcticons Kind="Link" Margin="3 0 5 0"
-                                                    Width="17"
-                                                    Height="17"
-                                                    VerticalAlignment="Center" />
-                            <TextBlock  Text="Połącz" Margin="2 4 4 4"
-                                    VerticalAlignment="Center" FontSize="13"/>
+                            <iconPacks:PackIconOcticons
+                                Width="17"
+                                Height="17"
+                                Margin="3,0,5,0"
+                                VerticalAlignment="Center"
+                                Kind="Link" />
+                            <TextBlock
+                                Margin="2,4,4,4"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Text="Połącz" />
                         </StackPanel>
                     </Button>
                 </Grid>
             </StackPanel>
         </Border>
-
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CollapsedStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Normal">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Expanded">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Normal">
+                    <Storyboard>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="-180" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="packIconMaterialLight" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="180" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="130" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Expanded">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="250" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="serverGrid" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="205" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="packIconMaterialLight" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="-180" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>

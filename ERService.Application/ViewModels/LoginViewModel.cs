@@ -1,39 +1,75 @@
-﻿using ERService.Infrastructure.Base.Common;
+﻿using CommonServiceLocator;
+using ERService.Infrastructure.Base.Common;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Helpers;
 using ERService.MSSQLDataAccess;
+using ERService.RBAC;
+using MySql.Data.MySqlClient;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Unity;
-using ERService.Infrastructure.Helpers;
-using System.ComponentModel;
-using ERService.RBAC;
-using CommonServiceLocator;
-using MySql.Data.MySqlClient;
 
 namespace ERService.ViewModels
 {
     public class LoginViewModel : BindableBase
     {
-        private string _login;
-
+        private string _dbPassword;
+        private string _dbServer;
+        private string _dbUser;
         private bool _isExpanded;
+        private string _login;
+        private readonly IConfig _config;
+        private IRBACManager _rBACManager;
+        private IEventAggregator _eventAggregator;
+        private DatabaseProviders _databaseProvider;
+        private IMessageDialogService _messageDialogService;
+
+        public LoginViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        {
+            _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
+            _config = config;
+
+            LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
+            ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
+
+            Providers = new List<KeyValuePair<DatabaseProviders, string>>();
+
+            Initialize();
+        }
+
+        public ICommand ConnectCommand { get; private set; }
+
+        public DatabaseProviders DatabaseProvider
+        {
+            get { return _databaseProvider; }
+            set { SetProperty(ref _databaseProvider, value); }
+        }
+
+        public string DbPassword
+        {
+            get { return _dbPassword; }
+            set { SetProperty(ref _dbPassword, value); }
+        }
+
+        public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }
+
+        public string DbUser
+        {
+            get { return _dbUser; }
+            set { SetProperty(ref _dbUser, value); }
+        }
 
         public bool IsExpanded
         {
             get { return _isExpanded; }
             set { SetProperty(ref _isExpanded, value); }
-        }
-
-        public void ToggleIsExpanded()
-        {
-            IsExpanded = !IsExpanded;
         }
 
         public string Login
@@ -42,66 +78,37 @@ namespace ERService.ViewModels
             set { SetProperty(ref _login, value); }
         }
 
-        private readonly IRBACManager _rBACManager;
-        private IEventAggregator _eventAggregator;
-        private IMessageDialogService _messageDialogService;
-        private readonly IConfig _config;
-
-        private string _dbUser;
-
-        public string DbUser
-        {
-            get { return _dbUser; }
-            set { SetProperty(ref _dbUser, value); }
-        }
-
-        private string _dbPassword;
-        private string _dbServer;
-
-        public string DbPassword
-        {
-            get { return _dbPassword; }
-            set { SetProperty(ref _dbPassword, value); }
-        }
-
-        private DatabaseProvidersEnum _selectedProvider;
-
-        public DatabaseProvidersEnum SelectedProvider
-        {
-            get { return _selectedProvider; }
-            set { _selectedProvider = value; }
-        }
-
-        public List<KeyValuePair<DatabaseProvidersEnum, string>> Providers { get; set; }
-
         public ICommand LoginCommand { get; private set; }
-        public ICommand ConnectCommand { get; private set; }
-        public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }
 
-        public LoginViewModel(IRBACManager rBACManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        public List<KeyValuePair<DatabaseProviders, string>> Providers { get; set; }
+
+        public void ToggleIsExpanded()
         {
-            _rBACManager = rBACManager;
-            _eventAggregator = eventAggregator;
-            _messageDialogService = messageDialogService;
-            _config = config;
+            IsExpanded = !IsExpanded;
+        }
 
-            LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
-            ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
-
-            Providers = new List<KeyValuePair<DatabaseProvidersEnum, string>>();
-
-            Initialize();
+        private void FillProvidersCombo()
+        {
+            Providers.Clear();
+            foreach (var provider in Enum.GetValues(typeof(DatabaseProviders)))
+            {
+                var desc = ((DatabaseProviders)provider).GetAttribute<DescriptionAttribute>();
+                Providers.Add(new KeyValuePair<DatabaseProviders, string>((DatabaseProviders)provider, desc.Description));
+            }
         }
 
         private void Initialize()
         {
+            FillProvidersCombo();
+
+
             try
             {
                 Login = _config.LastLogin;
                 DbServer = _config.Server;
                 DbUser = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
                 DbPassword = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
-                SelectedProvider = _config.SelectedDatabaseProvider;
+                DatabaseProvider = _config.DatabaseProvider;
             }
             catch (Exception ex)
             {
@@ -109,24 +116,15 @@ namespace ERService.ViewModels
                 DbServer = "";
                 DbUser = "";
                 DbPassword = "";
-                SelectedProvider = DatabaseProvidersEnum.MSSQLServerLocalDb;
+                DatabaseProvider = DatabaseProviders.MSSQLServerLocalDb;
                 //TODO: log
-            }
 
-            FillProvidersCombo();
-        }
+                Console.WriteLine($"[DEBUG] LoginViewModel error: {ex.Message}");
 
-        private void FillProvidersCombo()
-        {
-            Providers.Clear();
-            foreach (var provider in Enum.GetValues(typeof(DatabaseProvidersEnum)))
-            {
-                var desc = ((DatabaseProvidersEnum)provider).GetAttribute<DescriptionAttribute>();
-                Providers.Add(new KeyValuePair<DatabaseProvidersEnum, string>((DatabaseProvidersEnum)provider, desc.Description));
             }
         }
 
-        private void OnConnectExecute(object parameter)
+        private async void OnConnectExecute(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             if (passwordBox != null)
@@ -134,26 +132,67 @@ namespace ERService.ViewModels
                 DbPassword = passwordBox.Password;
             }
 
-            if (ServerHeartBeat())
+            var connectionString = ConnectionStringBuilder.Construct(DatabaseProvider, DbServer, DbUser, DbPassword);
+            if (ServerHeartBeat(connectionString))
+            {                
+                var result = await _messageDialogService.ShowConfirmationMessageAsync(this, "Połączenie poprawne...", "Połączono z bazą danych. " +
+                    "Zmiana parametrów połączenia wymaga ponownego uruchomienia aplikacji. Czy zapisać zmiany i uruchomić ponownie teraz?");
+
+                if (result == DialogResult.OK)
+                {
+                    _config.Server = DbServer;
+                    _config.User = Cryptography.StringCipher.Encrypt(DbUser, Cryptography.StringCipher.DbPassPhrase);
+                    _config.Password = Cryptography.StringCipher.Encrypt(DbPassword, Cryptography.StringCipher.DbPassPhrase);
+                    _config.DatabaseProvider = DatabaseProvider;
+                    _config.SaveConfig();
+
+                    System.Windows.Application.Current.Shutdown();
+                }
+            }
+        }
+
+        private void OnLoginCommandExecute(object parameter)
+        {
+            if (String.IsNullOrWhiteSpace(Login))
+                ShowWrongLoginDataMessage();
+
+            if (_config.LastLogin != Login)
             {
+                _config.LastLogin = Login;
                 _config.SaveConfig();
-                _messageDialogService.ShowInformationMessageAsync(this, "Połączenie poprawne...", "Połączono z bazą danych.");
-                return;
-            }            
+            }
+
+            var connectionString = ConnectionStringProvider.Current;
+            if (!ServerHeartBeat(connectionString)) return;
+
+            try
+            {
+                _rBACManager = ServiceLocator.Current.GetInstance<IRBACManager>();
+                _rBACManager.Load();
+            }
+            catch (Exception ex)
+            {
+                //TODO: error handling
+                _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...",
+                    $"Error: {ex.Message} {Environment.NewLine} {ex.InnerException?.Message ?? ""}");
+            }
+
+            var passwordBox = parameter as PasswordBox;
+            if (passwordBox != null)
+            {
+                if (!_rBACManager.Login(Login, passwordBox.Password))
+                {
+                    ShowWrongLoginDataMessage();
+                }
+            }
         }
 
         //TODO: move to helpers
-        private bool ServerHeartBeat()
+        private bool ServerHeartBeat(string connectionString)
         {
-            _config.Server = DbServer;
-            _config.User = Cryptography.StringCipher.Encrypt(DbUser, Cryptography.StringCipher.DbPassPhrase);
-            _config.Password = Cryptography.StringCipher.Encrypt(DbPassword, Cryptography.StringCipher.DbPassPhrase);
-            _config.SelectedDatabaseProvider = SelectedProvider;
-            _config.SaveConfig();
-
-            if (SelectedProvider != DatabaseProvidersEnum.MySQLServer)
+            if (DatabaseProvider == DatabaseProviders.MSSQLServer)
             {
-                using (SqlConnection connection = new SqlConnection(ConnectionStringBuilder.Construct()))
+                using (SqlConnection connection = new SqlConnection(connectionString.Replace(";Initial Catalog=ERService", String.Empty)))
                 {
                     try
                     {
@@ -164,13 +203,16 @@ namespace ERService.ViewModels
                     {
                         //TODO: logger
                         _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", "Nie udało się połączyć z bazą danych, więcej informacji znajduje się w pliku dziennika.");
+
+                        Console.WriteLine($"[DEBUG] Connection error: {ex.Message}");
+
                         return false;
                     }
                 }
             }
-            else
+            else if (DatabaseProvider == DatabaseProviders.MySQLServer)
             {
-                using (var connection = new MySqlConnection(ConnectionStringBuilder.Construct()))
+                using (var connection = new MySqlConnection(connectionString.Replace(";database=ERService", String.Empty)))
                 {
                     try
                     {
@@ -184,28 +226,12 @@ namespace ERService.ViewModels
                     }
                 }
             }
-        }
-
-        private void OnLoginCommandExecute(object parameter)
-        {
-            if (String.IsNullOrWhiteSpace(Login))
-                ShowWrongLoginDataMessage();
-
-            _config.LastLogin = Login;
-            _config.SaveConfig();
-
-            if (!ServerHeartBeat()) return;
-
-            _rBACManager.Load();
-
-            var passwordBox = parameter as PasswordBox;
-            if (passwordBox != null)
+            else if (DatabaseProvider == DatabaseProviders.MSSQLServerLocalDb)
             {
-                if (!_rBACManager.Login(Login, passwordBox.Password))
-                {
-                    ShowWrongLoginDataMessage();
-                }
+                return true;
             }
+
+            return false;
         }
 
         private void ShowWrongLoginDataMessage()
@@ -213,5 +239,4 @@ namespace ERService.ViewModels
             _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
         }
     }
-
 }

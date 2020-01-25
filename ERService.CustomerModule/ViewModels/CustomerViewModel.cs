@@ -48,16 +48,16 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnDropDownClosed(object arg)
         {
-            //if (WizardMode)
-            //{
-            //    var box = arg as AutoCompleteBox;
+            if (WizardMode)
+            {
+                var box = arg as AutoCompleteBox;
 
-            //    if (box?.SelectedItem != null && box.IsMouseOver)
-            //    {
-            //        InitializeCustomer(SelectedCustomer);
-            //        IsReadOnly = true;
-            //    }
-            //}
+                if (box?.SelectedItem != null && box.IsMouseOver)
+                {
+                    InitializeCustomer(SelectedCustomer);
+                    IsReadOnly = true;
+                }
+            }
         }
 
         public ICustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }

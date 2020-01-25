@@ -12,7 +12,7 @@ namespace ERService.Infrastructure.Base.Common
             Initialize();
         }
 
-        public DatabaseProvidersEnum SelectedDatabaseProvider { get; set; }
+        public DatabaseProviders DatabaseProvider { get; set; }
         public string Server { get; set; }
         public string User { get; set; }
         public string Password { get; set; }
@@ -29,7 +29,7 @@ namespace ERService.Infrastructure.Base.Common
 
                 if (dbSettings != null)
                 {
-                    dbSettings["Provider"].Value = ((int)SelectedDatabaseProvider).ToString();
+                    dbSettings["Provider"].Value = ((int)DatabaseProvider).ToString();
                     dbSettings["Server"].Value = Server;
                     dbSettings["User"].Value = User;
                     dbSettings["Password"].Value = Password;
@@ -68,7 +68,7 @@ namespace ERService.Infrastructure.Base.Common
                 if (dbSettings != null)
                 {
                     var selectedProvider = dbSettings["Provider"].Value;
-                    SelectedDatabaseProvider = (DatabaseProvidersEnum)int.Parse(selectedProvider);
+                    DatabaseProvider = (DatabaseProviders)int.Parse(selectedProvider);
                     Server = dbSettings["Server"].Value;
                     User = dbSettings["User"].Value;
                     Password = dbSettings["Password"].Value;
@@ -92,7 +92,7 @@ namespace ERService.Infrastructure.Base.Common
         }
     }
 
-    public enum DatabaseProvidersEnum
+    public enum DatabaseProviders
     {
         [Description("Microsoft SQL Server")]
         MSSQLServer,

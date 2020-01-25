@@ -1,6 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -18,22 +19,18 @@ namespace ERService.RBAC.Data.Repository
 
             public override async Task<IEnumerable<User>> GetAllAsync()
             {
-                var result = await Context.Set<User>()
+                return await Context.Set<User>()
                     .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
                     .Include(r => r.Role)
                     .ToListAsync();
-
-                return result;
             }
 
             public IEnumerable<User> GetAll()
             {
-                var result = Context.Set<User>()
-                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
-                    .Include(r => r.Role)
-                    .ToList();
-
-                return result;
+                return Context.Set<User>()
+                      .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
+                      .Include(r => r.Role)
+                      .ToList();
             }
         }
 

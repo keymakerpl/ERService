@@ -10,7 +10,7 @@ using ERService.Settings.Wrapper;
 
 namespace ERService.Settings.Manager
 {
-    public class SettingsManager : ISettingsManager
+    public class SettingsManager : ISettingsManager<Setting>
     {
         private readonly ISettingsRepository _settingsRepository;
 

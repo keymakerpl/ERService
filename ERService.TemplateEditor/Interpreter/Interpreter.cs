@@ -1,4 +1,5 @@
-﻿using ERService.Infrastructure.Attributes;
+﻿using ERService.Business;
+using ERService.Infrastructure.Attributes;
 using ERService.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ERService.TemplateEditor.Interpreter
         private IContext _context;
         private object[] _modelWrappers;
         private IndexExpression _expression;
-        private readonly ISettingsManager _settingsManager;
+        private readonly ISettingsManager<Setting> _settingsManager;
 
         public IContext Context { set => _context = value; }
         public object[] Wrappers { set => _modelWrappers = value; }
@@ -34,7 +35,7 @@ namespace ERService.TemplateEditor.Interpreter
             } 
         }
 
-        public Interpreter(ISettingsManager settingsManager)
+        public Interpreter(ISettingsManager<Setting> settingsManager)
         {
             _settingsManager = settingsManager;
         }

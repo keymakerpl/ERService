@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class User
+    public class User 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -38,8 +39,6 @@ namespace ERService.Business
         public Guid? RoleId { get; set; }
 
         public Role Role { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -98,7 +101,9 @@
     <Compile Include="Interfaces\ILicenseProvider.cs" />
     <Compile Include="Interfaces\ILicenseProviderFactory.cs" />
     <Compile Include="Interfaces\IModificationHistory.cs" />
+    <Compile Include="Interfaces\ISetting.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
+    <Compile Include="Interfaces\IVersionedRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,17 +126,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ERService.Business\ERService.Business.csproj">
-      <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
-      <Name>ERService.Business</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses">
@@ -144,10 +142,10 @@
       <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1367</Version>
+      <Version>7.2.0.1422</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
-      <Version>7.2.0.1367</Version>
+      <Version>7.2.0.1422</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERService.Infrastructure.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Order
+    public class Order 
     {        
         public Order()
         {
@@ -65,8 +66,6 @@ namespace ERService.Business
         public ICollection<Hardware> Hardwares { get; set; }
 
         public ICollection<Blob> Attachments { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        
     }
 }

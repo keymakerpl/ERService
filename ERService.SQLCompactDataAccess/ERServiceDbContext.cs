@@ -1,6 +1,5 @@
 ﻿using ERService.Business;
 using ERService.MSSQLDataAccess.Migrations;
-using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -9,16 +8,14 @@ namespace ERService.MSSQLDataAccess
 {
     [DbConfigurationType(typeof(ERServiceDbConfiguration))]
     public class ERServiceDbContext : DbContext, IERServiceDbContext
-    {
-        //TODO: Make db connection setting in entry login window        
-        public ERServiceDbContext() : base(ConnectionStringBuilder.Construct())
+    {     
+        public ERServiceDbContext() : base(ConnectionStringProvider.Current)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
+            Database.SetInitializer(new ERSCreateDatabaseIfNotExists());
+            Database.Initialize(false);
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
         }
-
-        /// <summary>
-        /// Lista
-        /// </summary>
+        
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<CustomerAddress> CustomerAddresses { get; set; }
@@ -62,10 +59,8 @@ namespace ERService.MSSQLDataAccess
 
             //Fluent API - zakomentowane bo użyjemy atrybutów, a następnie update-migration
             //modelBuilder.Configurations.Add(new CustomerConfiguration());
-
         }
     }
-
 
     /// <summary>
     /// Fluent Api cfg example

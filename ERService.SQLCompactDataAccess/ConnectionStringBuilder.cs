@@ -1,5 +1,4 @@
 ﻿using ERService.Infrastructure.Base.Common;
-using ERService.Infrastructure.Helpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data.SqlClient;
@@ -8,35 +7,39 @@ namespace ERService.MSSQLDataAccess
 {
     public static class ConnectionStringBuilder
     {
-        public static string Construct()
+        public static string Construct(DatabaseProviders provider, string server, string user, string password)
         {
-            IConfig _config = new Config();
+            var connectionstring = String.Empty;
 
-            switch (_config.SelectedDatabaseProvider)
+            switch (provider)
             {
-                case DatabaseProvidersEnum.MSSQLServer:
+                case DatabaseProviders.MSSQLServer:
                     var mssqlConnStringBuilder = new SqlConnectionStringBuilder();
-                    mssqlConnStringBuilder.DataSource = _config.Server;
-                    mssqlConnStringBuilder.UserID = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
-                    mssqlConnStringBuilder.Password = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
+                    mssqlConnStringBuilder.DataSource = server;
+                    mssqlConnStringBuilder.UserID = user;
+                    mssqlConnStringBuilder.Password = password;
                     mssqlConnStringBuilder.MultipleActiveResultSets = true;
                     mssqlConnStringBuilder.InitialCatalog = "ERService";
-                    return mssqlConnStringBuilder.ToString();
+                    mssqlConnStringBuilder.ApplicationName = AppDomain.CurrentDomain.FriendlyName;
+                    connectionstring = mssqlConnStringBuilder.ToString();
+                    break;
 
-                case DatabaseProvidersEnum.MSSQLServerLocalDb:
+                case DatabaseProviders.MSSQLServerLocalDb:
                     var path = AppDomain.CurrentDomain.BaseDirectory;
-                    return $@"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=SSPI;AttachDBFilename={path}localdb.mdf";
+                    connectionstring = $@"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=SSPI;AttachDBFilename={path}localdb.mdf";
+                    break;
 
-                case DatabaseProvidersEnum.MySQLServer:
+                case DatabaseProviders.MySQLServer:
                     var mysqlConnStringBuilder = new MySqlConnectionStringBuilder();
-                    mysqlConnStringBuilder.Server = _config.Server;
-                    mysqlConnStringBuilder.UserID = Cryptography.StringCipher.Decrypt(_config.User, Cryptography.StringCipher.DbPassPhrase);
-                    mysqlConnStringBuilder.Password = Cryptography.StringCipher.Decrypt(_config.Password, Cryptography.StringCipher.DbPassPhrase);
-                    return mysqlConnStringBuilder.ToString();
-
-                default:
-                    return "";
+                    mysqlConnStringBuilder.Server = server;
+                    mysqlConnStringBuilder.UserID = user;
+                    mysqlConnStringBuilder.Password = password;
+                    mysqlConnStringBuilder.Database = "ERService";
+                    connectionstring = mysqlConnStringBuilder.ToString();
+                    break;
             }
+
+            return connectionstring;
         }
     }
 }
