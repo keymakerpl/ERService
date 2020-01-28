@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Customer 
+    public class Customer : IVersionedRow
     {
         public Customer()
         {
@@ -57,12 +57,15 @@ namespace ERService.Business
         [StringLength(500)]
         public string Description { get; set; }
 
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
+
         #region Relacje
 
         public ICollection<CustomerAddress> CustomerAddresses { get; set; }
         public ICollection<Order> Orders { get; set; }
 
         #endregion
-        
+
     }
 }

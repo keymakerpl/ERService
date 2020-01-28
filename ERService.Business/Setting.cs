@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Setting :  ISetting
+    public class Setting :  ISetting, IVersionedRow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -20,6 +20,8 @@ namespace ERService.Business
         public string Category { get; set; }
 
         public string Description { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

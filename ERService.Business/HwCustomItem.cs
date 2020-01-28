@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class HwCustomItem 
+    public class HwCustomItem : IVersionedRow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -21,6 +21,8 @@ namespace ERService.Business
         public Guid HardwareId { get; set; }
 
         public Hardware Hardware { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

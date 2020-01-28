@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Order 
+    public class Order : IVersionedRow
     {        
         public Order()
         {
@@ -66,6 +66,8 @@ namespace ERService.Business
         public ICollection<Hardware> Hardwares { get; set; }
 
         public ICollection<Blob> Attachments { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }    
     }
 }
