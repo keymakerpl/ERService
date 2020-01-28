@@ -18,76 +18,93 @@
 
             <Grid>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <DataGrid
-                    Grid.Row="0"
-                    AutoGenerateColumns="False"
-                    ItemsSource="{Binding HardwareTypes}"
-                    RowHeaderWidth="0"
-                    SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                            ElementStyle="{StaticResource DataGridColumnStyle}"
-                            Header="Typy urządzeń" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="250" />
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="1" Margin="0,5,5,5">
-                    <Button
-                        Width="125"
-                        Margin="5"
-                        Command="{Binding AddCommand}"
-                        Content="Dodaj" />
-                    <Button
-                        Width="125"
-                        Margin="5"
-                        Command="{Binding RemoveCommand}"
-                        Content="Usuń" />
-                </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <Border Height="250" Style="{StaticResource DefaultBorderStyle}">
+                            <DataGrid
+                                ItemsSource="{Binding HardwareTypes}"
+                                SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay}"
+                                Style="{StaticResource DefaultDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                                        Header="Typy urządzeń" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,5,0"
+                                Command="{Binding AddOrderStatusCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
+                            </Button>
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,15,0"
+                                Command="{Binding RemoveOrderStatusCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Minus" />
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
 
-                <DataGrid
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    AutoGenerateColumns="False"
-                    ItemsSource="{Binding CustomItems}"
-                    RowHeaderWidth="0"
-                    SelectedItem="{Binding SelectedCustomItem, Mode=TwoWay}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                            ElementStyle="{StaticResource DataGridColumnStyle}"
-                            Header="Pola definiowane" />
-                    </DataGrid.Columns>
-                </DataGrid>
-
-                <StackPanel Grid.Column="3" Margin="0,5,5,5">
-                    <Button
-                        Width="125"
-                        Margin="5"
-                        Command="{Binding AddCustomItemCommand}"
-                        Content="Dodaj" />
-                    <Button
-                        Width="125"
-                        Margin="5"
-                        Command="{Binding RemoveCustomItemCommand}"
-                        Content="Usuń" />
-                </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <Border Height="250" Style="{StaticResource DefaultBorderStyle}">
+                            <DataGrid
+                                ItemsSource="{Binding CustomItems}"
+                                SelectedItem="{Binding SelectedCustomItem, Mode=TwoWay}"
+                                Style="{StaticResource DefaultDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                                        Header="Pola zdefiniowane" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,5,0"
+                                Command="{Binding AddOrderStatusCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
+                            </Button>
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,15,0"
+                                Command="{Binding RemoveOrderStatusCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Minus" />
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
 
                 <StackPanel
                     Grid.Row="1"
@@ -121,5 +138,6 @@
 
             </Grid>
         </GroupBox>
+
     </Grid>
 </UserControl>

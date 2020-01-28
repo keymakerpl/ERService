@@ -1,11 +1,14 @@
 ﻿using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Data.Repository;
+using ERService.OrderModule.OrderNumeration;
+using ERService.RBAC;
 using ERService.Settings.Wrapper;
 using Prism.Events;
 using Prism.Regions;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
@@ -15,9 +18,11 @@ namespace ERService.Settings.ViewModels
         private NumerationWrapper _numeration;
         private INumerationRepository _repository;
         public NumerationSettingsViewModel(IEventAggregator eventAggregator, INumerationRepository numerationRepository,
-            IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+            IMessageDialogService messageDialogService, IRBACManager rBACManager) : base(eventAggregator, messageDialogService)
         {
             _repository = numerationRepository;
+            _rBACManager = rBACManager;
+
             Title = "Schemat numeracji";
         }
 
@@ -25,6 +30,15 @@ namespace ERService.Settings.ViewModels
         {
             get { return _numeration; }
             set { SetProperty(ref _numeration, value); }
+        }
+
+        private string _numerationExample;
+        private readonly IRBACManager _rBACManager;
+
+        public string NumerationExample
+        {
+            get { return _numerationExample; }
+            set { SetProperty(ref _numerationExample, value); }
         }
 
         public override async Task LoadAsync()
@@ -39,6 +53,27 @@ namespace ERService.Settings.ViewModels
 
             if (defaultNumeration != null)
                 Numeration = new NumerationWrapper(defaultNumeration);
+            else
+            {
+                var newNumeration = new Business.Numeration();
+                _repository.Add(newNumeration);
+                Numeration = new NumerationWrapper(newNumeration);
+            }
+
+            Numeration.PropertyChanged += (o, a) => 
+            {
+                if (_rBACManager?.LoggedUser?.FirstName != null && _rBACManager?.LoggedUser?.LastName != null)
+                {
+                    var stringBuilder = new StringBuilder();
+                    stringBuilder.Append(_rBACManager?.LoggedUser?.FirstName[0]);
+                    stringBuilder.Append(_rBACManager?.LoggedUser?.LastName[0]);
+                    var initials = stringBuilder.ToString();
+
+                    NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern, initials);
+                    return;
+                }
+                NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern);
+            };
         }
 
         #region Events and Event Handlers

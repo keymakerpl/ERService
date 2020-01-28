@@ -20,6 +20,7 @@ namespace ERService.StartPage.ViewModels
         public DelegateCommand CustomersCommand { get; private set; }
         public DelegateCommand SettingsCommand { get; private set; }
         public DelegateCommand AddOrderCommand { get; private set; }
+        public DelegateCommand StatsCommand { get; }
 
         public StartPageViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
@@ -31,6 +32,12 @@ namespace ERService.StartPage.ViewModels
             CustomersCommand = new DelegateCommand(OnCustomersCommandExecute);
             SettingsCommand = new DelegateCommand(OnSettingsCommandExecute);
             AddOrderCommand = new DelegateCommand(OnAddOrderExecute);
+            StatsCommand = new DelegateCommand(OnStatsCommandExecute);
+        }
+
+        private void OnStatsCommandExecute()
+        {
+            
         }
 
         private async void OnAddOrderExecute()

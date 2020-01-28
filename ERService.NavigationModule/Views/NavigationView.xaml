@@ -52,7 +52,7 @@
             IsPaneOpen="True"
             ItemTemplate="{StaticResource MenuItemTemplate}"
             OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-            PaneBackground="SkyBlue">
+            PaneBackground="Gainsboro">
             <Controls:HamburgerMenu.Effect>
                 <BlurEffect />
             </Controls:HamburgerMenu.Effect>
