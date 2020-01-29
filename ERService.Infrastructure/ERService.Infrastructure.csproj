@@ -77,6 +77,7 @@
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\AfterLicenseValidationRequestEvent.cs" />
+    <Compile Include="Events\AfterSideMenuButtonToggled.cs" />
     <Compile Include="Events\LicenseValidationRequestEvent.cs" />
     <Compile Include="Events\AfterLogedoutEvent.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />

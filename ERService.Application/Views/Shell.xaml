@@ -20,8 +20,9 @@
         <Controls:FlyoutsControl>
             <Controls:Flyout
                 Width="200"
+                Background="DimGray"
                 Header=""
-                IsOpen="True"
+                IsOpen="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Position="Right">
                 <StackPanel />
             </Controls:Flyout>

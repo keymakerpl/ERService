@@ -106,6 +106,15 @@ namespace ERService.CustomerModule.ViewModels
             return true;
         }
 
+        public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            if(!WizardMode)
+                base.ConfirmNavigationRequest(navigationContext, continuationCallback);
+            else            
+                continuationCallback(true);            
+            
+        }
+
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             if (WizardMode) AllowLoadAsync = false;                

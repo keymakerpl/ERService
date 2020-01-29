@@ -16,17 +16,32 @@ namespace ERService.Application.ViewModels
         private readonly string _applicationName;
         public string ApplicationName { get { return _applicationName; } }
 
+        private bool _isExpanded;
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set { SetProperty(ref _isExpanded, value); }
+        }
+
+
         public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout, true);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Subscribe(OnSideMenuButtonToggled, true);
 
             var assembly = Assembly.GetEntryAssembly();
             _applicationName = $"{assembly.GetName().Name}";
 
             ShowLoginWindow();
+        }
+
+        private void OnSideMenuButtonToggled()
+        {
+            IsExpanded = !IsExpanded;
         }
 
         private void OnUserLogedout(UserAuthorizationEventArgs obj)
