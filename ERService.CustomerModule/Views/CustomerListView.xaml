@@ -24,10 +24,13 @@
         <Border
             x:Name="ToolbarBorder"
             Grid.Row="1"
-            Margin="20 0 20 0"
+            Margin="20,0,20,0"
             BorderBrush="LightGray"
-            BorderThickness="0 1 0 0">
-            <DockPanel HorizontalAlignment="Right" Margin="10,0,25,5" FlowDirection="RightToLeft">
+            BorderThickness="0,1,0,0">
+            <DockPanel
+                Margin="10,0,25,5"
+                HorizontalAlignment="Right"
+                FlowDirection="RightToLeft">
                 <Button
                     Width="35"
                     Height="35"
@@ -78,12 +81,12 @@
                 SelectionMode="Single"
                 Style="{StaticResource AzureDataGrid}">
 
-                <!--<DataGrid.Resources>
-                             <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                             TargetType="{x:Type DataGridColumnHeader}">
-                             <Setter Property="Foreground" Value="Black"/>
-                             </Style>
-                             </DataGrid.Resources>-->
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource AzureDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="FontSize" Value="11" />
+                    </Style>
+                </DataGrid.Resources>
 
                 <DataGrid.Columns>
                     <DataGridTextColumn

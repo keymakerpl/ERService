@@ -161,6 +161,7 @@ namespace ERService.CustomerModule.ViewModels
 
                 //Powiadom agregator eventów, że zapisano
                 RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                _navigationService.Journal.GoBack();
             });
         }
 

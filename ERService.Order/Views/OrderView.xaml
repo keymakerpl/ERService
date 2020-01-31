@@ -1,250 +1,490 @@
-﻿<UserControl x:Class="ERService.OrderModule.Views.OrderView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ERService.OrderModule.Views"
-             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
-             mc:Ignorable="d"
-             d:DesignHeight="750" d:DesignWidth="800"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
-    <Grid Background="White">
+﻿<UserControl
+    x:Class="ERService.OrderModule.Views.OrderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:ERService.OrderModule.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="750"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="340" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" x:Name="ListBorder" Margin="10 10 10 0"
-                BorderBrush="LightGray" BorderThickness="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <DockPanel
-                    HorizontalAlignment="Right">
-
-                    <metroControls:DropDownButton
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        Width="120"
-                        Height="30"
-                        Content="Drukuj"
-                        DisplayMemberPath="Name"
-                        ItemsSource="{Binding PrintTemplates}">
-                        <metroControls:DropDownButton.ItemContainerStyle>
-                            <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                                <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=local:OrderView}}"/>
-                                <Setter Property="CommandParameter" Value="{Binding}"/>
-                            </Style>
-                        </metroControls:DropDownButton.ItemContainerStyle>
-                    </metroControls:DropDownButton>
-
-                    <Button Content="Zapisz"
+        <Border
+            Grid.Column="2"
+            Margin="5"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0">
+            <StackPanel Margin="5">
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding CancelCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Anuluj">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
                     Command="{Binding SaveCommand}"
-                    Margin="10 10 5 10"
-                    Foreground="Black"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Zapisz"
+                    Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterialLight Kind="ContentSave" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
                     Background="GhostWhite"
-                    Height="30"
-                    Width="120" />
-                    
-                </DockPanel>
-                <DockPanel Grid.Column="1" HorizontalAlignment="Right">
-                    <Button Content="Wstecz"
                     Command="{Binding GoBackCommand}"
-                    Margin="10 10 5 10"
-                    Foreground="Black"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Wstecz"
+                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
+                </Button>
+                <metroControls:DropDownButton
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    VerticalContentAlignment="Center"
+                    ArrowBrush="LightGray"
+                    ArrowMouseOverBrush="Gray"
+                    ArrowVisibility="Visible"
                     Background="GhostWhite"
-                    Height="30"
-                    Width="120" />
-                </DockPanel>
-            </Grid>
+                    BorderBrush="LightGray"
+                    BorderThickness="0"
+                    ButtonStyle="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    Content=""
+                    DisplayMemberPath="Name"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="16"
+                    Foreground="Gray"
+                    ItemsSource="{Binding PrintTemplates}"
+                    ToolTip="Drukuj">
+                    <metroControls:DropDownButton.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=local:OrderView}}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </metroControls:DropDownButton.ItemContainerStyle>
+                </metroControls:DropDownButton>
+            </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" x:Name="DetailBorder" Margin="10 5 10 10"
-                BorderBrush="LightGray" BorderThickness="1">
-            <ScrollViewer
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto">
-                <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <Border BorderBrush="LightGray" BorderThickness="0,0,1,0">
+            <StackPanel Margin="5">
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="Numer naprawy:"
+                            FontSize="16"
+                            FontWeight="DemiBold" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Content="{Binding Order.Number, Mode=OneWay}"
+                            FontSize="18"
+                            FontWeight="Bold" />
 
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,0,0,0"
+                            Content="Postęp naprawy:"
+                            FontSize="14" />
+                        <Slider
+                            x:Name="slider"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="5"
+                            AutoToolTipPlacement="BottomRight"
+                            AutoToolTipPrecision="0"
+                            Maximum="100"
+                            Minimum="0"
+                            Style="{DynamicResource FlatSlider}"
+                            ToolTipService.ToolTip="{Binding Path=Value, ElementName=slider}"
+                            Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Content="{Binding Order.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Grid.Column="0"
+                            Content="Klient:"
+                            FontSize="16"
+                            FontWeight="DemiBold" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,0,0,0"
+                            Content="Imię:"
+                            FontSize="14" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="250"
+                            HorizontalAlignment="Left"
+                            Content="{Binding Customer.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            FontSize="14" />
+
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="10,0,0,0"
+                            Content="Nazwisko:"
+                            FontSize="14" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="4"
+                            Width="250"
+                            HorizontalAlignment="Left"
+                            Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            FontSize="14" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Margin="0,5,0,5"
+                            Content="Nazwa urządzenia:"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="{Binding Hardware.Name}" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5,5,0,5"
+                            Content="Numer seryjny:"
+                            FontSize="14" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,5,0,5"
+                            FontSize="14"
+                            Text="{Binding Hardware.SerialNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Margin="5"
+                            Content="Status naprawy:"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+                        <ComboBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5"
+                            HorizontalAlignment="Stretch"
+                            DisplayMemberPath="Name"
+                            IsSynchronizedWithCurrentItem="True"
+                            ItemsSource="{Binding OrderStatuses}"
+                            SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding SelectedOrderStatus.Name}"
+                            SelectedValuePath="Name" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="Typ naprawy:"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="5"
+                            HorizontalAlignment="Stretch"
+                            DisplayMemberPath="Name"
+                            IsSynchronizedWithCurrentItem="True"
+                            ItemsSource="{Binding OrderTypes}"
+                            SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding SelectedOrderType.Name}"
+                            SelectedValuePath="Name" />
+
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,0,0,0"
+                            Content="Data dodania:"
+                            FontSize="14" />
+
+                        <DatePicker
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            IsTodayHighlighted="False"
+                            SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,0,0,0"
+                            Content="Data zamknięcia:"
+                            FontSize="14" />
+
+                        <DatePicker
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            IsTodayHighlighted="False"
+                            SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Content="Numer zewnętrzny:"
+                            FontSize="14" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="0,5,0,5"
+                            VerticalContentAlignment="Center"
+                            Content="Koszt naprawy:"
+                            FontSize="14"
+                            FontWeight="SemiBold" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Column="1" Margin="5">
+            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label
+                        Grid.Column="0"
+                        Content="Opis usterki:"
+                        FontSize="16"
+                        FontWeight="DemiBold" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="5"
+                        AcceptsReturn="True"
+                        MinLines="5"
+                        Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-
-                    <Label Content="Dane klienta:" FontSize="18" FontWeight="Bold" />
-                    <Label Grid.Row="1" Content="Imię:" FontSize="14" />
-                    <Label Grid.Row="2" Content="Nazwisko:" FontSize="14" />
-
-                    <Label Grid.Column="2" Grid.Row="0" Content="Numer naprawy:" FontSize="18" FontWeight="Bold" />
-                    <Label Grid.Column="2" Grid.Row="2" Content="Postęp naprawy:" FontSize="14" />
-                    <Slider Grid.Row="2" Grid.Column="3" Minimum="0" Maximum="100"
-                            Width="200"
-                            HorizontalAlignment="Left"
-                            Margin="5 5 10 5"
-                            Style="{DynamicResource FlatSlider}"
-                            x:Name="slider"
-                            ToolTipService.ToolTip="{Binding Path=Value, ElementName=slider}"
-                            AutoToolTipPrecision="0"
-                            AutoToolTipPlacement="BottomRight"
-                            Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    </Slider>
-
-                    <Label Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left"
-                           FontWeight="Bold"
-                           VerticalContentAlignment="Center"
-                           FontSize="18"
-                           Content="{Binding Order.Number, Mode=OneWay}" />
-                    <Label Grid.Column="2" Grid.Row="1" Content="Nazwa urządzenia:" FontSize="14" />
-                    <Label Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" FontSize="14"
-                           VerticalAlignment="Center"
-                           Content="{Binding Hardware.Name}" />
-
-                    <Label Grid.Column="2" Grid.Row="3" Content="Numer zewnętrzny:"
-                           FontSize="14" VerticalContentAlignment="Center" />
-                    <TextBox Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Grid.Column="3" Grid.Row="3"
-                             HorizontalAlignment="Left"
-                             Width="150"
-                             Margin="5" />
-
-                    <Label Grid.Column="2" Grid.Row="4" Content="Koszt naprawy:"
-                           FontSize="14"
-                           VerticalContentAlignment="Center" />
-                    <TextBox Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Grid.Column="3" Grid.Row="4"
-                             Margin="5"
-                             Width="150"
-                             HorizontalAlignment="Left" />
-
-                    <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left"
-                           Content="{Binding Customer.FirstName}" />
-
-                    <Label Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left"
-                           Content="{Binding Customer.LastName}" />
-
-                    <Label Grid.Column="0" Grid.Row="3"
-                           Content="Status naprawy:"
-                           FontSize="14"
-                           Margin="0 5 0 5" />
-                    <ComboBox Grid.Column="1" Grid.Row="3" Margin="5"
-                              ItemsSource="{Binding OrderStatuses}"
-                              DisplayMemberPath="Name"
-                              SelectedValuePath="Name"
-                              SelectedValue="{Binding SelectedOrderStatus.Name}"
-                              SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsSynchronizedWithCurrentItem="True"
-                              Width="180"
-                              HorizontalAlignment="Left" />
-
-                    <Label Grid.Column="0" Grid.Row="4"
-                           Content="Typ naprawy:"
-                           FontSize="14"
-                           Margin="0 5 0 5" />
-                    <ComboBox Grid.Column="1" Grid.Row="4" Margin="5"
-                              ItemsSource="{Binding OrderTypes}"
-                              DisplayMemberPath="Name"
-                              SelectedValuePath="Name"
-                              SelectedValue="{Binding SelectedOrderType.Name}"
-                              SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsSynchronizedWithCurrentItem="True"
-                              Width="180"
-                              HorizontalAlignment="Left" />
-
-                    <Label Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
-                           Content="Opis usterki:" />
-
-                    <TextBox Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" AcceptsReturn="True"
-                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
-                             Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <Label Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
-                           Content="Opis naprawy:" />
-
-                    <TextBox Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="2" AcceptsReturn="True"
-                             TextWrapping="Wrap" MinLines="8" Margin="10 10 10 10"
-                             Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <Label Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
-                           Content="Załączniki:" />
-
-                    <StackPanel Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Column="0" Grid.Row="0" FontSize="14"
-                                   Content="Data dodania:"
-                                   Margin="5" />
-
-                            <DatePicker Grid.Column="1" Grid.Row="0" Margin="5"
-                                        Width="150" HorizontalAlignment="Left"
-                                        IsTodayHighlighted="False"
-                                        SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                            <Label Grid.Column="0" Grid.Row="1" FontSize="14"
-                                   Content="Data zamknięcia:"
-                                   Margin="5" />
-
-                            <DatePicker Grid.Column="1" Grid.Row="1" Margin="5"
-                                        Width="150" HorizontalAlignment="Left"
-                                        IsTodayHighlighted="False"
-                                        SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
+                    <Label
+                        Grid.Column="0"
+                        Content="Opis naprawy:"
+                        FontSize="16"
+                        FontWeight="DemiBold" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="5"
+                        AcceptsReturn="True"
+                        MinLines="5"
+                        Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label
+                        Grid.Column="0"
+                        Content="Załączniki:"
+                        FontSize="16"
+                        FontWeight="DemiBold" />
+                    <ListView
+                        Grid.Row="1"
+                        MinHeight="100"
+                        Margin="5"
+                        Background="GhostWhite"
+                        DisplayMemberPath="FileName"
+                        ItemsSource="{Binding Attachments}"
+                        SelectedItem="{Binding SelectedAttachment}" />
+                    <StackPanel
+                        Grid.RowSpan="2"
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom">
+                        <Button
+                            Width="20"
+                            Height="20"
+                            Margin="3"
+                            Command="{Binding AddAttachmentCommand}"
+                            Foreground="Gray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconModern Padding="3" Kind="Add" />
+                        </Button>
+                        <Button
+                            Width="20"
+                            Height="20"
+                            Margin="3"
+                            Command="{Binding RemoveAttachmentCommand}"
+                            Foreground="Gray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconModern Padding="3" Kind="Minus" />
+                        </Button>
                     </StackPanel>
 
-                    <ListView Grid.Row="9" Grid.ColumnSpan="2"
-                              MinHeight="120" Margin="10 10 10 10"
-                              SelectedItem="{Binding SelectedAttachment}"
-                              ItemsSource="{Binding Attachments}"
-                              DisplayMemberPath="FileName" />
-
-                    <Label Grid.Column="2" Grid.Row="10" HorizontalAlignment="Left" FontSize="18" FontWeight="Bold"
-                           Content="Komentarz:" />
-
-                    <TextBox Grid.Column="2" Grid.Row="11"
-                             Grid.ColumnSpan="2" AcceptsReturn="True"
-                             TextWrapping="Wrap" MinLines="3" Margin="10 10 10 10"
-                             Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <DockPanel Grid.Row="10" Grid.ColumnSpan="2" FlowDirection="LeftToRight"
-                               HorizontalAlignment="Left">
-                        <Button Content="Dodaj +" Width="80"
-                                Command="{Binding AddAttachmentCommand}"
-                                Margin="10 0 10 0" />
-                        <Button Content="Usuń -" Width="60"
-                                Command="{Binding RemoveAttachmentCommand}"
-                                Margin="5 0 5 0" />
-                    </DockPanel>
                 </Grid>
-            </ScrollViewer>
-        </Border>
+            </Border>
+            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label
+                        Grid.Column="0"
+                        Content="Komentarz:"
+                        FontSize="16"
+                        FontWeight="DemiBold" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="5"
+                        AcceptsReturn="True"
+                        MinLines="3"
+                        Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -285,7 +285,7 @@ namespace ERService.OrderModule.ViewModels
 
         protected override bool OnSaveCanExecute()
         {
-            return Order != null && !Order.HasErrors && HasChanges && !WizardMode;
+            return Order != null && !Order.HasErrors && HasChanges;
         }
 
         protected async override void OnSaveExecute()
@@ -307,7 +307,12 @@ namespace ERService.OrderModule.ViewModels
             var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
 
             var order = new Order();
-            order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
+
+            if (numeration.Any())
+            {
+                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
+            }
+            
             order.DateAdded = DateTime.Now;
             order.DateEnded = DateTime.Now.AddDays(14);
             _orderRepository.Add(order);
@@ -346,10 +351,11 @@ namespace ERService.OrderModule.ViewModels
                 }
 
                 //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
-                if (args.PropertyName == nameof(Order.HasErrors))
-                {
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
+                //if (args.PropertyName == nameof(Order.HasErrors))
+                //{
+
+                //}
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
                 if (args.PropertyName == nameof(Order.Number))
                 {

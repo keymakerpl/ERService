@@ -5,6 +5,7 @@ namespace ERService.MSSQLDataAccess.Migrations
     using ERService.Infrastructure.Base.Common;
     using System;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity;
     using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ERServiceDbContext>
@@ -48,6 +49,9 @@ namespace ERService.MSSQLDataAccess.Migrations
             context.Database.Log = Console.Write;
 #endif
 
+            context.Numeration.AddOrUpdate(n => n.Name, new Numeration() { Name = "default", Pattern = "[MM][RRRR]" });
+
+            // ACLe
             context.AclVerbs.AddOrUpdate(a => a.Name,
                 new AclVerb() { Name = "Dostêp do konfiguracji aplikacji", DefaultValue = 0 },
                 new AclVerb() { Name = "Dostêp do konfiguracji wydruków", DefaultValue = 0 },
@@ -63,8 +67,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                 new AclVerb() { Name = "Edytowanie klientów", DefaultValue = 0 }
                 );
 
-            context.SaveChanges(); // Zapisz verby
+            context.SaveChanges();
 
+            // Przypisz Acle do roli admina
             context.Roles.AddOrUpdate(n => n.Name,
                 new Role()
                 {
@@ -72,8 +77,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                     IsSystem = true
                 });
 
-            context.SaveChanges(); // Przypisz Acle do roli admina
+            context.SaveChanges(); 
 
+            // Przypisz Verby do Acli
             var roleId = context.Roles.FirstOrDefault(r => r.Name == "Administrator").Id;
             var acls = context.ACLs.Where(a => a.RoleId == roleId);
             foreach (var acl in acls)
@@ -88,8 +94,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                     new Acl() { AclVerbId = verb.Id, Value = 1, RoleId = roleId });
             }
 
-            context.SaveChanges(); // Przypisz Verby do Acli
+            context.SaveChanges(); 
 
+            // Dodaj admina i przypisz rolê
             context.Users.AddOrUpdate(u => u.Login,
                 new User()
                 {
@@ -103,8 +110,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                 }
                 );
 
-            context.SaveChanges(); // Dodaj usera i przypisz rolê
+            context.SaveChanges(); 
 
+            // Ustawienia
             context.Settings.AddOrUpdate(s => s.Key,
                 new Setting()
                 {
@@ -167,6 +175,41 @@ namespace ERService.MSSQLDataAccess.Migrations
                 new HardwareType() { Name = "Monitor" },
                 new HardwareType() { Name = "Telewizor" }
                 );
+
+            context.SaveChanges();
+
+            foreach (var hwType in context.HardwareTypes)
+            {
+                if (context.CustomItems.Any()) break;
+                switch (hwType.Name)
+                {
+                    case "Komputer PC":
+                    case "Laptop":
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Procesor" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "RAM" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "HDD" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Grafika" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Napêd" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Bateria" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Zasilacz" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                        break;
+                    case "Monitor":
+                    case "Telewizor":
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Przek¹tna ekranu" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                        break;
+                    case "Telefon":                                                                        
+                    case "Drukarka":                        
+                    case "Nawigacja":                        
+                    case "Konsola":                        
+                    case "Aparat":
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
+                        break;
+                }
+            }
 
             context.OrderStatuses.AddOrUpdate(os => os.Name,
                 new OrderStatus() { Name = "Nowa naprawa" },

@@ -2,11 +2,13 @@
     x:Class="ERService.Settings.Views.HardwareTypesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Settings.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -50,7 +52,7 @@
                                 Width="20"
                                 Height="20"
                                 Margin="0,0,5,0"
-                                Command="{Binding AddOrderStatusCommand}"
+                                Command="{Binding AddHardwareTypeCommand}"
                                 Foreground="Gray"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                                 <iconPacks:PackIconModern Padding="3" Kind="Add" />
@@ -59,7 +61,7 @@
                                 Width="20"
                                 Height="20"
                                 Margin="0,0,15,0"
-                                Command="{Binding RemoveOrderStatusCommand}"
+                                Command="{Binding RemoveHardwareTypeCommand}"
                                 Foreground="Gray"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                                 <iconPacks:PackIconModern Padding="3" Kind="Minus" />
@@ -88,7 +90,7 @@
                                 Width="20"
                                 Height="20"
                                 Margin="0,0,5,0"
-                                Command="{Binding AddOrderStatusCommand}"
+                                Command="{Binding AddCustomItemCommand}"
                                 Foreground="Gray"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                                 <iconPacks:PackIconModern Padding="3" Kind="Add" />
@@ -97,7 +99,7 @@
                                 Width="20"
                                 Height="20"
                                 Margin="0,0,15,0"
-                                Command="{Binding RemoveOrderStatusCommand}"
+                                Command="{Binding RemoveCustomItemCommand}"
                                 Foreground="Gray"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                                 <iconPacks:PackIconModern Padding="3" Kind="Minus" />

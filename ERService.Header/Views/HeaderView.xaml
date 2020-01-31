@@ -34,22 +34,29 @@
             BadgeBackground="LightBlue"
             BadgeForeground="Black"
             BadgePlacementMode="TopLeft">
-            <Button
-                x:Name="button"
-                Width="30"
-                Height="30"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                BorderThickness="2"
-                Command="{Binding SideMenuToggleCommand}"
-                Foreground="White"
-                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                <iconPacks:PackIconModern
-                    x:Name="packIconMaterialLight"
-                    Width="20"
-                    Height="20"
-                    Kind="ArrowLeft" />
-            </Button>
+            <Grid>
+                <Button
+                    x:Name="button"
+                    Width="30"
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BorderThickness="0"
+                    Command="{Binding SideMenuToggleCommand}"
+                    Foreground="White"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                    <iconPacks:PackIconFontAwesome Kind="BarsSolid" />
+                </Button>
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Cursor" Value="Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
         </metroControls:Badged>
 
         <!--<Border HorizontalAlignment="Right"
