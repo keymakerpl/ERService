@@ -7,9 +7,15 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using SqlKata.Compilers;
+using System.Collections.ObjectModel;
 
 namespace ERService.Infrastructure.Repositories
 {
+    public class ParameterCollection<Expression> : Collection<Expression>
+    {
+    }
+
     public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
         where TContext : DbContext
         where TEntity : class
@@ -33,9 +39,17 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> result = await Context.Set<TEntity>().Where(predicate).ToListAsync();
+            return await Context.Set<TEntity>().Where(predicate).ToListAsync();
+        }        
 
-            return result;
+        public virtual async Task<IEnumerable<TEntity>> FindByAsync(QueryBuilder<TEntity> queryBuilder)
+        {
+            var compiler = new SqlServerCompiler();
+            var sqlResult = compiler.Compile(queryBuilder);
+            var query = sqlResult.Sql;
+            var bindings = sqlResult.Bindings.ToArray();
+
+            return await Context.Database.SqlQuery<TEntity>(query, bindings).ToListAsync();
         }
 
         public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,

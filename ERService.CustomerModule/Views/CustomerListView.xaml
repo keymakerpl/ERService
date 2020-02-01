@@ -19,11 +19,12 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Border
             x:Name="ToolbarBorder"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="20,0,20,0"
             BorderBrush="LightGray"
             BorderThickness="0,1,0,0">
@@ -62,6 +63,14 @@
                     <iconPacks:PackIconMaterial Kind="Plus" />
                 </Button>
             </DockPanel>
+        </Border>
+
+        <Border
+            Grid.Row="1"
+            Margin="20,0,20,0"
+            BorderBrush="LightGray"
+            BorderThickness="0,1,0,0">
+            <ContentControl prism:RegionManager.RegionName="CustomerSearchRegion" />
         </Border>
 
         <Border

@@ -11,6 +11,7 @@ namespace ERService.Infrastructure.Repositories
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(Guid id);
         Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindByAsync(QueryBuilder<TEntity> queryBuilder);
         IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProp);
         IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps);
         Task SaveAsync();

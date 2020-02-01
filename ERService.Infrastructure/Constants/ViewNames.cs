@@ -4,6 +4,7 @@
     {
         public const string CustomerView = "CustomerView";
         public const string CustomerListView = "CustomerListView";
+        public const string CustomerSearchView = "CustomerSearchView";
         public const string HardwareView = "HardwareView";
         public const string HardwareListView = "HardwareListView";
         public const string OrderListView = "OrderListView";

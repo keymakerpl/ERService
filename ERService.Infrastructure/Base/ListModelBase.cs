@@ -11,7 +11,6 @@ using System.Linq.Expressions;
 
 namespace ERService.Infrastructure.Base
 {
-    //TODO: Czy trzeba to opakować pod ListViewModel? View View!
     public abstract class ListModelBase<TEntity, TContext> : GenericRepository<TEntity, TContext>, IListModelBase<TEntity>
         where TEntity : class
         where TContext : DbContext
@@ -56,7 +55,18 @@ namespace ERService.Infrastructure.Base
         public virtual void Load(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
+            Models.Clear();
             var models = FindByInclude(predicate, includeProps);
+            foreach (var model in models)
+            {
+                Models.Add(model);
+            }
+        }
+
+        public virtual async void LoadAsync(QueryBuilder<TEntity> queryBuilder)
+        {
+            Models.Clear();
+            var models = await FindByAsync(queryBuilder);
             foreach (var model in models)
             {
                 Models.Add(model);
@@ -65,6 +75,7 @@ namespace ERService.Infrastructure.Base
 
         public virtual async void LoadAsync()
         {
+            Models.Clear();
             var models = await GetAllAsync();
             foreach (var model in models)
             {

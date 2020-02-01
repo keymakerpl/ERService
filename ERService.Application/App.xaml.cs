@@ -46,7 +46,7 @@ namespace ERService.Application
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //DispatcherUnhandledException += App_DispatcherUnhandledException;
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             base.OnStartup(e);
 

@@ -124,6 +124,7 @@ namespace ERService.OrderModule.ViewModels
 
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (e.NewItems == null) return;
             foreach (var item in e.NewItems)
             {
                 Orders.Add(new OrderWrapper((Order)item));

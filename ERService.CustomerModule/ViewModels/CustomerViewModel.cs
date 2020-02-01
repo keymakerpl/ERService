@@ -4,13 +4,16 @@ using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Repositories;
 using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -37,7 +40,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             _repository = customerRepository;
             _regionManager = regionManager;
-            _rBACManager = rBACManager;
+            _rBACManager = rBACManager;                        
 
             Customers = new ObservableCollection<Customer>();
 

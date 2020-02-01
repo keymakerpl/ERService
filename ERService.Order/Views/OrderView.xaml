@@ -48,8 +48,7 @@
                     Command="{Binding SaveCommand}"
                     Foreground="Gray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Zapisz"
-                    Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    ToolTip="Zapisz">
                     <iconPacks:PackIconMaterialLight Kind="ContentSave" />
                 </Button>
                 <Button
