@@ -18,10 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border
-            Padding="10"
-            Background="GhostWhite"
-            Style="{StaticResource DefaultBorderStyle}">
+        <Border Padding="10" Style="{StaticResource DefaultBorderStyle}">
 
             <Grid>
                 <Grid.ColumnDefinitions>

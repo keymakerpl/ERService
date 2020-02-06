@@ -34,6 +34,9 @@ namespace ERService.Business
         [StringLength(50)]
         public string Number { get; set; }
 
+        [NotMapped]
+        public string OrderNumber { get { return $"{OrderId}/{Number}"; } }
+
         [Column(TypeName = "datetime")]
         public DateTime DateAdded { get; set; }
 

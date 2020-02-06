@@ -31,6 +31,9 @@ namespace ERService.Business
         [StringLength(50)]
         public string LastName { get; set; }
 
+        [NotMapped]
+        public string FullName { get { return $"{FirstName} {LastName}"; } }
+
         [StringLength(50)]
         public string CompanyName { get; set; }
 

@@ -48,17 +48,31 @@ namespace ERService.Infrastructure.Repositories
             var sqlResult = compiler.Compile(queryBuilder);
             var query = sqlResult.Sql;
             var bindings = sqlResult.Bindings.ToArray();
-
+            
             return await Context.Database.SqlQuery<TEntity>(query, bindings).ToListAsync();
+        }
+
+        public virtual async Task<Guid[]> GetIDsBy(QueryBuilder<TEntity> queryBuilder)
+        {
+            queryBuilder.Select($"{queryBuilder.TableName}.{"Id"}");
+
+            var compiler = new SqlServerCompiler();
+            var sqlResult = compiler.Compile(queryBuilder);
+            var query = sqlResult.Sql;
+            var bindings = sqlResult.Bindings.ToArray();
+
+            Console.WriteLine($"[DEBUG] {query}");
+
+            var result = await Context.Database.SqlQuery<Guid>(query, bindings).ToListAsync();
+
+            return result.ToArray();
         }
 
         public virtual IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
             var query = GetAllIncluding(includeProps);
-            IEnumerable<TEntity> result = query.Where(predicate).ToList();
-
-            return result;
+            return query.Where(predicate).ToList();
         }
 
         public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)

@@ -102,7 +102,7 @@ namespace ERService.CustomerModule.ViewModels
 
         #region Navigation
 
-        public override bool KeepAlive { get { return true; } }
+        public override bool KeepAlive { get { return false; } }
 
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {

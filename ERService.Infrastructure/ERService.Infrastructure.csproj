@@ -61,6 +61,7 @@
     <Compile Include="Base\IListModelBase.cs" />
     <Compile Include="Base\IDetailViewModelBase.cs" />
     <Compile Include="Base\ListModelBase.cs" />
+    <Compile Include="Base\SearchViewModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />

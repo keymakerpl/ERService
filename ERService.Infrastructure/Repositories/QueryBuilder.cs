@@ -7,5 +7,7 @@ namespace ERService.Infrastructure.Repositories
         public QueryBuilder() : base(typeof(TEntity).Name)
         {            
         }
+
+        public string TableName { get { return typeof(TEntity).Name; } }
     }
 }

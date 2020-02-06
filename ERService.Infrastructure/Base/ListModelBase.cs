@@ -116,8 +116,8 @@ namespace ERService.Infrastructure.Base
 
             var viewName = parameters["ViewFullName"].ToString();
 
-            _regionManager.Regions[region].RemoveAll();
-            _regionManager.RequestNavigate(region, new Uri(viewName + parameters, UriKind.Relative));
+            //_regionManager.Regions[region].RemoveAll();
+            _regionManager.RequestNavigate(region, viewName, parameters);
         }
     }
 }

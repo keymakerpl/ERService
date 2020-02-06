@@ -140,6 +140,30 @@
                         EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                         ElementStyle="{StaticResource DataGridColumnStyle}"
                         Header="E-mail" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding CustomerAddresses[0].Street}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Ulica" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding CustomerAddresses[0].HouseNumber}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Nr. budynku" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding CustomerAddresses[0].City}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Miasto" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding CustomerAddresses[0].Postcode}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Kod" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

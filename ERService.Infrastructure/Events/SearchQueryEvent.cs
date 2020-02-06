@@ -9,6 +9,6 @@ namespace ERService.Infrastructure.Events
 
     public class SearchQueryEventArgs<TEntity>
     {
-        public QueryBuilder<TEntity> queryBuilder { get; set; }
+        public QueryBuilder<TEntity> QueryBuilder { get; set; }
     }
 }

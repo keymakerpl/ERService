@@ -19,11 +19,12 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Border
             x:Name="ToolbarBorder"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="20,0,20,0"
             BorderBrush="LightGray"
             BorderThickness="0,1,0,0">
@@ -62,6 +63,14 @@
                     <iconPacks:PackIconMaterial Kind="Plus" />
                 </Button>
             </DockPanel>
+        </Border>
+
+        <Border
+            Grid.Row="1"
+            Margin="20,0,20,0"
+            BorderBrush="LightGray"
+            BorderThickness="0,1,0,0">
+            <ContentControl prism:RegionManager.RegionName="OrderSearchRegion" />
         </Border>
 
         <Border
@@ -119,6 +128,42 @@
                         EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                         ElementStyle="{StaticResource DataGridColumnStyle}"
                         Header="Koszt" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.OrderType.Name}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Typ" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.OrderStatus.Name}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Status" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.Progress}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Postęp" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.ExternalNumber}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Numer zewnętrzny" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.Customer.FullName}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Klient" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Model.Hardwares[0].Name}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                        Header="Sprzęt" />
                     <DataGridTextColumn
                         Width="*"
                         Binding="{Binding Comment}"

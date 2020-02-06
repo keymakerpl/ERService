@@ -1,36 +1,40 @@
 ﻿using System;
 using ERService.Business;
 using ERService.CustomerModule.Wrapper;
+using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Repositories;
-using Prism.Commands;
 using Prism.Events;
 
 namespace ERService.CustomerModule.ViewModels
 {
     //TODO: refactor do bardziej abstrakcyjnej klasy
-    public class CustomerSearchViewModel
+    public class CustomerSearchViewModel : SearchViewModelBase
     {
-        private readonly IEventAggregator _eventAggregator;
+        public Customer Customer { get; }
+        public CustomerAddress CustomerAddress { get; }
 
-        public DelegateCommand SearchCommand { get; }
-        public CustomerWrapper Customer { get; }
-        public AddressWrapper CustomerAddress { get; }
-
-        public CustomerSearchViewModel(IEventAggregator eventAggregator)
+        public CustomerSearchViewModel(IEventAggregator eventAggregator): base(eventAggregator)
         {
-            _eventAggregator = eventAggregator;
-
-            SearchCommand = new DelegateCommand(OnSearchExecute);
-
-            Customer = new CustomerWrapper(new Customer());
-            CustomerAddress = new AddressWrapper(new CustomerAddress());
+            Customer =  new Customer();
+            CustomerAddress = new CustomerAddress();
         }
 
         //TODO: przebudować tak aby budował zapytnie przez refleksje na propertisach w customerwrapper
-        private void OnSearchExecute()
+        protected override void OnSearchExecute()
         {
-            var query = new QueryBuilder<Customer>();            
+            var query = new QueryBuilder<Customer>();
+
+            if (!String.IsNullOrWhiteSpace(CustomerAddress.Street) || !String.IsNullOrWhiteSpace(CustomerAddress.HouseNumber) 
+                || !String.IsNullOrWhiteSpace(CustomerAddress.City) || !String.IsNullOrWhiteSpace(CustomerAddress.Postcode))
+            {
+                query.LeftJoin(nameof(Business.CustomerAddress), $"{nameof(CustomerAddress)}.{nameof(CustomerAddress.CustomerId)}", $"{nameof(Customer)}.{nameof(Customer.Id)}");
+
+                query.WhereContains(nameof(CustomerAddress.Street), CustomerAddress.Street);
+                query.WhereContains(nameof(CustomerAddress.HouseNumber), CustomerAddress.HouseNumber);
+                query.WhereContains(nameof(CustomerAddress.City), CustomerAddress.City);
+                query.WhereContains(nameof(CustomerAddress.Postcode), CustomerAddress.Postcode ?? "");
+            }
 
             if (!String.IsNullOrWhiteSpace(Customer.FirstName))
             {
@@ -70,18 +74,9 @@ namespace ERService.CustomerModule.ViewModels
             if (!String.IsNullOrWhiteSpace(Customer.PhoneNumber2))
             {
                 query.WhereContains(nameof(Customer.PhoneNumber2), Customer.PhoneNumber2);
-            }
+            }            
 
-            if (!String.IsNullOrWhiteSpace(CustomerAddress.Street) || !String.IsNullOrWhiteSpace(CustomerAddress.HouseNumber) || !String.IsNullOrWhiteSpace(CustomerAddress.City))
-            {
-                query.Join(nameof(Business.CustomerAddress), $"{nameof(CustomerAddress)}.{nameof(CustomerAddress.Model.CustomerId)}", $"{nameof(Customer)}.{nameof(Customer.Id)}");
-
-                query.WhereContains(nameof(CustomerAddress.Street), CustomerAddress.Street);
-                query.WhereContains(nameof(CustomerAddress.HouseNumber), CustomerAddress.HouseNumber);
-                query.WhereContains(nameof(CustomerAddress.City), CustomerAddress.City);
-            }
-
-            _eventAggregator.GetEvent<SearchQueryEvent<Customer>>().Publish(new SearchQueryEventArgs<Customer>() { queryBuilder = query });
+            EventAggregator.GetEvent<SearchQueryEvent<Customer>>().Publish(new SearchQueryEventArgs<Customer>() { QueryBuilder = query });
         }
     }
 }

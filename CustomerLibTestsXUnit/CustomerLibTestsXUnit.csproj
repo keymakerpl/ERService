@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
+    <Compile Include="ViewModel\CustomerListViewModelTests.cs" />
     <Compile Include="ViewModel\CustomerViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ using ERService.Infrastructure.Dialogs;
 using System.Windows;
 using Prism.Commands;
 using ERService.Infrastructure.Events;
+using System.Linq;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -37,9 +38,17 @@ namespace ERService.CustomerModule.ViewModels
             _eventAggregator.GetEvent<SearchQueryEvent<Customer>>().Subscribe(OnSearchRequest);
         }
 
-        private void OnSearchRequest(SearchQueryEventArgs<Customer> args)
+        private async void OnSearchRequest(SearchQueryEventArgs<Customer> args)
         {
-            LoadAsync(args.queryBuilder);
+            try
+            {
+                var ids = await GetIDsBy(args.QueryBuilder);
+                Load(c => ids.Contains(c.Id), a => a.CustomerAddresses);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void OnSearchExecute()
@@ -113,7 +122,7 @@ namespace ERService.CustomerModule.ViewModels
             //Load(c => c.Id != Guid.Empty, o => o.Orders);
         }
 
-        public bool KeepAlive => false;
+        public bool KeepAlive => true;
 
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
