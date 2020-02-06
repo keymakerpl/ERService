@@ -2,6 +2,7 @@
     x:Class="ERService.OrderModule.Views.OrderView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
@@ -9,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
+    Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="750"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -38,7 +40,7 @@
                     Foreground="Gray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                     ToolTip="Anuluj">
-                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <iconPacks:PackIconMaterial Kind="CloseCircle" />
                 </Button>
                 <Button
                     Width="40"
@@ -213,7 +215,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             FontSize="14"
-                            Text="{Binding Hardware.Name}" />
+                            Text="{Binding Hardware.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Label
                             Grid.Row="1"
                             Grid.Column="0"
@@ -225,7 +227,7 @@
                             Grid.Column="1"
                             Margin="0,5,0,5"
                             FontSize="14"
-                            Text="{Binding Hardware.SerialNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Hardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Border>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">

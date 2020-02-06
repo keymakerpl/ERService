@@ -16,7 +16,8 @@ namespace ERService.OrderModule.ViewModels
 
         public OrderSearchViewModel(IOrderStatusRepository statusRepository, IOrderTypeRepository typeRepository, IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            Order = new Order() { DateAdded = DateTime.Now.AddYears(-100), DateEnded = DateTime.Now.AddYears(100) };
+            Order = new Order() { DateAdded = DateTime.Now, DateEnded = DateTime.Now };
+            Customer = new Customer();
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
@@ -51,6 +52,7 @@ namespace ERService.OrderModule.ViewModels
         }
 
         public Order Order { get; }
+        public Customer Customer { get; }
 
         public ObservableCollection<OrderStatus> OrderStatuses { get; private set; }
 
@@ -112,6 +114,16 @@ namespace ERService.OrderModule.ViewModels
 
             query.LeftJoin(nameof(Customer), $"{nameof(Customer)}.{nameof(Customer.Id)}", $"{nameof(Order)}.{nameof(Order.CustomerId)}");
 
+            if (!String.IsNullOrEmpty(Customer.FirstName))
+            {
+                query.WhereLike(nameof(Customer.FirstName), Customer.FirstName);
+            }
+
+            if (!String.IsNullOrEmpty(Customer.LastName))
+            {
+                query.WhereLike(nameof(Customer.LastName), Customer.LastName);
+            }
+
             if (!String.IsNullOrWhiteSpace(Order.Number))
             {
                 query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", Order.Number);
@@ -143,7 +155,11 @@ namespace ERService.OrderModule.ViewModels
 
             if (EndDateIsChecked && Order.DateEnded != null) 
             {
-                //query.WhereDate(nameof(Order.DateEnded), "<=", Order.DateEnded.Date.);
+                query.WhereDate(nameof(Order.DateEnded), ">=", Order.DateEnded.Date);
+                if (DateEndTo.HasValue)
+                {
+                    query.WhereDate(nameof(Order.DateEnded), "<=", DateEndTo.Value.Date);
+                }
             }            
 
             EventAggregator.GetEvent<SearchQueryEvent<Order>>().Publish(new SearchQueryEventArgs<Order>() { QueryBuilder = query });

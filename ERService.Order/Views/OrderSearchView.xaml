@@ -69,7 +69,12 @@
                         HorizontalAlignment="Left"
                         Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Grid Grid.Row="3" Grid.ColumnSpan="3">
+                    <Grid
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="3"
+                        Margin="5"
+                        VerticalAlignment="Center">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <ToggleButton
@@ -93,7 +98,6 @@
                                     IsEnabled="{Binding RegisterDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedDate="{Binding DateAddedTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
                             </StackPanel>
-
                             <StackPanel Orientation="Horizontal">
                                 <ToggleButton
                                     Width="25"
@@ -106,7 +110,7 @@
                                     Margin="0,5,5,5"
                                     HorizontalAlignment="Left"
                                     IsEnabled="{Binding EndDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                                    SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
                                 <Label Margin="5,5,0,5" Content="Do:" />
                                 <DatePicker
                                     Width="95"
@@ -117,6 +121,37 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
+
+                    <GroupBox
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Header="Klient">
+                        <GroupBox.Style>
+                            <Style />
+                        </GroupBox.Style>
+                        <Grid Margin="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label Content="Imię:" />
+                            <TextBox
+                                Grid.Column="1"
+                                Margin="2"
+                                Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Grid.Row="1" Content="Nazwisko:" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="2"
+                                Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </GroupBox>
 
                     <Label
                         Grid.Row="1"

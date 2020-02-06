@@ -53,7 +53,7 @@ namespace ERService.StartPage.ViewModels
             parameters.Add("Wizard", true);
             parameters.Add("ViewFullName", ViewNames.CustomerView);
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, new Uri(ViewNames.CustomerView + parameters, UriKind.Relative));
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.CustomerView, parameters);
         }
 
         private void OnSettingsCommandExecute()

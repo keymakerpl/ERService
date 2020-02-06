@@ -132,10 +132,10 @@ namespace ERService.CustomerModule.ViewModels
             if(WizardMode)
                 InitializeCustomers();
 
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id) && AllowLoadAsync)
+            var id = navigationContext.Parameters.GetValue<Guid>("ID");
+            if (id != null && AllowLoadAsync)
             {
-                await LoadAsync(Guid.Parse(id));
+                await LoadAsync(id);
             }
 
             if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditCustomer))

@@ -54,7 +54,7 @@ namespace ERService.OrderModule.ViewModels
         public OrderWrapper SelectedOrder
         {
             get { return _selectedOrder; }
-            set {_selectedOrder = value; SelectedModel = value.Model; DeleteCommand.RaiseCanExecuteChanged(); }
+            set {_selectedOrder = value; SelectedModel = value?.Model; DeleteCommand.RaiseCanExecuteChanged(); }
         }
 
         public ObservableCollection<OrderWrapper> Orders { get; private set; }
