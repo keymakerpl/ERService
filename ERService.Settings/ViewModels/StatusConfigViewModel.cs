@@ -6,6 +6,7 @@ using ERService.OrderModule.Wrapper;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -95,7 +96,7 @@ namespace ERService.Settings.ViewModels
             }
         }
 
-        #region Events and Event Hanlers
+        #region Events and Event Handlers
         protected override bool OnSaveCanExecute()
         {
             return (_orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges());
@@ -109,22 +110,28 @@ namespace ERService.Settings.ViewModels
             HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }
 
-        private void OnAddOrderStatusExecute()
+        private async void OnAddOrderStatusExecute()
         {
             var wrappedOrderStatus = new OrderStatusWrapper(new OrderStatus());
             _orderStatusRepository.Add(wrappedOrderStatus.Model);
             wrappedOrderStatus.PropertyChanged += WrappedStatus_PropertyChanged;
-            wrappedOrderStatus.Name = "";
+
+            var newStatusName = await _messageDialogService.ShowInputMessageAsync(this, "Nowy status naprawy...", "Podaj nazwę nowego statusu: ");
+            if (String.IsNullOrWhiteSpace(newStatusName)) return;
+            wrappedOrderStatus.Name = newStatusName;
 
             OrderStatuses.Add(wrappedOrderStatus);
         }
 
-        private void OnAddOrderTypeExecute()
+        private async void OnAddOrderTypeExecute()
         {
             var wrappedOrderType = new OrderTypeWrapper(new OrderType());
             _orderTypeRepository.Add(wrappedOrderType.Model);
             wrappedOrderType.PropertyChanged += WrappedType_PropertyChanged;
-            wrappedOrderType.Name = "";
+
+            var newTypeName = await _messageDialogService.ShowInputMessageAsync(this, "Nowy typ naprawy...", "Podaj nazwę nowego typu: ");
+            if (String.IsNullOrWhiteSpace(newTypeName)) return;
+            wrappedOrderType.Name = newTypeName;
 
             OrderTypes.Add(wrappedOrderType);
         }

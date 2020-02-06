@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class User 
+    public class User : IVersionedRow
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -39,6 +39,8 @@ namespace ERService.Business
         public Guid? RoleId { get; set; }
 
         public Role Role { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

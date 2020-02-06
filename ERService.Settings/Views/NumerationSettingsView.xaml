@@ -13,62 +13,148 @@
     mc:Ignorable="d">
     <Grid>
         <GroupBox Margin="0,5,0,0" Header="Numeracja">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition />
                     </Grid.RowDefinitions>
-
-                    <Label Content="Schemat numeracji:" FontSize="14" />
-                    <TextBox
-                        Grid.Row="0"
+                    <Border
                         Grid.Column="1"
-                        Width="180"
-                        Margin="5,0,5,0"
-                        Text="{Binding Numeration.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <StackPanel
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="4"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                        <Button
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Width="80"
-                            Height="35"
-                            Margin="10"
-                            HorizontalAlignment="Right"
-                            Command="{Binding SaveCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterialLight
-                                    Width="17"
-                                    Height="17"
-                                    Margin="3,0,5,0"
-                                    VerticalAlignment="Center"
-                                    Kind="ContentSave" />
-                                <TextBlock
-                                    Margin="2,4,4,4"
-                                    VerticalAlignment="Center"
-                                    FontSize="13"
-                                    Text="Zapisz" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-
-                    <Label
-                        Grid.Row="1"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Content="[MM][RRRR]" />
+                        Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="200" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Margin="5"
+                                Content="Schemat numeracji:"
+                                FontSize="14"
+                                FontWeight="DemiBold" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="180"
+                                Height="30"
+                                Margin="5"
+                                Text="{Binding Numeration.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <Label
+                                Grid.Row="1"
+                                Margin="5"
+                                Content="Przykład:"
+                                FontSize="14"
+                                FontWeight="DemiBold" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Height="30"
+                                Margin="5"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{Binding NumerationExample, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                FontSize="16"
+                                FontWeight="DemiBold" />
+
+                        </Grid>
+                    </Border>
+                    <Border
+                        Width="250"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource DefaultBorderStyle}">
+                        <StackPanel Margin="5" Orientation="Vertical">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Content="[MM]"
+                                    FontSize="14"
+                                    FontWeight="DemiBold" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content=" - miesiąc"
+                                    FontSize="14" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Content="[RRRR]"
+                                    FontSize="14"
+                                    FontWeight="DemiBold" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content=" - rok"
+                                    FontSize="14" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Content="[USER]"
+                                    FontSize="14"
+                                    FontWeight="DemiBold" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content=" - inicjały użytkownika"
+                                    FontSize="14" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
 
                 </Grid>
-            </StackPanel>
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="80"
+                        Height="35"
+                        Margin="10"
+                        HorizontalAlignment="Right"
+                        Command="{Binding SaveCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialLight
+                                Width="17"
+                                Height="17"
+                                Margin="3,0,5,0"
+                                VerticalAlignment="Center"
+                                Kind="ContentSave" />
+                            <TextBlock
+                                Margin="2,4,4,4"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Text="Zapisz" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
     </Grid>

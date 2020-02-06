@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Acl 
+    public class Acl : IVersionedRow
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,6 +19,8 @@ namespace ERService.Business
         public Guid RoleId { get; set; }
 
         public int Value { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

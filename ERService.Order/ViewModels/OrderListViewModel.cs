@@ -2,17 +2,17 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
-using ERService.Infrastructure.Interfaces;
+using ERService.Infrastructure.Events;
 using ERService.MSSQLDataAccess;
 using ERService.OrderModule.Wrapper;
 using ERService.RBAC;
-using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Linq;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -20,6 +20,7 @@ namespace ERService.OrderModule.ViewModels
     public class OrderListViewModel : ListModelBase<Order, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
         private IMessageDialogService _dialogService;
+        private readonly IEventAggregator _eventAggregator;
         private IRBACManager _rbacManager;
 
         public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
@@ -27,16 +28,33 @@ namespace ERService.OrderModule.ViewModels
         {
             _rbacManager = rBACManager;
             _dialogService = messageDialogService;
+            _eventAggregator = eventAggregator;
+
+            _eventAggregator.GetEvent<SearchQueryEvent<Order>>().Subscribe(OnSearchRequest, true);
 
             Orders = new ObservableCollection<OrderWrapper>();
             Models.CollectionChanged += Models_CollectionChanged;
+        }
+
+        private async void OnSearchRequest(SearchQueryEventArgs<Order> args)
+        {
+            try
+            {
+                Orders.Clear();
+                var ids = await GetIDsBy(args.QueryBuilder);
+                Load(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private OrderWrapper _selectedOrder;
         public OrderWrapper SelectedOrder
         {
             get { return _selectedOrder; }
-            set {_selectedOrder = value; SelectedModel = value.Model; DeleteCommand.RaiseCanExecuteChanged(); }
+            set {_selectedOrder = value; SelectedModel = value?.Model; DeleteCommand.RaiseCanExecuteChanged(); }
         }
 
         public ObservableCollection<OrderWrapper> Orders { get; private set; }
@@ -119,11 +137,12 @@ namespace ERService.OrderModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Load(o => o.CustomerId.HasValue, h => h.Hardwares);
+            //Load(o => o.CustomerId.HasValue, h => h.Hardwares);
         }
 
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (e.NewItems == null) return;
             foreach (var item in e.NewItems)
             {
                 Orders.Add(new OrderWrapper((Order)item));

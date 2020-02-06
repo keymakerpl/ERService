@@ -28,8 +28,6 @@ namespace ERService.OrderModule.ViewModels
     {
         private string _cost;
         private string _externalNumber;
-        private Customer _customer;
-        private Hardware _hardware;
         private OrderWrapper _order;
         private Blob _selectedAttachment;
         private OrderType _selectedOrderType;
@@ -44,6 +42,8 @@ namespace ERService.OrderModule.ViewModels
         private readonly IPrintTemplateRepository _templateRepository;
         private readonly ISettingsManager<Setting> _settingsManager;
         private bool _wizardMode;
+        private CustomerWrapper _customer;
+        private HardwareWrapper _hardware;
 
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator,
@@ -82,11 +82,11 @@ namespace ERService.OrderModule.ViewModels
                 parameters.Add("IsToolbarVisible", false);
                 parameters.Add("ModelWrappers", new object[] 
                 { 
-                    new CustomerWrapper(Customer), 
-                    new HardwareWrapper(Hardware), 
+                    Customer, 
+                    Hardware, 
                     Order,
                     companyConfig,
-                    new AddressWrapper(Customer.CustomerAddresses.FirstOrDefault())
+                    new AddressWrapper(Customer.Model.CustomerAddresses.FirstOrDefault())
                 });
 
                 _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
@@ -100,14 +100,22 @@ namespace ERService.OrderModule.ViewModels
 
         public string Cost { get => _cost; set { SetProperty(ref _cost, value); } }
 
-        public Customer Customer { get => _customer; set { SetProperty(ref _customer, value); } }
+        public CustomerWrapper Customer
+        {
+            get { return _customer; }
+            set { SetProperty(ref _customer, value); }
+        }
 
         public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
 
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand<object> PrintCommand { get; }
 
-        public Hardware Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+        public HardwareWrapper Hardware
+        {
+            get { return _hardware; }
+            set { SetProperty(ref _hardware, value); }
+        }
 
         public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
@@ -181,7 +189,10 @@ namespace ERService.OrderModule.ViewModels
 
         public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            continuationCallback(true);
+            if (!WizardMode)
+                base.ConfirmNavigationRequest(navigationContext, continuationCallback);
+            else
+                continuationCallback(true);
         }
 
         public override bool IsNavigationTarget(NavigationContext navigationContext)
@@ -203,32 +214,32 @@ namespace ERService.OrderModule.ViewModels
                 //TODO: REFACTOR, czy możemy użyć tutaj budowniczego np. OrderBuilder?
                 var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
                 if (customer != null)
-                    Customer = customer;
+                    Customer = new CustomerWrapper(customer);
 
                 var hardware = navigationContext.Parameters.GetValue<Hardware>("Hardware");
                 if (hardware != null)
-                    Hardware = hardware;
+                    Hardware = new HardwareWrapper(hardware);
 
                 await LoadAsync(Guid.Empty);
 
                 //Order.DateAdded = DateTime.Now;
                 Order.Model.Hardwares.Clear();
-                Order.Model.Hardwares.Add(Hardware);
+                Order.Model.Hardwares.Add(Hardware.Model);
                 if (Customer.Id != Guid.Empty)
                 {
                     Order.Model.CustomerId = Customer.Id;
                 }
                 else
                 {
-                    Order.Model.Customer = Customer;
+                    Order.Model.Customer = Customer.Model;
                 }
             }
             else
             {
-                var id = navigationContext.Parameters.GetValue<string>("ID");
-                if (!String.IsNullOrWhiteSpace(id))
+                var id = navigationContext.Parameters.GetValue<Guid>("ID");
+                if (id != null)
                 {
-                    await LoadAsync(Guid.Parse(id));
+                    await LoadAsync(id);
                 }
             }
 
@@ -237,6 +248,11 @@ namespace ERService.OrderModule.ViewModels
         }
 
         private void OnGoBackExecute()
+        {
+            _navigationService.Journal.GoBack();
+        }
+
+        protected override void OnCancelEditExecute()
         {
             _navigationService.Journal.GoBack();
         }
@@ -274,18 +290,38 @@ namespace ERService.OrderModule.ViewModels
         private void InitializeCustomer()
         {
             if (WizardMode) return;
-            Customer = Order.Model.Customer;
+            Customer = new CustomerWrapper(Order.Model.Customer);
         }
 
         private void InitializeHarware()
         {
             if (WizardMode) return;
-            Hardware = Order.Model.Hardwares.FirstOrDefault();
+            Hardware = new HardwareWrapper(Order.Model.Hardwares.FirstOrDefault());
+            Hardware.PropertyChanged += ((sender, args) =>
+            {
+                if (!HasChanges)
+                {
+                    HasChanges = _orderRepository.HasChanges();
+                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
+                }
+
+                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
+                //if (args.PropertyName == nameof(Order.HasErrors))
+                //{
+
+                //}
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+                if (args.PropertyName == nameof(Order.Number))
+                {
+                    SetTitle();
+                }
+            });
         }
 
         protected override bool OnSaveCanExecute()
         {
-            return Order != null && !Order.HasErrors && HasChanges && !WizardMode;
+            return Order != null && !Order.HasErrors && HasChanges;
         }
 
         protected async override void OnSaveExecute()
@@ -297,7 +333,8 @@ namespace ERService.OrderModule.ViewModels
 
                 //Powiadom agregator eventów, że zapisano
                 //RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
-                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+                //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+                _navigationService.Journal.GoBack();
             });
         }
 
@@ -307,7 +344,12 @@ namespace ERService.OrderModule.ViewModels
             var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
 
             var order = new Order();
-            order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
+
+            if (numeration.Any())
+            {
+                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
+            }
+            
             order.DateAdded = DateTime.Now;
             order.DateEnded = DateTime.Now.AddDays(14);
             _orderRepository.Add(order);
@@ -346,10 +388,11 @@ namespace ERService.OrderModule.ViewModels
                 }
 
                 //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
-                if (args.PropertyName == nameof(Order.HasErrors))
-                {
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
+                //if (args.PropertyName == nameof(Order.HasErrors))
+                //{
+
+                //}
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
                 if (args.PropertyName == nameof(Order.Number))
                 {

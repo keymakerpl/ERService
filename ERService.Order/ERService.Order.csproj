@@ -75,9 +75,13 @@
     </Compile>
     <Compile Include="ViewModels\OrderListViewModel.cs" />
     <Compile Include="Numeration\OrderNumberGenerator.cs" />
+    <Compile Include="ViewModels\OrderSearchViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="Views\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderSearchView.xaml.cs">
+      <DependentUpon>OrderSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
@@ -140,6 +144,10 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Views\OrderListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

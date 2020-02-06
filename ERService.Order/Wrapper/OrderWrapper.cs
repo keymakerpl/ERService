@@ -18,7 +18,11 @@ namespace ERService.OrderModule.Wrapper
         [Interpreter(Name = "Numer zlecenia", Pattern = "[%o_number%]")]
         public string Number
         {
-            get { return $"{Model.OrderId}/{Model.Number}"; }
+            get
+            {
+                var slash = !String.IsNullOrWhiteSpace(Model.Number) ? "/" : String.Empty;
+                return $"{Model.OrderId}{slash}{Model.Number}";
+            }
             set { SetProperty(ref _number, value); }
         }
 

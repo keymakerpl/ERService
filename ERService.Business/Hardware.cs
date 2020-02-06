@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Hardware 
+    public class Hardware : IVersionedRow
     {
         public Hardware()
         {
@@ -30,6 +30,8 @@ namespace ERService.Business
         public string SerialNumber { get; set; }
 
         public ICollection<HwCustomItem> HardwareCustomItems { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

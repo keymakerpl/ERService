@@ -30,14 +30,21 @@ namespace ERService.Header.ViewModels
             set { SetProperty(ref _inProgressCounter, value); }
         }
 
+        private int _badgeValue = 0;
+
+        public int BadgeValue
+        {
+            get { return _badgeValue; }
+            set { SetProperty(ref _badgeValue, value); }
+        }    
+
         private int _expiredOrderCounter;
-        private IOrderRepository _orderRepository;
-        private IEventAggregator _eventAggregator;
-        //private readonly IRBACManager _rBACManager;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IRegionManager _regionManager;
 
         public DelegateCommand UserLogoutCommand { get; private set; }
         public DelegateCommand UserSettingsCommand { get; private set; }
+        public DelegateCommand SideMenuToggleCommand { get; }
 
         public int ExpiredOrderCounter
         {
@@ -46,17 +53,21 @@ namespace ERService.Header.ViewModels
         }        
 
         public HeaderViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
-        {
-            //_orderRepository = orderRepository;
-            _eventAggregator = eventAggregator;
-            //_rBACManager = rBACManager;
+        {            
+            _eventAggregator = eventAggregator;            
             _regionManager = regionManager;
 
             UserLogoutCommand = new DelegateCommand(OnUserLogoutExecute);
             UserSettingsCommand = new DelegateCommand(OnUserSettingsExecute);
+            SideMenuToggleCommand = new DelegateCommand(OnSideMenuToggleExecute);
 
             _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(OnUserLogged, true);
-            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLoggedout, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLoggedout, true);            
+        }
+
+        private void OnSideMenuToggleExecute()
+        {
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish();
         }
 
         private void OnUserSettingsExecute()

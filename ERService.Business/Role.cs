@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Role
+    public class Role : IVersionedRow
     {
         public Role()
         {
@@ -33,6 +33,8 @@ namespace ERService.Business
         public ICollection<Acl> ACLs { get; set; }
 
         public ICollection<User> Users { get; set; }
-        
+
+        [ConcurrencyCheck]
+        public long RowVersion { get; set; }
     }
 }

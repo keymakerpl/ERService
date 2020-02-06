@@ -32,8 +32,8 @@ namespace ERService.Settings.ViewModels
             HardwareTypes = new ObservableCollection<HardwareTypeWrapper>();
             CustomItems = new ObservableCollection<CustomItemWrapper>();
 
-            AddCommand = new DelegateCommand(OnAddExecute);
-            RemoveCommand = new DelegateCommand(OnRemoveExecute, OnRemoveCanExecute);
+            AddHardwareTypeCommand = new DelegateCommand(OnAddHardwareTypeExecute);
+            RemoveHardwareTypeCommand = new DelegateCommand(OnRemoveHardwareTypeExecute, OnRemoveCanExecute);
 
             AddCustomItemCommand = new DelegateCommand(OnAddCustomItemExecute, OnAddCustomItemCanExecute);
             RemoveCustomItemCommand = new DelegateCommand(OnRemoveCustomItemExecute, OnCanRemoveCustomItemExecute);
@@ -41,7 +41,7 @@ namespace ERService.Settings.ViewModels
             InitializeEvents();
         }
 
-        public DelegateCommand AddCommand { get; private set; }
+        public DelegateCommand AddHardwareTypeCommand { get; private set; }
 
         public DelegateCommand AddCustomItemCommand { get; private set; }
 
@@ -49,7 +49,7 @@ namespace ERService.Settings.ViewModels
 
         public ObservableCollection<HardwareTypeWrapper> HardwareTypes { get; set; }
 
-        public DelegateCommand RemoveCommand { get; private set; }
+        public DelegateCommand RemoveHardwareTypeCommand { get; private set; }
 
         public DelegateCommand RemoveCustomItemCommand { get; private set; }
 
@@ -69,7 +69,7 @@ namespace ERService.Settings.ViewModels
             set
             {
                 SetProperty(ref _selectedHardwareType, value);
-                RemoveCommand.RaiseCanExecuteChanged();
+                RemoveHardwareTypeCommand.RaiseCanExecuteChanged();
                 AddCustomItemCommand.RaiseCanExecuteChanged();
             }
         }
@@ -151,24 +151,33 @@ namespace ERService.Settings.ViewModels
             return SelectedHardwareType != null;
         }
 
-        private void OnAddCustomItemExecute()
+        private async void OnAddCustomItemExecute()
         {
-            var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });
-            wrappedCustomItem.PropertyChanged += WrappedCustomItem_PropertyChanged;
-            _customItemRepository.Add(wrappedCustomItem.Model);
-            CustomItems.Add(wrappedCustomItem);
+            var dialogResult = await _messageDialogService.ShowInputMessageAsync(this, "Nowe pole zdefiniowane...", "Podaj nazwę nowego pola:");
 
-            wrappedCustomItem.Key = "";
+            if (!String.IsNullOrWhiteSpace(dialogResult))
+            {
+                var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });
+                wrappedCustomItem.PropertyChanged += WrappedCustomItem_PropertyChanged;
+                _customItemRepository.Add(wrappedCustomItem.Model);
+                CustomItems.Add(wrappedCustomItem);
+
+                wrappedCustomItem.Key = dialogResult;
+            }
         }
 
-        private void OnAddExecute()
+        private async void OnAddHardwareTypeExecute()
         {
-            var wrappedHardwareType = new HardwareTypeWrapper(new HardwareType());
-            wrappedHardwareType.PropertyChanged += WrappedHardwareType_PropertyChanged;
-            _hardwareTypeRepository.Add(wrappedHardwareType.Model);
-            HardwareTypes.Add(wrappedHardwareType);
+            var dialogResult = await _messageDialogService.ShowInputMessageAsync(this, "Nowy typ naprawy...", "Podaj nazwę nowego typu:");
+            if (!String.IsNullOrWhiteSpace(dialogResult))
+            {
+                var wrappedHardwareType = new HardwareTypeWrapper(new HardwareType());
+                wrappedHardwareType.PropertyChanged += WrappedHardwareType_PropertyChanged;
+                _hardwareTypeRepository.Add(wrappedHardwareType.Model);
+                HardwareTypes.Add(wrappedHardwareType);
 
-            wrappedHardwareType.Name = "";
+                wrappedHardwareType.Name = dialogResult;
+            }                        
         }
 
         private bool OnCanRemoveCustomItemExecute()
@@ -191,7 +200,7 @@ namespace ERService.Settings.ViewModels
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
-        private void OnRemoveExecute()
+        private void OnRemoveHardwareTypeExecute()
         {
             throw new NotImplementedException();
         }

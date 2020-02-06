@@ -7,27 +7,59 @@
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Header.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="100"
     d:DesignWidth="1000"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
+    <Grid VerticalAlignment="Center">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <metroControls:Badged
             Grid.Column="1"
             Margin="5"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
+            Badge="{Binding BadgeValue, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            BadgeBackground="LightBlue"
+            BadgeForeground="Black"
+            BadgePlacementMode="TopLeft">
+            <Grid>
+                <Button
+                    x:Name="button"
+                    Width="30"
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BorderThickness="0"
+                    Command="{Binding SideMenuToggleCommand}"
+                    Foreground="White"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                    <iconPacks:PackIconFontAwesome Kind="BarsSolid" />
+                </Button>
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Cursor" Value="Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+        </metroControls:Badged>
 
-            <!--<Border HorizontalAlignment="Right"
+        <!--<Border HorizontalAlignment="Right"
                     VerticalAlignment="Center" BorderThickness="2"
                     BorderBrush="CornflowerBlue"
                     CornerRadius="1"
@@ -80,7 +112,7 @@
                 </Grid>
             </Border>-->
 
-            <!--<Border Visibility="Hidden"
+        <!--<Border Visibility="Hidden"
                 MinWidth="170"
                 MinHeight="40"
                 Margin="5,0,5,0"
@@ -155,8 +187,6 @@
                         FontSize="13" />
                 </Grid>
             </Border>-->
-
-        </StackPanel>
 
     </Grid>
 </UserControl>

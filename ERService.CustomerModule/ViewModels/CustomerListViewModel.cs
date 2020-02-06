@@ -8,13 +8,19 @@ using ERService.Infrastructure.Constants;
 using ERService.RBAC;
 using ERService.Infrastructure.Dialogs;
 using System.Windows;
+using Prism.Commands;
+using ERService.Infrastructure.Events;
+using System.Linq;
 
 namespace ERService.CustomerModule.ViewModels
 {
     public class CustomerListViewModel : ListModelBase<Customer, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
+        private readonly IEventAggregator _eventAggregator;
         private IRBACManager _rbacManager;
         private IMessageDialogService _dialogService;
+
+        public DelegateCommand SearchCommand { get; }
 
         public CustomerListViewModel(
             ERServiceDbContext context,
@@ -23,9 +29,32 @@ namespace ERService.CustomerModule.ViewModels
             IRBACManager rBACManager,
             IMessageDialogService dialogService) : base(context, regionManager, eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             _rbacManager = rBACManager;
-            _dialogService = dialogService;                                    
-        }        
+            _dialogService = dialogService;
+
+            SearchCommand = new DelegateCommand(OnSearchExecute);
+
+            _eventAggregator.GetEvent<SearchQueryEvent<Customer>>().Subscribe(OnSearchRequest);
+        }
+
+        private async void OnSearchRequest(SearchQueryEventArgs<Customer> args)
+        {
+            try
+            {
+                var ids = await GetIDsBy(args.QueryBuilder);
+                Load(c => ids.Contains(c.Id), a => a.CustomerAddresses);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void OnSearchExecute()
+        {
+            
+        }
 
         //TODO: Refactor with OnMouseDoubleClick
         public async override void OnAddExecute()
@@ -90,10 +119,10 @@ namespace ERService.CustomerModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Load(c => c.Id != Guid.Empty, o => o.Orders);
+            //Load(c => c.Id != Guid.Empty, o => o.Orders);
         }
 
-        public bool KeepAlive => false;
+        public bool KeepAlive => true;
 
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {

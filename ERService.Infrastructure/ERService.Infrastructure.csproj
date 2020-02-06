@@ -61,6 +61,7 @@
     <Compile Include="Base\IListModelBase.cs" />
     <Compile Include="Base\IDetailViewModelBase.cs" />
     <Compile Include="Base\ListModelBase.cs" />
+    <Compile Include="Base\SearchViewModelBase.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />
@@ -77,12 +78,14 @@
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\AfterLicenseValidationRequestEvent.cs" />
+    <Compile Include="Events\AfterSideMenuButtonToggled.cs" />
     <Compile Include="Events\LicenseValidationRequestEvent.cs" />
     <Compile Include="Events\AfterLogedoutEvent.cs" />
     <Compile Include="Events\AfterSelectedHardwareTypeChangedEvent.cs" />
     <Compile Include="Events\AfterDetailOpenedEvent.cs" />
     <Compile Include="Base\IView.cs" />
     <Compile Include="Events\PrintEvent.cs" />
+    <Compile Include="Events\SearchQueryEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
     <Compile Include="Helpers\Cryptography.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
@@ -117,6 +120,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Repositories\QueryBuilder.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\IGenericRepository.cs" />
     <Compile Include="Wrapper\IModelWrapper.cs" />
@@ -146,6 +150,12 @@
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
       <Version>7.2.0.1422</Version>
+    </PackageReference>
+    <PackageReference Include="SqlKata">
+      <Version>1.1.7</Version>
+    </PackageReference>
+    <PackageReference Include="System.Linq.Expressions">
+      <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

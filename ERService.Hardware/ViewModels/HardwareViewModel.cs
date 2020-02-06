@@ -23,7 +23,7 @@ namespace ERService.HardwareModule.ViewModels
         public HwCustomItem HwCustomItem { get { return _hwCustomItem; } set { SetProperty(ref _hwCustomItem, value); } }
     }
 
-    public class HardwareViewModel : DetailViewModelBase, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
+    public class HardwareViewModel : DetailViewModelBase
     {
         public ObservableCollection<HwCustomItem> HardwareCustomItems;
         private Customer _customer;
@@ -113,9 +113,10 @@ namespace ERService.HardwareModule.ViewModels
         }
 
         private async void HardwareViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
+        {            
             if (e.PropertyName == "SelectedHardwareType")
             {
+                GoForwardCommand.RaiseCanExecuteChanged();
                 await LoadHardwareCustomItemsAsync();
             }
         }
@@ -123,6 +124,11 @@ namespace ERService.HardwareModule.ViewModels
         private void InitializeHardware(Hardware hardware)
         {
             Hardware = new HardwareWrapper(hardware);
+            Hardware.PropertyChanged += (s,a) => 
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                GoForwardCommand.RaiseCanExecuteChanged();
+            };
         }
 
         private async Task LoadHardwareCustomItemsAsync()
@@ -165,7 +171,7 @@ namespace ERService.HardwareModule.ViewModels
 
         private bool OnGoForwardCanExecute()
         {
-            return true;
+            return Hardware != null && !String.IsNullOrWhiteSpace(Hardware.Name) && SelectedHardwareType != null;
         }
 
         private void OnGoForwardExecute()
@@ -214,7 +220,14 @@ namespace ERService.HardwareModule.ViewModels
 
             var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
             if (WizardMode && customer != null)
+            {
                 Customer = customer;
+                if (Hardware == null)
+                {
+                    InitializeHardware(GetNewDetail());
+                }
+            }
+                
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
             if (id != null && AllowLoadAsync)

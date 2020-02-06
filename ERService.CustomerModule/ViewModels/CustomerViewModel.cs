@@ -4,13 +4,16 @@ using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Repositories;
 using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -37,7 +40,7 @@ namespace ERService.CustomerModule.ViewModels
         {
             _repository = customerRepository;
             _regionManager = regionManager;
-            _rBACManager = rBACManager;
+            _rBACManager = rBACManager;                        
 
             Customers = new ObservableCollection<Customer>();
 
@@ -99,11 +102,20 @@ namespace ERService.CustomerModule.ViewModels
 
         #region Navigation
 
-        public override bool KeepAlive { get { return true; } }
+        public override bool KeepAlive { get { return false; } }
 
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
+        }
+
+        public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            if(!WizardMode)
+                base.ConfirmNavigationRequest(navigationContext, continuationCallback);
+            else            
+                continuationCallback(true);            
+            
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
@@ -120,10 +132,10 @@ namespace ERService.CustomerModule.ViewModels
             if(WizardMode)
                 InitializeCustomers();
 
-            var id = navigationContext.Parameters.GetValue<string>("ID");
-            if (!String.IsNullOrWhiteSpace(id) && AllowLoadAsync)
+            var id = navigationContext.Parameters.GetValue<Guid>("ID");
+            if (id != null && AllowLoadAsync)
             {
-                await LoadAsync(Guid.Parse(id));
+                await LoadAsync(id);
             }
 
             if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditCustomer))
@@ -152,6 +164,7 @@ namespace ERService.CustomerModule.ViewModels
 
                 //Powiadom agregator eventów, że zapisano
                 RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                _navigationService.Journal.GoBack();
             });
         }
 

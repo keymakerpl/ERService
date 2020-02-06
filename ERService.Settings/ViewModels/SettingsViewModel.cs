@@ -12,7 +12,7 @@ namespace ERService.Settings.ViewModels
         private readonly IRBACManager _rBACManager;
         private readonly IMessageDialogService _dialogService;
 
-        public bool KeepAlive => false;
+        public bool KeepAlive => true;
 
         public SettingsViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
@@ -31,20 +31,50 @@ namespace ERService.Settings.ViewModels
                 navigationContext.NavigationService.Journal.GoBack();
             }
 
-            navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.SettingsEditorViewRegion);
-            navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.GeneralSettingsTabControlRegion);
+            if (navigationContext.NavigationService.Region.RegionManager.Regions.ContainsRegionWithName(RegionNames.SettingsEditorViewRegion))
+            {
+                navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.SettingsEditorViewRegion);
+            }
 
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.NumerationSettingsView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.UserSettingsView);
-            _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.PrintTemplateSettingsView);
+            if (navigationContext.NavigationService.Region.RegionManager.Regions.ContainsRegionWithName(RegionNames.GeneralSettingsTabControlRegion))
+            {
+                navigationContext.NavigationService.Region.RegionManager.Regions.Remove(RegionNames.GeneralSettingsTabControlRegion);
+            }
+
+            if (navigationContext.NavigationService.Region.RegionManager.Regions.ContainsRegionWithName(RegionNames.SettingsTabControlRegion))
+            {
+                _regionManager.Regions[RegionNames.SettingsTabControlRegion].RemoveAll();
+            }
+
+            var tabViews = new string[6] 
+            {
+                ViewNames.GeneralSettingsView,
+                ViewNames.HardwareTypesView,
+                ViewNames.StatusConfigView,
+                ViewNames.NumerationSettingsView,
+                ViewNames.UserSettingsView,
+                ViewNames.PrintTemplateSettingsView
+            };
+
+            foreach (var view in tabViews)
+            {
+                if (!_regionManager.Regions[RegionNames.SettingsTabControlRegion].Views.Contains(view))
+                {
+                    _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, view);
+                }
+            }
+
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.NumerationSettingsView);
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.UserSettingsView);
+            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.PrintTemplateSettingsView);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return false;
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

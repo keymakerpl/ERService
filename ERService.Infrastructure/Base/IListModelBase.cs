@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using ERService.Infrastructure.Repositories;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -15,6 +16,7 @@ namespace ERService.Infrastructure.Base
         bool IsReadOnly { get; set; }
 
         void LoadAsync();
+        void LoadAsync(QueryBuilder<T> queryBuilder);
         void Load(Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] includeProps);
 
