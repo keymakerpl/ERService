@@ -1,5 +1,6 @@
 ﻿using CommonServiceLocator;
 using ERService.Infrastructure.Base.Common;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Helpers;
 using ERService.MSSQLDataAccess;
@@ -8,6 +9,7 @@ using MySql.Data.MySqlClient;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,11 +31,13 @@ namespace ERService.ViewModels
         private IEventAggregator _eventAggregator;
         private DatabaseProviders _databaseProvider;
         private IMessageDialogService _messageDialogService;
+        private readonly IRegionManager _regionManager;
 
-        public LoginViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        public LoginViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
         {
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
+            _regionManager = regionManager;
             _config = config;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
@@ -183,7 +187,12 @@ namespace ERService.ViewModels
                 if (!_rBACManager.Login(Login, passwordBox.Password))
                 {
                     ShowWrongLoginDataMessage();
+                    return;
                 }
+
+                var parameters = new NavigationParameters();
+                parameters.Add("UserName", _rBACManager.LoggedUser.FullName);
+                _regionManager.RequestNavigate(RegionNames.LoggedUserRegion, ViewNames.LoggedUserView, parameters);
             }
         }
 

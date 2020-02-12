@@ -20,11 +20,25 @@
         <Controls:FlyoutsControl>
             <Controls:Flyout
                 Width="200"
-                Background="DimGray"
                 Header=""
                 IsOpen="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Position="Right">
-                <StackPanel />
+                Position="Right"
+                Theme="Accent">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <ContentControl prism:RegionManager.RegionName="NotificationRegion" />
+                    </StackPanel>
+                    <Border
+                        Margin="15"
+                        VerticalAlignment="Bottom"
+                        BorderBrush="Gray"
+                        BorderThickness="0,1,0,0"
+                        DockPanel.Dock="Bottom">
+                        <StackPanel>
+                            <ContentControl prism:RegionManager.RegionName="LoggedUserRegion" />
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
@@ -79,9 +93,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            LastChildFill="True">
-            <ContentControl prism:RegionManager.RegionName="NotificationRegion" DockPanel.Dock="Right" />
-        </DockPanel>
+            LastChildFill="True" />
 
         <DockPanel
             Grid.Row="1"

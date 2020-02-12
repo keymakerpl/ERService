@@ -1,7 +1,7 @@
-﻿using ERService.Notification.Views;
+﻿using ERService.Infrastructure.Constants;
+using ERService.Notification.Views;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 
 namespace ERService.Notification
 {
@@ -14,7 +14,7 @@ namespace ERService.Notification
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterForNavigation(typeof(NotificationListView), ViewNames.NotificationView);
         }
     }
 }

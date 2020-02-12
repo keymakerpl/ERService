@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ERService.Notification.Views
 {
     /// <summary>
-    /// Interaction logic for ViewA.xaml
+    /// Interaction logic for NotificationView.xaml
     /// </summary>
-    public partial class ViewA : UserControl
+    public partial class NotificationListView : UserControl
     {
-        public ViewA()
+        public NotificationListView()
         {
             InitializeComponent();
         }

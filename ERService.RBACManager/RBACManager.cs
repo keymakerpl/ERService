@@ -190,6 +190,7 @@ namespace ERService.RBAC
 
         private void LoadRoles()
         {
+            _roles.Clear();
             var roles = _roleRepository.GetAll();
             if (roles != null)
             {
@@ -199,6 +200,7 @@ namespace ERService.RBAC
 
         private void LoadUsers()
         {
+            _users.Clear();
             var users = _userRepository.GetAll();
             if (users != null)
             {

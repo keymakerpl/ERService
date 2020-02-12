@@ -32,8 +32,12 @@ using System.Globalization;
 using System.Windows.Markup;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Base.Common;
-using System.IO;
-using System.Text;
+using ERService.Views;
+using ERService.Notification;
+using Prism.Regions;
+using ERService.Infrastructure.Prism.Regions;
+using System.Windows.Controls;
+using ERService.Services.Services;
 
 namespace ERService.Application
 {
@@ -71,8 +75,10 @@ namespace ERService.Application
             base.ConfigureModuleCatalog(moduleCatalog);
 
             moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
+            moduleCatalog.AddModule(typeof(Services.ServicesModule));
             moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
+            moduleCatalog.AddModule(typeof(NotificationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
             moduleCatalog.AddModule(typeof(SettingsModule));
@@ -89,6 +95,7 @@ namespace ERService.Application
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
             containerRegistry.RegisterSingleton<IConfig, Config>();
+            containerRegistry.RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>();            
             containerRegistry.Register<IUserRepository, UserRepository>();
             containerRegistry.Register<IRoleRepository, RoleRepository>();
             containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
@@ -108,6 +115,7 @@ namespace ERService.Application
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
 
+            containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView);
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
             containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
@@ -115,6 +123,12 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
             containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);            
+        }
+
+        protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+        {
+            base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+            regionAdapterMappings.RegisterMapping(typeof(StackPanel), Container.Resolve<StackPanelRegionAdapter>());
         }
     }
 }

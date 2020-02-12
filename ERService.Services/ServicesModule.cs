@@ -1,19 +1,47 @@
-﻿using Prism.Ioc;
+﻿using ERService.Services.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
+using Hangfire.Server;
+using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
+using System;
+using Unity;
 
 namespace ERService.Services
 {
+    public class ContainerJobActivator : JobActivator
+    {
+        private readonly IContainerProvider _container;
+
+        public ContainerJobActivator(IContainerProvider container)
+        {
+            _container = container;
+        }
+
+        public override object ActivateJob(Type type)
+        {
+            return _container.Resolve(type);
+        }
+    }
+
     public class ServicesModule : IModule
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
- 
+            var container = new ContainerJobActivator(containerProvider);
+
+            GlobalConfiguration.Configuration.UseMemoryStorage();
+            GlobalConfiguration.Configuration.UseActivator(container);
+
+            var service = containerProvider.Resolve(typeof(BackgroundTaskService)) as BackgroundTaskService;
+            if (service != null) service.Start();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterSingleton<IBackgroundProcessingServer, BackgroundJobServer>();
+            containerRegistry.RegisterSingleton<IRecurringJobManager, RecurringJobManager>();
+            containerRegistry.RegisterSingleton<IBackgroundTaskService, BackgroundTaskService>();
         }
     }
 }

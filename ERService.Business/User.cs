@@ -26,6 +26,9 @@ namespace ERService.Business
         [MaxLength(50)]
         public string LastName { get; set; }
 
+        [NotMapped]
+        public string FullName { get { return $"{FirstName ?? Login} {LastName ?? ""}"; } }
+
         [Phone]
         [MaxLength(50)]
         public string PhoneNumber { get; set; }
