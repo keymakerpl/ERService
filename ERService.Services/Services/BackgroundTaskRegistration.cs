@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Prism.Events;
 using ERService.Infrastructure.Events;
+using ERService.Services.Tasks;
 
 namespace ERService.Services.Services
 {
 
-    public class BackgroundTaskRegistration : Collection<BackgroundTask>, IBackgroundTaskRegistration
+    public class BackgroundTaskRegistration : Collection<IBackgroundTask>, IBackgroundTaskRegistration
     {
         private readonly IEventAggregator _eventAggregator;
 
@@ -16,18 +17,18 @@ namespace ERService.Services.Services
             _eventAggregator = eventAggregator;
         }
 
-        public IEnumerable<BackgroundTask> Tasks()
+        public IEnumerable<IBackgroundTask> Tasks()
         {
             return this;
         }
 
-        public void Register(BackgroundTask backgroundTask)
+        public void Register(IBackgroundTask backgroundTask)
         {
             Add(backgroundTask);
             _eventAggregator.GetEvent<AfterTaskRegistrationChanged>().Publish();
         }
 
-        public BackgroundTask this[string taskName]
+        public IBackgroundTask this[string taskName]
         {
             get { return this.FirstOrDefault(j => j.TaskName == taskName); }
         }        

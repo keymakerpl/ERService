@@ -1,7 +1,7 @@
 ﻿using ERService.Infrastructure.Constants;
 using ERService.OrderModule.Tasks;
 using ERService.OrderModule.Views;
-using ERService.Services.Services;
+using ERService.Services.Tasks;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -22,14 +22,13 @@ namespace ERService.OrderModule
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _regionManager.RegisterViewWithRegion(RegionNames.OrderSearchRegion, typeof(OrderSearchView));
-
-            var newOrderTask = new NewOrdersNotificationBackgroundTask();
-            _taskRegistration.Register(newOrderTask);
+            
+            _taskRegistration.Register(new BackgroundTask<NewOrdersNotificationTask>("*/1 * * * *"));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.Register(typeof(NewOrdersNotificationTask));
         }
     }
 }

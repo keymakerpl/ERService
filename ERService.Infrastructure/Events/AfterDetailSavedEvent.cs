@@ -9,10 +9,6 @@ namespace ERService.Infrastructure.Events
 
     public class AfterDetailSavedEventArgs
     {
-        public AfterDetailSavedEventArgs()
-        {
-        }
-
         public Guid Id { get; set; }
         public string DisplayMember { get; set; }
         public string ViewModelName { get; set; }

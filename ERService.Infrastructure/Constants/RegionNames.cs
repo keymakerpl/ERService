@@ -7,6 +7,7 @@
         public const string CustomerSearchRegion = "CustomerSearchRegion";
         public const string OrderSearchRegion = "OrderSearchRegion";
         public const string NotificationRegion = "NotificationRegion";
+        public const string NotificationListRegion = "NotificationListRegion";
         public const string StatusbarRegion = "StatusBarRegion";
         public const string HeaderRegion = "HeaderRegion";        
         public const string NavigationRegion = "NavigationRegion";

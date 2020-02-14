@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reflection;
-using Hangfire;
-using Hangfire.Common;
-using Hangfire.MemoryStorage;
-using Hangfire.Server;
-using Unity;
-using System.Linq;
-using Prism.Events;
-using ERService.Infrastructure.Events;
+using System.Threading.Tasks;
 
-namespace ERService.Services.Services
+namespace ERService.Services.Tasks
 {
-
-    public abstract class BackgroundTask
+    public class BackgroundTask<T> : IBackgroundTask where T : ITaskRunnable
     {
-        private const string RunMethodName = "Run";
+        private const string _runMethodName = "Run";
+        private readonly string _cronExpression;
 
-        public string TaskName { get { return GetType().Name; } }        
-        public abstract string CronExpression { get; }
-        public Type Type { get { return GetType(); } }
-        public MethodInfo MethodInfo { get { return GetType().GetMethod(RunMethodName); } }
-        public abstract void Run();
-        public Job Job { get { return new Job(Type, MethodInfo); } }
+        public BackgroundTask(string cronExpression)
+        {
+            _cronExpression = cronExpression;
+        }
+
+        public string CronExpression { get { return _cronExpression; } }
+        public string TaskName { get { return typeof(T).Name; } }        
+        public Type Type { get { return typeof(T); } }
+        public MethodInfo MethodInfo { get { return typeof(T).GetMethod(_runMethodName); } }                
+    }
+
+    public interface ITaskRunnable
+    {
+        Task Run();
     }
 }

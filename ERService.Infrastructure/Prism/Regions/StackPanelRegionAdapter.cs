@@ -13,6 +13,7 @@ namespace ERService.Infrastructure.Prism.Regions
 
         protected override void Adapt(IRegion region, StackPanel regionTarget)
         {
+            var _region = region;
             region.Views.CollectionChanged += (s, a) =>
             {
                 if (a.Action == NotifyCollectionChangedAction.Add)

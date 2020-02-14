@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ERService.Services.Services
+namespace ERService.Services.Tasks
 {
     public interface IBackgroundTaskRegistration
     {
-        void Register(BackgroundTask backgroundTask);
-        IEnumerable<BackgroundTask> Tasks();
+        void Register(IBackgroundTask backgroundTask);
+        IEnumerable<IBackgroundTask> Tasks();
     }
 }

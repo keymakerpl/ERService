@@ -15,10 +15,78 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Label
-            Content="Nowe naprawy:"
-            FontWeight="SemiBold"
-            Foreground="White" />
-        <StackPanel Grid.Row="1" prism:RegionManager.RegionName="NotificationListRegion" />
+        <Grid>
+            <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+                <Label
+                    Margin="5"
+                    Content="Ostatnie naprawy:"
+                    FontWeight="SemiBold"
+                    Foreground="White" />
+            </Border>
+        </Grid>
+        <ListView
+            Grid.Row="1"
+            BorderThickness="0"
+            ItemsSource="{Binding Orders}"
+            SelectedItem="{Binding SelectedOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Content="Numer:"
+                                FontWeight="SemiBold"
+                                Foreground="Wheat" />
+                            <Label
+                                Grid.Column="1"
+                                Content="{Binding OrderNumber}"
+                                Foreground="White" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Content="Klient:"
+                                FontWeight="SemiBold"
+                                Foreground="Wheat" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Content="{Binding CustomerName}"
+                                Foreground="White" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Content="Usterka:"
+                                FontWeight="SemiBold"
+                                Foreground="Wheat" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Content="{Binding Fault}"
+                                Foreground="White" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

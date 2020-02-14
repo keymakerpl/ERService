@@ -3,6 +3,8 @@ using Hangfire;
 using Hangfire.Server;
 using Prism.Events;
 using ERService.Infrastructure.Events;
+using ERService.Services.Tasks;
+using Hangfire.Common;
 
 namespace ERService.Services.Services
 {
@@ -13,7 +15,7 @@ namespace ERService.Services.Services
         private readonly IBackgroundTaskRegistration _backgroundTaskRegistration;
         private readonly IEventAggregator _eventAggregator;
 
-        private IEnumerable<BackgroundTask> BackgroundTasks => _backgroundTaskRegistration.Tasks();
+        private IEnumerable<IBackgroundTask> BackgroundTasks => _backgroundTaskRegistration.Tasks();
 
         public BackgroundTaskService(
             IBackgroundProcessingServer backgroundProcessingServer,
@@ -31,12 +33,8 @@ namespace ERService.Services.Services
                             {
                                 Refresh();
                             }, true);
-            
-        }
 
-        public void Start()
-        {
-            ActivateTasks();
+            Refresh();
         }
 
         public void Stop()
@@ -57,9 +55,10 @@ namespace ERService.Services.Services
             }
         }
 
-        private void Activate(BackgroundTask backgroundTask)
+        private void Activate(IBackgroundTask backgroundTask)
         {
-            _recurringJobManager.AddOrUpdate(backgroundTask.TaskName, backgroundTask.Job, backgroundTask.CronExpression);
+            var job = new Job(backgroundTask.Type, backgroundTask.MethodInfo);
+            _recurringJobManager.AddOrUpdate(backgroundTask.TaskName, job, backgroundTask.CronExpression);
         }
     }
 }

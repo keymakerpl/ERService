@@ -37,7 +37,9 @@ using ERService.Notification;
 using Prism.Regions;
 using ERService.Infrastructure.Prism.Regions;
 using System.Windows.Controls;
+using ERService.Services.Tasks;
 using ERService.Services.Services;
+using ERService.Services;
 
 namespace ERService.Application
 {
@@ -75,10 +77,10 @@ namespace ERService.Application
             base.ConfigureModuleCatalog(moduleCatalog);
 
             moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
-            moduleCatalog.AddModule(typeof(Services.ServicesModule));
+            moduleCatalog.AddModule<ServicesModule>(ModuleNames.ServicesModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<NotificationModule>(ModuleNames.NotificationModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
-            moduleCatalog.AddModule(typeof(NotificationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
             moduleCatalog.AddModule(typeof(StatusBarModule));
             moduleCatalog.AddModule(typeof(SettingsModule));

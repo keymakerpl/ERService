@@ -33,8 +33,7 @@ namespace ERService.Services
             GlobalConfiguration.Configuration.UseMemoryStorage();
             GlobalConfiguration.Configuration.UseActivator(container);
 
-            var service = containerProvider.Resolve(typeof(BackgroundTaskService)) as BackgroundTaskService;
-            if (service != null) service.Start();
+            containerProvider.Resolve(typeof(BackgroundTaskService));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

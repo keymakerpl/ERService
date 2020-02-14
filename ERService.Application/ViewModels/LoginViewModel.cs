@@ -8,6 +8,7 @@ using ERService.RBAC;
 using MySql.Data.MySqlClient;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -32,20 +33,22 @@ namespace ERService.ViewModels
         private DatabaseProviders _databaseProvider;
         private IMessageDialogService _messageDialogService;
         private readonly IRegionManager _regionManager;
+        private readonly IModuleManager _moduleManager;
 
-        public LoginViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        public LoginViewModel(IModuleManager moduleManager, IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
         {
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
             _regionManager = regionManager;
             _config = config;
+            _moduleManager = moduleManager;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
             ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
 
             Providers = new List<KeyValuePair<DatabaseProviders, string>>();
 
-            Initialize();
+            Initialize();            
         }
 
         public ICommand ConnectCommand { get; private set; }
@@ -193,6 +196,9 @@ namespace ERService.ViewModels
                 var parameters = new NavigationParameters();
                 parameters.Add("UserName", _rBACManager.LoggedUser.FullName);
                 _regionManager.RequestNavigate(RegionNames.LoggedUserRegion, ViewNames.LoggedUserView, parameters);
+
+                _moduleManager.LoadModule(ModuleNames.ServicesModule);
+                _moduleManager.LoadModule(ModuleNames.NotificationModule);
             }
         }
 

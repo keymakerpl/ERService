@@ -68,6 +68,7 @@
     <Compile Include="Services\BackgroundTaskService.cs" />
     <Compile Include="Services\IBackgroundTaskRegistration.cs" />
     <Compile Include="Services\IBackgroundTaskService.cs" />
+    <Compile Include="Tasks\IBackgroundTask.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

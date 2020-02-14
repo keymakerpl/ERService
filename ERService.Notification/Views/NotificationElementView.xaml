@@ -21,32 +21,20 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Label Content="Klient:" Foreground="Wheat" />
             <Label
+                Grid.Column="1"
+                Content="{Binding CustomerName}"
+                Foreground="White" />
+            <Label
+                Grid.Row="1"
                 Content="Numer:"
-                FontSize="10"
-                FontWeight="SemiBold"
-                Foreground="White" />
-            <Label Grid.Column="1" Content="{Binding OrderNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            <Label
-                Grid.Row="1"
-                Content="Klient:"
-                FontSize="10"
-                FontWeight="SemiBold"
-                Foreground="White" />
+                Foreground="Wheat" />
             <Label
                 Grid.Row="1"
                 Grid.Column="1"
-                Content="{Binding CustomerName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            <Label
-                Grid.Row="2"
-                Content="Usterka:"
-                FontSize="10"
-                FontWeight="SemiBold"
+                Content="{Binding OrderNumber}"
                 Foreground="White" />
-            <Label
-                Grid.Row="2"
-                Grid.Column="1"
-                Content="{Binding Fault, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
     </Grid>
 </UserControl>

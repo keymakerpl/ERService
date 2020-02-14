@@ -65,6 +65,7 @@
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />
+    <Compile Include="Constants\ModuleNames.cs" />
     <Compile Include="Constants\PublicKeys.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Events\AfterDetailClosedEvent.cs" />
     <Compile Include="Base\DetailViewModelBase.cs" />
     <Compile Include="Events\AfterLicenseValidationRequestEvent.cs" />
+    <Compile Include="Events\AfterNewOrdersAddedEvent.cs" />
     <Compile Include="Events\AfterSideMenuButtonToggled.cs" />
     <Compile Include="Events\AfterTaskRegistrationChanged.cs" />
     <Compile Include="Events\LicenseValidationRequestEvent.cs" />
@@ -88,7 +90,6 @@
     <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\SearchQueryEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
-    <Compile Include="Helpers\CronHelper.cs" />
     <Compile Include="Helpers\Cryptography.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -167,8 +168,6 @@
   <ItemGroup>
     <Resource Include="Repositories\ConnectedRepository.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -73,7 +73,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Tasks\NewOrdersNotificationBackgroundTask.cs" />
+    <Compile Include="Tasks\NewOrdersNotificationTask.cs" />
     <Compile Include="ViewModels\OrderListViewModel.cs" />
     <Compile Include="Numeration\OrderNumberGenerator.cs" />
     <Compile Include="ViewModels\OrderSearchViewModel.cs" />
