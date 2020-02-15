@@ -14,28 +14,28 @@ namespace ERService.OrderModule.Tasks
         private readonly IEventAggregator _eventAggregator;        
         private readonly IOrderRepository _orderRepository;
 
-        private static DateTime? LastExecutionTime { get; set; } 
+        private static DateTime? LastUpdateTime { get; set; } = DateTime.Now;
 
         public NewOrdersNotificationTask(IEventAggregator eventAggregator, IOrderRepository orderRepository)
         {
             _eventAggregator = eventAggregator;            
             _orderRepository = orderRepository;
 
-            if(!LastExecutionTime.HasValue)
-                LastExecutionTime = DateTime.Now;
+            if(!LastUpdateTime.HasValue)
+                LastUpdateTime = DateTime.Now;
         }
 
         public async Task Run()
         {
             var query = new QueryBuilder<Order>();
-            query.Where(nameof(Order.DateAdded), QueryBuilder<Order>.Operators.GreaterOrEqual, LastExecutionTime.Value);
+            query.Where(nameof(Order.DateAdded), QueryBuilder<Order>.Operators.GreaterOrEqual, LastUpdateTime.Value);
 
             var ids = await _orderRepository.GetIDsBy(query);
 
             if (ids.Length > 0)
             {
                 RaiseNewOrdersAdded(ids);
-                LastExecutionTime = DateTime.Now;
+                LastUpdateTime = DateTime.Now;
             }            
         }
 
