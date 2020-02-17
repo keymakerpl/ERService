@@ -74,11 +74,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\LoggedUserViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\LoggedUserView.xaml.cs">
+      <DependentUpon>LoggedUserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -141,6 +145,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\LoggedUserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +163,10 @@
     <Folder Include="Views\Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ERService.Business\ERService.Business.csproj">
+      <Project>{C154C972-2789-4666-852D-1215DFF4914A}</Project>
+      <Name>ERService.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.CustomerModule\ERService.Customer.csproj">
       <Project>{73229C43-9BB4-42B6-B7DF-A61A369CC85A}</Project>
       <Name>ERService.Customer</Name>
@@ -179,6 +191,10 @@
       <Project>{0580267C-8C3F-4D71-BD5A-851E67B08812}</Project>
       <Name>ERService.Navigation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.Notification\ERService.Notification.csproj">
+      <Project>{1EFF5441-4B33-4F9A-BDDA-E01243AC4AB9}</Project>
+      <Name>ERService.Notification</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ERService.Order\ERService.Order.csproj">
       <Project>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</Project>
       <Name>ERService.Order</Name>
@@ -186,6 +202,10 @@
     <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
       <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
       <Name>ERService.RBAC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Services\ERService.Services.csproj">
+      <Project>{0F415C32-6D96-4551-AA5C-5101C267C4F6}</Project>
+      <Name>ERService.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\ERService.Settings\ERService.Settings.csproj">
       <Project>{406E7194-6493-4031-9FC3-B341E84C9D1A}</Project>

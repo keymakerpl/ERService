@@ -35,7 +35,7 @@ namespace ERService.MSSQLDataAccess
 
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer && !Database.Exists())
             {
-                //Database.Initialize(false);
+                Database.Initialize(false);
             }
         }
         

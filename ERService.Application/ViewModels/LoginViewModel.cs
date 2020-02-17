@@ -1,5 +1,6 @@
 ﻿using CommonServiceLocator;
 using ERService.Infrastructure.Base.Common;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Helpers;
 using ERService.MSSQLDataAccess;
@@ -7,7 +8,9 @@ using ERService.RBAC;
 using MySql.Data.MySqlClient;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Modularity;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,19 +32,23 @@ namespace ERService.ViewModels
         private IEventAggregator _eventAggregator;
         private DatabaseProviders _databaseProvider;
         private IMessageDialogService _messageDialogService;
+        private readonly IRegionManager _regionManager;
+        private readonly IModuleManager _moduleManager;
 
-        public LoginViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        public LoginViewModel(IModuleManager moduleManager, IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
         {
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
+            _regionManager = regionManager;
             _config = config;
+            _moduleManager = moduleManager;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
             ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
 
             Providers = new List<KeyValuePair<DatabaseProviders, string>>();
 
-            Initialize();
+            Initialize();            
         }
 
         public ICommand ConnectCommand { get; private set; }
@@ -183,7 +190,15 @@ namespace ERService.ViewModels
                 if (!_rBACManager.Login(Login, passwordBox.Password))
                 {
                     ShowWrongLoginDataMessage();
+                    return;
                 }
+
+                var parameters = new NavigationParameters();
+                parameters.Add("UserName", _rBACManager.LoggedUser.FullName);
+                _regionManager.RequestNavigate(RegionNames.LoggedUserRegion, ViewNames.LoggedUserView, parameters);
+
+                _moduleManager.LoadModule(ModuleNames.ServicesModule);
+                _moduleManager.LoadModule(ModuleNames.NotificationModule);
             }
         }
 

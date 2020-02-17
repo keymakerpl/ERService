@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:controls="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
     xmlns:prism="http://prismlibrary.com/"
     Title="ERService 1.0.0"
     Width="1280"
@@ -20,11 +21,25 @@
         <Controls:FlyoutsControl>
             <Controls:Flyout
                 Width="200"
-                Background="DimGray"
                 Header=""
                 IsOpen="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Position="Right">
-                <StackPanel />
+                Position="Right"
+                Theme="Accent">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <ContentControl prism:RegionManager.RegionName="NotificationRegion" />
+                    </StackPanel>
+                    <Border
+                        Margin="15"
+                        VerticalAlignment="Bottom"
+                        BorderBrush="Gray"
+                        BorderThickness="0,1,0,0"
+                        DockPanel.Dock="Bottom">
+                        <StackPanel>
+                            <ContentControl prism:RegionManager.RegionName="LoggedUserRegion" />
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
@@ -79,9 +94,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            LastChildFill="True">
-            <ContentControl prism:RegionManager.RegionName="NotificationRegion" DockPanel.Dock="Right" />
-        </DockPanel>
+            LastChildFill="True" />
 
         <DockPanel
             Grid.Row="1"
@@ -118,6 +131,12 @@
             LastChildFill="True">
             <ContentControl prism:RegionManager.RegionName="ContentRegion" DockPanel.Dock="Left" />
         </DockPanel>
+
+        <controls:NotificationArea
+            x:Name="WindowArea"
+            Grid.ColumnSpan="2"
+            MaxItems="3"
+            Position="TopLeft" />
 
     </Grid>
 </Controls:MetroWindow>

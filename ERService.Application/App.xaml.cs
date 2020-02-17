@@ -32,8 +32,15 @@ using System.Globalization;
 using System.Windows.Markup;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Base.Common;
-using System.IO;
-using System.Text;
+using ERService.Views;
+using ERService.Notification;
+using Prism.Regions;
+using ERService.Infrastructure.Prism.Regions;
+using System.Windows.Controls;
+using ERService.Services.Tasks;
+using ERService.Services.Services;
+using ERService.Services;
+using ERService.Infrastructure.Notifications.ToastNotifications;
 
 namespace ERService.Application
 {
@@ -71,6 +78,8 @@ namespace ERService.Application
             base.ConfigureModuleCatalog(moduleCatalog);
 
             moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
+            moduleCatalog.AddModule<ServicesModule>(ModuleNames.ServicesModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<NotificationModule>(ModuleNames.NotificationModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));
@@ -89,6 +98,7 @@ namespace ERService.Application
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
             containerRegistry.RegisterSingleton<IConfig, Config>();
+            containerRegistry.RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>();            
             containerRegistry.Register<IUserRepository, UserRepository>();
             containerRegistry.Register<IRoleRepository, RoleRepository>();
             containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
@@ -107,7 +117,9 @@ namespace ERService.Application
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
+            containerRegistry.Register<IToastNotificationService, ToastNotificationService>();
 
+            containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView);
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
             containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
@@ -115,6 +127,12 @@ namespace ERService.Application
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
             containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);            
+        }
+
+        protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+        {
+            base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+            regionAdapterMappings.RegisterMapping(typeof(StackPanel), Container.Resolve<StackPanelRegionAdapter>());
         }
     }
 }

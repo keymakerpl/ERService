@@ -73,6 +73,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tasks\NewOrdersNotificationTask.cs" />
     <Compile Include="ViewModels\OrderListViewModel.cs" />
     <Compile Include="Numeration\OrderNumberGenerator.cs" />
     <Compile Include="ViewModels\OrderSearchViewModel.cs" />
@@ -119,6 +120,10 @@
     <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
       <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
       <Name>ERService.RBAC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERService.Services\ERService.Services.csproj">
+      <Project>{0F415C32-6D96-4551-AA5C-5101C267C4F6}</Project>
+      <Name>ERService.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\ERService.SQLCompactDataAccess\ERService.MSSQLDataAccess.csproj">
       <Project>{BDB0A081-4EA0-4986-8F45-6A0112835C13}</Project>

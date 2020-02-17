@@ -9,5 +9,14 @@ namespace ERService.Infrastructure.Repositories
         }
 
         public string TableName { get { return typeof(TEntity).Name; } }
+
+        public static class Operators
+        {
+            public const string Greater = ">";
+            public const string GreaterOrEqual = ">=";
+            public const string Equal = "=";
+            public const string Less = "<";
+            public const string LessOrEqual = "<=";
+        }
     }
 }

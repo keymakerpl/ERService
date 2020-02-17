@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using ERService.Infrastructure.Notifications.ToastNotifications;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace ERService.Infrastructure.Dialogs
@@ -7,11 +9,14 @@ namespace ERService.Infrastructure.Dialogs
     {
         private IDialogCoordinator _dialogCoordinator;
         private MetroDialogSettings _confirmDialogSettings;
+        private readonly IToastNotificationService _toastNotificationService;
 
-        public MessageDialogService(IDialogCoordinator dialogCoordinator)
+        public MessageDialogService(IDialogCoordinator dialogCoordinator, IToastNotificationService toastNotificationService)
         {
-            _dialogCoordinator = dialogCoordinator;
             _confirmDialogSettings = new MetroDialogSettings { AffirmativeButtonText = "Tak", NegativeButtonText = "Anuluj" };
+
+            _dialogCoordinator = dialogCoordinator;
+            _toastNotificationService = toastNotificationService;
         }
 
         public async Task<DialogResult> ShowConfirmationMessageAsync(object context, string title, string message)
@@ -37,6 +42,16 @@ namespace ERService.Infrastructure.Dialogs
             var dialogMessage = message != null ? message : "Nie masz uprawnień do wykonania tej czynności.";
 
             await _dialogCoordinator.ShowMessageAsync(context, dialogTitle, dialogMessage);
+        }
+
+        public void ShowInsideContainer(string title, string message, NotificationTypes notificationType, string areaName = "WindowArea", Action onClick = null, Action onClose = null)
+        {
+            _toastNotificationService.ShowInsideContainer(title, message, notificationType, areaName, onClick, onClose);
+        }
+
+        public void ShowOverTaskBar(string title, string message, NotificationTypes notificationType, Action onClick = null, Action onClose = null)
+        {
+            _toastNotificationService.ShowOverTaskBar(title, message, notificationType, onClick, onClose);
         }
     }
 

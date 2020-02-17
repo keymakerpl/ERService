@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using MahApps.Metro.Controls.Dialogs;
+﻿using ERService.Infrastructure.Notifications.ToastNotifications;
+using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Dialogs
 {
-    public interface IMessageDialogService
+    public interface IMessageDialogService : IToastNotificationService
     {
         Task<DialogResult> ShowConfirmationMessageAsync(object context, string title, string message);
         Task<string> ShowInputMessageAsync(object context, string title, string message);
