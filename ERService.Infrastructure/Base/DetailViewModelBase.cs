@@ -1,5 +1,6 @@
 ﻿using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Notifications.ToastNotifications;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -183,6 +184,8 @@ namespace ERService.Infrastructure.Base
             }
 
             afterSaveAction();
+
+            _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano nowy element.", NotificationTypes.Success);
         }
 
         #region Navigation

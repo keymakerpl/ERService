@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:controls="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
     xmlns:prism="http://prismlibrary.com/"
     Title="ERService 1.0.0"
     Width="1280"
@@ -130,6 +131,12 @@
             LastChildFill="True">
             <ContentControl prism:RegionManager.RegionName="ContentRegion" DockPanel.Dock="Left" />
         </DockPanel>
+
+        <controls:NotificationArea
+            x:Name="WindowArea"
+            Grid.ColumnSpan="2"
+            MaxItems="3"
+            Position="TopLeft" />
 
     </Grid>
 </Controls:MetroWindow>

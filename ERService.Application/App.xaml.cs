@@ -40,6 +40,7 @@ using System.Windows.Controls;
 using ERService.Services.Tasks;
 using ERService.Services.Services;
 using ERService.Services;
+using ERService.Infrastructure.Notifications.ToastNotifications;
 
 namespace ERService.Application
 {
@@ -116,6 +117,7 @@ namespace ERService.Application
             containerRegistry.Register<IPasswordHasher, PasswordHasher>();
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
             containerRegistry.Register<IMessageDialogService, MessageDialogService>();
+            containerRegistry.Register<IToastNotificationService, ToastNotificationService>();
 
             containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView);
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);

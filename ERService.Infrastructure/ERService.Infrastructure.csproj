@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\InterpreterAttribute.cs" />
+    <Compile Include="Base\Common\Collections\ObservableQueue.cs" />
     <Compile Include="Base\Common\Config.cs" />
     <Compile Include="Base\Common\IConfig.cs" />
     <Compile Include="Base\Common\Images\ERimage.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Interfaces\ISetting.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Interfaces\IVersionedRow.cs" />
+    <Compile Include="Notifications\ToastNotifications\IToastNotificationService.cs" />
+    <Compile Include="Notifications\ToastNotifications\ToastNotificationService.cs" />
     <Compile Include="Prism\Regions\StackPanelRegionAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -151,6 +154,9 @@
     </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
+    </PackageReference>
+    <PackageReference Include="Notifications.Wpf">
+      <Version>0.1.1</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
       <Version>7.2.0.1422</Version>
