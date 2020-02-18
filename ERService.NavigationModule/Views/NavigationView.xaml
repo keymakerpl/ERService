@@ -16,7 +16,7 @@
     mc:Ignorable="d">
 
 
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.Resources>
             <DataTemplate x:Key="MenuItemTemplate" DataType="{x:Type Controls:HamburgerMenuGlyphItem}">
                 <Grid Height="48">
@@ -52,7 +52,7 @@
             IsPaneOpen="True"
             ItemTemplate="{StaticResource MenuItemTemplate}"
             OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-            PaneBackground="#e5e5e5">
+            PaneBackground="Transparent">
             <Controls:HamburgerMenu.Effect>
                 <BlurEffect />
             </Controls:HamburgerMenu.Effect>

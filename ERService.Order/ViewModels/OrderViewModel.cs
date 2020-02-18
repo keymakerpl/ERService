@@ -334,7 +334,14 @@ namespace ERService.OrderModule.ViewModels
                 //Powiadom agregator eventów, że zapisano
                 //RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
                 //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-                _navigationService.Journal.GoBack();
+                if (WizardMode)
+                {
+                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
+                }
+                else
+                {
+                    _navigationService.Journal.GoBack();
+                }
             });
         }
 
