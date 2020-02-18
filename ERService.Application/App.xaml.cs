@@ -97,36 +97,36 @@ namespace ERService.Application
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
-            containerRegistry.RegisterSingleton<IConfig, Config>();
-            containerRegistry.RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>();            
-            containerRegistry.Register<IUserRepository, UserRepository>();
-            containerRegistry.Register<IRoleRepository, RoleRepository>();
-            containerRegistry.Register<IACLVerbCollection, ACLVerbCollection>();
-            containerRegistry.Register<IAclVerbRepository, AclVerbRepository>();
-            containerRegistry.Register<IAclRepository, AclRepository>();
-            containerRegistry.RegisterSingleton<IRBACManager, RBACManager>();            
-            containerRegistry.Register<ICustomerRepository, CustomerRepository>();
-            containerRegistry.Register<IOrderRepository, OrderRepository>();
-            containerRegistry.Register<IHardwareRepository, HardwareRepository>();
-            containerRegistry.Register<IHardwareTypeRepository, HardwareTypeRepository>();
-            containerRegistry.Register<ICustomItemRepository, CustomItemRepository>();
-            containerRegistry.Register<IOrderStatusRepository, OrderStatusRepository>();
-            containerRegistry.Register<IOrderTypeRepository, OrderTypeRepository>();
-            containerRegistry.Register<IBlobRepository, BlobRepository>();
-            containerRegistry.Register<INumerationRepository, NumerationRepository>();
-            containerRegistry.Register<IPasswordHasher, PasswordHasher>();
-            containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
-            containerRegistry.Register<IMessageDialogService, MessageDialogService>();
-            containerRegistry.Register<IToastNotificationService, ToastNotificationService>();
+            containerRegistry.RegisterSingleton<IConfig, Config>()
+                             .RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>()
+                             .Register<IUserRepository, UserRepository>()
+                             .Register<IRoleRepository, RoleRepository>()
+                             .Register<IACLVerbCollection, ACLVerbCollection>()
+                             .Register<IAclVerbRepository, AclVerbRepository>()
+                             .Register<IAclRepository, AclRepository>()
+                             .RegisterSingleton<IRBACManager, RBACManager>()
+                             .Register<ICustomerRepository, CustomerRepository>()
+                             .Register<IOrderRepository, OrderRepository>()
+                             .Register<IHardwareRepository, HardwareRepository>()
+                             .Register<IHardwareTypeRepository, HardwareTypeRepository>()
+                             .Register<ICustomItemRepository, CustomItemRepository>()
+                             .Register<IOrderStatusRepository, OrderStatusRepository>()
+                             .Register<IOrderTypeRepository, OrderTypeRepository>()
+                             .Register<IBlobRepository, BlobRepository>()
+                             .Register<INumerationRepository, NumerationRepository>()
+                             .Register<IPasswordHasher, PasswordHasher>()
+                             .Register<IDialogCoordinator, DialogCoordinator>()
+                             .Register<IMessageDialogService, MessageDialogService>()
+                             .Register<IToastNotificationService, ToastNotificationService>();
 
             containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView);
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
-            containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);            
+            containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);
             containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
             containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
             containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
-            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);            
+            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView); ;         
         }
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)

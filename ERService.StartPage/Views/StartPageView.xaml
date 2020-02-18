@@ -5,6 +5,7 @@
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.StartPage.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
@@ -54,33 +55,69 @@
 
                 <controls:Tile
                     Title="Dodaj nową naprawę"
+                    Width="200"
                     Background="CadetBlue"
                     Command="{Binding AddOrderCommand}"
-                    Style="{StaticResource SmallTileStyle}" />
+                    FontWeight="SemiBold"
+                    Foreground="Wheat"
+                    Style="{StaticResource SmallTileStyle}">
+                    <iconPacks:PackIconModern
+                        Width="40"
+                        Height="40"
+                        Kind="Add" />
+                </controls:Tile>
 
                 <controls:Tile
                     Title="Naprawy"
                     Background="Gray"
                     Command="{Binding OrdersCommand}"
-                    Style="{StaticResource SmallTileStyle}" />
+                    FontWeight="SemiBold"
+                    Foreground="Wheat"
+                    Style="{StaticResource SmallTileStyle}">
+                    <iconPacks:PackIconModern
+                        Width="50"
+                        Height="50"
+                        Kind="Tools" />
+                </controls:Tile>
 
                 <controls:Tile
                     Title="Klienci"
                     Background="SteelBlue"
                     Command="{Binding CustomersCommand}"
-                    Style="{StaticResource SmallTileStyle}" />
+                    FontWeight="SemiBold"
+                    Foreground="Wheat"
+                    Style="{StaticResource SmallTileStyle}">
+                    <iconPacks:PackIconModern
+                        Width="50"
+                        Height="50"
+                        Kind="People" />
+                </controls:Tile>
 
                 <controls:Tile
                     Title="Ustawienia"
                     Background="LightSlateGray"
                     Command="{Binding SettingsCommand}"
-                    Style="{StaticResource SmallTileStyle}" />
+                    FontWeight="SemiBold"
+                    Foreground="Wheat"
+                    Style="{StaticResource SmallTileStyle}">
+                    <iconPacks:PackIconModern
+                        Width="50"
+                        Height="50"
+                        Kind="Cogs" />
+                </controls:Tile>
 
                 <controls:Tile
                     Title="Statystyki"
-                    Background="LightSlateGray"
+                    Background="DimGray"
                     Command="{Binding StatsCommand}"
-                    Style="{StaticResource SmallTileStyle}" />
+                    FontWeight="SemiBold"
+                    Foreground="Wheat"
+                    Style="{StaticResource SmallTileStyle}">
+                    <iconPacks:PackIconModern
+                        Width="50"
+                        Height="50"
+                        Kind="GraphBar" />
+                </controls:Tile>
 
             </WrapPanel>
         </Border>

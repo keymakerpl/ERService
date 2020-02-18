@@ -111,6 +111,7 @@
     <Compile Include="Interfaces\ISetting.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Interfaces\IVersionedRow.cs" />
+    <Compile Include="Logger\NLog\NLogLogger.cs" />
     <Compile Include="Notifications\ToastNotifications\IToastNotificationService.cs" />
     <Compile Include="Notifications\ToastNotifications\ToastNotificationService.cs" />
     <Compile Include="Prism\Regions\StackPanelRegionAdapter.cs" />
@@ -155,6 +156,9 @@
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.6.8</Version>
+    </PackageReference>
     <PackageReference Include="Notifications.Wpf">
       <Version>0.1.1</Version>
     </PackageReference>
@@ -174,6 +178,8 @@
   <ItemGroup>
     <Resource Include="Repositories\ConnectedRepository.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -45,7 +45,7 @@
                     Command="{Binding SideMenuToggleCommand}"
                     Foreground="White"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                    <iconPacks:PackIconFontAwesome Kind="BarsSolid" />
+                    <iconPacks:PackIconFontAwesome Foreground="Wheat" Kind="BarsSolid" />
                 </Button>
                 <Grid.Style>
                     <Style TargetType="{x:Type Grid}">

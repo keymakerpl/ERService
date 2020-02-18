@@ -51,7 +51,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
+            <RowDefinition Height="75" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -101,14 +101,16 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             Margin="0,15,0,20"
-            Background="Gainsboro"
+            Background="Transparent"
             LastChildFill="True">
 
-            <DockPanel.Effect>
+            <!--<DockPanel.Effect>
                 <DropShadowEffect ShadowDepth="2" />
-            </DockPanel.Effect>
+            </DockPanel.Effect>-->
 
-            <ContentControl prism:RegionManager.RegionName="NavigationRegion" DockPanel.Dock="Left" />
+            <Border BorderBrush="LightGray" BorderThickness="0,0,1,0">
+                <ContentControl prism:RegionManager.RegionName="NavigationRegion" DockPanel.Dock="Left" />
+            </Border>
         </DockPanel>
 
         <DockPanel
