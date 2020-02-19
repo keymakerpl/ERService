@@ -12,14 +12,12 @@ using System.Collections.ObjectModel;
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class ParameterCollection<Expression> : Collection<Expression>
-    {
-    }
-
     public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
         where TContext : DbContext
         where TEntity : class
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         protected readonly TContext Context;
 
         protected GenericRepository(TContext context)
@@ -61,7 +59,7 @@ namespace ERService.Infrastructure.Repositories
             var query = sqlResult.Sql;
             var bindings = sqlResult.Bindings.ToArray();
 
-            Console.WriteLine($"[DEBUG] {query}");
+            _logger.Debug($"Builded query: {query}");
 
             var result = await Context.Database.SqlQuery<Guid>(query, bindings).ToListAsync();
 

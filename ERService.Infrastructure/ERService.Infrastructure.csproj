@@ -111,7 +111,6 @@
     <Compile Include="Interfaces\ISetting.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Interfaces\IVersionedRow.cs" />
-    <Compile Include="Logger\NLog\NLogLogger.cs" />
     <Compile Include="Notifications\ToastNotifications\IToastNotificationService.cs" />
     <Compile Include="Notifications\ToastNotifications\ToastNotificationService.cs" />
     <Compile Include="Prism\Regions\StackPanelRegionAdapter.cs" />
