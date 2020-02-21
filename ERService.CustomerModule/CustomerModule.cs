@@ -17,14 +17,13 @@ namespace ERService.CustomerModule
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
-        {
-            _regionManager.RegisterViewWithRegion(RegionNames.CustomerSearchRegion, typeof(CustomerSearchView));
-            _logger.Info("Customer Module Initialized.");
+        {            
+            _logger.Info("Initialized.");
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterForNavigation(typeof(CustomerSearchView), ViewNames.CustomerSearchView);
         }
     }
 }

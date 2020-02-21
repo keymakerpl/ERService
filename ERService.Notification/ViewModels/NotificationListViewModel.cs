@@ -104,7 +104,7 @@ namespace ERService.Notification.ViewModels
             parameters.Add("ID", args);
 
             _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish();
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.RightSide });
         }
     }
 }

@@ -15,18 +15,17 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid>
-            <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
-                <Label
-                    Margin="5"
-                    Content="Ostatnio dodane:"
-                    FontWeight="SemiBold"
-                    Foreground="White" />
-            </Border>
-        </Grid>
+        <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+            <Label
+                Margin="5"
+                Content="Ostatnio dodane:"
+                FontWeight="SemiBold"
+                Foreground="White" />
+        </Border>
         <ListView
             Grid.Row="1"
             HorizontalAlignment="Stretch"
@@ -100,5 +99,36 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Label
+                Content="W trakcie naprawy:"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="White" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="0"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Foreground="Wheat" />
+            <Label
+                HorizontalAlignment="Center"
+                Content="Po terminie:"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="White" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="0"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Foreground="Wheat" />
+        </StackPanel>
     </Grid>
 </UserControl>

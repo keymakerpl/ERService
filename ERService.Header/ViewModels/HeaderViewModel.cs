@@ -42,7 +42,7 @@ namespace ERService.Header.ViewModels
         {
             BadgeIsVisible = false;
             BadgeValue = 0;
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish();
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.RightSide });
         }
     }
 }

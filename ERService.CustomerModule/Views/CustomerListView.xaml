@@ -69,7 +69,7 @@
             Grid.Row="1"
             Margin="20,0,20,0"
             BorderBrush="LightGray"
-            BorderThickness="0,1,0,0">
+            BorderThickness="0,0,0,0">
             <ContentControl prism:RegionManager.RegionName="CustomerSearchRegion" />
         </Border>
 

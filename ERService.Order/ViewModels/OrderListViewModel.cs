@@ -13,14 +13,19 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Linq;
+using ERService.Infrastructure.Repositories;
+using Prism.Commands;
 
 namespace ERService.OrderModule.ViewModels
 {
-    // Oj ListModelBase musi być bindable. Może go Wrappować? ListWrapper
     public class OrderListViewModel : ListModelBase<Order, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IMessageDialogService _dialogService;
-        private readonly IEventAggregator _eventAggregator;
+
+        public DelegateCommand SearchCommand { get; }
+
         private IRBACManager _rbacManager;
 
         public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
@@ -28,12 +33,19 @@ namespace ERService.OrderModule.ViewModels
         {
             _rbacManager = rBACManager;
             _dialogService = messageDialogService;
-            _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<SearchQueryEvent<Order>>().Subscribe(OnSearchRequest, true);
+            SearchCommand = new DelegateCommand(OnSearchExecute);
+
+            _eventAggregator.GetEvent<SearchQueryEvent<Order>>().Subscribe(OnSearchRequest);
 
             Orders = new ObservableCollection<OrderWrapper>();
             Models.CollectionChanged += Models_CollectionChanged;
+        }
+
+        private void OnSearchExecute()
+        {
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.BottomSearch });
+            _regionManager.RequestNavigate(RegionNames.SearchFlyoutRegion, ViewNames.OrderSearchView);
         }
 
         private async void OnSearchRequest(SearchQueryEventArgs<Order> args)
@@ -46,7 +58,7 @@ namespace ERService.OrderModule.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.Error(ex);
             }
         }
 
@@ -116,7 +128,7 @@ namespace ERService.OrderModule.ViewModels
 
                 ShowDetail(parameters);
             }
-        }
+        }        
 
         #endregion
 
@@ -137,7 +149,13 @@ namespace ERService.OrderModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Load(o => o.CustomerId.HasValue, h => h.Hardwares);
+            var orderNumber = navigationContext.Parameters.GetValue<string>("OrderNumber");
+            if (orderNumber != null)
+            {
+                var query = new QueryBuilder<Order>();
+                query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", orderNumber);
+                OnSearchRequest(new SearchQueryEventArgs<Order>() { QueryBuilder = query } );
+            }
         }
 
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

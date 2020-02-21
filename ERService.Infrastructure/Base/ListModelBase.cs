@@ -15,8 +15,8 @@ namespace ERService.Infrastructure.Base
         where TEntity : class
         where TContext : DbContext
     {
-        private IRegionManager _regionManager;
-        private readonly IEventAggregator _eventAggregator;
+        public readonly IRegionManager _regionManager;
+        public readonly IEventAggregator _eventAggregator;
         private TEntity _selectedModel;
         private bool _isReadOnly;
 

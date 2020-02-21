@@ -16,7 +16,8 @@ namespace ERService.CustomerModule.ViewModels
 {
     public class CustomerListViewModel : ListModelBase<Customer, ERServiceDbContext>, INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
     {
-        private readonly IEventAggregator _eventAggregator;
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        
         private IRBACManager _rbacManager;
         private IMessageDialogService _dialogService;
 
@@ -29,7 +30,6 @@ namespace ERService.CustomerModule.ViewModels
             IRBACManager rBACManager,
             IMessageDialogService dialogService) : base(context, regionManager, eventAggregator)
         {
-            _eventAggregator = eventAggregator;
             _rbacManager = rBACManager;
             _dialogService = dialogService;
 
@@ -47,13 +47,14 @@ namespace ERService.CustomerModule.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.Error(ex);
             }
         }
 
         private void OnSearchExecute()
         {
-            
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.BottomSearch });
+            _regionManager.RequestNavigate(RegionNames.SearchFlyoutRegion, ViewNames.CustomerSearchView);
         }
 
         //TODO: Refactor with OnMouseDoubleClick

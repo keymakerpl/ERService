@@ -9,197 +9,191 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     Dialog:DialogParticipation.Register="{Binding}"
-    d:DesignHeight="300"
-    d:DesignWidth="800"
+    d:DesignHeight="800"
+    d:DesignWidth="300"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Border Padding="10" Style="{StaticResource DefaultBorderStyle}">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="Wheat" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
 
+    <Grid Margin="5">
+        <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="1"
+                    Margin="5"
+                    Content="Imię" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Label
-                        Grid.Row="1"
-                        Margin="5"
-                        Content="Imię" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="5"
-                        Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Grid.Row="2"
+                    Margin="5"
+                    Content="Nazwisko" />
 
-                    <Label
-                        Grid.Row="2"
-                        Margin="5"
-                        Content="Nazwisko" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="5"
-                        Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Grid.Row="3"
+                    Margin="5"
+                    Content="Firma" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
 
-                    <Label
-                        Grid.Row="3"
-                        Margin="5"
-                        Content="Firma" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Margin="5"
-                        Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                    <Label
-                        Grid.Row="4"
-                        Margin="5"
-                        Content="NIP" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Width="150"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding Customer.NIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Margin="5"
-                        Content="Email" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="3"
-                        Margin="5"
-                        Text="{Binding Customer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                    <Label
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Margin="5"
-                        Content="Email 2" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="3"
-                        Margin="5"
-                        Text="{Binding Customer.Email2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                    <Label
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        Margin="5"
-                        Content="Numer telefonu" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="3"
-                        Width="150"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding Customer.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                    <Label
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Margin="5"
-                        Content="Numer telefonu 2" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="3"
-                        Width="150"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding Customer.PhoneNumber2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-
-                </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label Margin="5" Content="Ulica" />
-                    <TextBox
-                        Grid.Column="1"
-                        Width="200"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding CustomerAddress.Street, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
-                    <Label
-                        Grid.Row="1"
-                        Margin="5"
-                        Content="Numer" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Width="100"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding CustomerAddress.HouseNumber, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
-                    <Label
-                        Grid.Row="2"
-                        Margin="5"
-                        Content="Miasto" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="200"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Text="{Binding CustomerAddress.City, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
-                </Grid>
-                <Grid
-                    Grid.Column="2"
+                <Label
+                    Grid.Row="4"
+                    Margin="5"
+                    Content="NIP" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
                     Width="100"
-                    Height="35">
-                    <Button Command="{Binding SearchCommand}">
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    Text="{Binding Customer.NIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+
+                <Label
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="5"
+                    Content="Email" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+
+                <Label
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Margin="5"
+                    Content="Email 2" />
+                <TextBox
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.Email2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+
+                <Label
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Margin="5"
+                    Content="Numer telefonu" />
+                <TextBox
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+
+                <Label
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Margin="5"
+                    Content="Numer telefonu 2" />
+                <TextBox
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding Customer.PhoneNumber2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                <Label
+                    Grid.Row="9"
+                    Margin="5"
+                    Content="Ulica" />
+                <TextBox
+                    Grid.Row="9"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding CustomerAddress.Street, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Grid.Row="10"
+                    Grid.Column="0"
+                    Margin="5"
+                    Content="Numer" />
+                <TextBox
+                    Grid.Row="10"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    Text="{Binding CustomerAddress.HouseNumber, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Grid.Row="11"
+                    Margin="5"
+                    Content="Miasto" />
+                <TextBox
+                    Grid.Row="11"
+                    Grid.Column="1"
+                    Margin="5"
+                    Text="{Binding CustomerAddress.City, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+            <Border
+                Grid.Column="2"
+                Margin="10"
+                Padding="5"
+                BorderBrush="Wheat"
+                BorderThickness="0,1,0,0">
+                <Grid
+                    Width="100"
+                    Height="35"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                    <Button Background="DimGray" Command="{Binding SearchCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial Kind="Magnify" />
+                            <iconPacks:PackIconMaterial Foreground="Wheat" Kind="Magnify" />
                             <TextBlock
                                 Margin="5,0,5,0"
-                                FontSize="12"
-                                Foreground="Black"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Foreground="Wheat"
                                 Text="Szukaj" />
                         </StackPanel>
                     </Button>
                 </Grid>
-            </Grid>
-
-        </Border>
+            </Border>
+        </StackPanel>
+        <Grid.InputBindings>
+            <KeyBinding Key="Return" Command="{Binding SearchCommand}" />
+        </Grid.InputBindings>
     </Grid>
 </UserControl>

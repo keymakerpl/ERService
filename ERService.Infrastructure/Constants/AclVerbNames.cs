@@ -1,6 +1,6 @@
 ﻿namespace ERService.Infrastructure.Constants
 {
-    public class AclVerbNames
+    public static class AclVerbNames
     {
         public const string PrintConfiguration = "Dostęp do konfiguracji wydruków";
         public const string NumerationConfiguration = "Dostęp do konfiguracji numeracji";

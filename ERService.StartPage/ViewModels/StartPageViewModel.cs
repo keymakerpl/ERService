@@ -21,6 +21,7 @@ namespace ERService.StartPage.ViewModels
         public DelegateCommand SettingsCommand { get; private set; }
         public DelegateCommand AddOrderCommand { get; private set; }
         public DelegateCommand StatsCommand { get; }
+        public DelegateCommand<object> SearchCommand { get; }
 
         public StartPageViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
@@ -33,6 +34,15 @@ namespace ERService.StartPage.ViewModels
             SettingsCommand = new DelegateCommand(OnSettingsCommandExecute);
             AddOrderCommand = new DelegateCommand(OnAddOrderExecute);
             StatsCommand = new DelegateCommand(OnStatsCommandExecute);
+            SearchCommand = new DelegateCommand<object>(OnSearchExecute);
+        }
+
+        private void OnSearchExecute(object args)
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("OrderNumber", args);
+
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderListView, parameters);
         }
 
         private void OnStatsCommandExecute()
