@@ -10,6 +10,8 @@ namespace ERService.OrderModule
 {
     public class OrderModule : IModule
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IRegionManager _regionManager;
         private readonly IBackgroundTaskRegistration _taskRegistration;
 
@@ -20,15 +22,15 @@ namespace ERService.OrderModule
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
-        {
-            _regionManager.RegisterViewWithRegion(RegionNames.OrderSearchRegion, typeof(OrderSearchView));
-            
-            _taskRegistration.Register(new BackgroundTask<NewOrdersNotificationTask>("*/1 * * * *"));
+        {            
+            _taskRegistration.Register(new BackgroundTask<NewOrdersNotificationTask>(CronExpressions.EveryOneMinute));            
+            _logger.Info("Initialized");
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register(typeof(NewOrdersNotificationTask));
+            containerRegistry.RegisterForNavigation(typeof(OrderSearchView), ViewNames.OrderSearchView);
         }
     }
 }

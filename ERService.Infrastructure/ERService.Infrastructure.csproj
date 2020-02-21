@@ -66,6 +66,7 @@
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />
+    <Compile Include="Constants\CronExpressions.cs" />
     <Compile Include="Constants\ModuleNames.cs" />
     <Compile Include="Constants\PublicKeys.cs" />
     <Compile Include="Constants\RegionNames.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="Interfaces\ISetting.cs" />
     <Compile Include="Interfaces\ISettingsManager.cs" />
     <Compile Include="Interfaces\IVersionedRow.cs" />
-    <Compile Include="Logger\NLog\NLogLogger.cs" />
     <Compile Include="Notifications\ToastNotifications\IToastNotificationService.cs" />
     <Compile Include="Notifications\ToastNotifications\ToastNotificationService.cs" />
     <Compile Include="Prism\Regions\StackPanelRegionAdapter.cs" />

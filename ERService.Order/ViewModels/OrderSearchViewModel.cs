@@ -14,7 +14,10 @@ namespace ERService.OrderModule.ViewModels
         private bool _registerDateIsChecked;
         private bool _endDateIsChecked;
 
-        public OrderSearchViewModel(IOrderStatusRepository statusRepository, IOrderTypeRepository typeRepository, IEventAggregator eventAggregator) : base(eventAggregator)
+        public OrderSearchViewModel(
+            IOrderStatusRepository statusRepository,
+            IOrderTypeRepository typeRepository,
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             Order = new Order() { DateAdded = DateTime.Now, DateEnded = DateTime.Now };
             Customer = new Customer();

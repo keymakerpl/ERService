@@ -22,6 +22,8 @@ namespace ERService.CustomerModule.ViewModels
     //TODO: Refactor Interface
     public class CustomerViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private ICustomerWrapper _customer;
         private CustomerAddress _customerAddress;
         private IRegionNavigationService _navigationService;
@@ -173,6 +175,8 @@ namespace ERService.CustomerModule.ViewModels
         {
             var customer = new Customer();
             _repository.Add(customer);
+
+            _logger.Debug("New customer object created.");
 
             return customer;
         }

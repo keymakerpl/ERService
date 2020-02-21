@@ -18,12 +18,19 @@ namespace ERService.Application.ViewModels
 
         private bool _isExpanded;
 
-        public bool IsExpanded
+        public bool RightFlyoutIsExpanded
         {
             get { return _isExpanded; }
             set { SetProperty(ref _isExpanded, value); }
         }
 
+        private bool _searchIsExpanded;
+
+        public bool SearchIsExpanded
+        {
+            get { return _searchIsExpanded; }
+            set { SetProperty(ref _searchIsExpanded, value); }
+        }
 
         public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
@@ -39,9 +46,17 @@ namespace ERService.Application.ViewModels
             ShowLoginWindow();
         }
 
-        private void OnSideMenuButtonToggled()
+        private void OnSideMenuButtonToggled(AfterSideMenuButtonToggledArgs args)
         {
-            IsExpanded = !IsExpanded;
+            switch (args.FlyoutSide)
+            {
+                case SideFlyouts.RightSide:
+                    RightFlyoutIsExpanded = !RightFlyoutIsExpanded;
+                    break;
+                case SideFlyouts.BottomSearch:
+                    SearchIsExpanded = !SearchIsExpanded;
+                    break;
+            }
         }
 
         private void OnUserLogedout(UserAuthorizationEventArgs obj)
