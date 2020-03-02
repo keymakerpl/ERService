@@ -27,12 +27,12 @@ namespace ERService.StartPage
 
         private void ContinueInitialization(UserAuthorizationEventArgs obj)
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, typeof(StartPageView).FullName);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<StartPageView>(typeof(StartPageView).FullName);
+            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView);
         }
     }
 }

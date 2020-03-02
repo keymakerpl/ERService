@@ -112,6 +112,10 @@
                         </StackPanel>
                     </Button>
 
+                    <Grid.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding LoginCommand}" />
+                    </Grid.InputBindings>
+
                 </Grid>
                 <Grid>
                     <Grid

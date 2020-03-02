@@ -78,6 +78,7 @@
     <Compile Include="Numeration\OrderNumberGenerator.cs" />
     <Compile Include="ViewModels\OrderSearchViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
+    <Compile Include="ViewModels\OrderWizardViewModel.cs" />
     <Compile Include="Views\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>
     </Compile>

@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:ERService.Notification.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    d:DesignHeight="500"
+    d:DesignHeight="800"
     d:DesignWidth="200"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -16,95 +16,98 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+        <Grid VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+                <Label
+                    Margin="5"
+                    Content="Ostatnio dodane:"
+                    FontWeight="SemiBold"
+                    Foreground="White" />
+            </Border>
+            <ListView
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                BorderThickness="0"
+                ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Width="190"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1">
+                            <Grid>
+                                <Grid.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=local:NotificationListView, Mode=FindAncestor}, Path=DataContext.ShowOrderCommand}"
+                                        CommandParameter="{Binding OrderID}"
+                                        Gesture="LeftClick" />
+                                </Grid.InputBindings>
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="Numer:"
+                                    FontWeight="SemiBold"
+                                    Foreground="Wheat" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content="{Binding OrderNumber}"
+                                    Foreground="White" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="Klient:"
+                                    FontWeight="SemiBold"
+                                    Foreground="Wheat" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Content="{Binding CustomerName}"
+                                    Foreground="White" />
+                                <Label
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Content="Usterka:"
+                                    FontWeight="SemiBold"
+                                    Foreground="Wheat" />
+                                <Label
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Content="{Binding Fault}"
+                                    Foreground="White" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <StackPanel Grid.Row="1">
             <Label
-                Margin="5"
-                Content="Ostatnio dodane:"
-                FontWeight="SemiBold"
-                Foreground="White" />
-        </Border>
-        <ListView
-            Grid.Row="1"
-            HorizontalAlignment="Stretch"
-            BorderThickness="0"
-            ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border
-                        Width="190"
-                        BorderBrush="Gray"
-                        BorderThickness="0,0,0,1">
-                        <Grid>
-                            <Grid.InputBindings>
-                                <MouseBinding
-                                    Command="{Binding RelativeSource={RelativeSource AncestorType=local:NotificationListView, Mode=FindAncestor}, Path=DataContext.ShowOrderCommand}"
-                                    CommandParameter="{Binding OrderID}"
-                                    Gesture="LeftClick" />
-                            </Grid.InputBindings>
-                            <Grid.Style>
-                                <Style TargetType="{x:Type Grid}">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Cursor" Value="Hand" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Content="Numer:"
-                                FontWeight="SemiBold"
-                                Foreground="Wheat" />
-                            <Label
-                                Grid.Column="1"
-                                Content="{Binding OrderNumber}"
-                                Foreground="White" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Content="Klient:"
-                                FontWeight="SemiBold"
-                                Foreground="Wheat" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Content="{Binding CustomerName}"
-                                Foreground="White" />
-                            <Label
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Content="Usterka:"
-                                FontWeight="SemiBold"
-                                Foreground="Wheat" />
-                            <Label
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Content="{Binding Fault}"
-                                Foreground="White" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <StackPanel
-            Grid.Row="2"
-            Margin="0,50"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <Label
+                HorizontalAlignment="Center"
                 Content="W trakcie naprawy:"
                 FontSize="14"
                 FontWeight="SemiBold"

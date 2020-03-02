@@ -21,31 +21,30 @@
         <Controls:FlyoutsControl>
             <Controls:Flyout
                 Width="200"
-                IsOpen="{Binding RightFlyoutIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsOpen="{Binding NotificationFlyoutIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Position="Right"
                 Theme="Dark">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top">
-                        <ContentControl prism:RegionManager.RegionName="NotificationRegion" />
-                    </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ContentControl prism:RegionManager.RegionName="NotificationRegion" />
                     <Border
+                        Grid.Row="1"
                         Margin="15"
-                        VerticalAlignment="Bottom"
                         BorderBrush="Gray"
-                        BorderThickness="0,1,0,0"
-                        DockPanel.Dock="Bottom">
-                        <StackPanel>
-                            <ContentControl prism:RegionManager.RegionName="LoggedUserRegion" />
-                        </StackPanel>
+                        BorderThickness="0,1,0,0">
+                        <ContentControl prism:RegionManager.RegionName="LoggedUserRegion" />
                     </Border>
-                </DockPanel>
+                </Grid>
             </Controls:Flyout>
             <Controls:Flyout
                 Width="350"
-                IsOpen="{Binding SearchIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsOpen="{Binding RightFlyoutIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Position="Right"
                 Theme="Dark">
-                <ContentControl prism:RegionManager.RegionName="SearchFlyoutRegion" />
+                <ContentControl prism:RegionManager.RegionName="DetailFlyoutRegion" />
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>

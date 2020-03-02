@@ -1,4 +1,6 @@
 ﻿using ERService.Infrastructure.Constants;
+using ERService.OrderModule.Data.Repository;
+using ERService.OrderModule.Repository;
 using ERService.OrderModule.Tasks;
 using ERService.OrderModule.Views;
 using ERService.Services.Tasks;
@@ -29,8 +31,16 @@ namespace ERService.OrderModule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register(typeof(NewOrdersNotificationTask));
-            containerRegistry.RegisterForNavigation(typeof(OrderSearchView), ViewNames.OrderSearchView);
+            containerRegistry.Register(typeof(NewOrdersNotificationTask))
+                             .Register<IOrderRepository, OrderRepository>()
+                             .Register<IOrderStatusRepository, OrderStatusRepository>()
+                             .Register<IOrderTypeRepository, OrderTypeRepository>()
+                             .Register<IBlobRepository, BlobRepository>()
+                             .Register<INumerationRepository, NumerationRepository>();
+
+            containerRegistry.RegisterForNavigation<OrderSearchView>(ViewNames.OrderSearchView);
+            containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
+            containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
         }
     }
 }

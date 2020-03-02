@@ -53,8 +53,8 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.BottomSearch });
-            _regionManager.RequestNavigate(RegionNames.SearchFlyoutRegion, ViewNames.CustomerSearchView);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout });
+            _regionManager.RequestNavigate(RegionNames.DetailFlyoutRegion, ViewNames.CustomerSearchView);
         }
 
         //TODO: Refactor with OnMouseDoubleClick

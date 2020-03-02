@@ -22,6 +22,8 @@ namespace ERService.ViewModels
 {
     public class LoginViewModel : BindableBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private string _dbPassword;
         private string _dbServer;
         private string _dbUser;
@@ -179,9 +181,9 @@ namespace ERService.ViewModels
             }
             catch (Exception ex)
             {
-                //TODO: error handling
-                _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...",
-                    $"Error: {ex.Message} {Environment.NewLine} {ex.InnerException?.Message ?? ""}");
+                _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...", "Więcej informacji znajduje się w logu.");
+                _logger.Error(ex);
+                return;
             }
 
             var passwordBox = parameter as PasswordBox;

@@ -13,23 +13,23 @@ namespace ERService.Application.ViewModels
     {
         private IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
-        private readonly string _applicationName;
-        public string ApplicationName { get { return _applicationName; } }
+        public string ApplicationName { get; }
 
-        private bool _isExpanded;
-
-        public bool RightFlyoutIsExpanded
+        private bool _notificationFlyoutIsExpanded;
+        public bool NotificationFlyoutIsExpanded
         {
-            get { return _isExpanded; }
-            set { SetProperty(ref _isExpanded, value); }
+            get { return _notificationFlyoutIsExpanded; }
+            set { SetProperty(ref _notificationFlyoutIsExpanded, value); }
         }
 
-        private bool _searchIsExpanded;
-
-        public bool SearchIsExpanded
+        private bool _rightFlyoutIsExpanded;
+        public bool RightFlyoutIsExpanded
         {
-            get { return _searchIsExpanded; }
-            set { SetProperty(ref _searchIsExpanded, value); }
+            get { return _rightFlyoutIsExpanded; }
+            set
+            {
+                SetProperty(ref _rightFlyoutIsExpanded, value);
+            }
         }
 
         public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
@@ -38,24 +38,50 @@ namespace ERService.Application.ViewModels
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout, true);
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Subscribe(OnSideMenuButtonToggled, true);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Subscribe(OnSideMenuButtonToggled);
 
             var assembly = Assembly.GetEntryAssembly();
-            _applicationName = $"{assembly.GetName().Name}";
+            ApplicationName = $"{assembly.GetName().Name} {assembly.GetName().Version}";
 
             ShowLoginWindow();
         }
 
         private void OnSideMenuButtonToggled(AfterSideMenuButtonToggledArgs args)
         {
-            switch (args.FlyoutSide)
+            switch (args.Flyout)
             {
-                case SideFlyouts.RightSide:
-                    RightFlyoutIsExpanded = !RightFlyoutIsExpanded;
+                case SideFlyouts.NotificationFlyout:
+                    ToggleNotificationFlyout();
                     break;
-                case SideFlyouts.BottomSearch:
-                    SearchIsExpanded = !SearchIsExpanded;
+                case SideFlyouts.DetailFlyout:
+                    ToggleDetailFlyout(args.DetailID, args.ViewName, args.IsReadOnly);
                     break;
+            }
+        }
+
+        private void ToggleNotificationFlyout()
+        {
+            NotificationFlyoutIsExpanded = !NotificationFlyoutIsExpanded;
+        }
+
+        private void ToggleDetailFlyout(Guid detailID, string viewName, bool isReadOnly)
+        {
+            if (String.IsNullOrWhiteSpace(viewName)) return;
+
+            RightFlyoutIsExpanded = !RightFlyoutIsExpanded;
+
+            if (RightFlyoutIsExpanded)
+            {
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", detailID);
+                parameters.Add("IsReadOnly", isReadOnly);
+
+                _regionManager.Regions[RegionNames.DetailFlyoutRegion].RemoveAll();
+                _regionManager.RequestNavigate(RegionNames.DetailFlyoutRegion, viewName, parameters);
+            }
+            else
+            {
+                _regionManager.Regions[RegionNames.DetailFlyoutRegion].RemoveAll();
             }
         }
 

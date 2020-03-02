@@ -124,6 +124,8 @@ namespace ERService.TemplateEditor.ViewModels
             var template = new PrintTemplate();
             _templeteRepository.Add(template);
 
+            IsToolbarVisible = true;
+
             return template;
         }
 

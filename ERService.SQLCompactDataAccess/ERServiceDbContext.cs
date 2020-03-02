@@ -81,7 +81,7 @@ namespace ERService.MSSQLDataAccess
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             //Fluent API - zakomentowane bo użyjemy atrybutów, a następnie update-migration
-            //modelBuilder.Configurations.Add(new CustomerConfiguration());
+            //modelBuilder.Configurations.Add(new CustomerConfiguration());            
         }
     }
 

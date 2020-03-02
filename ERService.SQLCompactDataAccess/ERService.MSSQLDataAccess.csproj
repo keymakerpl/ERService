@@ -58,6 +58,12 @@
     <Compile Include="ConnectionStringBuilder.cs" />
     <Compile Include="ConnectionStringProvider.cs" />
     <Compile Include="ERSCreateDatabaseIfNotExists.cs" />
+    <Compile Include="ERService.MSSQLDataAccess.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERService.MSSQLDataAccess.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ERServiceDbContext.Views.cs" />
     <Compile Include="ERSMySqlMigrationSqlGenerator.cs" />
     <Compile Include="ERServiceDbConfiguration.cs" />
     <Compile Include="ERServiceDbContext.cs" />
@@ -98,6 +104,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <EntityDeploy Include="ERService.MSSQLDataAccess.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ERService.MSSQLDataAccess.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

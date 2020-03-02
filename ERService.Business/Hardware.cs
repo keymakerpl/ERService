@@ -11,10 +11,10 @@ namespace ERService.Business
     {
         public Hardware()
         {
-            Init();
+            Initialize();
         }
 
-        private void Init()
+        private void Initialize()
         {
             HardwareCustomItems = new Collection<HwCustomItem>();
         }
@@ -28,6 +28,9 @@ namespace ERService.Business
 
         [StringLength(80)]
         public string SerialNumber { get; set; }
+        
+        public Guid? HardwareTypeID { get; set; }
+        public HardwareType HardwareType { get; set; }
 
         public ICollection<HwCustomItem> HardwareCustomItems { get; set; }
 

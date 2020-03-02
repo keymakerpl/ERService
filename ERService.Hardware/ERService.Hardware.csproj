@@ -58,6 +58,9 @@
     <Compile Include="Data\Repository\IHardwareTypeRepository.cs" />
     <Compile Include="Data\Repository\IHwCustomItemRepository.cs" />
     <Compile Include="HardwareModule.cs" />
+    <Compile Include="Views\HardwareFlyoutDetailView.xaml.cs">
+      <DependentUpon>HardwareFlyoutDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wrapper\CustomItemWrapper.cs" />
     <Compile Include="Wrapper\HardwareTypeWrapper.cs" />
     <Compile Include="Wrapper\HardwareWrapper.cs" />
@@ -93,6 +96,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\HardwareFlyoutDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HardwareListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

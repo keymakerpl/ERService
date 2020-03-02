@@ -58,7 +58,7 @@ namespace ERService.Infrastructure.Base
 
         public Guid ID { get; protected set; }
         public bool IsReadOnly { get => _isReadOnly; set { SetProperty(ref _isReadOnly, value); } }
-        public ICommand SaveCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; private set; }
 
         public string Title
         {

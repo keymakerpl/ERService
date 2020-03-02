@@ -1,28 +1,18 @@
 ﻿using ERService.Application.Views;
-using ERService.CustomerModule.Repository;
-using ERService.CustomerModule.Views;
-using ERService.HardwareModule.Data.Repository;
-using ERService.HardwareModule.Views;
 using ERService.Header;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Helpers;
 using ERService.Navigation;
-using ERService.OrderModule.Data.Repository;
-using ERService.OrderModule.Repository;
-using ERService.OrderModule.Views;
 using ERService.RBAC;
-using ERService.RBAC.Data.Repository;
 using ERService.Settings;
 using ERService.Settings.Views;
 using ERService.StartPage;
-using ERService.StartPage.Views;
 using ERService.StatusBar;
 using Prism.Ioc;
 using Prism.Modularity;
 using System;
 using System.Windows;
 using System.Windows.Threading;
-using static ERService.RBAC.Data.Repository.RBACRepository;
 using MahApps.Metro.Controls.Dialogs;
 using ERService.Infrastructure.Dialogs;
 using ERService.TemplateEditor;
@@ -37,10 +27,10 @@ using ERService.Notification;
 using Prism.Regions;
 using ERService.Infrastructure.Prism.Regions;
 using System.Windows.Controls;
-using ERService.Services.Tasks;
-using ERService.Services.Services;
 using ERService.Services;
 using ERService.Infrastructure.Notifications.ToastNotifications;
+using ERService.Services.Tasks;
+using ERService.Services.Services;
 
 namespace ERService.Application
 {
@@ -88,45 +78,22 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(StartPageModule));
             moduleCatalog.AddModule(typeof(RBACModule));
             moduleCatalog.AddModule(typeof(TemplateEditorModule));
-
-            //TODO: Assembly names refactor
+            moduleCatalog.AddModule(typeof(HardwareModule.HardwareModule));
             moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
             moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule));
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //TODO: Czy możemy przenieść rejestrację typów do modułów tak aby było jak najmniej zależności w solucji?
-            containerRegistry.RegisterSingleton<IConfig, Config>()
-                             .RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>()
-                             .Register<IUserRepository, UserRepository>()
-                             .Register<IRoleRepository, RoleRepository>()
-                             .Register<IACLVerbCollection, ACLVerbCollection>()
-                             .Register<IAclVerbRepository, AclVerbRepository>()
-                             .Register<IAclRepository, AclRepository>()
-                             .RegisterSingleton<IRBACManager, RBACManager>()
-                             .Register<ICustomerRepository, CustomerRepository>()
-                             .Register<IOrderRepository, OrderRepository>()
-                             .Register<IHardwareRepository, HardwareRepository>()
-                             .Register<IHardwareTypeRepository, HardwareTypeRepository>()
-                             .Register<ICustomItemRepository, CustomItemRepository>()
-                             .Register<IOrderStatusRepository, OrderStatusRepository>()
-                             .Register<IOrderTypeRepository, OrderTypeRepository>()
-                             .Register<IBlobRepository, BlobRepository>()
-                             .Register<INumerationRepository, NumerationRepository>()
-                             .Register<IPasswordHasher, PasswordHasher>()
-                             .Register<IDialogCoordinator, DialogCoordinator>()
-                             .Register<IMessageDialogService, MessageDialogService>()
-                             .Register<IToastNotificationService, ToastNotificationService>();
+            containerRegistry   .RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>()
+                                .RegisterSingleton<IConfig, Config>()                                                                                                                                            
+                                .Register<IPasswordHasher, PasswordHasher>()
+                                .Register<IDialogCoordinator, DialogCoordinator>()
+                                .Register<IMessageDialogService, MessageDialogService>()
+                                .Register<IToastNotificationService, ToastNotificationService>();            
 
-            containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView);
-            containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
-            containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
-            containerRegistry.RegisterForNavigation<HardwareView>(ViewNames.HardwareView);
-            containerRegistry.RegisterForNavigation<OrderView>(ViewNames.OrderView);
-            containerRegistry.RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
-            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
-            containerRegistry.RegisterForNavigation<StartPageView>(ViewNames.StartPageView); ;         
+            containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView); 
+            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);                    
         }
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)

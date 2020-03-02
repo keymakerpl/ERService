@@ -152,6 +152,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -186,11 +187,36 @@
                             FontSize="14" />
                         <Label
                             Grid.Row="2"
-                            Grid.Column="4"
+                            Grid.Column="1"
                             Width="250"
                             HorizontalAlignment="Left"
                             Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             FontSize="14" />
+
+                        <Grid
+                            Grid.RowSpan="3"
+                            Grid.Column="2"
+                            VerticalAlignment="Top">
+                            <Button
+                                Width="25"
+                                Height="25"
+                                Margin="3"
+                                BorderThickness="0"
+                                Command="{Binding ShowCustomerDetailFlyoutCommand}"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                ToolTip="Pokaż szczegóły klienta">
+                                <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                            </Button>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                        </Grid>
                     </Grid>
                 </Border>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
@@ -198,18 +224,27 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label
                             Margin="0,5,0,5"
-                            Content="Nazwa urządzenia:"
+                            Content="Urządzenie:"
                             FontSize="14"
                             FontWeight="SemiBold" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5,5,0,5"
+                            Content="Nazwa:"
+                            FontSize="14" />
                         <TextBox
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Grid.Column="1"
                             Margin="0,5,0,5"
                             HorizontalAlignment="Stretch"
@@ -217,17 +252,59 @@
                             FontSize="14"
                             Text="{Binding Hardware.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Label
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="0"
                             Margin="5,5,0,5"
                             Content="Numer seryjny:"
                             FontSize="14" />
                         <TextBox
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="1"
                             Margin="0,5,0,5"
                             FontSize="14"
                             Text="{Binding Hardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="Typ urządzenia:"
+                            FontSize="14" />
+                        <ComboBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Stretch"
+                            DisplayMemberPath="Name"
+                            IsEnabled="False"
+                            IsSynchronizedWithCurrentItem="True"
+                            ItemsSource="{Binding HardwareTypes}"
+                            SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding SelectedHardwareType.Name}"
+                            SelectedValuePath="Name" />
+                        <Grid
+                            Grid.RowSpan="3"
+                            Grid.Column="2"
+                            VerticalAlignment="Top">
+                            <Button
+                                Width="25"
+                                Height="25"
+                                Margin="3"
+                                BorderThickness="0"
+                                Command="{Binding ShowHardwareDetailFlyoutCommand}"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                ToolTip="Pokaż szczegóły urządzenia">
+                                <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                            </Button>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                        </Grid>
                     </Grid>
                 </Border>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">

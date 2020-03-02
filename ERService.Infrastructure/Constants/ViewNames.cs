@@ -2,13 +2,15 @@
 {
     public static class ViewNames
     {
-        public const string CustomerView = "CustomerView";
         public const string NotificationListView = "NotificationListView";
         public const string NotificationElementView = "NotificationElementView";
         public const string LoggedUserView = "LoggedUserView";
+        public const string CustomerView = "CustomerView";
         public const string CustomerListView = "CustomerListView";
         public const string CustomerSearchView = "CustomerSearchView";
+        public const string CustomerFlyoutDetailView = "CustomerFlyoutDetailView";
         public const string HardwareView = "HardwareView";
+        public const string HardwareFlyoutDetailView = "HardwareFlyoutDetailView";
         public const string HardwareListView = "HardwareListView";        
         public const string OrderListView = "OrderListView";
         public const string OrderSearchView = "OrderSearchView";
