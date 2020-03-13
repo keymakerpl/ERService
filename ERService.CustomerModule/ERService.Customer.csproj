@@ -130,9 +130,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.Input">
-      <Version>6.0.77</Version>
-    </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>

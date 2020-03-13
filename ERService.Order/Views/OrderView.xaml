@@ -53,18 +53,6 @@
                     ToolTip="Zapisz">
                     <iconPacks:PackIconMaterialLight Kind="ContentSave" />
                 </Button>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Margin="5"
-                    Background="GhostWhite"
-                    Command="{Binding GoBackCommand}"
-                    Foreground="Gray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Wstecz"
-                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
-                </Button>
                 <metroControls:DropDownButton
                     Width="40"
                     Height="40"

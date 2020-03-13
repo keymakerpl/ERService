@@ -51,7 +51,7 @@ namespace ERService.Infrastructure.Base
                 {
                     _hasChanges = value;
                     RaisePropertyChanged();
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                    SaveCommand.RaiseCanExecuteChanged();
                 }
             }
         }

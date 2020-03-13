@@ -11,6 +11,7 @@ using System.Windows;
 using Prism.Commands;
 using ERService.Infrastructure.Events;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -42,8 +43,12 @@ namespace ERService.CustomerModule.ViewModels
         {
             try
             {
-                var ids = await GetIDsBy(args.QueryBuilder);
-                Load(c => ids.Contains(c.Id), a => a.CustomerAddresses);
+                await GetIDsBy(args.QueryBuilder)
+                                                    .ContinueWith((t) => 
+                                                    {
+                                                        Load(c => t.Result.Contains(c.Id), a => a.CustomerAddresses);
+                                                    }, 
+                                                    TaskContinuationOptions.ExecuteSynchronously);                
             }
             catch (Exception ex)
             {
@@ -53,8 +58,7 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout });
-            _regionManager.RequestNavigate(RegionNames.DetailFlyoutRegion, ViewNames.CustomerSearchView);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.CustomerSearchView });
         }
 
         //TODO: Refactor with OnMouseDoubleClick

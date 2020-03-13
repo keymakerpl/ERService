@@ -23,9 +23,11 @@ namespace ERService.Business
         [Key]
         public Guid Id { get; set; }
 
+        [Required]
         [StringLength(80)]
         public string Name { get; set; }
 
+        [Required]
         [StringLength(80)]
         public string SerialNumber { get; set; }
         

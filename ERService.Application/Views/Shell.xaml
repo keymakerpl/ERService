@@ -145,9 +145,10 @@
 
         <controls:NotificationArea
             x:Name="WindowArea"
+            Grid.RowSpan="4"
             Grid.ColumnSpan="2"
-            MaxItems="3"
-            Position="TopLeft" />
+            MaxItems="6"
+            Position="BottomRight" />
 
     </Grid>
 </Controls:MetroWindow>

@@ -13,7 +13,7 @@ namespace ERService.MSSQLDataAccess.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            
+
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
             {
                 SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());

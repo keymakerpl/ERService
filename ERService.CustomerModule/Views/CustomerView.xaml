@@ -18,25 +18,6 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="AutoCompleteBoxItemTemplate">
-            <StackPanel Orientation="Horizontal">
-                <Label Width="Auto" Content="{Binding FirstName}" />
-                <Label Width="Auto" Content="{Binding LastName}" />
-                <Label
-                    Width="Auto"
-                    Content="tel. "
-                    FontStyle="Italic"
-                    Foreground="SlateGray" />
-                <Label
-                    Width="Auto"
-                    Content="{Binding PhoneNumber}"
-                    FontStyle="Italic"
-                    Foreground="SlateGray" />
-            </StackPanel>
-        </DataTemplate>
-    </UserControl.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -72,33 +53,8 @@
                     Command="{Binding SaveCommand}"
                     Foreground="Gray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Zapisz"
-                    Visibility="{Binding WizardMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    ToolTip="Zapisz">
                     <iconPacks:PackIconMaterialLight Kind="ContentSave" />
-                </Button>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Margin="5"
-                    Background="GhostWhite"
-                    Command="{Binding GoForwardCommand}"
-                    Foreground="Gray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Dalej"
-                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <iconPacks:PackIconMaterial Kind="ArrowRight" />
-                </Button>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Margin="5"
-                    Background="GhostWhite"
-                    Command="{Binding GoBackCommand}"
-                    Foreground="Gray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Wstecz"
-                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
                 </Button>
             </StackPanel>
         </Border>
@@ -158,21 +114,11 @@
                         Margin="10,10,0,0"
                         Content="Nazwisko" />
 
-                    <controls:AutoCompleteBox
-                        x:Name="AutoBox"
+                    <TextBox
                         Grid.Row="4"
                         Margin="10,0,10,10"
-                        ItemTemplate="{StaticResource AutoCompleteBoxItemTemplate}"
-                        ItemsSource="{Binding Customers}"
-                        SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-                        Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                        ValueMemberPath="LastName">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="DropDownClosed">
-                                <i:InvokeCommandAction Command="{Binding DropDownCloseCommand}" CommandParameter="{Binding ElementName=AutoBox}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </controls:AutoCompleteBox>
+                        BorderThickness="0"
+                        Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
 
                     <Label
                         Grid.Row="5"
@@ -223,6 +169,7 @@
                         Grid.Row="6"
                         Grid.Column="1"
                         Margin="10,0,10,10"
+                        BorderThickness="0"
                         Text="{Binding Customer.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
 
                     <Label

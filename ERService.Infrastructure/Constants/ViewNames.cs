@@ -28,5 +28,9 @@
         public const string PrintTemplateEditorView = "PrintTemplateEditorView";
         public const string CompanySettingsView = "CompanySettingsView";
         public const string LicenseSettingsView = "LicenseSettingsView";
+        public const string OrderWizardCustomerView = "OrderWizardCustomerView";
+        public const string OrderWizardHardwareView = "OrderWizardHardwareView";
+        public const string OrderWizardOrderView = "OrderWizardOrderView";
+        public const string OrderWizardView = "OrderWizardView";
     }
 }

@@ -30,7 +30,7 @@ namespace ERService.CustomerModule
             containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
             containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
             containerRegistry.RegisterForNavigation<CustomerSearchView>(ViewNames.CustomerSearchView);
-            containerRegistry.RegisterForNavigation<CustomerFlyoutDetailView, CustomerViewModel>(ViewNames.CustomerFlyoutDetailView);
+            containerRegistry.RegisterForNavigation<CustomerFlyoutDetailView, CustomerViewModel>(ViewNames.CustomerFlyoutDetailView);            
         }
     }
 }

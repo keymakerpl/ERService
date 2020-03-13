@@ -183,6 +183,7 @@ namespace ERService.ViewModels
             {
                 _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...", "Więcej informacji znajduje się w logu.");
                 _logger.Error(ex);
+                _logger.Debug(ex);
                 return;
             }
 

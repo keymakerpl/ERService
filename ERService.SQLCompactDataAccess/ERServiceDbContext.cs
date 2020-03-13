@@ -31,7 +31,7 @@ namespace ERService.MSSQLDataAccess
         public ERServiceDbContext() : base(ConnectionStringProvider.Current)
         {
             Database.SetInitializer(new ERSCreateDatabaseIfNotExists());            
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());            
 
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer && !Database.Exists())
             {

@@ -93,7 +93,7 @@ namespace ERService.Application
                                 .Register<IToastNotificationService, ToastNotificationService>();            
 
             containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView); 
-            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);                    
+            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);                
         }
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
