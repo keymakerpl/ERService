@@ -32,7 +32,7 @@ namespace ERService.OrderModule.Tasks
         public async Task Run()
         {
             var query = new QueryBuilder<Order>();
-            query.Where(nameof(Order.DateAdded), QueryBuilder<Order>.Operators.GreaterOrEqual, LastUpdateTime.Value);
+            query.Where(nameof(Order.DateAdded), SQLOperators.GreaterOrEqual, LastUpdateTime.Value);
 
             var ids = await _orderRepository.GetIDsBy(query);
 

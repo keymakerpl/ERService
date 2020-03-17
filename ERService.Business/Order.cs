@@ -37,11 +37,11 @@ namespace ERService.Business
         [NotMapped]
         public string OrderNumber { get { return $"{OrderId}/{Number}"; } }
 
-        [Column(TypeName = "datetime")]
+        [Column(TypeName = "DateTime")]
         public DateTime DateAdded { get; set; }
 
-        [Column(TypeName = "datetime")]
-        public DateTime DateEnded { get; set; }
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateEnded { get; set; }
 
         public Guid? OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; }

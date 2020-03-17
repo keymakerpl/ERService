@@ -9,7 +9,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 namespace ERService.MSSQLDataAccess
 {
     [DbConfigurationType(typeof(ERServiceDbConfiguration))]
-    public class ERServiceDbContext : DbContext, IERServiceDbContext
+    public class ERServiceDbContext : DbContext
     {
         private static IConfig _config
         {
@@ -30,7 +30,7 @@ namespace ERService.MSSQLDataAccess
 
         public ERServiceDbContext() : base(ConnectionStringProvider.Current)
         {
-            Database.SetInitializer(new ERSCreateDatabaseIfNotExists());            
+            //Database.SetInitializer(new ERSCreateDatabaseIfNotExists());            
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ERServiceDbContext, Configuration>());            
 
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer && !Database.Exists())

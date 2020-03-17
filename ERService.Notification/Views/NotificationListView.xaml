@@ -21,7 +21,7 @@
         <Grid VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
@@ -39,7 +39,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border
-                            Width="190"
+                            Width="170"
                             BorderBrush="Gray"
                             BorderThickness="0,0,0,1">
                             <Grid>

@@ -83,474 +83,481 @@
         </Border>
 
         <Border BorderBrush="LightGray" BorderThickness="0,0,1,0">
-            <StackPanel Margin="5">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="5">
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="30" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5"
+                                Content="Numer naprawy:"
+                                FontSize="16"
+                                FontWeight="DemiBold" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{Binding Order.Number, Mode=OneWay}"
+                                FontSize="18"
+                                FontWeight="Bold" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                Content="Postęp naprawy:"
+                                FontSize="14" />
+                            <Slider
+                                x:Name="slider"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                AutoToolTipPlacement="BottomRight"
+                                AutoToolTipPrecision="0"
+                                Maximum="100"
+                                Minimum="0"
+                                Style="{DynamicResource FlatSlider}"
+                                ToolTipService.ToolTip="{Binding Path=Value, ElementName=slider}"
+                                Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Content="{Binding Order.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Content="Klient:"
+                                FontSize="16"
+                                FontWeight="DemiBold" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                Content="Imię:"
+                                FontSize="14" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Width="250"
+                                HorizontalAlignment="Left"
+                                Content="{Binding Customer.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                Content="Nazwisko:"
+                                FontSize="14" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Width="250"
+                                HorizontalAlignment="Left"
+                                Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                FontSize="14" />
+
+                            <Grid
+                                Grid.RowSpan="3"
+                                Grid.Column="2"
+                                VerticalAlignment="Top">
+                                <Button
+                                    Width="25"
+                                    Height="25"
+                                    Margin="3"
+                                    BorderThickness="0"
+                                    Command="{Binding ShowCustomerDetailFlyoutCommand}"
+                                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                    ToolTip="Pokaż szczegóły klienta">
+                                    <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                                </Button>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Margin="0,5,0,5"
+                                Content="Urządzenie:"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5,5,0,5"
+                                Content="Nazwa:"
+                                FontSize="14" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding Hardware.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5,5,0,5"
+                                Content="Numer seryjny:"
+                                FontSize="14" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,5,0,5"
+                                FontSize="14"
+                                Text="{Binding Hardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5"
+                                Content="Typ urządzenia:"
+                                FontSize="14" />
+                            <ComboBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Stretch"
+                                DisplayMemberPath="Name"
+                                IsEnabled="False"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding HardwareTypes}"
+                                SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding SelectedHardwareType.Name}"
+                                SelectedValuePath="Name" />
+                            <Grid
+                                Grid.RowSpan="3"
+                                Grid.Column="2"
+                                VerticalAlignment="Top">
+                                <Button
+                                    Width="25"
+                                    Height="25"
+                                    Margin="3"
+                                    BorderThickness="0"
+                                    Command="{Binding ShowHardwareDetailFlyoutCommand}"
+                                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                    ToolTip="Pokaż szczegóły urządzenia">
+                                    <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                                </Button>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Margin="5"
+                                Content="Status naprawy:"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
+                            <ComboBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                DisplayMemberPath="Name"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding OrderStatuses}"
+                                SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding SelectedOrderStatus.Name}"
+                                SelectedValuePath="Name" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5"
+                                Content="Typ naprawy:"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
+                            <ComboBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                DisplayMemberPath="Name"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding OrderTypes}"
+                                SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding SelectedOrderType.Name}"
+                                SelectedValuePath="Name" />
+
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                Content="Data dodania:"
+                                FontSize="14" />
+
+                            <DatePicker
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="150"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                IsTodayHighlighted="False"
+                                SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                Content="Data zamknięcia:"
+                                FontSize="14" />
+
+                            <DatePicker
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Width="150"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                IsTodayHighlighted="False"
+                                SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Margin="10,0,0,0"
+                                VerticalContentAlignment="Center"
+                                Content="Numer zewnętrzny:"
+                                FontSize="14" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Stretch"
+                                Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Margin="0,5,0,5"
+                                VerticalContentAlignment="Center"
+                                Content="Koszt naprawy:"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Stretch"
+                                Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <ScrollViewer
+            Grid.Column="1"
+            Margin="5"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="30" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label
-                            Grid.Row="0"
                             Grid.Column="0"
-                            Margin="5"
-                            Content="Numer naprawy:"
+                            Content="Opis usterki:"
                             FontSize="16"
                             FontWeight="DemiBold" />
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            HorizontalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="{Binding Order.Number, Mode=OneWay}"
-                            FontSize="18"
-                            FontWeight="Bold" />
-
-                        <Label
+                        <TextBox
                             Grid.Row="1"
                             Grid.Column="0"
-                            Margin="10,0,0,0"
-                            Content="Postęp naprawy:"
-                            FontSize="14" />
-                        <Slider
-                            x:Name="slider"
-                            Grid.Row="1"
-                            Grid.Column="1"
                             Margin="5"
-                            AutoToolTipPlacement="BottomRight"
-                            AutoToolTipPrecision="0"
-                            Maximum="100"
-                            Minimum="0"
-                            Style="{DynamicResource FlatSlider}"
-                            ToolTipService.ToolTip="{Binding Path=Value, ElementName=slider}"
-                            Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            Content="{Binding Order.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            AcceptsReturn="True"
+                            MinLines="5"
+                            Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap" />
                     </Grid>
                 </Border>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label
                             Grid.Column="0"
-                            Content="Klient:"
+                            Content="Opis naprawy:"
                             FontSize="16"
                             FontWeight="DemiBold" />
-
-                        <Label
+                        <TextBox
                             Grid.Row="1"
                             Grid.Column="0"
-                            Margin="10,0,0,0"
-                            Content="Imię:"
-                            FontSize="14" />
+                            Margin="5"
+                            AcceptsReturn="True"
+                            MinLines="5"
+                            Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+                </Border>
+                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Label
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Width="250"
-                            HorizontalAlignment="Left"
-                            Content="{Binding Customer.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            FontSize="14" />
-
-                        <Label
-                            Grid.Row="2"
                             Grid.Column="0"
-                            Margin="10,0,0,0"
-                            Content="Nazwisko:"
-                            FontSize="14" />
-                        <Label
-                            Grid.Row="2"
+                            Content="Załączniki:"
+                            FontSize="16"
+                            FontWeight="DemiBold" />
+                        <ListView
+                            Grid.Row="1"
+                            MinHeight="100"
+                            Margin="5"
+                            Background="GhostWhite"
+                            DisplayMemberPath="FileName"
+                            ItemsSource="{Binding Attachments}"
+                            SelectedItem="{Binding SelectedAttachment}" />
+                        <StackPanel
+                            Grid.RowSpan="2"
                             Grid.Column="1"
-                            Width="250"
-                            HorizontalAlignment="Left"
-                            Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            FontSize="14" />
-
-                        <Grid
-                            Grid.RowSpan="3"
-                            Grid.Column="2"
-                            VerticalAlignment="Top">
+                            VerticalAlignment="Bottom">
                             <Button
-                                Width="25"
-                                Height="25"
+                                Width="20"
+                                Height="20"
                                 Margin="3"
-                                BorderThickness="0"
-                                Command="{Binding ShowCustomerDetailFlyoutCommand}"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                ToolTip="Pokaż szczegóły klienta">
-                                <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                                Command="{Binding AddAttachmentCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
                             </Button>
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Cursor" Value="Hand" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-                        </Grid>
-                    </Grid>
-                </Border>
-                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                    <Grid Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Label
-                            Margin="0,5,0,5"
-                            Content="Urządzenie:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <Label
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="5,5,0,5"
-                            Content="Nazwa:"
-                            FontSize="14" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,5,0,5"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Text="{Binding Hardware.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="5,5,0,5"
-                            Content="Numer seryjny:"
-                            FontSize="14" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="0,5,0,5"
-                            FontSize="14"
-                            Text="{Binding Hardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="5"
-                            Content="Typ urządzenia:"
-                            FontSize="14" />
-                        <ComboBox
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="0,5,0,5"
-                            HorizontalAlignment="Stretch"
-                            DisplayMemberPath="Name"
-                            IsEnabled="False"
-                            IsSynchronizedWithCurrentItem="True"
-                            ItemsSource="{Binding HardwareTypes}"
-                            SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedValue="{Binding SelectedHardwareType.Name}"
-                            SelectedValuePath="Name" />
-                        <Grid
-                            Grid.RowSpan="3"
-                            Grid.Column="2"
-                            VerticalAlignment="Top">
                             <Button
-                                Width="25"
-                                Height="25"
+                                Width="20"
+                                Height="20"
                                 Margin="3"
-                                BorderThickness="0"
-                                Command="{Binding ShowHardwareDetailFlyoutCommand}"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                ToolTip="Pokaż szczegóły urządzenia">
-                                <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
+                                Command="{Binding RemoveAttachmentCommand}"
+                                Foreground="Gray"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                <iconPacks:PackIconModern Padding="3" Kind="Minus" />
                             </Button>
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Cursor" Value="Hand" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-                        </Grid>
+                        </StackPanel>
+
                     </Grid>
                 </Border>
                 <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                    <Grid>
+                    <Grid Margin="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label
-                            Margin="5"
-                            Content="Status naprawy:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <ComboBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            DisplayMemberPath="Name"
-                            IsSynchronizedWithCurrentItem="True"
-                            ItemsSource="{Binding OrderStatuses}"
-                            SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedValue="{Binding SelectedOrderStatus.Name}"
-                            SelectedValuePath="Name" />
-
-                        <Label
-                            Grid.Row="1"
                             Grid.Column="0"
-                            Margin="5"
-                            Content="Typ naprawy:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <ComboBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            DisplayMemberPath="Name"
-                            IsSynchronizedWithCurrentItem="True"
-                            ItemsSource="{Binding OrderTypes}"
-                            SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedValue="{Binding SelectedOrderType.Name}"
-                            SelectedValuePath="Name" />
-
-                    </Grid>
-                </Border>
-                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                    <Grid Margin="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="10,0,0,0"
-                            Content="Data dodania:"
-                            FontSize="14" />
-
-                        <DatePicker
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Width="150"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            IsTodayHighlighted="False"
-                            SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                        <Label
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="10,0,0,0"
-                            Content="Data zamknięcia:"
-                            FontSize="14" />
-
-                        <DatePicker
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Width="150"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            IsTodayHighlighted="False"
-                            SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                </Border>
-                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                    <Grid Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label
-                            Margin="10,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="Numer zewnętrzny:"
-                            FontSize="14" />
+                            Content="Komentarz:"
+                            FontSize="16"
+                            FontWeight="DemiBold" />
                         <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="0,5,0,5"
-                            HorizontalAlignment="Stretch"
-                            Text="{Binding Order.ExternalNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                </Border>
-                <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                    <Grid Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label
-                            Margin="0,5,0,5"
-                            VerticalContentAlignment="Center"
-                            Content="Koszt naprawy:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="0,5,0,5"
-                            HorizontalAlignment="Stretch"
-                            Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5"
+                            AcceptsReturn="True"
+                            MinLines="3"
+                            Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap" />
                     </Grid>
                 </Border>
             </StackPanel>
-        </Border>
-
-        <StackPanel Grid.Column="1" Margin="5">
-            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label
-                        Grid.Column="0"
-                        Content="Opis usterki:"
-                        FontSize="16"
-                        FontWeight="DemiBold" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="5"
-                        AcceptsReturn="True"
-                        MinLines="5"
-                        Text="{Binding Order.Fault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        TextWrapping="Wrap" />
-                </Grid>
-            </Border>
-            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label
-                        Grid.Column="0"
-                        Content="Opis naprawy:"
-                        FontSize="16"
-                        FontWeight="DemiBold" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="5"
-                        AcceptsReturn="True"
-                        MinLines="5"
-                        Text="{Binding Order.Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        TextWrapping="Wrap" />
-                </Grid>
-            </Border>
-            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label
-                        Grid.Column="0"
-                        Content="Załączniki:"
-                        FontSize="16"
-                        FontWeight="DemiBold" />
-                    <ListView
-                        Grid.Row="1"
-                        MinHeight="100"
-                        Margin="5"
-                        Background="GhostWhite"
-                        DisplayMemberPath="FileName"
-                        ItemsSource="{Binding Attachments}"
-                        SelectedItem="{Binding SelectedAttachment}" />
-                    <StackPanel
-                        Grid.RowSpan="2"
-                        Grid.Column="1"
-                        VerticalAlignment="Bottom">
-                        <Button
-                            Width="20"
-                            Height="20"
-                            Margin="3"
-                            Command="{Binding AddAttachmentCommand}"
-                            Foreground="Gray"
-                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                            <iconPacks:PackIconModern Padding="3" Kind="Add" />
-                        </Button>
-                        <Button
-                            Width="20"
-                            Height="20"
-                            Margin="3"
-                            Command="{Binding RemoveAttachmentCommand}"
-                            Foreground="Gray"
-                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                            <iconPacks:PackIconModern Padding="3" Kind="Minus" />
-                        </Button>
-                    </StackPanel>
-
-                </Grid>
-            </Border>
-            <Border Background="GhostWhite" Style="{StaticResource DefaultBorderStyle}">
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label
-                        Grid.Column="0"
-                        Content="Komentarz:"
-                        FontSize="16"
-                        FontWeight="DemiBold" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="5"
-                        AcceptsReturn="True"
-                        MinLines="3"
-                        Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        TextWrapping="Wrap" />
-                </Grid>
-            </Border>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

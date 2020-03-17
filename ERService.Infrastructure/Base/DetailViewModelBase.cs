@@ -35,8 +35,7 @@ namespace ERService.Infrastructure.Base
             _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid, true);
             _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();            
         }
-
-        public bool AllowLoadAsync { get; set; } = true; //TODO: czy da się z tego zrezygnować?
+        
         public ICommand CancelCommand { get; set; }
         public ICommand CloseCommand { get; set; }
         /// <summary>
@@ -47,12 +46,8 @@ namespace ERService.Infrastructure.Base
             get { return _hasChanges; }
             set
             {
-                if (_hasChanges != value)
-                {
-                    _hasChanges = value;
-                    RaisePropertyChanged();
-                    SaveCommand.RaiseCanExecuteChanged();
-                }
+                SetProperty(ref _hasChanges, value);
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
 

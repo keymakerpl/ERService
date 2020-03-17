@@ -38,8 +38,7 @@ namespace ERService.HardwareModule.ViewModels
         private IHardwareRepository _hardwareRepository;
         private ICustomItemRepository _customItemRepository;
         private IHardwareTypeRepository _typeRepository;
-        private IRegionNavigationService _navigationService;
-        private bool _wizardMode;
+        private IRegionNavigationService _navigationService;        
 
         public HardwareViewModel(IHardwareRepository hardwareRepository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
             IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IHwCustomItemRepository hwCustomItemRepository) : base(eventAggregator, messageDialogService)
@@ -52,10 +51,7 @@ namespace ERService.HardwareModule.ViewModels
 
             HardwareCustomItems = new ObservableCollection<HwCustomItem>();
             HardwareTypes = new ObservableCollection<HardwareType>();
-            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();            
-
-            GoBackCommand = new DelegateCommand(OnGoBackExecute);
-            GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
+            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();       
         }
 
         public Customer Customer
@@ -63,20 +59,7 @@ namespace ERService.HardwareModule.ViewModels
             get { return _customer; }
             set { SetProperty(ref _customer, value); }
         }
-
-        public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems
-        {
-            get => _displayableCustomItems;
-            set
-            {
-                SetProperty(ref _displayableCustomItems, value);
-            }
-        }
-
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand GoForwardCommand { get; private set; }
         public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
-        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
         public HardwareType SelectedHardwareType
         {
             get => _selectedHardwareType;
@@ -84,11 +67,17 @@ namespace ERService.HardwareModule.ViewModels
             {
                 SetProperty(ref _selectedHardwareType, value);
                 Hardware.Model.HardwareTypeID = value?.Id;
-                GoForwardCommand.CanExecute();
             }
         }
-
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
+        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
+        public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems
+        {
+            get => _displayableCustomItems;
+            set
+            {
+                SetProperty(ref _displayableCustomItems, value);
+            }
+        }        
 
         public override async Task LoadAsync(Guid id)
         {
@@ -113,12 +102,7 @@ namespace ERService.HardwareModule.ViewModels
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
-        protected override bool OnSaveCanExecute()
-        {
-            return !WizardMode;
-        }
+        }        
 
         protected override void OnSaveExecute()
         {
@@ -138,8 +122,7 @@ namespace ERService.HardwareModule.ViewModels
 
             Hardware.PropertyChanged += (s,a) => 
             {
-                SaveCommand.RaiseCanExecuteChanged();
-                GoForwardCommand.RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();               
             };
 
             if (hardware.HardwareType != null)
@@ -212,33 +195,6 @@ namespace ERService.HardwareModule.ViewModels
             }                
         }
 
-        private void OnGoBackExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
-
-        private bool OnGoForwardCanExecute()
-        {
-            return WizardMode && Hardware != null && !String.IsNullOrWhiteSpace(Hardware.Name) && SelectedHardwareType != null;
-        }
-
-        private void OnGoForwardExecute()
-        {
-            Hardware.Model.HardwareCustomItems.Clear();
-            foreach (var item in DisplayableCustomItems)
-            {
-                Hardware.Model.HardwareCustomItems.Add(item.HwCustomItem);
-            }
-
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", Guid.Empty);
-            parameters.Add("Wizard", true);
-            parameters.Add("Customer", Customer);
-            parameters.Add("Hardware", Hardware.Model);
-
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
-        }
-
         #region Navigation
 
         public override bool KeepAlive
@@ -259,34 +215,13 @@ namespace ERService.HardwareModule.ViewModels
             return true;
         }
 
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            if (WizardMode)
-            {
-                AllowLoadAsync = false;
-            }
-        }
-
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
-            var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
 
-            if (WizardMode)
-            {
-                Customer = customer;
-                if (Hardware == null)
-                {
-                    await LoadAsync(Guid.Empty);
-                }
-            }
-            else
-            {                
-                await LoadAsync(id);
-            }
+            await LoadAsync(id);
         }
 
         #endregion Navigation
