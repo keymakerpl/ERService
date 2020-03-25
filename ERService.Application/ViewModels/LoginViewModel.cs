@@ -202,6 +202,7 @@ namespace ERService.ViewModels
 
                 _moduleManager.LoadModule(ModuleNames.ServicesModule);
                 _moduleManager.LoadModule(ModuleNames.NotificationModule);
+                _moduleManager.LoadModule(ModuleNames.StatisticsModule);
             }
         }
 

@@ -7,14 +7,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Order : IVersionedRow
+    public class Order : IVersionedRow, IModificationHistory
     {        
         public Order()
         {
-            Init();
+            Initialize();
         }
 
-        private void Init()
+        private void Initialize()
         {
             Hardwares = new Collection<Hardware>();
             Attachments = new Collection<Blob>();
@@ -71,6 +71,9 @@ namespace ERService.Business
         public ICollection<Blob> Attachments { get; set; }
 
         [ConcurrencyCheck]
-        public long RowVersion { get; set; }    
+        public long RowVersion { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateModified { get; set; }        
     }
 }

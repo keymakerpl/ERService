@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Hardware : IVersionedRow
+    public class Hardware : IVersionedRow, IModificationHistory
     {
         public Hardware()
         {
@@ -38,5 +38,11 @@ namespace ERService.Business
 
         [ConcurrencyCheck]
         public long RowVersion { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime DateAdded { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateModified { get; set; }        
     }
 }

@@ -101,11 +101,8 @@ namespace ERService.CustomerModule.ViewModels
         private void InitializeCustomer(Customer customer)
         {
             if (customer == null) return;
-
-            //Opakowanie modelu detala w ModelWrapper aby korzystał z walidacji propertisów
-            Customer = new CustomerWrapper(customer);
-
-            //Po załadowaniu detala i każdej zmianie propertisa sprawdzamy CanExecute Sejwa
+            
+            Customer = new CustomerWrapper(customer);            
             Customer.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)
@@ -113,27 +110,20 @@ namespace ERService.CustomerModule.ViewModels
                     HasChanges = _repository.HasChanges();
                     SaveCommand.RaiseCanExecuteChanged();
                 }
-
-                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
+                
                 if (args.PropertyName == nameof(Customer.HasErrors))
                 {
                     SaveCommand.RaiseCanExecuteChanged();
                 }
-
-                if (args.PropertyName == nameof(Customer.FirstName) || args.PropertyName == nameof(Customer.LastName))
-                {
-                    SetTitle();
-                }
             });
+
             SaveCommand.RaiseCanExecuteChanged();
 
             if (Customer.Id == Guid.Empty)
             {
-                Customer.LastName = ""; // takie se, trzeba tacznąć propertisa aby zadziałała walidacja nowego detalu
+                Customer.LastName = ""; 
                 Customer.PhoneNumber = "";
-            }
-
-            SetTitle();
+            }            
         }
 
         protected override void OnCancelEditExecute()
@@ -152,11 +142,9 @@ namespace ERService.CustomerModule.ViewModels
 
             await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync, () =>
             {
-                HasChanges = _repository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id z wrappera
-
-                //Powiadom agregator eventów, że zapisano
-                RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
+                HasChanges = _repository.HasChanges();
+                ID = Customer.Id;
+                
                 _navigationService.Journal.GoBack();
             });
         }
@@ -168,11 +156,6 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnOrdersCommandExecute()
         {
-        }
-
-        private void SetTitle()
-        {
-            Title = $"{Customer.FirstName} {Customer.LastName}";
         }
     }
 }

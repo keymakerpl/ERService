@@ -15,13 +15,14 @@ namespace ERService.Infrastructure.Base
 {
     public abstract class DetailViewModelBase : BindableBase, IDetailViewModelBase, IConfirmNavigationRequest, IRegionMemberLifetime
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         protected readonly IEventAggregator _eventAggregator;
-
         protected readonly IMessageDialogService _messageDialogService;
-        private bool _hasChanges;
 
-        private bool _isReadOnly;
         private string _title;
+        private bool _isReadOnly;
+        private bool _hasChanges;
 
         public DetailViewModelBase(IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
         {
@@ -36,8 +37,10 @@ namespace ERService.Infrastructure.Base
             _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();            
         }
         
-        public ICommand CancelCommand { get; set; }
-        public ICommand CloseCommand { get; set; }
+        public DelegateCommand SaveCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; set; }
+        public DelegateCommand CloseCommand { get; set; }
+        
         /// <summary>
         /// Właściwośc pomocnicza do przechowania zmiany z repo, odpala even jeśli w repo zaszły  zmiany
         /// </summary>
@@ -52,8 +55,8 @@ namespace ERService.Infrastructure.Base
         }
 
         public Guid ID { get; protected set; }
+
         public bool IsReadOnly { get => _isReadOnly; set { SetProperty(ref _isReadOnly, value); } }
-        public DelegateCommand SaveCommand { get; private set; }
 
         public string Title
         {
@@ -149,6 +152,8 @@ namespace ERService.Infrastructure.Base
             try
             {
                 await saveFunc();
+
+                _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano nowy element.", NotificationTypes.Success);
             }
             catch (DbUpdateConcurrencyException e) // rowversion się zmienił - ktoś inny zmienił dane
             {
@@ -177,10 +182,16 @@ namespace ERService.Infrastructure.Base
                     await LoadAsync(ID); //załaduj ponownie model
                 }
             }
+            catch (Exception e)
+            {
+                _logger.Debug(e);
+                _logger.Error(e);
 
-            afterSaveAction();
+                _messageDialogService.ShowInsideContainer("Błąd zapisu...", "Szczegóły błędu znajdziesz w dzienniku.", NotificationTypes.Error);
+                return;
+            }
 
-            _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano nowy element.", NotificationTypes.Success);
+            afterSaveAction();            
         }
 
         #region Navigation

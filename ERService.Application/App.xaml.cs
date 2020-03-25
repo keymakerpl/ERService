@@ -31,11 +31,14 @@ using ERService.Services;
 using ERService.Infrastructure.Notifications.ToastNotifications;
 using ERService.Services.Tasks;
 using ERService.Services.Services;
+using ERService.Statistics;
 
 namespace ERService.Application
 {
     public partial class App
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         protected override Window CreateShell()
         {            
             return Container.Resolve<Shell>();
@@ -46,21 +49,22 @@ namespace ERService.Application
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             base.OnStartup(e);
-
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("pl-PL");
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pl-PL");
-
-            FrameworkElement.LanguageProperty.OverrideMetadata(
-                         typeof(FrameworkElement),
-                         new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            _logger.Fatal(e.Exception);
+
             //TODO: MessageBox error handler
             MessageBox.Show("Ups... " + Environment.NewLine +
                 Environment.NewLine + e.Exception.Message);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            NLog.LogManager.Shutdown();
+
+            base.OnExit(e);
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -70,6 +74,7 @@ namespace ERService.Application
             moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
             moduleCatalog.AddModule<ServicesModule>(ModuleNames.ServicesModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule<NotificationModule>(ModuleNames.NotificationModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<StatisticsModule>(ModuleNames.StatisticsModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule(typeof(LicensingModule));
             moduleCatalog.AddModule(typeof(NavigationModule));
             moduleCatalog.AddModule(typeof(HeaderModule));

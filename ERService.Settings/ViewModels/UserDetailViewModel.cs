@@ -97,11 +97,8 @@ namespace ERService.Settings.ViewModels
 
             await SaveWithOptimisticConcurrencyAsync(_userRepository.SaveAsync, () =>
             {
-                HasChanges = _userRepository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = User.Id; //odśwież Id wrappera
-
-                //Powiadom agregator eventów, że zapisano
-                RaiseDetailSavedEvent(User.Id, $"{User.FirstName} {User.LastName}");
+                HasChanges = _userRepository.HasChanges();
+                ID = User.Id;
 
                 _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
                 _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.SettingsView);
@@ -147,8 +144,7 @@ namespace ERService.Settings.ViewModels
                 {
                     HasChanges = _userRepository.HasChanges();
                 }
-
-                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
+                
                 if (args.PropertyName == nameof(User.HasErrors))
                 {
                     SaveCommand.RaiseCanExecuteChanged();

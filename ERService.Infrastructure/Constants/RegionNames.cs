@@ -1,7 +1,8 @@
 ﻿namespace ERService.Infrastructure.Constants
 {
     public static class RegionNames
-    {        
+    {
+        public const string StatsTabControlRegion = "StatsTabControlRegion";
         public const string LoggedUserRegion = "LoggedUserRegion";
         public const string DetailFlyoutRegion = "DetailFlyoutRegion";
         public const string ContentRegion = "ContentRegion";

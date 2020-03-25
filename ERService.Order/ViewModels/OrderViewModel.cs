@@ -187,13 +187,10 @@ namespace ERService.OrderModule.ViewModels
         #endregion Navigation
 
         #region Overrides
-
-        //TODO: Refactor?
         public override async Task LoadAsync(Guid id)
         {
-            var order = id != Guid.Empty ? await _orderRepository.GetByIdAsync(id) : await GetNewDetail();
-
-            //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
+            var order = await _orderRepository.GetByIdAsync(id);
+            
             ID = id;
 
             InitializeComboBoxes();
@@ -218,8 +215,8 @@ namespace ERService.OrderModule.ViewModels
         {
             await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
             {
-                HasChanges = _orderRepository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Order.Id; //odśwież Id
+                HasChanges = _orderRepository.HasChanges();
+                ID = Order.Id;
 
                 _navigationService.Journal.GoBack();
             });
@@ -288,24 +285,6 @@ namespace ERService.OrderModule.ViewModels
             RaiseSideMenuButtonToggled(SideFlyouts.DetailFlyout, Hardware.Id, ViewNames.HardwareFlyoutDetailView);
         }
 
-        private async Task<Order> GetNewDetail()
-        {
-            var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
-
-            var order = new Order();
-
-            if (numeration.Any())
-            {
-                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
-            }
-
-            order.DateAdded = DateTime.Now;
-            order.DateEnded = DateTime.Now.AddDays(14);
-            _orderRepository.Add(order);
-
-            return order;
-        }
-
         private void InitializeCustomer()
         {
             Customer = new CustomerWrapper(Order.Model.Customer);
@@ -323,47 +302,34 @@ namespace ERService.OrderModule.ViewModels
                     if (!HasChanges)
                     {
                         HasChanges = _orderRepository.HasChanges();
-                        ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
+                        CancelCommand.RaiseCanExecuteChanged();
                     }
 
-                    SaveCommand.RaiseCanExecuteChanged();
-
-                    if (args.PropertyName == nameof(Order.Number))
-                    {
-                        SetTitle();
-                    }
+                    SaveCommand.RaiseCanExecuteChanged();                    
                 });
             }
         }
 
         private void InitializeOrder(Order order)
         {
-            //Opakowanie modelu detala w ModelWrapper aby korzystał z walidacji propertisów
-            Order = new OrderWrapper(order);
-
-            //Po załadowaniu detala i każdej zmianie propertisa sprawdzamy CanExecute Sejwa
+            Order = new OrderWrapper(order);            
             Order.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)
                 {
                     HasChanges = _orderRepository.HasChanges();
-                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
+                    CancelCommand.RaiseCanExecuteChanged();
                 }
-
-                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
-                //if (args.PropertyName == nameof(Order.HasErrors))
-                //{
-                //}
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-
-                if (args.PropertyName == nameof(Order.Number))
+                
+                if (args.PropertyName == nameof(Order.HasErrors))
                 {
-                    SetTitle();
+                    SaveCommand.RaiseCanExecuteChanged();
                 }
-            });
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
-            SetTitle();
+                SaveCommand.RaiseCanExecuteChanged();                
+            });
+
+            SaveCommand.RaiseCanExecuteChanged();            
         }
 
         private void InitializeAttachments()
@@ -424,12 +390,7 @@ namespace ERService.OrderModule.ViewModels
             }
 
             SelectedOrderType = Order.Model.OrderType;
-        }
-
-        private void SetTitle()
-        {
-            Title = $"{Order.Number}";
-        }
+        }        
 
         #endregion Overrides
     }

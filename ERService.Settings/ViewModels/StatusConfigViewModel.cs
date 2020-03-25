@@ -161,28 +161,27 @@ namespace ERService.Settings.ViewModels
 
         private void WrappedStatus_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges)
             {
                 HasChanges = _orderTypeRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
+            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors))
             {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
-
-        //TODO: Zastanówmy się czy tego handlera nie można przenieść gdzieś niżej, czy może być generykiem?
+        
         private void WrappedType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges) 
             {
                 HasChanges = _orderTypeRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
+            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors)) 
             {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
 

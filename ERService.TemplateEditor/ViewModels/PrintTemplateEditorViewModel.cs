@@ -112,11 +112,14 @@ namespace ERService.TemplateEditor.ViewModels
 
             PrintTemplate.PropertyChanged += (s, a) =>
             {
-                HasChanges = _templeteRepository.HasChanges();
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                if (!HasChanges)
+                {
+                    HasChanges = _templeteRepository.HasChanges();
+                    SaveCommand.RaiseCanExecuteChanged();
+                }
             };
 
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
         } 
 
         private PrintTemplate GetNewDetail()

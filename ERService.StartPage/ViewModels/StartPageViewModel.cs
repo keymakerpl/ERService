@@ -47,7 +47,7 @@ namespace ERService.StartPage.ViewModels
 
         private void OnStatsCommandExecute()
         {
-            
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StatisticsTabView);
         }
 
         private async void OnAddOrderExecute()

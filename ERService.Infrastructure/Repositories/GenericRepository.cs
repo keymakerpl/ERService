@@ -8,7 +8,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SqlKata.Compilers;
-using System.Collections.ObjectModel;
 
 namespace ERService.Infrastructure.Repositories
 {
@@ -73,33 +72,43 @@ namespace ERService.Infrastructure.Repositories
             return query.Where(predicate).ToList();
         }
 
-        public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
+        private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
         {
             IQueryable<TEntity> queryable = Context.Set<TEntity>();
 
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public virtual async Task SaveAsync()
+        public virtual async Task<bool> SaveAsync()
         {
-
-#if DEBUG
-            Context.Database.Log = Console.Write;
-#endif
+            Context.Database.Log = _logger.Debug;            
 
             var objectContextAdapter = Context as IObjectContextAdapter;
             if (objectContextAdapter != null)
             {
                 objectContextAdapter.ObjectContext.DetectChanges();
+                foreach (ObjectStateEntry entry in objectContextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added))
+                {
+                    var added = entry.Entity as IModificationHistory;
+                    if (added != null && added.DateAdded == DateTime.MinValue)
+                        added.DateAdded = DateTime.Now;
+                }
+
                 foreach (ObjectStateEntry entry in objectContextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Modified))
                 {
-                    var v = entry.Entity as IVersionedRow;
-                    if (v != null)
-                        v.RowVersion++;
+                    var modified = entry.Entity as IModificationHistory;
+                    if (modified != null)
+                        modified.DateModified = DateTime.Now;
+
+                    var versioned = entry.Entity as IVersionedRow;
+                    if (versioned != null)
+                        versioned.RowVersion++;                    
                 }
             }
 
-            await Context.SaveChangesAsync();
+            var savedElements = await Context.SaveChangesAsync();
+
+            return savedElements > 0;
         }
 
         public bool HasChanges()

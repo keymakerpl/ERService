@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Customer : IVersionedRow
+    public class Customer : IVersionedRow, IModificationHistory
     {
         public Customer()
         {
@@ -63,10 +63,16 @@ namespace ERService.Business
         [ConcurrencyCheck]
         public long RowVersion { get; set; }
 
+        [Column(TypeName = "DateTime")]
+        public DateTime DateAdded { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateModified { get; set; }        
+
         #region Relacje
 
         public ICollection<CustomerAddress> CustomerAddresses { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }        
 
         #endregion
 

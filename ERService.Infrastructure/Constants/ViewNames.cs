@@ -2,6 +2,9 @@
 {
     public static class ViewNames
     {
+        public const string StatisticsTabView = "StatisticsTabView";
+        public const string BasicStatsView = "BasicStatsView";
+        public const string OrdersStatsView = "OrdersStatsView";
         public const string NotificationListView = "NotificationListView";
         public const string NotificationElementView = "NotificationElementView";
         public const string LoggedUserView = "LoggedUserView";
