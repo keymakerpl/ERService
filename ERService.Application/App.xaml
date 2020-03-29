@@ -4,8 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:helper="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:local="clr-namespace:ERService.Application"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+    xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -41,6 +40,7 @@
                     <helper:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
                     <helper:InverseBooleanConverter x:Key="InverseBooleanConverter" />
                     <helper:BooleanOrConverter x:Key="BooleanOrConverter" />
+                    <helper:StatusGroupIntToBrushConverter x:Key="StatusGroupIntToBrushConverter" />
 
                     <!--  Zadefiniowane style dla pól tekstowych</  -->
                     <Style

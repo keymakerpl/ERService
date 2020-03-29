@@ -3,9 +3,7 @@ namespace ERService.MSSQLDataAccess.Migrations
     using CommonServiceLocator;
     using ERService.Business;
     using ERService.Infrastructure.Base.Common;
-    using System;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity;
     using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ERServiceDbContext>
@@ -15,11 +13,11 @@ namespace ERService.MSSQLDataAccess.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
 
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
             {
-                SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());
-                AutomaticMigrationDataLossAllowed = true;
+                SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());                
             }
         }
 
