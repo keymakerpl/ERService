@@ -22,6 +22,8 @@ namespace ERService.Infrastructure.Repositories
         protected GenericRepository(TContext context)
         {
             this.Context = context;
+
+            Context.Database.Log = _logger.Debug;
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -53,12 +55,13 @@ namespace ERService.Infrastructure.Repositories
         {
             queryBuilder.Select($"{queryBuilder.TableName}.{"Id"}");
 
+            //TODO: Sql compiler
             var compiler = new SqlServerCompiler();
             var sqlResult = compiler.Compile(queryBuilder);
             var query = sqlResult.Sql;
             var bindings = sqlResult.Bindings.ToArray();
 
-            _logger.Debug($"Builded query: {query}");
+            _logger.Debug($"Get IDs by: {query}");
 
             var result = await Context.Database.SqlQuery<Guid>(query, bindings).ToListAsync();
 
@@ -81,8 +84,6 @@ namespace ERService.Infrastructure.Repositories
 
         public virtual async Task<bool> SaveAsync()
         {
-            Context.Database.Log = _logger.Debug;            
-
             var objectContextAdapter = Context as IObjectContextAdapter;
             if (objectContextAdapter != null)
             {

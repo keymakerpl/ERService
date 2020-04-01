@@ -1,6 +1,5 @@
 ﻿using System;
 using ERService.Business;
-using ERService.CustomerModule.Wrapper;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Repositories;
