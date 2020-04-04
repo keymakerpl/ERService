@@ -25,36 +25,33 @@ namespace ERService.HardwareModule.ViewModels
 
     public class HardwareViewModel : DetailViewModelBase
     {
-        public ObservableCollection<HwCustomItem> HardwareCustomItems;
-        private Customer _customer;
-        private ICustomItemRepository _customItemRepository;
-        private ObservableCollection<DisblayableCustomItem> _displayableCustomItems;
-        private HardwareWrapper _hardware;
-        private ObservableCollection<HardwareType> _hardwareTypes;
-        private IRegionNavigationService _navigationService;
-        private IRegionManager _regionManager;
-        private IHardwareRepository _repository;
-        private HardwareType _selectedHardwareType;
-        private IHardwareTypeRepository _typeRepository;
-        private bool _wizardMode;
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public HardwareViewModel(IHardwareRepository repository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
-            IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+        public ObservableCollection<HwCustomItem> HardwareCustomItems;
+        private ObservableCollection<DisblayableCustomItem> _displayableCustomItems;
+        private ObservableCollection<HardwareType> _hardwareTypes;
+        private Customer _customer;
+        private HardwareType _selectedHardwareType;
+        private HardwareWrapper _hardware;
+        private IRegionManager _regionManager;
+        private readonly IHwCustomItemRepository _hwCustomItemRepository;
+        private IHardwareRepository _hardwareRepository;
+        private ICustomItemRepository _customItemRepository;
+        private IHardwareTypeRepository _typeRepository;
+        private IRegionNavigationService _navigationService;        
+
+        public HardwareViewModel(IHardwareRepository hardwareRepository, IHardwareTypeRepository typeRepository, ICustomItemRepository customItemRepository,
+            IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IHwCustomItemRepository hwCustomItemRepository) : base(eventAggregator, messageDialogService)
         {
-            //TODO: Czy można zrobić tu refactor? Może jakiś wzorzec Fasada? Aby wrzucić repo w jedno miejsce
             _regionManager = regionManager;
-            _repository = repository;
+            _hwCustomItemRepository = hwCustomItemRepository;
+            _hardwareRepository = hardwareRepository;
             _typeRepository = typeRepository;
             _customItemRepository = customItemRepository;
 
             HardwareCustomItems = new ObservableCollection<HwCustomItem>();
             HardwareTypes = new ObservableCollection<HardwareType>();
-            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();
-
-            PropertyChanged += HardwareViewModel_PropertyChanged;
-
-            GoBackCommand = new DelegateCommand(OnGoBackExecute);
-            GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
+            DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();       
         }
 
         public Customer Customer
@@ -62,7 +59,17 @@ namespace ERService.HardwareModule.ViewModels
             get { return _customer; }
             set { SetProperty(ref _customer, value); }
         }
-
+        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
+        public HardwareType SelectedHardwareType
+        {
+            get => _selectedHardwareType;
+            set
+            {
+                SetProperty(ref _selectedHardwareType, value);
+                Hardware.Model.HardwareTypeID = value?.Id;
+            }
+        }
+        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
         public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems
         {
             get => _displayableCustomItems;
@@ -70,35 +77,32 @@ namespace ERService.HardwareModule.ViewModels
             {
                 SetProperty(ref _displayableCustomItems, value);
             }
-        }
-
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand GoForwardCommand { get; private set; }
-        public HardwareWrapper Hardware { get => _hardware; set { SetProperty(ref _hardware, value); } }
-        public ObservableCollection<HardwareType> HardwareTypes { get => _hardwareTypes; set { SetProperty(ref _hardwareTypes, value); } }
-        public HardwareType SelectedHardwareType { get => _selectedHardwareType; set { SetProperty(ref _selectedHardwareType, value); } }
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
+        }        
 
         public override async Task LoadAsync(Guid id)
         {
-            var hardware = id != Guid.Empty ? await _repository.GetByIdAsync(id) : GetNewDetail();
+            var hardware = id != Guid.Empty ? await _hardwareRepository.GetByIdAsync(id) : GetNewDetail();
 
             //TODO: Można to przypisanie id zrobić niżej w bazowych?
             ID = id;
 
-            InitializeHardware(hardware);
-            LoadHardwareTypes();
+            await LoadHardwareTypes();
+            await InitializeHardware(hardware);
+            await LoadHardwareCustomItemsAsync();
+
+            PropertyChanged += async (s, a) =>
+            {
+                if (a.PropertyName == nameof(SelectedHardwareType))
+                {
+                    await LoadHardwareCustomItemsAsync();
+                }
+            };
         }
 
         protected override void OnCancelEditExecute()
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-        }
-
-        protected override bool OnSaveCanExecute()
-        {
-            return !WizardMode;
-        }
+        }        
 
         protected override void OnSaveExecute()
         {
@@ -107,93 +111,99 @@ namespace ERService.HardwareModule.ViewModels
         private Hardware GetNewDetail()
         {
             var Hardware = new Hardware();
-            _repository.Add(Hardware);
+            _hardwareRepository.Add(Hardware);
 
             return Hardware;
         }
 
-        private async void HardwareViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async Task InitializeHardware(Hardware hardware)
         {            
-            if (e.PropertyName == "SelectedHardwareType")
-            {
-                GoForwardCommand.RaiseCanExecuteChanged();
-                await LoadHardwareCustomItemsAsync();
-            }
-        }
-
-        private void InitializeHardware(Hardware hardware)
-        {
             Hardware = new HardwareWrapper(hardware);
+
             Hardware.PropertyChanged += (s,a) => 
             {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                GoForwardCommand.RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();               
             };
-        }
 
-        private async Task LoadHardwareCustomItemsAsync()
-        {
-            var items = await _customItemRepository
-                .FindByAsync(i => i.HardwareTypeId == SelectedHardwareType.Id);
+            if (hardware.HardwareType != null)
+            {
+                SelectedHardwareType = HardwareTypes.SingleOrDefault(ht => ht.Id == hardware.HardwareType.Id);
+            }
 
             HardwareCustomItems.Clear();
-            foreach (var item in items)
+            var hwCustomItems = await _hwCustomItemRepository.FindByAsync(i => i.HardwareId == hardware.Id);
+            foreach (var item in hwCustomItems)
             {
-                HardwareCustomItems
-                    .Add(new HwCustomItem
-                    { CustomItemId = item.Id, Hardware = Hardware.Model, Value = "" });
+                HardwareCustomItems.Add(item);
             }
-
-            var query = from hci in HardwareCustomItems
-                        from ci in items
-                        where hci.CustomItemId == ci.Id
-                        select new DisblayableCustomItem { HwCustomItem = hci, CustomItem = ci };
-
-            var result = query.ToList();
-
+        }
+        
+        private async Task LoadHardwareCustomItemsAsync()
+        {
+            if (SelectedHardwareType == null) return;
+            
             DisplayableCustomItems.Clear();
-            DisplayableCustomItems.AddRange(result);
+
+            try
+            {
+                var items = await _customItemRepository
+                                                        .FindByAsync(i => i.HardwareTypeId == SelectedHardwareType.Id);
+
+                foreach (var item in items)
+                {
+                    if (HardwareCustomItems.Any(i => i.CustomItemId == item.Id))
+                        continue;
+
+                    HardwareCustomItems
+                                        .Add(new HwCustomItem
+                                                        {
+                                                            CustomItemId = item.Id, Hardware = Hardware.Model, Value = ""
+                                                        });
+                }
+
+                var query = from hci in HardwareCustomItems
+                            from ci in items
+                            where hci.CustomItemId == ci.Id
+                            select new DisblayableCustomItem { HwCustomItem = hci, CustomItem = ci };
+
+                var displayableItems = query.ToList();
+
+                foreach (var item in displayableItems)
+                {
+                    if (!DisplayableCustomItems.Contains(item))
+                        DisplayableCustomItems.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex);
+                _logger.Error(ex);
+            }
         }
 
-        private async void LoadHardwareTypes()
+        private async Task LoadHardwareTypes()
         {
             HardwareTypes.Clear();
+
             var types = await _typeRepository.GetAllAsync();
-
             if (types != null)
-                HardwareTypes.AddRange(types);
-        }
-
-        private void OnGoBackExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
-
-        private bool OnGoForwardCanExecute()
-        {
-            return Hardware != null && !String.IsNullOrWhiteSpace(Hardware.Name) && SelectedHardwareType != null;
-        }
-
-        private void OnGoForwardExecute()
-        {
-            Hardware.Model.HardwareCustomItems.Clear();
-            foreach (var item in DisplayableCustomItems)
             {
-                Hardware.Model.HardwareCustomItems.Add(item.HwCustomItem);
-            }
-
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", Guid.Empty);
-            parameters.Add("Wizard", true);
-            parameters.Add("Customer", Customer);
-            parameters.Add("Hardware", Hardware.Model);
-
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
+                foreach (var type in types)
+                {
+                    HardwareTypes.Add(type);
+                }
+            }                
         }
 
         #region Navigation
 
-        public override bool KeepAlive => true;
+        public override bool KeepAlive
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
@@ -205,35 +215,13 @@ namespace ERService.HardwareModule.ViewModels
             return true;
         }
 
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            if (WizardMode)
-            {
-                AllowLoadAsync = false;
-            }
-        }
-
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
-
-            var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
-            if (WizardMode && customer != null)
-            {
-                Customer = customer;
-                if (Hardware == null)
-                {
-                    InitializeHardware(GetNewDetail());
-                }
-            }
-                
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
-            if (id != null && AllowLoadAsync)
-            {
-                await LoadAsync(id);
-            }
+
+            await LoadAsync(id);
         }
 
         #endregion Navigation

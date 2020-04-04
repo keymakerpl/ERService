@@ -1,0 +1,110 @@
+﻿<UserControl
+    x:Class="ERService.OrderModule.Views.OrderWizardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:ERService.OrderModule.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:prism="http://prismlibrary.com/"
+    Dialog:DialogParticipation.Register="{Binding}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Border
+            Grid.Column="2"
+            Margin="5"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0">
+            <StackPanel Margin="5">
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding CancelCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Anuluj">
+                    <iconPacks:PackIconMaterial Kind="CloseCircle" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding SaveCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Zapisz">
+                    <iconPacks:PackIconMaterialLight Kind="ContentSave" />
+                </Button>
+                <metroControls:DropDownButton
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    VerticalContentAlignment="Center"
+                    ArrowBrush="LightGray"
+                    ArrowMouseOverBrush="Gray"
+                    ArrowVisibility="Visible"
+                    Background="GhostWhite"
+                    BorderBrush="LightGray"
+                    BorderThickness="0"
+                    ButtonStyle="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    Content=""
+                    DisplayMemberPath="Name"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="16"
+                    Foreground="Gray"
+                    ItemsSource="{Binding PrintTemplates}"
+                    ToolTip="Drukuj">
+                    <metroControls:DropDownButton.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=local:OrderWizardView}}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </metroControls:DropDownButton.ItemContainerStyle>
+                </metroControls:DropDownButton>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding GoForwardCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Dalej"
+                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial Kind="ArrowRight" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding GoBackwardCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Wstecz"
+                    Visibility="{Binding WizardMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <ContentControl prism:RegionManager.RegionName="OrderWizardStageRegion" Background="Transparent" />
+
+    </Grid>
+
+</UserControl>

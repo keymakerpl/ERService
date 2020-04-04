@@ -1,9 +1,10 @@
 ﻿namespace ERService.Infrastructure.Constants
 {
     public static class RegionNames
-    {        
+    {
+        public const string StatsTabControlRegion = "StatsTabControlRegion";
         public const string LoggedUserRegion = "LoggedUserRegion";
-        public const string SearchFlyoutRegion = "SearchFlyoutRegion";
+        public const string DetailFlyoutRegion = "DetailFlyoutRegion";
         public const string ContentRegion = "ContentRegion";
         public const string CustomerSearchRegion = "CustomerSearchRegion";
         public const string OrderSearchRegion = "OrderSearchRegion";
@@ -14,6 +15,7 @@
         public const string NavigationRegion = "NavigationRegion";
         public const string SettingsTabControlRegion = "SettingsTabControlRegion";
         public const string SettingsEditorViewRegion = "SettingsEditorViewRegion";
-        public const string GeneralSettingsTabControlRegion = "GeneralSettingsTabControlRegion";
+        public const string GeneralSettingsTabControlRegion = "GeneralSettingsTabControlRegion";        
+        public const string OrderWizardStageRegion = "OrderWizardStageRegion";
     }
 }

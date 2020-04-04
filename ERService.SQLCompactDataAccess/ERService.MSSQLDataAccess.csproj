@@ -61,15 +61,6 @@
     <Compile Include="ERSMySqlMigrationSqlGenerator.cs" />
     <Compile Include="ERServiceDbConfiguration.cs" />
     <Compile Include="ERServiceDbContext.cs" />
-    <Compile Include="IERServiceDbContext.cs" />
-    <Compile Include="Migrations\202001041051079_Initial.cs" />
-    <Compile Include="Migrations\202001041051079_Initial.designer.cs">
-      <DependentUpon>202001041051079_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001251234075_ChangedDescriptionMaxLengInCustomer.cs" />
-    <Compile Include="Migrations\202001251234075_ChangedDescriptionMaxLengInCustomer.designer.cs">
-      <DependentUpon>202001251234075_ChangedDescriptionMaxLengInCustomer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MSSQLDataAccessModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -85,12 +76,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202001041051079_Initial.resx">
-      <DependentUpon>202001041051079_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001251234075_ChangedDescriptionMaxLengInCustomer.resx">
-      <DependentUpon>202001251234075_ChangedDescriptionMaxLengInCustomer.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -6,6 +6,8 @@ namespace ERService.MSSQLDataAccess
 {
     public static class ConnectionStringProvider
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static IConfig _config
         {
             get
@@ -14,10 +16,10 @@ namespace ERService.MSSQLDataAccess
                 {
                     return ServiceLocator.Current.GetInstance<IConfig>();
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    _logger.Error(ex);
 #if DEBUG
-                    //TODO: Log
                     return new Config();
 #endif
                 }

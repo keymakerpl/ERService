@@ -1,58 +1,62 @@
 ﻿using ERService.Business;
+using ERService.CustomerModule.Wrapper;
+using ERService.HardwareModule;
+using ERService.HardwareModule.Data.Repository;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Helpers;
+using ERService.Infrastructure.Interfaces;
 using ERService.OrderModule.Data.Repository;
+using ERService.OrderModule.OrderNumeration;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
+using ERService.RBAC;
+using ERService.TemplateEditor.Data.Repository;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
-using ERService.OrderModule.OrderNumeration;
-using ERService.Infrastructure.Dialogs;
-using ERService.RBAC;
-using ERService.TemplateEditor.Data.Repository;
-using ERService.CustomerModule.Wrapper;
-using ERService.HardwareModule;
-using ERService.Infrastructure.Interfaces;
-using ERService.Infrastructure.Helpers;
+using System.Threading.Tasks;
 
 namespace ERService.OrderModule.ViewModels
 {
     public class OrderViewModel : DetailViewModelBase
     {
-        private string _cost;
-        private string _externalNumber;
-        private OrderWrapper _order;
-        private Blob _selectedAttachment;
-        private OrderType _selectedOrderType;
-        private OrderStatus _selectedOrderStatus;
-        private IRegionManager _regionManager;
-        private IOrderRepository _orderRepository;
+        private readonly IHardwareTypeRepository _hardwareTypesRepository;
         private readonly IRBACManager _rBACManager;
-        private IOrderTypeRepository _typeRepository;
-        private IOrderStatusRepository _statusRepository;
-        private INumerationRepository _numerationRepository;
-        private IRegionNavigationService _navigationService;
-        private readonly IPrintTemplateRepository _templateRepository;
         private readonly ISettingsManager<Setting> _settingsManager;
-        private bool _wizardMode;
+        private readonly IPrintTemplateRepository _templateRepository;
+        private string _cost;
         private CustomerWrapper _customer;
+        private string _externalNumber;
         private HardwareWrapper _hardware;
+        private IRegionNavigationService _navigationService;
+        private INumerationRepository _numerationRepository;
+        private OrderWrapper _order;
+        private IOrderRepository _orderRepository;
+        private IRegionManager _regionManager;
+        private Blob _selectedAttachment;
+        private HardwareType _selectedHardwareType;
+        private OrderStatus _selectedOrderStatus;
+        private OrderType _selectedOrderType;
+        private IOrderStatusRepository _statusRepository;
+        private IOrderTypeRepository _typeRepository;        
 
+        //TODO: Za duży konstruktor, Dodać IOrderContext.
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
-            IOrderStatusRepository statusRepository, IEventAggregator eventAggregator,
+            IOrderStatusRepository statusRepository, IEventAggregator eventAggregator, IHardwareTypeRepository hardwareTypesRepository,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
             IPrintTemplateRepository templateRepository, ISettingsManager<Setting> settingsManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
             _statusRepository = statusRepository;
+            _hardwareTypesRepository = hardwareTypesRepository;
             _numerationRepository = numerationRepository;
             _rBACManager = rBACManager;
             _templateRepository = templateRepository;
@@ -61,42 +65,20 @@ namespace ERService.OrderModule.ViewModels
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
+            HardwareTypes = new ObservableCollection<HardwareType>();
             Attachments = new ObservableCollection<Blob>();
             PrintTemplates = new ObservableCollection<PrintTemplate>();
 
             AddAttachmentCommand = new DelegateCommand(OnAddAttachmentExecute);
             RemoveAttachmentCommand = new DelegateCommand(OnRemoveAttachmentExecute, OnRemoveAttachmentCanExecute);
-            GoBackCommand = new DelegateCommand(OnGoBackExecute);
             PrintCommand = new DelegateCommand<object>(OnPrintExecute);
-        }
-
-        private async void OnPrintExecute(object parameter)
-        {
-            var template = parameter as PrintTemplate;
-            if (template != null)
-            {
-                var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
-                var parameters = new NavigationParameters();
-                parameters.Add("ID", template.Id);
-                parameters.Add("IsReadOnly", true);
-                parameters.Add("IsToolbarVisible", false);
-                parameters.Add("ModelWrappers", new object[] 
-                { 
-                    Customer, 
-                    Hardware, 
-                    Order,
-                    companyConfig,
-                    new AddressWrapper(Customer.Model.CustomerAddresses.FirstOrDefault())
-                });
-
-                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
-            }
+            ShowHardwareDetailFlyoutCommand = new DelegateCommand(OnShowHardwareFlyoutExecute);
+            ShowCustomerDetailFlyoutCommand = new DelegateCommand(OnShowCustomerFlyoutExecute);
         }
 
         public DelegateCommand AddAttachmentCommand { get; private set; }
 
         public ObservableCollection<Blob> Attachments { get; private set; }
-        public ObservableCollection<PrintTemplate> PrintTemplates { get; private set; }
 
         public string Cost { get => _cost; set { SetProperty(ref _cost, value); } }
 
@@ -109,7 +91,6 @@ namespace ERService.OrderModule.ViewModels
         public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
 
         public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand<object> PrintCommand { get; }
 
         public HardwareWrapper Hardware
         {
@@ -117,11 +98,17 @@ namespace ERService.OrderModule.ViewModels
             set { SetProperty(ref _hardware, value); }
         }
 
+        public ObservableCollection<HardwareType> HardwareTypes { get; private set; }
+
         public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
         public ObservableCollection<OrderStatus> OrderStatuses { get; private set; }
 
         public ObservableCollection<OrderType> OrderTypes { get; private set; }
+
+        public DelegateCommand<object> PrintCommand { get; }
+
+        public ObservableCollection<PrintTemplate> PrintTemplates { get; private set; }
 
         public DelegateCommand RemoveAttachmentCommand { get; private set; }
 
@@ -131,13 +118,19 @@ namespace ERService.OrderModule.ViewModels
             set { SetProperty(ref _selectedAttachment, value); RemoveAttachmentCommand.RaiseCanExecuteChanged(); }
         }
 
+        public HardwareType SelectedHardwareType
+        {
+            get { return _selectedHardwareType; }
+            set { SetProperty(ref _selectedHardwareType, value); }
+        }
+
         public OrderStatus SelectedOrderStatus
         {
             get { return _selectedOrderStatus; }
             set
             {
                 SetProperty(ref _selectedOrderStatus, value);
-                Order.Model.OrderStatusId = value.Id;
+                Order.Model.OrderStatusId = value?.Id;
             }
         }
 
@@ -151,7 +144,83 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        public bool WizardMode { get => _wizardMode; set { SetProperty(ref _wizardMode, value); } }
+        public DelegateCommand ShowCustomerDetailFlyoutCommand { get; }
+
+        public DelegateCommand ShowHardwareDetailFlyoutCommand { get; }        
+
+        private void RaiseSideMenuButtonToggled(SideFlyouts flyout, Guid detailID, string viewName)
+        {
+            _eventAggregator
+                                        .GetEvent<AfterSideMenuButtonToggled>()
+                                        .Publish(new AfterSideMenuButtonToggledArgs
+                                        {
+                                            Flyout = flyout,
+                                            DetailID = detailID,
+                                            ViewName = viewName,
+                                            IsReadOnly = true
+                                        });
+        }
+
+        #region Navigation
+
+        public override bool KeepAlive => false;
+
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _navigationService = navigationContext.NavigationService;
+
+            var id = navigationContext.Parameters.GetValue<Guid>("ID");
+            if (id != null)
+            {
+                await LoadAsync(id);
+            }
+
+            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditOrder))
+                IsReadOnly = true;
+        }        
+
+        #endregion Navigation
+
+        #region Overrides
+        public override async Task LoadAsync(Guid id)
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            
+            ID = id;
+
+            InitializeComboBoxes();
+            InitializePrintTemplates();
+            InitializeOrder(order);
+            InitializeHardware();
+            InitializeCustomer();
+            InitializeAttachments();
+        }
+
+        protected override void OnCancelEditExecute()
+        {
+            _navigationService.Journal.GoBack();
+        }
+
+        protected override bool OnSaveCanExecute()
+        {
+            return Order != null && !Order.HasErrors && HasChanges;
+        }
+
+        protected async override void OnSaveExecute()
+        {
+            await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
+            {
+                HasChanges = _orderRepository.HasChanges();
+                ID = Order.Id;
+
+                _navigationService.Journal.GoBack();
+            });
+        }
 
         private void OnAddAttachmentExecute()
         {
@@ -172,6 +241,29 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
+        private async void OnPrintExecute(object parameter)
+        {
+            var template = parameter as PrintTemplate;
+            if (template != null)
+            {
+                var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", template.Id);
+                parameters.Add("IsReadOnly", true);
+                parameters.Add("IsToolbarVisible", false);
+                parameters.Add("ModelWrappers", new object[]
+                {
+                    Customer,
+                    Hardware,
+                    Order,
+                    companyConfig,
+                    new AddressWrapper(Customer.Model.CustomerAddresses.FirstOrDefault())
+                });
+
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
+            }
+        }
+
         private bool OnRemoveAttachmentCanExecute()
         {
             return SelectedAttachment != null;
@@ -183,190 +275,65 @@ namespace ERService.OrderModule.ViewModels
             Attachments.Remove(SelectedAttachment);
         }
 
-        #region Navigation
-
-        public override bool KeepAlive => false;
-
-        public override void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        private void OnShowCustomerFlyoutExecute()
         {
-            if (!WizardMode)
-                base.ConfirmNavigationRequest(navigationContext, continuationCallback);
-            else
-                continuationCallback(true);
+            RaiseSideMenuButtonToggled(SideFlyouts.DetailFlyout, Customer.Id, ViewNames.CustomerFlyoutDetailView);
         }
 
-        public override bool IsNavigationTarget(NavigationContext navigationContext)
+        private void OnShowHardwareFlyoutExecute()
         {
-            return true;
-        }
-
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            _navigationService = navigationContext.NavigationService;
-            WizardMode = navigationContext.Parameters.GetValue<bool>("Wizard");
-
-            if (WizardMode)
-            {
-                //TODO: REFACTOR, czy możemy użyć tutaj budowniczego np. OrderBuilder?
-                var customer = navigationContext.Parameters.GetValue<Customer>("Customer");
-                if (customer != null)
-                    Customer = new CustomerWrapper(customer);
-
-                var hardware = navigationContext.Parameters.GetValue<Hardware>("Hardware");
-                if (hardware != null)
-                    Hardware = new HardwareWrapper(hardware);
-
-                await LoadAsync(Guid.Empty);
-
-                //Order.DateAdded = DateTime.Now;
-                Order.Model.Hardwares.Clear();
-                Order.Model.Hardwares.Add(Hardware.Model);
-                if (Customer.Id != Guid.Empty)
-                {
-                    Order.Model.CustomerId = Customer.Id;
-                }
-                else
-                {
-                    Order.Model.Customer = Customer.Model;
-                }
-            }
-            else
-            {
-                var id = navigationContext.Parameters.GetValue<Guid>("ID");
-                if (id != null)
-                {
-                    await LoadAsync(id);
-                }
-            }
-
-            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditOrder))
-                IsReadOnly = true;
-        }
-
-        private void OnGoBackExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
-
-        protected override void OnCancelEditExecute()
-        {
-            _navigationService.Journal.GoBack();
-        }
-
-        #endregion Navigation
-
-        #region Overrides
-
-        //TODO: Refactor?
-        public override async Task LoadAsync(Guid id)
-        {
-            var order = id != Guid.Empty ? await _orderRepository.GetByIdAsync(id) : await GetNewDetail();
-
-            //ustaw Id dla detailviewmodel, taki sam jak pobranego modelu z repo
-            ID = id;
-
-            InitializeOrder(order);
-            InitializeHarware();
-            InitializeCustomer();
-            InitializeComboBoxes();
-            InitializeAttachments();
-            InitializePrintTemplates();
-        }
-
-        private async void InitializePrintTemplates()
-        {
-            PrintTemplates.Clear();
-            var templates = await _templateRepository.GetAllAsync();
-            foreach (var template in templates)
-            {
-                PrintTemplates.Add(template);
-            }
+            RaiseSideMenuButtonToggled(SideFlyouts.DetailFlyout, Hardware.Id, ViewNames.HardwareFlyoutDetailView);
         }
 
         private void InitializeCustomer()
         {
-            if (WizardMode) return;
             Customer = new CustomerWrapper(Order.Model.Customer);
         }
 
-        private void InitializeHarware()
+        private void InitializeHardware()
         {
-            if (WizardMode) return;
-            Hardware = new HardwareWrapper(Order.Model.Hardwares.FirstOrDefault());
-            Hardware.PropertyChanged += ((sender, args) =>
+            var hardware = Order.Model.Hardwares.FirstOrDefault();
+            if (hardware != null)
+            {
+                SelectedHardwareType = hardware.HardwareType;
+                Hardware = new HardwareWrapper(hardware);
+                Hardware.PropertyChanged += ((sender, args) =>
+                {
+                    if (!HasChanges)
+                    {
+                        HasChanges = _orderRepository.HasChanges();
+                        CancelCommand.RaiseCanExecuteChanged();
+                    }
+
+                    SaveCommand.RaiseCanExecuteChanged();                    
+                });
+            }
+        }
+
+        private void InitializeOrder(Order order)
+        {
+            Order = new OrderWrapper(order);            
+            Order.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)
                 {
                     HasChanges = _orderRepository.HasChanges();
-                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
+                    CancelCommand.RaiseCanExecuteChanged();
                 }
-
-                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
-                //if (args.PropertyName == nameof(Order.HasErrors))
-                //{
-
-                //}
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-
-                if (args.PropertyName == nameof(Order.Number))
+                
+                if (args.PropertyName == nameof(Order.HasErrors))
                 {
-                    SetTitle();
+                    SaveCommand.RaiseCanExecuteChanged();
                 }
+
+                SaveCommand.RaiseCanExecuteChanged();                
             });
-        }
 
-        protected override bool OnSaveCanExecute()
-        {
-            return Order != null && !Order.HasErrors && HasChanges;
-        }
-
-        protected async override void OnSaveExecute()
-        {
-            await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
-            {
-                HasChanges = _orderRepository.HasChanges(); // Po zapisie ustawiamy flagę na false jeśli nie ma zmian w repo
-                ID = Customer.Id; //odśwież Id
-
-                //Powiadom agregator eventów, że zapisano
-                //RaiseDetailSavedEvent(Customer.Id, $"{Customer.FirstName} {Customer.LastName}");
-                //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-                if (WizardMode)
-                {
-                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
-                }
-                else
-                {
-                    _navigationService.Journal.GoBack();
-                }
-            });
-        }
-
-        //TODO: Refactor? Może zrobić tu fabrykę w bazowym?
-        private async Task<Order> GetNewDetail()
-        {
-            var numeration = await _numerationRepository.FindByAsync(n => n.Name == "default");
-
-            var order = new Order();
-
-            if (numeration.Any())
-            {
-                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
-            }
-            
-            order.DateAdded = DateTime.Now;
-            order.DateEnded = DateTime.Now.AddDays(14);
-            _orderRepository.Add(order);
-
-            return order;
+            SaveCommand.RaiseCanExecuteChanged();            
         }
 
         private void InitializeAttachments()
         {
-            if (WizardMode) return;
             Attachments.Clear();
             foreach (var att in Order.Model.Attachments)
             {
@@ -378,37 +345,27 @@ namespace ERService.OrderModule.ViewModels
         {
             LoadOrderStatusesAsync();
             LoadOrderTypesAsync();
+            LoadHardwareTypesAsync();
+        }        
+
+        private async void InitializePrintTemplates()
+        {
+            PrintTemplates.Clear();
+            var templates = await _templateRepository.GetAllAsync();
+            foreach (var template in templates)
+            {
+                PrintTemplates.Add(template);
+            }
         }
 
-        private void InitializeOrder(Order order)
+        private async void LoadHardwareTypesAsync()
         {
-            //Opakowanie modelu detala w ModelWrapper aby korzystał z walidacji propertisów
-            Order = new OrderWrapper(order);
-
-            //Po załadowaniu detala i każdej zmianie propertisa sprawdzamy CanExecute Sejwa
-            Order.PropertyChanged += ((sender, args) =>
+            HardwareTypes.Clear();
+            var types = await _hardwareTypesRepository.GetAllAsync();
+            foreach (var type in types)
             {
-                if (!HasChanges)
-                {
-                    HasChanges = _orderRepository.HasChanges();
-                    ((DelegateCommand)CancelCommand).RaiseCanExecuteChanged();
-                }
-
-                //sprawdzamy czy zmieniony propert w modelu ma błędy i ustawiamy SaveButton
-                //if (args.PropertyName == nameof(Order.HasErrors))
-                //{
-
-                //}
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-
-                if (args.PropertyName == nameof(Order.Number))
-                {
-                    SetTitle();
-                }
-            });
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-
-            SetTitle();
+                HardwareTypes.Add(type);
+            }
         }
 
         private async void LoadOrderStatusesAsync()
@@ -420,10 +377,7 @@ namespace ERService.OrderModule.ViewModels
                 OrderStatuses.Add(status);
             }
 
-            if (!WizardMode)
-            {
-                SelectedOrderStatus = Order.Model.OrderStatus;
-            }
+            SelectedOrderStatus = Order.Model.OrderStatus;
         }
 
         private async void LoadOrderTypesAsync()
@@ -435,21 +389,8 @@ namespace ERService.OrderModule.ViewModels
                 OrderTypes.Add(type);
             }
 
-            if (!WizardMode)
-            {
-                SelectedOrderType = Order.Model.OrderType;
-            }
-        }
-
-        public override Task LoadAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SetTitle()
-        {
-            Title = $"{Order.Number}";
-        }
+            SelectedOrderType = Order.Model.OrderType;
+        }        
 
         #endregion Overrides
     }

@@ -1,4 +1,6 @@
 ﻿using ERService.CustomerModule.Views;
+using ERService.CustomerModule.Repository;
+using ERService.CustomerModule.ViewModels;
 using ERService.Infrastructure.Constants;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -18,12 +20,17 @@ namespace ERService.CustomerModule
 
         public void OnInitialized(IContainerProvider containerProvider)
         {            
-            _logger.Info("Initialized.");
+            _logger.Info("Initialized");
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation(typeof(CustomerSearchView), ViewNames.CustomerSearchView);
+            containerRegistry.Register<ICustomerRepository, CustomerRepository>();
+
+            containerRegistry.RegisterForNavigation<CustomerView>(ViewNames.CustomerView);
+            containerRegistry.RegisterForNavigation<CustomerListView>(ViewNames.CustomerListView);
+            containerRegistry.RegisterForNavigation<CustomerSearchView>(ViewNames.CustomerSearchView);
+            containerRegistry.RegisterForNavigation<CustomerFlyoutDetailView, CustomerViewModel>(ViewNames.CustomerFlyoutDetailView);            
         }
     }
 }

@@ -20,20 +20,22 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <TextBlock
-                            Margin="1,0"
-                            Padding="10"
-                            Text="{Binding DataContext.Title}">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Gainsboro" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <Border BorderBrush="LightGray" BorderThickness="0,0,0,1">
+                            <TextBlock
+                                Margin="1,0"
+                                Padding="10"
+                                Text="{Binding DataContext.Title}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Gainsboro" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

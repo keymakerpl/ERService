@@ -33,7 +33,7 @@ namespace ERService.Settings.ViewModels
             CustomItems = new ObservableCollection<CustomItemWrapper>();
 
             AddHardwareTypeCommand = new DelegateCommand(OnAddHardwareTypeExecute);
-            RemoveHardwareTypeCommand = new DelegateCommand(OnRemoveHardwareTypeExecute, OnRemoveCanExecute);
+            RemoveHardwareTypeCommand = new DelegateCommand(OnRemoveHardwareTypeExecute, OnRemoveHardwareTypeCanExecute);
 
             AddCustomItemCommand = new DelegateCommand(OnAddCustomItemExecute, OnAddCustomItemCanExecute);
             RemoveCustomItemCommand = new DelegateCommand(OnRemoveCustomItemExecute, OnCanRemoveCustomItemExecute);
@@ -127,7 +127,7 @@ namespace ERService.Settings.ViewModels
 
         protected override bool OnSaveCanExecute()
         {
-            return (_hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges()) && SelectedHardwareType != null;
+            return (_hardwareTypeRepository.HasChanges() || _customItemRepository.HasChanges());
         }
 
         protected async override void OnSaveExecute()
@@ -139,9 +139,15 @@ namespace ERService.Settings.ViewModels
         }
 
         private async void HardwareTypesViewModel_PropertyChangedAsync(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectedHardwareType")
+        {            
+            if (e.PropertyName == nameof(SelectedHardwareType))
             {
+                if(SelectedHardwareType == null)
+                {
+                    CustomItems.Clear();
+                    return;
+                }
+
                 await LoadCustomItems();
             }
         }
@@ -185,7 +191,7 @@ namespace ERService.Settings.ViewModels
             return SelectedCustomItem != null;
         }
 
-        private bool OnRemoveCanExecute()
+        private bool OnRemoveHardwareTypeCanExecute()
         {
             return SelectedHardwareType != null;
         }
@@ -197,36 +203,42 @@ namespace ERService.Settings.ViewModels
             CustomItems.Remove(_selectedCustomItem);
             SelectedCustomItem = null;
             HasChanges = _customItemRepository.HasChanges();
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
         }
 
         private void OnRemoveHardwareTypeExecute()
         {
-            throw new NotImplementedException();
+            SelectedHardwareType.PropertyChanged -= WrappedHardwareType_PropertyChanged;
+            _hardwareTypeRepository.Remove(SelectedHardwareType.Model);
+            HardwareTypes.Remove(_selectedHardwareType);
+            SelectedHardwareType = null;
+            HasChanges = _hardwareTypeRepository.HasChanges();
+            SaveCommand.RaiseCanExecuteChanged();
         }
+
         private void WrappedCustomItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges) 
             {
                 HasChanges = _customItemRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(CustomItemWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
+            if (e.PropertyName == nameof(CustomItemWrapper.HasErrors))
             {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
 
         private void WrappedHardwareType_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges)
             {
                 HasChanges = _hardwareTypeRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(HardwareTypeWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
+            if (e.PropertyName == nameof(HardwareTypeWrapper.HasErrors))
             {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
         #endregion Events and Event Handlers

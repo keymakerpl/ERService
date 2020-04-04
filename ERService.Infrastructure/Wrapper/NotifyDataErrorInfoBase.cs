@@ -22,6 +22,17 @@ namespace ERService.Infrastructure.Wrapper
             return _errorsByPropertyName.ContainsKey(propertyName) ? _errorsByPropertyName[propertyName] : null;
         }
 
+        public IEnumerable GetAllErrors()
+        {
+            foreach (var key in _errorsByPropertyName.Keys)
+            {
+                foreach (var error in _errorsByPropertyName[key])
+                {
+                    yield return error;
+                }
+            }
+        }
+
         public bool HasErrors => _errorsByPropertyName.Any();
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 

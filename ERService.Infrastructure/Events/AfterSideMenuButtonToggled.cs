@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using System;
 
 namespace ERService.Infrastructure.Events
 {
@@ -8,12 +9,15 @@ namespace ERService.Infrastructure.Events
 
     public class AfterSideMenuButtonToggledArgs
     {
-        public SideFlyouts FlyoutSide;
+        public SideFlyouts Flyout { get; set; }
+        public Guid DetailID { get; set; }
+        public string ViewName { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 
     public enum SideFlyouts
     {
-        RightSide,
-        BottomSearch
+        NotificationFlyout,
+        DetailFlyout
     }
 }

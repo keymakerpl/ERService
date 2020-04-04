@@ -67,11 +67,11 @@
     <Compile Include="Constants\AclVerbNames.cs" />
     <Compile Include="Constants\ConfigNames.cs" />
     <Compile Include="Constants\CronExpressions.cs" />
+    <Compile Include="Constants\DialogNames.cs" />
     <Compile Include="Constants\ModuleNames.cs" />
     <Compile Include="Constants\PublicKeys.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Constants\ViewNames.cs" />
-    <Compile Include="Dialogs\DialogModel.cs" />
     <Compile Include="Dialogs\IMessageDialogService.cs" />
     <Compile Include="Dialogs\MessageDialogService.cs" />
     <Compile Include="Events\AfterAuthorisedEvent.cs" />
@@ -92,6 +92,7 @@
     <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\SearchQueryEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Helpers\BooleanOrConverter.cs" />
     <Compile Include="Helpers\Cryptography.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Helpers\Serializer.cs" />
+    <Compile Include="Helpers\StatusGroupIntToBrushConverter.cs" />
     <Compile Include="Interfaces\ILicenseManager.cs" />
     <Compile Include="Interfaces\ILicenseProvider.cs" />
     <Compile Include="Interfaces\ILicenseProviderFactory.cs" />

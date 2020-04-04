@@ -7,14 +7,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERService.Business
 {
-    public class Order : IVersionedRow
+    public class Order : IVersionedRow, IModificationHistory
     {        
         public Order()
         {
-            Init();
+            Initialize();
         }
 
-        private void Init()
+        private void Initialize()
         {
             Hardwares = new Collection<Hardware>();
             Attachments = new Collection<Blob>();
@@ -37,11 +37,11 @@ namespace ERService.Business
         [NotMapped]
         public string OrderNumber { get { return $"{OrderId}/{Number}"; } }
 
-        [Column(TypeName = "datetime")]
+        [Column(TypeName = "DateTime")]
         public DateTime DateAdded { get; set; }
 
-        [Column(TypeName = "datetime")]
-        public DateTime DateEnded { get; set; }
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateEnded { get; set; }
 
         public Guid? OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; }
@@ -71,6 +71,9 @@ namespace ERService.Business
         public ICollection<Blob> Attachments { get; set; }
 
         [ConcurrencyCheck]
-        public long RowVersion { get; set; }    
+        public long RowVersion { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime? DateModified { get; set; }        
     }
 }

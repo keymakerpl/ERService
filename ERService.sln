@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.Licensing", "ERSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.Resources", "ERService.Resources\ERService.Resources.csproj", "{6DCF2C2F-F5A5-468E-9480-5FF76EBA1260}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERService.Statistics", "Statistics\ERService.Statistics.csproj", "{5244DB60-F30F-436F-8339-553A8D63BB68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,10 @@ Global
 		{6DCF2C2F-F5A5-468E-9480-5FF76EBA1260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCF2C2F-F5A5-468E-9480-5FF76EBA1260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DCF2C2F-F5A5-468E-9480-5FF76EBA1260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5244DB60-F30F-436F-8339-553A8D63BB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5244DB60-F30F-436F-8339-553A8D63BB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5244DB60-F30F-436F-8339-553A8D63BB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5244DB60-F30F-436F-8339-553A8D63BB68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +198,7 @@ Global
 		{0A9E2222-EB8A-4FC1-B788-E95E7AB9CBFC} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
 		{373720C3-09B2-4E02-B6EF-B48A28A94174} = {CC555453-D8FC-4A85-BB8B-2A2873444B43}
 		{F7E9AE93-8CF6-4C0F-90EA-F876F7846DC7} = {0C20AB8C-1916-4C68-9C55-0515B1841408}
+		{5244DB60-F30F-436F-8339-553A8D63BB68} = {0C20AB8C-1916-4C68-9C55-0515B1841408}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71A6DA07-2ECD-47A2-A2FE-37111201A1E6}

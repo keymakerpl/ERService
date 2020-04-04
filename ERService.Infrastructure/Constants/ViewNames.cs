@@ -2,13 +2,18 @@
 {
     public static class ViewNames
     {
-        public const string CustomerView = "CustomerView";
+        public const string StatisticsTabView = "StatisticsTabView";
+        public const string BasicStatsView = "BasicStatsView";
+        public const string OrdersStatsView = "OrdersStatsView";
         public const string NotificationListView = "NotificationListView";
         public const string NotificationElementView = "NotificationElementView";
         public const string LoggedUserView = "LoggedUserView";
+        public const string CustomerView = "CustomerView";
         public const string CustomerListView = "CustomerListView";
         public const string CustomerSearchView = "CustomerSearchView";
+        public const string CustomerFlyoutDetailView = "CustomerFlyoutDetailView";
         public const string HardwareView = "HardwareView";
+        public const string HardwareFlyoutDetailView = "HardwareFlyoutDetailView";
         public const string HardwareListView = "HardwareListView";        
         public const string OrderListView = "OrderListView";
         public const string OrderSearchView = "OrderSearchView";
@@ -26,5 +31,9 @@
         public const string PrintTemplateEditorView = "PrintTemplateEditorView";
         public const string CompanySettingsView = "CompanySettingsView";
         public const string LicenseSettingsView = "LicenseSettingsView";
+        public const string OrderWizardCustomerView = "OrderWizardCustomerView";
+        public const string OrderWizardHardwareView = "OrderWizardHardwareView";
+        public const string OrderWizardOrderView = "OrderWizardOrderView";
+        public const string OrderWizardView = "OrderWizardView";
     }
 }

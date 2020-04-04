@@ -47,7 +47,7 @@ namespace ERService.StartPage.ViewModels
 
         private void OnStatsCommandExecute()
         {
-            
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StatisticsTabView);
         }
 
         private async void OnAddOrderExecute()
@@ -58,12 +58,7 @@ namespace ERService.StartPage.ViewModels
                 return;
             }
 
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", Guid.Empty);
-            parameters.Add("Wizard", true);
-            parameters.Add("ViewFullName", ViewNames.CustomerView);
-
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.CustomerView, parameters);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderWizardView);
         }
 
         private void OnSettingsCommandExecute()

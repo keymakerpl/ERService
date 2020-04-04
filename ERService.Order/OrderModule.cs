@@ -1,5 +1,8 @@
 ﻿using ERService.Infrastructure.Constants;
+using ERService.OrderModule.Data.Repository;
+using ERService.OrderModule.Repository;
 using ERService.OrderModule.Tasks;
+using ERService.OrderModule.ViewModels;
 using ERService.OrderModule.Views;
 using ERService.Services.Tasks;
 using Prism.Ioc;
@@ -29,8 +32,21 @@ namespace ERService.OrderModule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register(typeof(NewOrdersNotificationTask));
-            containerRegistry.RegisterForNavigation(typeof(OrderSearchView), ViewNames.OrderSearchView);
+            containerRegistry   .Register(typeof(NewOrdersNotificationTask))
+                                .Register<IOrderRepository, OrderRepository>()
+                                .Register<IOrderStatusRepository, OrderStatusRepository>()
+                                .Register<IOrderTypeRepository, OrderTypeRepository>()
+                                .Register<IBlobRepository, BlobRepository>()
+                                .Register<INumerationRepository, NumerationRepository>()
+                                .Register<IOrderContext, OrderContext>();
+
+            containerRegistry   .RegisterForNavigation<OrderSearchView>(ViewNames.OrderSearchView);
+            containerRegistry   .RegisterForNavigation<OrderView>(ViewNames.OrderView);
+            containerRegistry   .RegisterForNavigation<OrderListView>(ViewNames.OrderListView);
+            containerRegistry   .RegisterForNavigation<OrderWizardView, OrderWizardViewModel>(ViewNames.OrderWizardView);
+            containerRegistry   .RegisterForNavigation<OrderWizardCustomerView, OrderWizardCurrentStageModel>(ViewNames.OrderWizardCustomerView);
+            containerRegistry   .RegisterForNavigation<OrderWizardHardwareView, OrderWizardCurrentStageModel>(ViewNames.OrderWizardHardwareView);
+            containerRegistry   .RegisterForNavigation<OrderWizardOrderView, OrderWizardCurrentStageModel>(ViewNames.OrderWizardOrderView);
         }
     }
 }

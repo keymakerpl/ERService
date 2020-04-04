@@ -68,6 +68,9 @@
     <Compile Include="ViewModels\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\CustomerSearchViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="Views\CustomerFlyoutDetailView.xaml.cs">
+      <DependentUpon>CustomerFlyoutDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>
@@ -109,6 +112,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\CustomerFlyoutDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CustomerListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,9 +130,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.Input">
-      <Version>6.0.77</Version>
-    </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>

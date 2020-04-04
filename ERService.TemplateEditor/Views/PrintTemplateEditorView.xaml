@@ -32,7 +32,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid Margin="5">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="75*" />
@@ -47,7 +47,7 @@
                 Grid.Column="1"
                 Margin="5,0,5,0"
                 HorizontalAlignment="Stretch"
-                Visibility="{Binding IsNavigationBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Visibility="{Binding IsNavigationBarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <metroControls:DropDownButton
                     Width="100"
@@ -166,7 +166,6 @@
             <Border
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="5"
                 BorderBrush="SlateGray"
                 BorderThickness="1"
                 FocusManager.FocusedElement="{Binding ElementName=Editor}">

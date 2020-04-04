@@ -13,7 +13,9 @@ namespace ERService.OrderModule.Tasks
 {
     public class NewOrdersNotificationTask : ITaskRunnable
     {
-        private readonly IEventAggregator _eventAggregator;        
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private readonly IEventAggregator _eventAggregator;
         private readonly IOrderRepository _orderRepository;
         private readonly IMessageDialogService _messageService;
 
@@ -32,7 +34,9 @@ namespace ERService.OrderModule.Tasks
         public async Task Run()
         {
             var query = new QueryBuilder<Order>();
-            query.Where(nameof(Order.DateAdded), QueryBuilder<Order>.Operators.GreaterOrEqual, LastUpdateTime.Value);
+            query.Where(nameof(Order.DateAdded), SQLOperators.GreaterOrEqual, LastUpdateTime.Value);
+
+            _logger.Debug($"LastUpdateTime: {LastUpdateTime}");
 
             var ids = await _orderRepository.GetIDsBy(query);
 

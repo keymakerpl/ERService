@@ -53,8 +53,7 @@ namespace ERService.Navigation.ViewModels
 
         private void OnOpenDetailViewExecute(object viewName)
         {
-            //_regionManager.Regions[RegionNames.ContentRegion].RemoveAll(); //Na ten moment nawigujemy tylko po widokach w wybranym module
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());            
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());
         }
     }
 }

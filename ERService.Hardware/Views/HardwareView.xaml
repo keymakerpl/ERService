@@ -255,7 +255,7 @@
                 <Border
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Stretch"
                     Background="GhostWhite"
                     Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="10">

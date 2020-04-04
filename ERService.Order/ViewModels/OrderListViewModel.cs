@@ -44,8 +44,7 @@ namespace ERService.OrderModule.ViewModels
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { FlyoutSide = SideFlyouts.BottomSearch });
-            _regionManager.RequestNavigate(RegionNames.SearchFlyoutRegion, ViewNames.OrderSearchView);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.OrderSearchView });
         }
 
         private async void OnSearchRequest(SearchQueryEventArgs<Order> args)
@@ -82,12 +81,7 @@ namespace ERService.OrderModule.ViewModels
                 return;
             }
 
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", Guid.Empty);
-            parameters.Add("Wizard", true);
-            parameters.Add("ViewFullName", ViewNames.CustomerView);
-
-            ShowDetail(parameters);
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderWizardView);
         }
 
         public async override void OnDeleteExecute()

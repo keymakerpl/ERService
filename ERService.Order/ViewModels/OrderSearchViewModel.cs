@@ -156,9 +156,9 @@ namespace ERService.OrderModule.ViewModels
                 }
             }
 
-            if (EndDateIsChecked && Order.DateEnded != null) 
+            if (EndDateIsChecked && Order.DateEnded.HasValue) 
             {
-                query.WhereDate(nameof(Order.DateEnded), ">=", Order.DateEnded.Date);
+                query.WhereDate(nameof(Order.DateEnded), ">=", Order.DateEnded.Value.Date);
                 if (DateEndTo.HasValue)
                 {
                     query.WhereDate(nameof(Order.DateEnded), "<=", DateEndTo.Value.Date);

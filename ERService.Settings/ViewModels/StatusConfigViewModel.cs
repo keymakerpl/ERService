@@ -1,76 +1,126 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
+using MahApps.Metro.Controls.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
+    public class StatusGroupLookupItem
+    {
+        public StatusGroup Group { get; set; }
+        public string DisplayableName { get; set; }
+    }
+
     public class StatusConfigViewModel : DetailViewModelBase
     {
         private IOrderStatusRepository _orderStatusRepository;
         private IOrderTypeRepository _orderTypeRepository;
         private OrderStatusWrapper _selectedOrderStatus;
         private OrderTypeWrapper _selectedOrderType;
+        private OrderStatusWrapper _newOrderStatus;
 
         public StatusConfigViewModel(IEventAggregator eventAggregator, IOrderStatusRepository orderStatusRepository,
              IOrderTypeRepository orderTypeRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Title = "Konfiguracja statusów";
-
+            
             _orderStatusRepository = orderStatusRepository;
             _orderTypeRepository = orderTypeRepository;
 
+            _isNewStatusCollapsed = true;
+
             OrderTypes = new ObservableCollection<OrderTypeWrapper>();
             OrderStatuses = new ObservableCollection<OrderStatusWrapper>();
+            Groups = new ObservableCollection<StatusGroupLookupItem>();
 
             AddOrderTypeCommand = new DelegateCommand(OnAddOrderTypeExecute);
-            AddOrderStatusCommand = new DelegateCommand(OnAddOrderStatusExecute);
+            AddOrderStatusCommand = new DelegateCommand<object>(OnAddOrderStatusExecute);
 
             RemoveOrderTypeCommand = new DelegateCommand(OnRemoveOrderTypeExecute, OnRemoveOrderTypeCanExecute);
             RemoveOrderStatusCommand = new DelegateCommand(OnRemoveOrderStatusExecute, OnRemoveOrderStatusCanExecute);
+
+            ToggleNewStatusPaneCommand = new DelegateCommand(OnNewStatusToggled);
         }
 
-        public DelegateCommand AddOrderStatusCommand { get; private set; }
-        public DelegateCommand AddOrderTypeCommand { get; private set; }
+        private void OnNewStatusToggled()
+        {
+            NewOrderStatus = new OrderStatusWrapper(new OrderStatus());
+            NewOrderStatus.PropertyChanged += WrappedStatus_PropertyChanged;
+
+            NewOrderStatus.Name = "";
+            NewOrderStatus.Group = StatusGroup.Open;
+
+            IsNewStatusCollapsed = !IsNewStatusCollapsed;
+        }
+
         public ObservableCollection<OrderStatusWrapper> OrderStatuses { get; set; }
+        public ObservableCollection<StatusGroupLookupItem> Groups { get; }
         public ObservableCollection<OrderTypeWrapper> OrderTypes { get; set; }
-        public DelegateCommand RemoveOrderStatusCommand { get; private set; }
-        public DelegateCommand RemoveOrderTypeCommand { get; private set; }
+
+        public DelegateCommand<object> AddOrderStatusCommand { get; }
+        public DelegateCommand AddOrderTypeCommand { get; }
+        public DelegateCommand RemoveOrderStatusCommand { get; }
+        public DelegateCommand ToggleNewStatusPaneCommand { get; }
+        public DelegateCommand RemoveOrderTypeCommand { get; }
 
         public OrderStatusWrapper SelectedOrderStatus
         {
             get { return _selectedOrderStatus; }
-            set { SetProperty(ref _selectedOrderStatus, value); }
+            set { SetProperty(ref _selectedOrderStatus, value); RemoveOrderStatusCommand.RaiseCanExecuteChanged(); }
         }
-
         public OrderTypeWrapper SelectedOrderType
         {
             get { return _selectedOrderType; }
-            set { SetProperty(ref _selectedOrderType, value); }
+            set { SetProperty(ref _selectedOrderType, value); RemoveOrderTypeCommand.RaiseCanExecuteChanged(); }
+        }
+        public OrderStatusWrapper NewOrderStatus
+        {
+            get { return _newOrderStatus; }
+            set { SetProperty(ref _newOrderStatus, value); }
+        }
+
+        private bool _isNewStatusCollapsed;        
+        public bool IsNewStatusCollapsed
+        {
+            get { return _isNewStatusCollapsed; }
+            set { SetProperty(ref _isNewStatusCollapsed, value); }
         }
 
         public async override Task LoadAsync()
         {
             await LoadStatuses();
             await LoadTypes();
+            LoadLookups(); //TODO: async
+        }
+
+        private void LoadLookups()
+        {
+            Groups.Add(new StatusGroupLookupItem() { Group = StatusGroup.Open, DisplayableName = "Otwarte" });
+            Groups.Add(new StatusGroupLookupItem() { Group = StatusGroup.InProgress, DisplayableName = "W trakcie" });
+            Groups.Add(new StatusGroupLookupItem() { Group = StatusGroup.Finished, DisplayableName = "Zamknięte" });            
         }
 
         private async Task LoadStatuses()
         {
+            var statuses = await _orderStatusRepository.GetAllAsync();
+
             foreach (var status in OrderStatuses)
             {
                 status.PropertyChanged -= WrappedStatus_PropertyChanged;
             }
 
             OrderStatuses.Clear();
-            var statuses = await _orderStatusRepository.GetAllAsync();
             foreach (var status in statuses)
             {
                 var wrappedStatus = new OrderStatusWrapper(status);
@@ -110,17 +160,16 @@ namespace ERService.Settings.ViewModels
             HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }
 
-        private async void OnAddOrderStatusExecute()
+        private void OnAddOrderStatusExecute(object arg)
         {
-            var wrappedOrderStatus = new OrderStatusWrapper(new OrderStatus());
-            _orderStatusRepository.Add(wrappedOrderStatus.Model);
-            wrappedOrderStatus.PropertyChanged += WrappedStatus_PropertyChanged;
+            var item = arg as StatusGroupLookupItem;
+            if (item != null)
+                NewOrderStatus.Group = item.Group;
 
-            var newStatusName = await _messageDialogService.ShowInputMessageAsync(this, "Nowy status naprawy...", "Podaj nazwę nowego statusu: ");
-            if (String.IsNullOrWhiteSpace(newStatusName)) return;
-            wrappedOrderStatus.Name = newStatusName;
+            _orderStatusRepository.Add(NewOrderStatus.Model);                       
+            OrderStatuses.Add(NewOrderStatus);
 
-            OrderStatuses.Add(wrappedOrderStatus);
+            IsNewStatusCollapsed = true;
         }
 
         private async void OnAddOrderTypeExecute()
@@ -135,8 +184,7 @@ namespace ERService.Settings.ViewModels
 
             OrderTypes.Add(wrappedOrderType);
         }
-
-        //TODO: Czy można zrobić tak aby usuwany element był generykiem aby można było przenieść ADD/REMOVE niżej?
+        
         private bool OnRemoveOrderStatusCanExecute()
         {
             return SelectedOrderStatus != null;
@@ -161,29 +209,22 @@ namespace ERService.Settings.ViewModels
 
         private void WrappedStatus_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges)
             {
                 HasChanges = _orderTypeRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
-            {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            }
+            SaveCommand.RaiseCanExecuteChanged();
         }
-
-        //TODO: Zastanówmy się czy tego handlera nie można przenieść gdzieś niżej, czy może być generykiem?
+        
         private void WrappedType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!HasChanges) //odśwerzamy z repo czy już zaszły jakieś zmiany, nie odpalamy jeśli już jest True
+            if (!HasChanges) 
             {
                 HasChanges = _orderTypeRepository.HasChanges();
             }
 
-            if (e.PropertyName == nameof(OrderTypeWrapper.HasErrors)) //sprawdzamy czy możemy sejwować
-            {
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            }
+            SaveCommand.RaiseCanExecuteChanged();
         }
 
         #endregion Events and Event Hanlers

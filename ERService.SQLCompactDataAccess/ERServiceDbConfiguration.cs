@@ -12,6 +12,8 @@ namespace ERService.MSSQLDataAccess
 {
     public class ERServiceDbConfiguration : DbConfiguration
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public ERServiceDbConfiguration()
         {
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
@@ -28,10 +30,7 @@ namespace ERService.MSSQLDataAccess
                 }
                 catch (System.Exception ex)
                 {
-                    //TODO: log
-#if DEBUG
-                    System.Console.WriteLine("[DEBUG] Provider already in machine.config");
-#endif
+                    _logger.Error(ex);
                 }
 
                 SetDefaultConnectionFactory(new MySqlConnectionFactory());

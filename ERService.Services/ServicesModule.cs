@@ -1,4 +1,5 @@
 ﻿using ERService.Services.Services;
+using ERService.Services.Tasks;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.Server;
@@ -38,9 +39,10 @@ namespace ERService.Services
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IBackgroundProcessingServer, BackgroundJobServer>();
-            containerRegistry.RegisterSingleton<IRecurringJobManager, RecurringJobManager>();
-            containerRegistry.RegisterSingleton<IBackgroundTaskService, BackgroundTaskService>();
+            containerRegistry   
+                                .RegisterSingleton<IBackgroundProcessingServer, BackgroundJobServer>()
+                                .RegisterSingleton<IRecurringJobManager, RecurringJobManager>()
+                                .RegisterSingleton<IBackgroundTaskService, BackgroundTaskService>();
         }
     }
 }

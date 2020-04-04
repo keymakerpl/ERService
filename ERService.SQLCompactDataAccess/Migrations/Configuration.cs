@@ -3,21 +3,21 @@ namespace ERService.MSSQLDataAccess.Migrations
     using CommonServiceLocator;
     using ERService.Business;
     using ERService.Infrastructure.Base.Common;
-    using System;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity;
     using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ERServiceDbContext>
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            
+            AutomaticMigrationDataLossAllowed = true;
+
             if (_config.DatabaseProvider == DatabaseProviders.MySQLServer)
             {
-                SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());
-                AutomaticMigrationDataLossAllowed = true;
+                SetSqlGenerator("MySql.Data.MySqlClient", new ERSMySqlMigrationSqlGenerator());                
             }
         }
 
@@ -29,8 +29,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                 {
                     return ServiceLocator.Current.GetInstance(typeof(IConfig)) as IConfig;
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    _logger.Error(ex);
 #if DEBUG
                     return new Config();
 #endif
@@ -45,14 +46,14 @@ namespace ERService.MSSQLDataAccess.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
-#if DEBUG
-            context.Database.Log = Console.Write;
-#endif
+            context.Database.Log = _logger.Debug;
 
             context.Numeration.AddOrUpdate(n => n.Name, new Numeration() { Name = "default", Pattern = "[MM][RRRR]" });
 
             // ACLe
-            context.AclVerbs.AddOrUpdate(a => a.Name,
+            if (!context.AclVerbs.Any())
+            {
+                context.AclVerbs.AddOrUpdate(a => a.Name,
                 new AclVerb() { Name = "Dostêp do konfiguracji aplikacji", DefaultValue = 0 },
                 new AclVerb() { Name = "Dostêp do konfiguracji wydruków", DefaultValue = 0 },
                 new AclVerb() { Name = "Dostêp do konfiguracji numeracji", DefaultValue = 0 },
@@ -67,17 +68,21 @@ namespace ERService.MSSQLDataAccess.Migrations
                 new AclVerb() { Name = "Edytowanie klientów", DefaultValue = 0 }
                 );
 
-            context.SaveChanges();
+                context.SaveChanges();
+            }
 
             // Przypisz Acle do roli admina
-            context.Roles.AddOrUpdate(n => n.Name,
+            if (!context.Roles.Any())
+            {
+                context.Roles.AddOrUpdate(n => n.Name,
                 new Role()
                 {
                     Name = "Administrator",
                     IsSystem = true
                 });
 
-            context.SaveChanges(); 
+                context.SaveChanges();
+            }
 
             // Przypisz Verby do Acli
             var roleId = context.Roles.FirstOrDefault(r => r.Name == "Administrator").Id;
@@ -110,10 +115,12 @@ namespace ERService.MSSQLDataAccess.Migrations
                 }
                 );
 
-            context.SaveChanges(); 
+            context.SaveChanges();
 
             // Ustawienia
-            context.Settings.AddOrUpdate(s => s.Key,
+            if (!context.Settings.Any())
+            {
+                context.Settings.AddOrUpdate(s => s.Key,
                 new Setting()
                 {
                     Key = "CompanyName",
@@ -163,8 +170,11 @@ namespace ERService.MSSQLDataAccess.Migrations
                     Description = "NIP"
                 }
                 );
+            }
 
-            context.HardwareTypes.AddOrUpdate(ht => ht.Name,
+            if (!context.HardwareTypes.Any())
+            {
+                context.HardwareTypes.AddOrUpdate(ht => ht.Name,
                 new HardwareType() { Name = "Laptop" },
                 new HardwareType() { Name = "Komputer PC" },
                 new HardwareType() { Name = "Telefon" },
@@ -176,54 +186,61 @@ namespace ERService.MSSQLDataAccess.Migrations
                 new HardwareType() { Name = "Telewizor" }
                 );
 
-            context.SaveChanges();
+                context.SaveChanges();
 
-            foreach (var hwType in context.HardwareTypes)
-            {
-                if (context.CustomItems.Any()) break;
-                switch (hwType.Name)
+                foreach (var hwType in context.HardwareTypes)
                 {
-                    case "Komputer PC":
-                    case "Laptop":
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Procesor" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "RAM" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "HDD" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Grafika" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Napêd" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Bateria" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Zasilacz" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
-                        break;
-                    case "Monitor":
-                    case "Telewizor":
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Przek¹tna ekranu" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
-                        break;
-                    case "Telefon":                                                                        
-                    case "Drukarka":                        
-                    case "Nawigacja":                        
-                    case "Konsola":                        
-                    case "Aparat":
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
-                        context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
-                        break;
+                    if (context.CustomItems.Any()) break;
+                    switch (hwType.Name)
+                    {
+                        case "Komputer PC":
+                        case "Laptop":
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Procesor" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "RAM" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "HDD" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Grafika" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Napêd" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Bateria" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Zasilacz" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                            break;
+                        case "Monitor":
+                        case "Telewizor":
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Przek¹tna ekranu" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                            break;
+                        case "Telefon":
+                        case "Drukarka":
+                        case "Nawigacja":
+                        case "Konsola":
+                        case "Aparat":
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Stan" });
+                            context.CustomItems.Add(new CustomItem() { HardwareTypeId = hwType.Id, Key = "Akcesoria" });
+                            break;
+                    }
                 }
             }
 
-            context.OrderStatuses.AddOrUpdate(os => os.Name,
+            if (!context.OrderStatuses.Any())
+            {
+                context.OrderStatuses.AddOrUpdate(os => os.Name,
                 new OrderStatus() { Name = "Nowa naprawa" },
                 new OrderStatus() { Name = "W trakcie naprawy" },
                 new OrderStatus() { Name = "Oczekuje na czêœci" },
                 new OrderStatus() { Name = "Naprawa zakoñczona" },
                 new OrderStatus() { Name = "Naprawa niewykonana" }
                 );
+            }
 
-            context.OrderTypes.AddOrUpdate(ot => ot.Name,
+            if (!context.OrderTypes.Any())
+            {
+                context.OrderTypes.AddOrUpdate(ot => ot.Name,
                 new OrderType() { Name = "Gwarancyjna" },
                 new OrderType() { Name = "Niegwarancyjna" },
                 new OrderType() { Name = "Pogwarancyjna" }
                 );
+            }
 
             context.SaveChanges();
         }

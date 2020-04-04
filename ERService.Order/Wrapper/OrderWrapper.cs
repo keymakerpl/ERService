@@ -35,13 +35,13 @@ namespace ERService.OrderModule.Wrapper
             set { SetProperty(ref _dateAdded, value); }
         }
 
-        private DateTime _datEnded;
+        private DateTime? _dateEnded;
 
         [Interpreter(Name = "Data zakończenia", Pattern = "[%o_DateEnded%]")]
-        public DateTime DateEnded
+        public DateTime? DateEnded
         {
-            get { return GetValue<DateTime>(); }
-            set { SetProperty(ref _datEnded, value); }
+            get { return GetValue<DateTime?>(); }
+            set { SetProperty(ref _dateEnded, value); }
         }
 
         private OrderStatus _orderStatus;

@@ -74,10 +74,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Tasks\NewOrdersNotificationTask.cs" />
+    <Compile Include="ViewModels\IOrderContext.cs" />
     <Compile Include="ViewModels\OrderListViewModel.cs" />
     <Compile Include="Numeration\OrderNumberGenerator.cs" />
     <Compile Include="ViewModels\OrderSearchViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
+    <Compile Include="ViewModels\OrderContext.cs" />
+    <Compile Include="ViewModels\OrderWizardCurrentStageModel.cs" />
+    <Compile Include="ViewModels\OrderWizardViewModel.cs" />
     <Compile Include="Views\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>
     </Compile>
@@ -86,6 +90,18 @@
     </Compile>
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderWizardCustomerView.xaml.cs">
+      <DependentUpon>OrderWizardCustomerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderWizardHardwareView.xaml.cs">
+      <DependentUpon>OrderWizardHardwareView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderWizardOrderView.xaml.cs">
+      <DependentUpon>OrderWizardOrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderWizardView.xaml.cs">
+      <DependentUpon>OrderWizardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrapper\OrderStatusWrapper.cs" />
     <Compile Include="Wrapper\OrderTypeWrapper.cs" />
@@ -135,6 +151,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DotNetProjects.WpfToolkit.Input">
+      <Version>6.0.78</Version>
+    </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>
@@ -157,6 +176,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderWizardCustomerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderWizardHardwareView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderWizardOrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderWizardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

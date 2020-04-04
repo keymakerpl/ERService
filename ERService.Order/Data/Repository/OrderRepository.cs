@@ -19,7 +19,7 @@ namespace ERService.OrderModule.Repository
             return await Context.Set<Order>()
                                 .Include(c => c.Customer)
                                 .Include(c => c.Customer.CustomerAddresses)
-                                .Include(h => h.Hardwares)
+                                .Include(h => h.Hardwares.Select(t => t.HardwareType))
                                 .Include(a => a.Attachments)
                                 .Include(os => os.OrderStatus)
                                 .Include(ot => ot.OrderType)
