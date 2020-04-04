@@ -53,7 +53,7 @@ namespace ERService.Navigation.ViewModels
 
         private void OnOpenDetailViewExecute(object viewName)
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());            
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());
         }
     }
 }

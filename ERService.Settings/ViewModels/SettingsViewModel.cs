@@ -63,13 +63,6 @@ namespace ERService.Settings.ViewModels
                     _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, view);
                 }
             }
-
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.GeneralSettingsView);
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.HardwareTypesView);
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.StatusConfigView);
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.NumerationSettingsView);
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.UserSettingsView);
-            //_regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, ViewNames.PrintTemplateSettingsView);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

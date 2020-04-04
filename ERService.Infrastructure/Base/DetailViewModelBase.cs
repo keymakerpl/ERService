@@ -8,6 +8,7 @@ using Prism.Regions;
 using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -223,6 +224,22 @@ namespace ERService.Infrastructure.Base
         }
 
         public virtual bool KeepAlive => false;
+
+        protected virtual void OnNavigatedResult(NavigationResult arg)
+        {
+            var message = $"Navigated to: {arg.Context.Uri} with result: {arg.Result}.";
+            var stringBuilder = new StringBuilder(message);
+            if (arg.Error != null)
+            {
+                stringBuilder.Append($" Error: \n{arg.Error.Message}.");
+                if (arg.Error.InnerException != null)
+                {
+                    stringBuilder.Append($" \nInner exception: \n{arg.Error.InnerException.Message}.");
+                }
+            }
+
+            _logger.Debug(stringBuilder);
+        }
         #endregion
 
     }

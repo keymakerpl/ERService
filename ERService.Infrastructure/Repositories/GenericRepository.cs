@@ -61,8 +61,6 @@ namespace ERService.Infrastructure.Repositories
             var query = sqlResult.Sql;
             var bindings = sqlResult.Bindings.ToArray();
 
-            _logger.Debug($"Get IDs by: {query}");
-
             var result = await Context.Database.SqlQuery<Guid>(query, bindings).ToListAsync();
 
             return result.ToArray();
