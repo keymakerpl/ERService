@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using ERService.Infrastructure.Repositories;
 using Prism.Commands;
 using Prism.Regions;
+using SqlKata;
 
 namespace ERService.Infrastructure.Base
 {
@@ -16,7 +17,7 @@ namespace ERService.Infrastructure.Base
         bool IsReadOnly { get; set; }
 
         void LoadAsync();
-        void LoadAsync(QueryBuilder<T> queryBuilder);
+        void LoadAsync(Query queryBuilder);
         void Load(Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] includeProps);
 

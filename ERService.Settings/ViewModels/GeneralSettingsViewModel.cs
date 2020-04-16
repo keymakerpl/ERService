@@ -18,10 +18,18 @@ namespace ERService.Settings.ViewModels
             IMessageDialogService messageDialogService,
             IRegionManager regionManager) : base(eventAggregator, messageDialogService)
         {
+            _regionManager = regionManager;
             _settingsRepository = settingsRepository;
             
             Title = "Ustawienia ogólne";
-            _regionManager = regionManager;
+        }
+
+        private int _tabIndex;
+
+        public int TabIndex
+        {
+            get { return _tabIndex; }
+            set { SetProperty(ref _tabIndex, value); }
         }
 
         #region Navigation
@@ -30,9 +38,12 @@ namespace ERService.Settings.ViewModels
         {
             _regionManager.RequestNavigate(RegionNames.GeneralSettingsTabControlRegion, ViewNames.CompanySettingsView);
             _regionManager.RequestNavigate(RegionNames.GeneralSettingsTabControlRegion, ViewNames.LicenseSettingsView);
+
+            TabIndex = 0;
         }
 
         public override bool KeepAlive => true;
+        
         #endregion
     }
 }

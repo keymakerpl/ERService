@@ -54,18 +54,7 @@
                             Foreground="Gray"
                             Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                             ToolTip="Zapisz">
-                            <iconPacks:PackIconMaterialLight Kind="ContentSave" />
-                        </Button>
-                        <Button
-                            Width="40"
-                            Height="40"
-                            Margin="5"
-                            Background="GhostWhite"
-                            Command="{Binding CancelCommand}"
-                            Foreground="Gray"
-                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                            ToolTip="Anuluj">
-                            <iconPacks:PackIconMaterial Kind="CloseCircle" />
+                            <iconPacks:PackIconModern Kind="Save" />
                         </Button>
                     </StackPanel>
                 </Border>
@@ -184,23 +173,32 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <Border
-                                                    Height="40"
+                                                    Height="35"
                                                     Background="{Binding Group, Converter={StaticResource StatusGroupIntToBrushConverter}}"
                                                     BorderThickness="0"
                                                     Style="{StaticResource DefaultBorderStyle}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition />
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <TextBlock
+                                                        <iconPacks:PackIconModern
+                                                            Grid.Column="0"
                                                             Margin="5"
+                                                            HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
-                                                            FontSize="14"
+                                                            Foreground="LightSlateGray"
+                                                            Kind="Base" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Margin="5,0,5,0"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="12"
                                                             FontWeight="SemiBold"
                                                             Text="{Binding Name}" />
-                                                        <WrapPanel Grid.Column="1" VerticalAlignment="Bottom">
+                                                        <WrapPanel Grid.Column="2" VerticalAlignment="Bottom">
                                                             <TextBlock
                                                                 Margin="5"
                                                                 FontSize="12"
@@ -285,13 +283,7 @@
                                     Command="{Binding AddOrderStatusCommand}"
                                     CommandParameter="{Binding ElementName=GroupCombo, Path=SelectedItem}"
                                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                    <iconPacks:PackIconModern
-                                        Width="25"
-                                        Height="25"
-                                        Padding="5"
-                                        BorderThickness="0"
-                                        Foreground="Gray"
-                                        Kind="ListAddBelow" />
+                                    <iconPacks:PackIconEntypo Foreground="Gray" Kind="AddToList" />
                                 </Button>
                             </Grid>
                         </Border>
@@ -421,24 +413,25 @@
                                     <DataTemplate>
                                         <Grid>
                                             <Border
-                                                Height="45"
+                                                Height="35"
                                                 Background="LightGray"
                                                 BorderThickness="1"
                                                 Style="{StaticResource DefaultBorderStyle}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock
+                                                        Grid.Column="1"
                                                         Margin="5"
                                                         VerticalAlignment="Center"
-                                                        FontSize="14"
+                                                        FontSize="12"
                                                         FontWeight="SemiBold"
                                                         Text="{Binding Name}" />
                                                     <iconPacks:PackIconModern
-                                                        Grid.Column="1"
-                                                        Margin="10"
+                                                        Grid.Column="0"
+                                                        Margin="5"
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Foreground="LightSlateGray"

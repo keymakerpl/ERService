@@ -66,9 +66,9 @@ namespace ERService.Application.ViewModels
 
         private void ToggleDetailFlyout(Guid detailID, string viewName, bool isReadOnly)
         {
-            if (String.IsNullOrWhiteSpace(viewName)) return;
-
             RightFlyoutIsExpanded = !RightFlyoutIsExpanded;
+
+            if (String.IsNullOrWhiteSpace(viewName)) return;
 
             if (RightFlyoutIsExpanded)
             {

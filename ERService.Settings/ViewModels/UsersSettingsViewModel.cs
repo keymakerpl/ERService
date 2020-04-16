@@ -11,6 +11,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Linq;
+using ERService.Infrastructure.Events;
 
 namespace ERService.Settings.ViewModels
 {
@@ -40,6 +41,16 @@ namespace ERService.Settings.ViewModels
             AddRoleCommand = new DelegateCommand(OnAddRoleExecute);
             EditRoleCommand = new DelegateCommand(OnEditRoleExecute);
             RemoveRoleCommand = new DelegateCommand(OnRemoveRoleExecute, OnRemoveRoleCanExecute);
+
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(OnUserDetailSaved);
+        }
+
+        private async void OnUserDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == typeof(UserDetailViewModel).Name)
+            {
+                await LoadUsers();
+            }
         }
 
         public DelegateCommand AddRoleCommand { get; }
@@ -166,7 +177,14 @@ namespace ERService.Settings.ViewModels
                 return;
             }
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>()
+                .Publish(new AfterSideMenuButtonToggledArgs
+                {
+                    Flyout = SideFlyouts.DetailFlyout,
+                    ViewName = ViewNames.UserDetailView
+                });
+
+            //_regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView);
         }
 
         private void OnEditRoleExecute()
@@ -184,7 +202,15 @@ namespace ERService.Settings.ViewModels
             var parameters = new NavigationParameters();
             parameters.Add("ID", SelectedUser.Id);
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
+            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>()
+                .Publish(new AfterSideMenuButtonToggledArgs
+                {
+                    Flyout = SideFlyouts.DetailFlyout,
+                    ViewName = ViewNames.UserDetailView,
+                    DetailID = SelectedUser.Id
+                });
+
+            //_regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
         }
 
         private bool OnRemoveRoleCanExecute()

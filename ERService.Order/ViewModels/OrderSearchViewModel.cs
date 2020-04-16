@@ -113,7 +113,7 @@ namespace ERService.OrderModule.ViewModels
 
         protected override void OnSearchExecute()
         {
-            var query = new QueryBuilder<Order>();
+            var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
 
             query.LeftJoin(nameof(Customer), $"{nameof(Customer)}.{nameof(Customer.Id)}", $"{nameof(Order)}.{nameof(Order.CustomerId)}");
 
@@ -165,7 +165,7 @@ namespace ERService.OrderModule.ViewModels
                 }
             }            
 
-            EventAggregator.GetEvent<SearchQueryEvent<Order>>().Publish(new SearchQueryEventArgs<Order>() { QueryBuilder = query });
+            EventAggregator.GetEvent<SearchQueryEvent>().Publish(new SearchQueryEventArgs() { QueryBuilder = query });
         }
     }
 }

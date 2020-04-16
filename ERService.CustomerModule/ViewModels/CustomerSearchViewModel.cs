@@ -22,7 +22,7 @@ namespace ERService.CustomerModule.ViewModels
         //TODO: przebudować tak aby budował zapytnie przez refleksje na propertisach w customerwrapper
         protected override void OnSearchExecute()
         {
-            var query = new QueryBuilder<Customer>();
+            var query = new QueryBuilder(nameof(Customer)).Select($"{nameof(Customer)}.{nameof(Customer.Id)}");
 
             if (!String.IsNullOrWhiteSpace(CustomerAddress.Street) || !String.IsNullOrWhiteSpace(CustomerAddress.HouseNumber) 
                 || !String.IsNullOrWhiteSpace(CustomerAddress.City) || !String.IsNullOrWhiteSpace(CustomerAddress.Postcode))
@@ -75,7 +75,7 @@ namespace ERService.CustomerModule.ViewModels
                 query.WhereContains(nameof(Customer.PhoneNumber2), Customer.PhoneNumber2);
             }            
 
-            EventAggregator.GetEvent<SearchQueryEvent<Customer>>().Publish(new SearchQueryEventArgs<Customer>() { QueryBuilder = query });
+            EventAggregator.GetEvent<SearchQueryEvent>().Publish(new SearchQueryEventArgs() { QueryBuilder = query });
         }
     }
 }

@@ -22,11 +22,11 @@ namespace ERService.OrderModule.ViewModels
         
         private readonly IOrderContext _orderWizardContext;
         private readonly IPrintTemplateRepository _printTemplateRepository;
-        private readonly ISettingsManager<Setting> _settingsManager;
+        private readonly ISettingsManager _settingsManager;
         private readonly IRegionManager _regionManager;
 
         public OrderWizardViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
-            IOrderContext orderWizardContext, IPrintTemplateRepository printTemplateRepository, ISettingsManager<Setting> settingsManager)
+            IOrderContext orderWizardContext, IPrintTemplateRepository printTemplateRepository, ISettingsManager settingsManager)
             : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;

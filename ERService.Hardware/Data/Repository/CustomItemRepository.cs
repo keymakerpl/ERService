@@ -24,5 +24,14 @@ namespace ERService.HardwareModule.Data.Repository
             return result.FindAll(e => e.HardwareType.Id == typeId);
         }
 
+        public Guid[] GetHardwareIDsByCustomItemID(Guid customItemID)
+        {
+            var query = from c in Context.HardwareCustomItems
+                        where c.CustomItemId == customItemID
+                        select c.HardwareId;
+
+            var result = query.ToArray();
+            return result;
+        }
     }
 }

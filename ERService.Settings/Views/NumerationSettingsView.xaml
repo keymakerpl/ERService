@@ -12,12 +12,38 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
-        <GroupBox Margin="0,5,0,0" Header="Numeracja">
+        <GroupBox
+            Margin="0,5,0,0"
+            BorderThickness="0"
+            Header="Numeracja">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    Grid.Column="2"
+                    Margin="5"
+                    BorderBrush="LightGray"
+                    BorderThickness="1,0,0,0">
+                    <StackPanel Margin="5" VerticalAlignment="Bottom">
+                        <Button
+                            Width="40"
+                            Height="40"
+                            Margin="5"
+                            Background="GhostWhite"
+                            Command="{Binding SaveCommand}"
+                            Foreground="Gray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                            ToolTip="Zapisz">
+                            <iconPacks:PackIconModern Kind="Save" />
+                        </Button>
+                    </StackPanel>
+                </Border>
                 <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -86,12 +112,26 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Label
+                                    Content="[DD]"
+                                    FontSize="14"
+                                    FontWeight="DemiBold" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content=" - dzień, np. 01"
+                                    FontSize="14" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
                                     Content="[MM]"
                                     FontSize="14"
                                     FontWeight="DemiBold" />
                                 <Label
                                     Grid.Column="1"
-                                    Content=" - miesiąc"
+                                    Content=" - miesiąc, np. 04"
                                     FontSize="14" />
                             </Grid>
                             <Grid>
@@ -105,7 +145,21 @@
                                     FontWeight="DemiBold" />
                                 <Label
                                     Grid.Column="1"
-                                    Content=" - rok"
+                                    Content=" - rok, np. 2020"
+                                    FontSize="14" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Content="[RR]"
+                                    FontSize="14"
+                                    FontWeight="DemiBold" />
+                                <Label
+                                    Grid.Column="1"
+                                    Content=" - rok, np. 20"
                                     FontSize="14" />
                             </Grid>
                             <Grid>
@@ -126,34 +180,6 @@
                     </Border>
 
                 </Grid>
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Width="80"
-                        Height="35"
-                        Margin="10"
-                        HorizontalAlignment="Right"
-                        Command="{Binding SaveCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialLight
-                                Width="17"
-                                Height="17"
-                                Margin="3,0,5,0"
-                                VerticalAlignment="Center"
-                                Kind="ContentSave" />
-                            <TextBlock
-                                Margin="2,4,4,4"
-                                VerticalAlignment="Center"
-                                FontSize="13"
-                                Text="Zapisz" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
             </Grid>
         </GroupBox>
 

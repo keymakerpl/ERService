@@ -106,6 +106,43 @@
                         <Setter Property="AutoGenerateColumns" Value="False" />
                     </Style>
 
+                    <Style
+                        x:Key="DefaultTabItemStyle"
+                        BasedOn="{StaticResource {x:Type TabItem}}"
+                        TargetType="{x:Type TabItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border
+                                        x:Name="border"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="0,0,0,0">
+                                        <TextBlock
+                                            Margin="1,0"
+                                            Padding="10"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding DataContext.Title}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="Gainsboro" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="border" Property="BorderThickness" Value="0,0,0,1" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
                 </ResourceDictionary>
 
             </ResourceDictionary.MergedDictionaries>

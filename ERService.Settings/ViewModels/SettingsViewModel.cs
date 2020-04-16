@@ -11,9 +11,7 @@ namespace ERService.Settings.ViewModels
         private IRegionManager _regionManager;
         private readonly IRBACManager _rBACManager;
         private readonly IMessageDialogService _dialogService;
-
-        public bool KeepAlive => true;
-
+        
         public SettingsViewModel(IRegionManager regionManager, IRBACManager rBACManager, IMessageDialogService dialogService)
         {
             _regionManager = regionManager;
@@ -21,7 +19,17 @@ namespace ERService.Settings.ViewModels
             _dialogService = dialogService;
         }
 
+        private int _tabIndex;
+
+        public int TabIndex
+        {
+            get { return _tabIndex; }
+            set { SetProperty(ref _tabIndex, value); }
+        }
+
         #region Navigation        
+
+        public bool KeepAlive => true;
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -63,6 +71,8 @@ namespace ERService.Settings.ViewModels
                     _regionManager.RequestNavigate(RegionNames.SettingsTabControlRegion, view);
                 }
             }
+
+            TabIndex = 0;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

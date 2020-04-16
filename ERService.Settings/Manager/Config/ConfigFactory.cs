@@ -14,7 +14,7 @@ namespace ERService.Settings.Manager
                     return new CompanyInfoConfig(config);
                 
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException("Cant create config");
             }
         }
     }

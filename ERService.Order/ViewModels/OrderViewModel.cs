@@ -29,7 +29,7 @@ namespace ERService.OrderModule.ViewModels
     {
         private readonly IHardwareTypeRepository _hardwareTypesRepository;
         private readonly IRBACManager _rBACManager;
-        private readonly ISettingsManager<Setting> _settingsManager;
+        private readonly ISettingsManager _settingsManager;
         private readonly IPrintTemplateRepository _templateRepository;
         private string _cost;
         private CustomerWrapper _customer;
@@ -51,7 +51,7 @@ namespace ERService.OrderModule.ViewModels
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator, IHardwareTypeRepository hardwareTypesRepository,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
-            IPrintTemplateRepository templateRepository, ISettingsManager<Setting> settingsManager) : base(eventAggregator, messageDialogService)
+            IPrintTemplateRepository templateRepository, ISettingsManager settingsManager) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;

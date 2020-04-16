@@ -5,6 +5,7 @@ using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Helpers;
 using ERService.Infrastructure.Interfaces;
+using ERService.Settings.Manager;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
@@ -20,27 +21,43 @@ namespace ERService.Settings.ViewModels
     public class CompanySettingsViewModel : DetailViewModelBase
     {
         private readonly IRegionManager _regionManager;
-        private readonly ISettingsManager<Setting> _settingsManager;
+        private readonly ILicenseManager _licenseManager;
+        private readonly ISettingsManager _settingsManager;
         private readonly IImagesCollection _imagesCollection;
 
         public DelegateCommand LoadLogoCommand { get; }
+        public DelegateCommand CopyFromLicenseCommand { get; }
 
-        private object _companySetting;
+        private dynamic _companySetting;
 
         public CompanySettingsViewModel(
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IRegionManager regionManager,
-            ISettingsManager<Setting> settingsManager,
+            ILicenseManager licenseManager,
+            ISettingsManager settingsManager,
             IImagesCollection imagesCollection) : base(eventAggregator, messageDialogService)
         {
             Title = "Dane firmy";
 
             _regionManager = regionManager;
+            _licenseManager = licenseManager;
             _settingsManager = settingsManager;
             _imagesCollection = imagesCollection;
 
             LoadLogoCommand = new DelegateCommand(OnLoadLogoExecute);
+            CopyFromLicenseCommand = new DelegateCommand(OnCopyFromLicenseExecute);
+        }
+
+        private void OnCopyFromLicenseExecute()
+        {
+            var owner = _licenseManager.LicenseProvider.Owner;
+
+            CompanyConfig.CompanyName = owner.Name;
+            CompanyConfig.CompanyStreet = owner.Street;
+            CompanyConfig.CompanyCity = owner.City;
+            CompanyConfig.CompanyPostCode = owner.ZIPCode;
+            CompanyConfig.CompanyNIP = owner.NIP;
         }
 
         private string _selectedImageFile;
@@ -127,7 +144,7 @@ namespace ERService.Settings.ViewModels
 
         public override bool KeepAlive => true;
 
-        public object CompanyConfig
+        public ICompanyInfoConfig CompanyConfig
         {
             get { return _companySetting; }
             private set { SetProperty(ref _companySetting, value); }
@@ -156,8 +173,7 @@ namespace ERService.Settings.ViewModels
 
         public override async Task LoadAsync()
         {
-            CompanyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
-
+            CompanyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig) as ICompanyInfoConfig;
             LoadLogo();
         }
 

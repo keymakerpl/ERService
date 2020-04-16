@@ -15,7 +15,7 @@ namespace ERService.TemplateEditor.Interpreter
         private IContext _context;
         private object[] _modelWrappers;
         private IndexExpression _expression;
-        private readonly ISettingsManager<Setting> _settingsManager;
+        private readonly ISettingsManager _settingsManager;
 
         public IContext Context { set => _context = value; }
         public object[] Wrappers { set => _modelWrappers = value; }
@@ -35,7 +35,7 @@ namespace ERService.TemplateEditor.Interpreter
             } 
         }
 
-        public Interpreter(ISettingsManager<Setting> settingsManager)
+        public Interpreter(ISettingsManager settingsManager)
         {
             _settingsManager = settingsManager;
         }

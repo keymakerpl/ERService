@@ -36,10 +36,10 @@ namespace ERService.CustomerModule.ViewModels
 
             SearchCommand = new DelegateCommand(OnSearchExecute);
 
-            _eventAggregator.GetEvent<SearchQueryEvent<Customer>>().Subscribe(OnSearchRequest);
+            _eventAggregator.GetEvent<SearchQueryEvent>().Subscribe(OnSearchRequest);
         }
 
-        private async void OnSearchRequest(SearchQueryEventArgs<Customer> args)
+        private async void OnSearchRequest(SearchQueryEventArgs args)
         {
             try
             {

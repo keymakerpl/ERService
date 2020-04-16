@@ -2,13 +2,16 @@
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class QueryBuilder<TEntity> : Query
+    public class QueryBuilder : Query
     {
-        public QueryBuilder() : base(typeof(TEntity).Name)
-        {            
+        private readonly string _tableName;
+
+        public QueryBuilder(string tableName) : base(tableName)
+        {
+            _tableName = tableName;
         }
 
-        public string TableName { get { return typeof(TEntity).Name; } }        
+        public string TableName => _tableName;
     }
 
     public static class SQLOperators
@@ -16,6 +19,7 @@ namespace ERService.Infrastructure.Repositories
         public const string Greater = ">";
         public const string GreaterOrEqual = ">=";
         public const string Equal = "=";
+        public const string NotEqual = "<>";
         public const string Less = "<";
         public const string LessOrEqual = "<=";
     }

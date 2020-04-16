@@ -4,6 +4,7 @@ using ERService.Infrastructure.Repositories;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using SqlKata;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -63,7 +64,7 @@ namespace ERService.Infrastructure.Base
             }
         }
 
-        public virtual async void LoadAsync(QueryBuilder<TEntity> queryBuilder)
+        public virtual async void LoadAsync(Query queryBuilder)
         {
             Models.Clear();
             var models = await FindByAsync(queryBuilder);

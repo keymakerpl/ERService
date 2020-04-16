@@ -10,19 +10,13 @@ using ERService.Settings.Wrapper;
 
 namespace ERService.Settings.Manager
 {
-    public class SettingsManager : ISettingsManager<Setting>
+    public class SettingsManager : ISettingsManager
     {
         private readonly ISettingsRepository _settingsRepository;
 
         public SettingsManager(ISettingsRepository settingsRepository)
         {
             _settingsRepository = settingsRepository;
-        }
-
-        public async Task<IEnumerable<Setting>> FindSettingsAsync(Expression<Func<Setting, bool>> predicate)
-        {
-            var settings = await _settingsRepository.FindByAsync(predicate);
-            return settings;
         }
 
         public async Task<dynamic> GetConfigAsync(string configCategory)

@@ -36,7 +36,7 @@ namespace ERService.OrderModule.ViewModels
 
             SearchCommand = new DelegateCommand(OnSearchExecute);
 
-            _eventAggregator.GetEvent<SearchQueryEvent<Order>>().Subscribe(OnSearchRequest);
+            _eventAggregator.GetEvent<SearchQueryEvent>().Subscribe(OnSearchRequest);
 
             Orders = new ObservableCollection<OrderWrapper>();
             Models.CollectionChanged += Models_CollectionChanged;
@@ -47,7 +47,7 @@ namespace ERService.OrderModule.ViewModels
             _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.OrderSearchView });
         }
 
-        private async void OnSearchRequest(SearchQueryEventArgs<Order> args)
+        private async void OnSearchRequest(SearchQueryEventArgs args)
         {
             try
             {
@@ -146,9 +146,10 @@ namespace ERService.OrderModule.ViewModels
             var orderNumber = navigationContext.Parameters.GetValue<string>("OrderNumber");
             if (orderNumber != null)
             {
-                var query = new QueryBuilder<Order>();
+                var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
                 query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", orderNumber);
-                OnSearchRequest(new SearchQueryEventArgs<Order>() { QueryBuilder = query } );
+
+                OnSearchRequest(new SearchQueryEventArgs() { QueryBuilder = query } );
             }
         }
 

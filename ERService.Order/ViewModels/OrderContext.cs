@@ -229,7 +229,17 @@ namespace ERService.OrderModule.ViewModels
                 Order.Model.Customer = Customer.Model;
             }
 
-            Order.Model.Hardwares.Add(Hardware.Model);
+            Hardware.Model.HardwareCustomItems.Clear();
+            foreach (var item in HardwareCustomItems)
+            {
+                Hardware.Model.HardwareCustomItems.Add(item);
+            }
+
+            var hasHardware = Order.Model.Hardwares.Contains(Hardware.Model);
+            if (!hasHardware)
+            {
+                Order.Model.Hardwares.Add(Hardware.Model);
+            }
 
             await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
             {

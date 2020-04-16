@@ -2,6 +2,7 @@
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Helpers;
 using ERService.RBAC;
 using ERService.RBAC.Data.Repository;
@@ -88,7 +89,7 @@ namespace ERService.Settings.ViewModels
 
         protected bool OnSaveCanExecute(object parameter)
         {
-            return true;// User != null && !User.HasErrors && HasChanges;
+            return User != null && !User.HasErrors && HasChanges;
         }
 
         protected async void OnSaveExecute(object parameter)
@@ -99,9 +100,15 @@ namespace ERService.Settings.ViewModels
             {
                 HasChanges = _userRepository.HasChanges();
                 ID = User.Id;
+                
+                RaiseDetailSavedEvent(ID, User.FullName);
 
-                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.SettingsView);
+                _eventAggregator
+                    .GetEvent<AfterSideMenuButtonToggled>()
+                    .Publish(new AfterSideMenuButtonToggledArgs
+                    {
+                        Flyout = SideFlyouts.DetailFlyout
+                    });
             });
         }
 

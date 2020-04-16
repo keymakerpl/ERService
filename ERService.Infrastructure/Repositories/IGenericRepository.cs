@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlKata;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -9,9 +10,9 @@ namespace ERService.Infrastructure.Repositories
     {        
         Task<TEntity> GetByIdAsync(Guid id);
         Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> FindByAsync(QueryBuilder<TEntity> queryBuilder);
+        Task<IEnumerable<TEntity>> FindByAsync(Query queryBuilder);
         Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<Guid[]> GetIDsBy(QueryBuilder<TEntity> queryBuilder);
+        Task<Guid[]> GetIDsBy(Query queryBuilder);
         IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProp);
 
         Task<bool> SaveAsync();

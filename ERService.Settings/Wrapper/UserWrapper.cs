@@ -10,7 +10,13 @@ namespace ERService.Settings.Wrapper
         {
         }
 
-        public Guid Id { get { return Model.Id; } }
+        public Guid Id
+        {
+            get
+            {
+                return Model.Id;
+            }
+        }
 
         private string _login;
 
@@ -42,6 +48,22 @@ namespace ERService.Settings.Wrapper
         {
             get { return GetValue<string>(); }
             set { SetProperty(ref _lastName, value); }
+        }
+
+        private string _fullName;
+
+        public string FullName
+        {
+            get { return GetValue<string>(); }
+            set { SetProperty(ref _fullName, value); }
+        }
+
+        private string _initials;
+
+        public string Initials
+        {
+            get { return GetValue<string>(); }
+            set { SetProperty(ref _initials, value); }
         }
 
         private string _phoneNumber;
@@ -77,8 +99,11 @@ namespace ERService.Settings.Wrapper
         }
 
         private Guid? _roleId;
-        public Guid? RoleId { get { return GetValue<Guid>(); } set { SetProperty(ref _roleId, value); } }
-
+        public Guid? RoleId
+        {
+            get => GetValue<Guid>();
+            set => SetProperty(ref _roleId, value);
+        }
 
         private Role _role;
         public Role Role

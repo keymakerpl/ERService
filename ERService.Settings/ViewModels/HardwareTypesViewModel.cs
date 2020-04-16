@@ -41,17 +41,17 @@ namespace ERService.Settings.ViewModels
             InitializeEvents();
         }
 
-        public DelegateCommand AddHardwareTypeCommand { get; private set; }
-
-        public DelegateCommand AddCustomItemCommand { get; private set; }
-
         public ObservableCollection<CustomItemWrapper> CustomItems { get; set; }
 
         public ObservableCollection<HardwareTypeWrapper> HardwareTypes { get; set; }
 
-        public DelegateCommand RemoveHardwareTypeCommand { get; private set; }
+        public DelegateCommand AddHardwareTypeCommand { get; }
 
-        public DelegateCommand RemoveCustomItemCommand { get; private set; }
+        public DelegateCommand AddCustomItemCommand { get; }
+
+        public DelegateCommand RemoveHardwareTypeCommand { get; }
+
+        public DelegateCommand RemoveCustomItemCommand { get; }
 
         public CustomItemWrapper SelectedCustomItem
         {
@@ -196,24 +196,53 @@ namespace ERService.Settings.ViewModels
             return SelectedHardwareType != null;
         }
 
-        private void OnRemoveCustomItemExecute()
+        private async void OnRemoveCustomItemExecute()
         {
+            if (IsCustomItemInUse(_selectedCustomItem.Model))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Pole zdefiniowane w użyciu...", "Wybrane pole zdefiniowane jest w użyciu, nie można go usunąć.");
+                return;
+            }
+
             SelectedCustomItem.PropertyChanged -= WrappedCustomItem_PropertyChanged;
+
             _customItemRepository.Remove(SelectedCustomItem.Model);
             CustomItems.Remove(_selectedCustomItem);
+
             SelectedCustomItem = null;
             HasChanges = _customItemRepository.HasChanges();
             SaveCommand.RaiseCanExecuteChanged();
         }
 
-        private void OnRemoveHardwareTypeExecute()
+        private bool IsCustomItemInUse(CustomItem customItem)
         {
+            var ids = _customItemRepository.GetHardwareIDsByCustomItemID(customItem.Id);
+            return ids.Length > 0;
+        }
+
+        private async void OnRemoveHardwareTypeExecute()
+        {
+            if (await IsHardwareTypeInUse(_selectedHardwareType.Model))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Typ urządzania w użyciu...", "Typ urządzenia jest w użyciu, nie można go usunąć.");
+                return;
+            }
+
             SelectedHardwareType.PropertyChanged -= WrappedHardwareType_PropertyChanged;
+
             _hardwareTypeRepository.Remove(SelectedHardwareType.Model);
             HardwareTypes.Remove(_selectedHardwareType);
+
             SelectedHardwareType = null;
             HasChanges = _hardwareTypeRepository.HasChanges();
             SaveCommand.RaiseCanExecuteChanged();
+        }
+
+        private async Task<bool> IsHardwareTypeInUse(HardwareType model)
+        {
+            var ids = await _hardwareTypeRepository.GetHardwareIDsWith(model.Id);
+
+            return ids.Length > 0;
         }
 
         private void WrappedCustomItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -241,6 +270,7 @@ namespace ERService.Settings.ViewModels
                 SaveCommand.RaiseCanExecuteChanged();
             }
         }
+
         #endregion Events and Event Handlers
 
         #region Navigation

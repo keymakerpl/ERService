@@ -51,7 +51,7 @@ namespace ERService.Notification.ViewModels
 
         public override async Task LoadAsync()
         {
-            var query = new QueryBuilder<Order>();
+            var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
             query.OrderByDesc(nameof(Order.DateAdded));
             query.Limit(4);
 

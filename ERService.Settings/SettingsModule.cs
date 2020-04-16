@@ -21,7 +21,7 @@ namespace ERService.Settings
         {
             containerRegistry.Register<IPrintTemplateRepository, PrintTemplateRepository>();
             containerRegistry.Register<ISettingsRepository, SettingsRepository>();
-            containerRegistry.Register<ISettingsManager<Setting>, SettingsManager>();
+            containerRegistry.Register<ISettingsManager, SettingsManager>();
             containerRegistry.Register<IImagesCollection, ImagesCollection>();
 
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);

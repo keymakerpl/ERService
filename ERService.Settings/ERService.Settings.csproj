@@ -57,6 +57,7 @@
     <Compile Include="Manager\Config\CompanyInfoConfig.cs" />
     <Compile Include="Manager\Config\Config.cs" />
     <Compile Include="Manager\Config\ConfigFactory.cs" />
+    <Compile Include="Manager\Config\ICompanyInfoConfig.cs" />
     <Compile Include="Manager\SettingsManager.cs" />
     <Compile Include="SettingsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

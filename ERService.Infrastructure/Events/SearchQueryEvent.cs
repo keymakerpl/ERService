@@ -1,14 +1,14 @@
-﻿using ERService.Infrastructure.Repositories;
-using Prism.Events;
+﻿using Prism.Events;
+using SqlKata;
 
 namespace ERService.Infrastructure.Events
 {
-    public class SearchQueryEvent<TEntity> : PubSubEvent<SearchQueryEventArgs<TEntity>> where TEntity : class 
+    public class SearchQueryEvent : PubSubEvent<SearchQueryEventArgs>
     {
     }
 
-    public class SearchQueryEventArgs<TEntity>
+    public class SearchQueryEventArgs
     {
-        public QueryBuilder<TEntity> QueryBuilder { get; set; }
+        public Query QueryBuilder { get; set; }
     }
 }

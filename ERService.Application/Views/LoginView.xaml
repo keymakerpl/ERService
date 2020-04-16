@@ -73,7 +73,14 @@
                         Grid.Column="2"
                         MinWidth="150"
                         Margin="5"
-                        Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding
+                                Key="Return"
+                                Command="{Binding LoginCommand}"
+                                CommandParameter="{Binding ElementName=PasswordBox}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
 
                     <Label
                         Grid.Row="1"
@@ -86,7 +93,14 @@
                         Grid.Row="1"
                         Grid.Column="2"
                         MinWidth="150"
-                        Margin="5" />
+                        Margin="5">
+                        <PasswordBox.InputBindings>
+                            <KeyBinding
+                                Key="Return"
+                                Command="{Binding LoginCommand}"
+                                CommandParameter="{Binding ElementName=PasswordBox}" />
+                        </PasswordBox.InputBindings>
+                    </PasswordBox>
 
                     <Button
                         Grid.Row="2"
@@ -111,10 +125,6 @@
                                 Text="Zaloguj" />
                         </StackPanel>
                     </Button>
-
-                    <Grid.InputBindings>
-                        <KeyBinding Key="Return" Command="{Binding LoginCommand}" />
-                    </Grid.InputBindings>
 
                 </Grid>
                 <Grid>

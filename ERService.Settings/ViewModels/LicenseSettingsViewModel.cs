@@ -16,7 +16,7 @@ namespace ERService.Settings.ViewModels
         private readonly string licensePath = $"{AppDomain.CurrentDomain.BaseDirectory}license.lic";
         private readonly ILicenseManager _licenseManager;
         private IOwnerInfo _owner;
-        private DateTime _expiration;
+        private string _expiration;
 
         public LicenseSettingsViewModel(ILicenseManager licenseManager, 
                                         IEventAggregator eventAggregator,
@@ -60,7 +60,7 @@ namespace ERService.Settings.ViewModels
             Owner = _licenseManager?.LicenseProvider?.Owner;
             
             if(_licenseManager.LicenseProvider?.Expiration != null)
-                Expiration = _licenseManager.LicenseProvider.Expiration;
+                Expiration = _licenseManager.LicenseProvider.Expiration.ToString("dd MMMM yyyy");
         }
 
         public override bool KeepAlive => true;
@@ -78,7 +78,7 @@ namespace ERService.Settings.ViewModels
             private set { SetProperty(ref _owner, value); }
         }
 
-        public DateTime Expiration
+        public string Expiration
         {
             get { return _expiration; }
             private set { SetProperty(ref _expiration, value); }

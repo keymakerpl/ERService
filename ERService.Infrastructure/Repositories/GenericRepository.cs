@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SqlKata.Compilers;
+using SqlKata;
 
 namespace ERService.Infrastructure.Repositories
 {
@@ -41,8 +42,9 @@ namespace ERService.Infrastructure.Repositories
             return await Context.Set<TEntity>().Where(predicate).ToListAsync();
         }        
 
-        public virtual async Task<IEnumerable<TEntity>> FindByAsync(QueryBuilder<TEntity> queryBuilder)
+        public virtual async Task<IEnumerable<TEntity>> FindByAsync(Query queryBuilder)
         {
+            //TODO: Sql compiler
             var compiler = new SqlServerCompiler();
             var sqlResult = compiler.Compile(queryBuilder);
             var query = sqlResult.Sql;
@@ -51,10 +53,8 @@ namespace ERService.Infrastructure.Repositories
             return await Context.Database.SqlQuery<TEntity>(query, bindings).ToListAsync();
         }
 
-        public virtual async Task<Guid[]> GetIDsBy(QueryBuilder<TEntity> queryBuilder)
+        public virtual async Task<Guid[]> GetIDsBy(Query queryBuilder)
         {
-            queryBuilder.Select($"{queryBuilder.TableName}.{"Id"}");
-
             //TODO: Sql compiler
             var compiler = new SqlServerCompiler();
             var sqlResult = compiler.Compile(queryBuilder);
@@ -122,7 +122,15 @@ namespace ERService.Infrastructure.Repositories
 
         public void Remove(TEntity model)
         {
-            Context.Set<TEntity>().Remove(model);
+            try
+            {
+                Context.Set<TEntity>().Remove(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex);
+                _logger.Error(ex);
+            }
         }
 
         public void RollBackChanges()

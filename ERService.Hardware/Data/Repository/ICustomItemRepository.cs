@@ -9,5 +9,6 @@ namespace ERService.HardwareModule.Data.Repository
     public interface ICustomItemRepository : IGenericRepository<CustomItem>
     {
         Task<List<CustomItem>> GetCustomItemsByHardwareTypeAsync(Guid typeId);
+        Guid[] GetHardwareIDsByCustomItemID(Guid id);
     }
 }

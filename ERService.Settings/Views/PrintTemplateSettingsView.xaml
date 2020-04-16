@@ -1,84 +1,102 @@
-﻿<UserControl x:Class="ERService.Settings.Views.PrintTemplateSettingsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ERService.Settings.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-             Dialog:DialogParticipation.Register="{Binding}"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
-             xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
-             xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure">
-    
+﻿<UserControl
+    x:Class="ERService.Settings.Views.PrintTemplateSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:editor="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
+    xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:ERService.Settings.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    Dialog:DialogParticipation.Register="{Binding}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
     <Grid>
-        <Border>
+        <GroupBox
+            Grid.RowSpan="2"
+            Margin="0,5,5,0"
+            BorderThickness="0"
+            Header="Ustawienia szablonów">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="75*"/>
-                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="75*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="85*"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <GroupBox Header="Szablon" Grid.RowSpan="2"
-                              Margin="0 5 5 0">
-                    
-                        <!--<editor:HtmlEditor x:Name="Editor" IsToolbarVisible="False" helpers:HtmlEditorUtility.ReadOnlyProperty="True"
-                                           BindingContent="{Binding SelectedTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-                    <ContentControl prism:RegionManager.RegionName="SettingsEditorViewRegion"/>
-                </GroupBox>
-                <GroupBox Grid.Column="1" 
-                              Header="Wybrany szablon:"
-                              Margin="0 5 0 0">
-                    <ScrollViewer>
-                        <ListView Name="TemplatesList"
-                        ItemsSource="{Binding Templates}"
-                        SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Grid.Column="1">
+                    <ContentControl prism:RegionManager.RegionName="SettingsEditorViewRegion" />
+                </Grid>
+                <Border
+                    Grid.Column="0"
+                    Margin="0,5,0,0"
+                    BorderBrush="LightGray"
+                    BorderThickness="0,0,1,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ListView
+                            Name="TemplatesList"
+                            BorderThickness="0"
+                            ItemsSource="{Binding Templates}"
+                            SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <WrapPanel>
-                                        <TextBlock Text="Nazwa : " Foreground="DarkSlateGray" FontStyle="Italic" VerticalAlignment="Bottom"
-                                               Margin="10 0 0 0" />
-                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="5 0 5 0" FontSize="12"
-                                               MinWidth="100" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Bottom"
+                                            FontStyle="Italic"
+                                            Foreground="DarkSlateGray"
+                                            Text="Nazwa : " />
+                                        <TextBlock
+                                            MinWidth="100"
+                                            Margin="5,0,5,0"
+                                            FontSize="12"
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}" />
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </ScrollViewer>
-                </GroupBox>
-                <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Orientation="Horizontal"
-                    Grid.Column="1" FlowDirection="RightToLeft"
-                            Margin="0 5 0 0" Grid.ColumnSpan="2">
-                    <StackPanel.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <LinearGradientBrush.RelativeTransform>
-                                <TransformGroup>
-                                    <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                    <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                    <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </LinearGradientBrush.RelativeTransform>
-                            <GradientStop Color="White" Offset="0.25"/>
-                            <GradientStop Color="#FFDBDBDB" Offset="1"/>
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <Button Command="{Binding EditTemplateCommand}" Margin="5" 
-                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
-                        <iconPacks:PackIconMaterial Kind="PlaylistEdit" />
-                    </Button>
-                    <Button Command="{Binding AddTemplateCommand}" Margin="5"
-                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}" BorderThickness="0">
-                        <iconPacks:PackIconMaterial Kind="PlaylistPlus" />
-                    </Button >
-                </StackPanel>
+                </Border>
+                <Border
+                    Grid.Column="2"
+                    Margin="5"
+                    BorderBrush="LightGray"
+                    BorderThickness="1,0,0,0">
+                    <StackPanel Margin="5" VerticalAlignment="Bottom">
+                        <Button
+                            Width="40"
+                            Height="40"
+                            Margin="5"
+                            Background="GhostWhite"
+                            Command="{Binding AddTemplateCommand}"
+                            Foreground="Gray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                            ToolTip="Dodaj szablon">
+                            <iconPacks:PackIconModern Kind="PageAdd" />
+                        </Button>
+                        <Button
+                            Width="40"
+                            Height="40"
+                            Margin="5"
+                            Background="GhostWhite"
+                            Command="{Binding EditTemplateCommand}"
+                            Foreground="Gray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                            ToolTip="Edytuj szablon">
+                            <iconPacks:PackIconModern Kind="PageEdit" />
+                        </Button>
+                    </StackPanel>
+                </Border>
             </Grid>
-        </Border>
+        </GroupBox>
     </Grid>
 </UserControl>

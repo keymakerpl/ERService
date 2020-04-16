@@ -1,39 +1,23 @@
-﻿<UserControl x:Class="ERService.Settings.Views.GeneralSettingsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ERService.Settings.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True">
-
-    <UserControl.Resources>
-        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource MetroTabItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem" >
-                        <TextBlock Text="{Binding DataContext.Title}" Padding="10" Margin="1 0">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Gainsboro"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
+﻿<UserControl
+    x:Class="ERService.Settings.Views.GeneralSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ERService.Settings.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
 
     <Grid>
 
-        <TabControl prism:RegionManager.RegionName="GeneralSettingsTabControlRegion" />
+        <TabControl prism:RegionManager.RegionName="GeneralSettingsTabControlRegion" SelectedIndex="{Binding TabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TabControl.Resources>
+                <Style BasedOn="{StaticResource DefaultTabItemStyle}" TargetType="TabItem" />
+            </TabControl.Resources>
+        </TabControl>
 
     </Grid>
 </UserControl>

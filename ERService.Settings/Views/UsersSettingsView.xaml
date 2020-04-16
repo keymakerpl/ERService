@@ -8,6 +8,7 @@
     xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Settings.Views"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     Dialog:DialogParticipation.Register="{Binding}"
@@ -21,279 +22,281 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <GroupBox
-            Grid.RowSpan="3"
-            Margin="0,5,5,0"
-            Header="Użytkownicy">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <StackPanel>
-                    <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    Margin="2"
-                                    BorderBrush="LightGray"
-                                    BorderThickness="1"
-                                    CornerRadius="2">
-                                    <Grid Margin="5">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
+        <Border
+            Grid.Column="2"
+            Margin="5"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0">
+            <StackPanel Margin="5" VerticalAlignment="Bottom">
+                <Button
+                    Width="40"
+                    Height="40"
+                    Margin="5"
+                    Background="GhostWhite"
+                    Command="{Binding SaveCommand}"
+                    Foreground="Gray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Zapisz">
+                    <iconPacks:PackIconModern Kind="Save" />
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <Border
+            Margin="5"
+            BorderBrush="LightGray"
+            BorderThickness="0,0,1,0">
+            <GroupBox
+                Margin="0,10,15,0"
+                BorderThickness="0"
+                Header="Użytkownicy">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <ListView
+                            BorderThickness="0"
+                            ItemsSource="{Binding Users}"
+                            SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="2"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1"
+                                        CornerRadius="2">
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <iconPacks:PackIconMaterial
+                                                Grid.ColumnSpan="2"
+                                                Margin="2"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Foreground="Gray"
+                                                Kind="AccountCardDetails" />
+
+                                            <WrapPanel>
+                                                <TextBlock
+                                                    Margin="5"
+                                                    VerticalAlignment="Bottom"
+                                                    FontStyle="Italic"
+                                                    Foreground="DarkSlateGray"
+                                                    Text="Login:" />
+                                                <TextBlock
+                                                    MinWidth="100"
+                                                    Margin="5"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Login}" />
+                                            </WrapPanel>
+                                            <WrapPanel
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Margin="0,0,5,0">
+                                                <TextBlock
+                                                    Margin="5"
+                                                    VerticalAlignment="Bottom"
+                                                    FontStyle="Italic"
+                                                    Foreground="DarkSlateGray"
+                                                    Text="Imię:" />
+                                                <TextBlock
+                                                    MinWidth="100"
+                                                    Margin="5"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding FirstName}" />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    VerticalAlignment="Bottom"
+                                                    FontStyle="Italic"
+                                                    Foreground="DarkSlateGray"
+                                                    Text="Nazwisko:" />
+                                                <TextBlock
+                                                    MinWidth="80"
+                                                    Margin="5"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding LastName}" />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    VerticalAlignment="Bottom"
+                                                    FontStyle="Italic"
+                                                    Foreground="DarkSlateGray"
+                                                    Text="Rola:" />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Role.Name}" />
+                                            </WrapPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        FlowDirection="RightToLeft"
+                        Orientation="Horizontal">
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderThickness="1"
+                            Command="{Binding RemoveUserCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconFontAwesome Padding="2" Kind="TrashAltRegular" />
+                        </Button>
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderThickness="1"
+                            Command="{Binding EditUserCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconMaterial Padding="2" Kind="AccountEdit" />
+                        </Button>
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderThickness="1"
+                            Command="{Binding AddUserCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconOcticons Padding="2" Kind="PlusSmall" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <GroupBox
+                Grid.Column="1"
+                Margin="0,5,0,5"
+                BorderThickness="0"
+                Header="Role">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <ListView
+                            BorderThickness="0"
+                            ItemsSource="{Binding Roles}"
+                            SelectedItem="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Bottom"
+                                            FontStyle="Italic"
+                                            Foreground="DarkSlateGray"
+                                            Text="Nazwa roli: " />
+                                        <TextBlock
+                                            MinWidth="100"
+                                            Margin="5,0,5,0"
+                                            FontSize="12"
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}" />
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        FlowDirection="RightToLeft"
+                        Orientation="Horizontal">
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderThickness="1"
+                            Command="{Binding RemoveRoleCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconFontAwesome Padding="2" Kind="TrashAltRegular" />
+                        </Button>
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            Command="{Binding AddRoleCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconOcticons Padding="2" Kind="PlusSmall" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox
+                Grid.Row="1"
+                Margin="0,5,0,5"
+                BorderThickness="0"
+                Header="Uprawnienia dla wybranej roli">
+                <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ListView BorderThickness="0" ItemsSource="{Binding RoleACLs}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <WrapPanel>
-                                            <TextBlock
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="18"
-                                                Foreground="Black"
-                                                Text="" />
-                                            <TextBlock
-                                                Margin="5"
-                                                VerticalAlignment="Bottom"
-                                                FontStyle="Italic"
-                                                Foreground="DarkSlateGray"
-                                                Text="Login:" />
-                                            <TextBlock
-                                                MinWidth="100"
-                                                Margin="5"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Text="{Binding Login}" />
+                                        <WrapPanel VerticalAlignment="Center">
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding AclVerb.Name}" />
                                         </WrapPanel>
-                                        <WrapPanel
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Margin="0,0,5,0">
-                                            <TextBlock
-                                                Margin="5"
-                                                VerticalAlignment="Bottom"
-                                                FontStyle="Italic"
-                                                Foreground="DarkSlateGray"
-                                                Text="Imię:" />
-                                            <TextBlock
-                                                MinWidth="100"
-                                                Margin="5"
+                                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                                            <mah:ToggleSwitch
                                                 FontSize="12"
-                                                FontWeight="Bold"
-                                                Text="{Binding FirstName}" />
-                                            <TextBlock
-                                                Margin="5"
-                                                VerticalAlignment="Bottom"
-                                                FontStyle="Italic"
-                                                Foreground="DarkSlateGray"
-                                                Text="Nazwisko:" />
-                                            <TextBlock
-                                                MinWidth="80"
-                                                Margin="5"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Text="{Binding LastName}" />
-                                            <TextBlock
-                                                Margin="5"
-                                                VerticalAlignment="Bottom"
-                                                FontStyle="Italic"
-                                                Foreground="DarkSlateGray"
-                                                Text="Rola:" />
-                                            <TextBlock
-                                                Margin="5"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Text="{Binding Role.Name}" />
+                                                IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                OffLabel="Zabronione"
+                                                OnLabel="Dozwolone" />
                                         </WrapPanel>
                                     </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-                <StackPanel
-                    Grid.Row="1"
-                    FlowDirection="RightToLeft"
-                    Orientation="Horizontal">
-                    <StackPanel.Background>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Offset="0.25" Color="White" />
-                            <GradientStop Offset="1" Color="Gainsboro" />
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <Button
-                        Width="20"
-                        Height="20"
-                        Margin="5"
-                        BorderThickness="0"
-                        Command="{Binding RemoveUserCommand}"
-                        Foreground="SlateGray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
-                    </Button>
-                    <Button
-                        Margin="5"
-                        BorderThickness="0"
-                        Command="{Binding EditUserCommand}"
-                        Foreground="SlateGray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconMaterial Kind="AccountEdit" />
-                    </Button>
-                    <Button
-                        Width="20"
-                        Height="20"
-                        Margin="5"
-                        BorderThickness="0"
-                        Command="{Binding AddUserCommand}"
-                        Foreground="SlateGray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconOcticons Kind="PlusSmall" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Grid>
+            </GroupBox>
+        </Grid>
 
-        <GroupBox
-            Grid.Column="1"
-            Margin="0,5,0,5"
-            Header="Role">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <StackPanel>
-                    <ListView ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <WrapPanel>
-                                    <TextBlock
-                                        Margin="10,0,0,0"
-                                        VerticalAlignment="Bottom"
-                                        FontStyle="Italic"
-                                        Foreground="DarkSlateGray"
-                                        Text="Nazwa roli: " />
-                                    <TextBlock
-                                        MinWidth="100"
-                                        Margin="5,0,5,0"
-                                        FontSize="12"
-                                        FontWeight="Bold"
-                                        Text="{Binding Name}" />
-                                </WrapPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-                <StackPanel
-                    Grid.Row="1"
-                    FlowDirection="RightToLeft"
-                    Orientation="Horizontal">
-                    <StackPanel.Background>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Offset="0.25" Color="White" />
-                            <GradientStop Offset="1" Color="Gainsboro" />
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
-                    <Button
-                        Width="20"
-                        Height="20"
-                        Margin="5"
-                        BorderThickness="0"
-                        Command="{Binding RemoveRoleCommand}"
-                        Foreground="SlateGray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
-                    </Button>
-                    <Button
-                        Width="20"
-                        Height="20"
-                        Margin="5"
-                        BorderThickness="0"
-                        Command="{Binding AddRoleCommand}"
-                        Foreground="SlateGray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                        <iconPacks:PackIconOcticons Kind="PlusSmall" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-
-        <GroupBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,5,0,5"
-            Header="Uprawnienia dla wybranej roli">
-            <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <StackPanel>
-                    <ListView ItemsSource="{Binding RoleACLs}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <WrapPanel>
-                                        <TextBlock Text="{Binding AclVerb.Name}" />
-                                    </WrapPanel>
-                                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                                        <CheckBox IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    </WrapPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-
-        <StackPanel
-            Grid.Row="2"
-            Grid.Column="1"
-            HorizontalAlignment="Stretch"
-            helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}"
-            FlowDirection="RightToLeft"
-            Orientation="Horizontal">
-            <StackPanel.Background>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <LinearGradientBrush.RelativeTransform>
-                        <TransformGroup>
-                            <ScaleTransform CenterX="0.5" CenterY="0.5" />
-                            <SkewTransform CenterX="0.5" CenterY="0.5" />
-                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5" />
-                            <TranslateTransform />
-                        </TransformGroup>
-                    </LinearGradientBrush.RelativeTransform>
-                    <GradientStop Offset="0.25" Color="White" />
-                    <GradientStop Offset="1" Color="Gainsboro" />
-                </LinearGradientBrush>
-            </StackPanel.Background>
-            <Button
-                Margin="5"
-                Command="{Binding SaveCommand}"
-                Content="Zapisz" />
-            <Button
-                Margin="5"
-                Command="{Binding CancelCommand}"
-                Content="Anuluj" />
-        </StackPanel>
     </Grid>
 </UserControl>

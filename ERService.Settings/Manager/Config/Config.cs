@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace ERService.Settings.Manager
 {
-
-    public abstract class Config
+    public abstract class Config : BindableBase
     {
         private readonly dynamic _config;
 
