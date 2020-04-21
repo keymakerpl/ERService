@@ -13,6 +13,7 @@ using ERService.OrderModule.Wrapper;
 using Prism.Events;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,7 +62,7 @@ namespace ERService.OrderModule.ViewModels
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
 
-            Attachments = new ObservableCollection<Blob>();
+            Attachments = new ObservableCollection<Blob>();            
 
             Initialize();
         }
@@ -120,7 +121,7 @@ namespace ERService.OrderModule.ViewModels
                 SetProperty(ref _selectedOrderType, value);
                 Order.Model.OrderTypeId = value.Id;
             }
-        }
+        }                
 
         private async void Initialize()
         {
@@ -212,7 +213,9 @@ namespace ERService.OrderModule.ViewModels
             if (numeration.Any())
             {
                 order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
-            }  
+            }
+
+            order.DateRegistered = DateTime.Now;
 
             _orderRepository.Add(order);
             Order = new OrderWrapper(order);            

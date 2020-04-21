@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System.Globalization;
 using System.Windows.Controls;
 
 namespace ERService.OrderModule.ViewModels
@@ -17,9 +18,13 @@ namespace ERService.OrderModule.ViewModels
 
         private readonly IRegionManager _regionManager;
 
+        public CultureInfo Culture { get; }
+
         public OrderWizardCurrentStageModel(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;
+
+            Culture = new CultureInfo("pl-PL");            
 
             Context = _regionManager.Regions[RegionNames.OrderWizardStageRegion].Context as IOrderContext;
 

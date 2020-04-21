@@ -156,7 +156,7 @@
                             Grid.Column="1"
                             Width="250"
                             HorizontalAlignment="Left"
-                            Content="{Binding Context.Customer.Model.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            Content="{Binding Context.Customer.Model.FirstName, Mode=OneWay, UpdateSourceTrigger=Default}"
                             FontSize="14" />
 
                         <Label
@@ -170,7 +170,7 @@
                             Grid.Column="4"
                             Width="250"
                             HorizontalAlignment="Left"
-                            Content="{Binding Context.Customer.Model.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            Content="{Binding Context.Customer.Model.LastName, Mode=OneWay, UpdateSourceTrigger=Default}"
                             FontSize="14" />
                     </Grid>
                 </Border>

@@ -20,6 +20,7 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace ERService.OrderModule.ViewModels
         private OrderStatus _selectedOrderStatus;
         private OrderType _selectedOrderType;
         private IOrderStatusRepository _statusRepository;
-        private IOrderTypeRepository _typeRepository;        
+        private IOrderTypeRepository _typeRepository;
 
         //TODO: Za duży konstruktor, Dodać IOrderContext.
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
@@ -146,7 +147,7 @@ namespace ERService.OrderModule.ViewModels
 
         public DelegateCommand ShowCustomerDetailFlyoutCommand { get; }
 
-        public DelegateCommand ShowHardwareDetailFlyoutCommand { get; }        
+        public DelegateCommand ShowHardwareDetailFlyoutCommand { get; }
 
         private void RaiseSideMenuButtonToggled(SideFlyouts flyout, Guid detailID, string viewName)
         {
@@ -312,7 +313,7 @@ namespace ERService.OrderModule.ViewModels
 
         private void InitializeOrder(Order order)
         {
-            Order = new OrderWrapper(order);            
+            Order = new OrderWrapper(order);
             Order.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)

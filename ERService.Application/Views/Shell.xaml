@@ -7,7 +7,7 @@
     xmlns:prism="http://prismlibrary.com/"
     Title="ERService 1.0.0"
     Width="1280"
-    Height="780"
+    Height="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     BorderThickness="0"
     GlowBrush="Black"

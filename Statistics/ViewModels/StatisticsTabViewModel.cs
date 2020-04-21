@@ -18,6 +18,14 @@ namespace ERService.Statistics.ViewModels
             _regionManager = regionManager;
         }
 
+        private int _tabIndex;
+
+        public int TabIndex
+        {
+            get { return _tabIndex; }
+            set { SetProperty(ref _tabIndex, value); }
+        }
+
         public override bool KeepAlive
         {
             get
@@ -35,6 +43,8 @@ namespace ERService.Statistics.ViewModels
         {
             _regionManager.RequestNavigate(RegionNames.StatsTabControlRegion, ViewNames.BasicStatsView, OnNavigatedResult);
             _regionManager.RequestNavigate(RegionNames.StatsTabControlRegion, ViewNames.OrdersStatsView, OnNavigatedResult);
+
+            TabIndex = 0;
         }
     }
 }

@@ -2,6 +2,7 @@
 using ERService.Infrastructure.Attributes;
 using ERService.Infrastructure.Wrapper;
 using System;
+using System.ComponentModel;
 
 namespace ERService.OrderModule.Wrapper
 {
@@ -26,13 +27,22 @@ namespace ERService.OrderModule.Wrapper
             set { SetProperty(ref _number, value); }
         }
 
-        private DateTime _dateAdded;
+        private DateTime _dateRegistered;
 
-        [Interpreter(Name = "Data rejestracji", Pattern = "[%o_DateAdded%]")]
-        public DateTime DateAdded
+        [Interpreter(Name = "Data rejestracji", Pattern = "[%o_DateRegistered%]")]
+        public DateTime DateRegistered
         {
             get { return GetValue<DateTime>(); }
-            set { SetProperty(ref _dateAdded, value); }
+            set { SetProperty(ref _dateRegistered, value); }
+        }
+
+        /// <summary>
+        /// Właściwość pomocnicza do ustawiania czasu w dacie rejestracji przez kontrolke DateTimePicker
+        /// </summary>
+        public TimeSpan TimeRegistered
+        {
+            get { return DateRegistered.TimeOfDay; }
+            set { DateRegistered = DateRegistered.Date.Add(value); RaisePropertyChanged(); }
         }
 
         private DateTime? _dateEnded;
@@ -41,7 +51,7 @@ namespace ERService.OrderModule.Wrapper
         public DateTime? DateEnded
         {
             get { return GetValue<DateTime?>(); }
-            set { SetProperty(ref _dateEnded, value); }
+            set { SetProperty(ref _dateEnded, value.Value.Date.Add(DateTime.Now.TimeOfDay)); }
         }
 
         private OrderStatus _orderStatus;
@@ -114,6 +124,16 @@ namespace ERService.OrderModule.Wrapper
         {
             get { return GetValue<int>(); }
             set { SetProperty(ref _progress, value); }
+        }
+        
+        public DateTime DateAdded
+        {
+            get { return GetValue<DateTime>(); }            
+        }
+
+        public DateTime DateModified
+        {
+            get { return GetValue<DateTime>(); }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ERService.Header.ViewModels
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IRegionManager _regionManager;
-        private int _badgeValue = 0;
+        private int? _badgeValue = null;
 
         public bool BadgeIsVisible { get; set; }
 
@@ -31,19 +31,25 @@ namespace ERService.Header.ViewModels
             BadgeValue = args.NewItemsIDs.Length;
         }
 
-        public int BadgeValue
+        public int? BadgeValue
         {
             get { return _badgeValue; }
             set { SetProperty(ref _badgeValue, value); }
         }
 
         public DelegateCommand SideMenuToggleCommand { get; }
+
         private void OnSideMenuToggleExecute()
         {
             BadgeIsVisible = false;
-            BadgeValue = 0;
+            BadgeValue = null;
 
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.NotificationFlyout });
+            _eventAggregator
+                .GetEvent<AfterSideMenuButtonToggled>()
+                .Publish(new AfterSideMenuButtonToggledArgs()
+                {
+                    Flyout = SideFlyouts.NotificationFlyout
+                });
         }
     }
 }

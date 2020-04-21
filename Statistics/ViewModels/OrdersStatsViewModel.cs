@@ -1,6 +1,5 @@
 ﻿using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Dialogs;
-using ERService.Infrastructure.Repositories;
 using ERService.OrderModule.Repository;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -110,13 +109,13 @@ namespace ERService.Statistics.ViewModels
 
             var dateTo = _dateTo.AddDays(1);
 
-            var openCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Open && (o.DateAdded >= _dateFrom && o.DateAdded <= dateTo), s => s.OrderStatus).Count();            
+            var openCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Open && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();            
             OpenCount.Add(openCount);
 
-            var inProgressCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.InProgress && (o.DateAdded >= _dateFrom && o.DateAdded <= dateTo), s => s.OrderStatus).Count();
+            var inProgressCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.InProgress && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();
             InProgressCount.Add(inProgressCount);
 
-            var finishedCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Finished && (o.DateAdded >= _dateFrom && o.DateAdded <= dateTo), s => s.OrderStatus).Count();
+            var finishedCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Finished && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();
             FinishedCount.Add(finishedCount);
         }
 

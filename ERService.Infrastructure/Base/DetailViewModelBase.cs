@@ -7,6 +7,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,6 +75,8 @@ namespace ERService.Infrastructure.Base
                 RaisePropertyChanged();
             }
         }
+
+        public CultureInfo CustomCulture { get => new CultureInfo("pl-PL"); }
 
         public virtual void Load()
         {

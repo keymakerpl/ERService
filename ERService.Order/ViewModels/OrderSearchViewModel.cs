@@ -19,7 +19,7 @@ namespace ERService.OrderModule.ViewModels
             IOrderTypeRepository typeRepository,
             IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            Order = new Order() { DateAdded = DateTime.Now, DateEnded = DateTime.Now };
+            Order = new Order() { DateRegistered = DateTime.Now, DateEnded = DateTime.Now };
             Customer = new Customer();
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
@@ -147,12 +147,12 @@ namespace ERService.OrderModule.ViewModels
                 query.Where(nameof(Order.ExternalNumber), Order.ExternalNumber);
             }
 
-            if (RegisterDateIsChecked && Order.DateAdded != null)
+            if (RegisterDateIsChecked && Order.DateRegistered != null)
             {
-                query.WhereDate(nameof(Order.DateAdded), ">=", Order.DateAdded.Date);
+                query.WhereDate(nameof(Order.DateRegistered), ">=", Order.DateRegistered.Date);
                 if (DateAddedTo.HasValue)
                 {
-                    query.WhereDate(nameof(Order.DateAdded), "<=", DateAddedTo.Value.Date);
+                    query.WhereDate(nameof(Order.DateRegistered), "<=", DateAddedTo.Value.Date);
                 }
             }
 

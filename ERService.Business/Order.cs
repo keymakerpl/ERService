@@ -38,7 +38,7 @@ namespace ERService.Business
         public string OrderNumber { get { return $"{OrderId}/{Number}"; } }
 
         [Column(TypeName = "DateTime")]
-        public DateTime DateAdded { get; set; }
+        public DateTime DateRegistered { get; set; }
 
         [Column(TypeName = "DateTime")]
         public DateTime? DateEnded { get; set; }
@@ -70,8 +70,13 @@ namespace ERService.Business
 
         public ICollection<Blob> Attachments { get; set; }
 
+        public User User { get; set; }
+
         [ConcurrencyCheck]
         public long RowVersion { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        public DateTime DateAdded { get; set; }
 
         [Column(TypeName = "DateTime")]
         public DateTime? DateModified { get; set; }        

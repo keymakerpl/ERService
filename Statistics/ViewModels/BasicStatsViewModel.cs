@@ -118,7 +118,7 @@ namespace ERService.Statistics.ViewModels
             {
                 var dateTo = _dateTo.AddDays(1);
                 var customers = await _customerRepository.FindByAsync(c => c.DateAdded >= _dateFrom && c.DateAdded <= dateTo);
-                var orders = await _orderRepository.FindByAsync(o => o.DateAdded >= _dateFrom && o.DateAdded <= dateTo);                
+                var orders = await _orderRepository.FindByAsync(o => o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo);                
                                 
                 var customerDates = GetEmptyDateModels(_dateFrom, _dateTo)
                                                                           .Cast<DateModel>()
@@ -142,7 +142,7 @@ namespace ERService.Statistics.ViewModels
                                                                           .ToDictionary(dm => dm.DateTime);
 
                 var orderQuery = from o in orders
-                                 group o by o.DateAdded.Date into g
+                                 group o by o.DateRegistered.Date into g
                                  orderby g.Key
                                  select new DateModel { DateTime = g.Key, Value = g.Count() };
 

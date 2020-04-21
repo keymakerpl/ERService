@@ -45,12 +45,17 @@ namespace ERService.Settings.ViewModels
             Groups = new ObservableCollection<StatusGroupLookupItem>();
 
             AddOrderTypeCommand = new DelegateCommand(OnAddOrderTypeExecute);
-            AddOrderStatusCommand = new DelegateCommand<object>(OnAddOrderStatusExecute);
+            AddOrderStatusCommand = new DelegateCommand<object>(OnAddOrderStatusExecute, OnAddOrderStatusCanExecute);
 
             RemoveOrderTypeCommand = new DelegateCommand(OnRemoveOrderTypeExecute, OnRemoveOrderTypeCanExecute);
             RemoveOrderStatusCommand = new DelegateCommand(OnRemoveOrderStatusExecute, OnRemoveOrderStatusCanExecute);
 
             ToggleNewStatusPaneCommand = new DelegateCommand(OnNewStatusToggled);
+        }
+
+        private bool OnAddOrderStatusCanExecute(object arg)
+        {
+            return NewOrderStatus != null && !NewOrderStatus.HasErrors;
         }
 
         private void OnNewStatusToggled()
@@ -215,6 +220,7 @@ namespace ERService.Settings.ViewModels
             }
 
             SaveCommand.RaiseCanExecuteChanged();
+            AddOrderStatusCommand.RaiseCanExecuteChanged();
         }
         
         private void WrappedType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

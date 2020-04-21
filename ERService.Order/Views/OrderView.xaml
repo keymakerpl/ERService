@@ -359,17 +359,19 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="10,0,0,0"
-                                Content="Data dodania:"
+                                Content="Data rejestracji:"
                                 FontSize="14" />
 
-                            <DatePicker
+                            <metroControls:DateTimePicker
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Width="150"
                                 Margin="5"
                                 HorizontalAlignment="Left"
-                                IsTodayHighlighted="False"
-                                SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                Culture="{Binding CustomCulture, Mode=OneWay}"
+                                IsTodayHighlighted="True"
+                                SelectedDate="{Binding Order.DateRegistered, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedTime="{Binding Order.TimeRegistered, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <Label
                                 Grid.Row="1"
@@ -384,7 +386,7 @@
                                 Width="150"
                                 Margin="5"
                                 HorizontalAlignment="Left"
-                                IsTodayHighlighted="False"
+                                IsTodayHighlighted="True"
                                 SelectedDate="{Binding Order.DateEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
@@ -422,6 +424,7 @@
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
+                                Height="25"
                                 Margin="0,5,0,5"
                                 HorizontalAlignment="Stretch"
                                 Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

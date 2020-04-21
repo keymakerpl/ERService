@@ -16,7 +16,10 @@
 
     <Grid>
 
-        <TabControl Margin="10" prism:RegionManager.RegionName="StatsTabControlRegion">
+        <TabControl
+            Margin="10"
+            prism:RegionManager.RegionName="StatsTabControlRegion"
+            SelectedIndex="{Binding TabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TabControl.Resources>
                 <Style BasedOn="{StaticResource DefaultTabItemStyle}" TargetType="TabItem" />
             </TabControl.Resources>

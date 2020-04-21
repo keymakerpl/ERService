@@ -85,9 +85,10 @@ namespace ERService.Application.ViewModels
             }
         }
 
-        private void OnUserLogedout(UserAuthorizationEventArgs obj)
+        private void OnUserLogedout(UserAuthorizationEventArgs args)
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+            ToggleNotificationFlyout();
             ShowLoginWindow();
         }
 

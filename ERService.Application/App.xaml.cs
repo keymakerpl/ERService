@@ -46,9 +46,20 @@ namespace ERService.Application
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            InitializeCultures();
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             base.OnStartup(e);
+        }
+
+        private static void InitializeCultures()
+        {
+            //TODO: Make multilanguage
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pl-PL");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pl-PL");
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
+                XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
