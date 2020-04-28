@@ -1,5 +1,4 @@
-﻿using System;
-using ERService.Infrastructure.Events;
+﻿using ERService.Infrastructure.Events;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -12,8 +11,7 @@ namespace ERService.Header.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IRegionManager _regionManager;
         private int? _badgeValue = null;
-
-        public bool BadgeIsVisible { get; set; }
+        private bool _isToogleButtonVisible;
 
         public HeaderViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
@@ -21,14 +19,10 @@ namespace ERService.Header.ViewModels
             _regionManager = regionManager;
 
             _eventAggregator.GetEvent<AfterNewOrdersAddedEvent>().Subscribe(OnNewOrdersAdded, true);
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((a) => IsToogleButtonVisible = true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((a) => IsToogleButtonVisible = false);
 
             SideMenuToggleCommand = new DelegateCommand(OnSideMenuToggleExecute);
-        }
-
-        private void OnNewOrdersAdded(AfterNewOrdersAddedEventArgs args)
-        {
-            BadgeIsVisible = true;
-            BadgeValue = args.NewItemsIDs.Length;
         }
 
         public int? BadgeValue
@@ -37,16 +31,26 @@ namespace ERService.Header.ViewModels
             set { SetProperty(ref _badgeValue, value); }
         }
 
+        public bool IsToogleButtonVisible
+        {
+            get { return _isToogleButtonVisible; }
+            set { SetProperty(ref _isToogleButtonVisible, value); }
+        }
+
         public DelegateCommand SideMenuToggleCommand { get; }
+
+        private void OnNewOrdersAdded(AfterNewOrdersAddedEventArgs args)
+        {
+            BadgeValue = args.NewItemsIDs.Length;
+        }
 
         private void OnSideMenuToggleExecute()
         {
-            BadgeIsVisible = false;
             BadgeValue = null;
 
             _eventAggregator
-                .GetEvent<AfterSideMenuButtonToggled>()
-                .Publish(new AfterSideMenuButtonToggledArgs()
+                .GetEvent<AfterSideMenuExpandToggled>()
+                .Publish(new AfterSideMenuExpandToggledArgs()
                 {
                     Flyout = SideFlyouts.NotificationFlyout
                 });

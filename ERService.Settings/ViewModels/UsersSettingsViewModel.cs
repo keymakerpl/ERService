@@ -177,8 +177,8 @@ namespace ERService.Settings.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>()
-                .Publish(new AfterSideMenuButtonToggledArgs
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>()
+                .Publish(new AfterSideMenuExpandToggledArgs
                 {
                     Flyout = SideFlyouts.DetailFlyout,
                     ViewName = ViewNames.UserDetailView
@@ -202,8 +202,8 @@ namespace ERService.Settings.ViewModels
             var parameters = new NavigationParameters();
             parameters.Add("ID", SelectedUser.Id);
 
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>()
-                .Publish(new AfterSideMenuButtonToggledArgs
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>()
+                .Publish(new AfterSideMenuExpandToggledArgs
                 {
                     Flyout = SideFlyouts.DetailFlyout,
                     ViewName = ViewNames.UserDetailView,

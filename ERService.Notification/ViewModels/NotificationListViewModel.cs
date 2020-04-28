@@ -103,8 +103,7 @@ namespace ERService.Notification.ViewModels
             var parameters = new NavigationParameters();
             parameters.Add("ID", args);
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.NotificationFlyout });
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);            
         }
     }
 }

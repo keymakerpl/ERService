@@ -32,10 +32,32 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            Orientation="Horizontal"
+            Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <Label
+                Margin="5"
+                VerticalAlignment="Center"
+                Content="Nazwa szblonu:"
+                FontWeight="SemiBold" />
+            <TextBox
+                Width="150"
+                Margin="5"
+                Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="75*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -43,21 +65,91 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Border
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                Margin="5"
+                BorderBrush="LightGray"
+                BorderThickness="1,0,0,0"
+                Visibility="{Binding IsNavigationBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Margin="5" VerticalAlignment="Bottom">
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Margin="5"
+                        Background="GhostWhite"
+                        Command="{Binding CancelCommand}"
+                        Foreground="Gray"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        ToolTip="Powrót"
+                        Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <iconPacks:PackIconEntypo Kind="Back" />
+                    </Button>
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Margin="5"
+                        Background="GhostWhite"
+                        Command="{Binding PrintCommand}"
+                        Foreground="Gray"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        ToolTip="Drukuj"
+                        Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <iconPacks:PackIconModern Kind="PrinterText" />
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <Border
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                Margin="5"
+                BorderBrush="LightGray"
+                BorderThickness="1,0,0,0"
+                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <StackPanel Margin="5" VerticalAlignment="Bottom">
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Margin="5"
+                        Background="GhostWhite"
+                        Command="{Binding CancelCommand}"
+                        Foreground="Gray"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        ToolTip="Powrót">
+                        <iconPacks:PackIconEntypo Kind="Back" />
+                    </Button>
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Margin="5"
+                        Background="GhostWhite"
+                        Command="{Binding SaveCommand}"
+                        Foreground="Gray"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        ToolTip="Zapisz"
+                        Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                        <iconPacks:PackIconModern Kind="Save" />
+                    </Button>
+                </StackPanel>
+            </Border>
+
             <DockPanel
                 Grid.Column="1"
                 Margin="5,0,5,0"
-                HorizontalAlignment="Stretch"
-                Visibility="{Binding IsNavigationBarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
+                HorizontalAlignment="Stretch">
 
                 <metroControls:DropDownButton
                     Width="100"
                     Height="30"
                     Margin="5"
+                    HorizontalAlignment="Right"
                     VerticalContentAlignment="Center"
                     Content="Szablony"
                     DisplayMemberPath="Name"
                     DockPanel.Dock="Right"
-                    ItemsSource="{Binding PrintTemplates}">
+                    ItemsSource="{Binding PrintTemplates}"
+                    Visibility="{Binding IsNavigationBarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <metroControls:DropDownButton.ItemContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
                             <Setter Property="Command" Value="{Binding DataContext.SelectTemplateCommand, RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView}}" />
@@ -66,42 +158,19 @@
                     </metroControls:DropDownButton.ItemContainerStyle>
                 </metroControls:DropDownButton>
 
-                <Button
-                    Width="25"
-                    Height="25"
-                    Margin="5,0,5,0"
-                    HorizontalAlignment="Left"
-                    Background="GhostWhite"
-                    BorderThickness="0"
-                    Command="{Binding CloseCommand}"
-                    Foreground="Black"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                    <iconPacks:PackIconMaterial Kind="ArrowLeft" />
-                </Button>
-
-                <Button
-                    Width="25"
-                    Height="25"
-                    Margin="5,0,5,0"
-                    HorizontalAlignment="Left"
-                    Background="GhostWhite"
-                    BorderThickness="0"
-                    Command="{Binding PrintCommand}"
-                    Foreground="Black"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                    <iconPacks:PackIconMaterial Kind="Printer" />
-
-                </Button>
-
             </DockPanel>
 
             <GroupBox
                 Grid.Row="1"
                 Margin="5"
+                BorderThickness="0"
                 Header="Znaczniki"
                 Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
 
-                <ListView ItemsSource="{Binding Indexes}" SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView
+                    BorderThickness="0"
+                    ItemsSource="{Binding Indexes}"
+                    SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -151,66 +220,21 @@
 
             </GroupBox>
 
-            <StackPanel
-                Grid.Row="2"
-                HorizontalAlignment="Stretch"
-                Orientation="Horizontal"
-                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <Label Margin="5" Content="Nazwa szblonu:" />
-                <TextBox
-                    Width="150"
-                    Margin="5"
-                    Text="{Binding PrintTemplate.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-
             <Border
                 Grid.Row="1"
+                Grid.RowSpan="3"
                 Grid.Column="1"
                 BorderBrush="SlateGray"
-                BorderThickness="1"
+                BorderThickness="0"
                 FocusManager.FocusedElement="{Binding ElementName=Editor}">
                 <editor:HtmlEditor
                     x:Name="Editor"
+                    Margin="0,0,0,5"
                     editorhelpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     IsToolbarVisible="{Binding IsToolbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     ReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </Border>
-
-            <StackPanel
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="5,0,5,0"
-                HorizontalAlignment="Stretch"
-                helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly}"
-                FlowDirection="RightToLeft"
-                Orientation="Horizontal"
-                Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <StackPanel.Background>
-                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                        <LinearGradientBrush.RelativeTransform>
-                            <TransformGroup>
-                                <ScaleTransform CenterX="0.5" CenterY="0.5" />
-                                <SkewTransform CenterX="0.5" CenterY="0.5" />
-                                <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5" />
-                                <TranslateTransform />
-                            </TransformGroup>
-                        </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Offset="0.25" Color="White" />
-                        <GradientStop Offset="1" Color="Gainsboro" />
-                    </LinearGradientBrush>
-                </StackPanel.Background>
-                <Button
-                    MaxHeight="30"
-                    Margin="5"
-                    Command="{Binding SaveCommand}"
-                    Content="Zapisz" />
-                <Button
-                    MaxHeight="30"
-                    Margin="5"
-                    Command="{Binding CancelCommand}"
-                    Content="Anuluj" />
-            </StackPanel>
 
         </Grid>
     </Grid>

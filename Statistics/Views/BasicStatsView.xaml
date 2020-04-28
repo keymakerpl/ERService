@@ -21,7 +21,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <lvc:CartesianChart x:Name="Chart" LegendLocation="Bottom">
+        <lvc:CartesianChart
+            x:Name="Chart"
+            Margin="10"
+            LegendLocation="Bottom">
             <lvc:CartesianChart.Series>
                 <lvc:LineSeries
                     Title="Klienci"
@@ -51,8 +54,11 @@
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
 
-        <Grid Grid.Column="1">
-            <StackPanel>
+        <Border
+            Grid.Column="1"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0">
+            <StackPanel Margin="5,0,0,0">
                 <Label
                     Margin="5"
                     Content="Data od:"
@@ -84,6 +90,6 @@
                     FontWeight="SemiBold"
                     IsChecked="{Binding IsOrdersVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

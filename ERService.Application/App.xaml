@@ -23,6 +23,16 @@
                 <!--  Standard resource, zdefiniowane style  -->
                 <ResourceDictionary>
 
+                    <Style
+                        x:Key="ToggleDefault"
+                        BasedOn="{StaticResource MetroCircleToggleButtonStyle}"
+                        TargetType="ToggleButton">
+                        <Setter Property="Width" Value="25" />
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="Foreground" Value="Gray" />
+                    </Style>
+
+
                     <Style BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
                         <Setter Property="Foreground" Value="Black" />
                     </Style>

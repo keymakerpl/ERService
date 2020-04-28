@@ -104,8 +104,8 @@ namespace ERService.Settings.ViewModels
                 RaiseDetailSavedEvent(ID, User.FullName);
 
                 _eventAggregator
-                    .GetEvent<AfterSideMenuButtonToggled>()
-                    .Publish(new AfterSideMenuButtonToggledArgs
+                    .GetEvent<AfterSideMenuExpandToggled>()
+                    .Publish(new AfterSideMenuExpandToggledArgs
                     {
                         Flyout = SideFlyouts.DetailFlyout
                     });

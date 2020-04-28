@@ -106,10 +106,10 @@
                         Header="Numer" />
                     <DataGridTextColumn
                         Width="Auto"
-                        Binding="{Binding DateAdded}"
+                        Binding="{Binding DateRegistered}"
                         EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                         ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Data dodania" />
+                        Header="Data rejestracji" />
                     <DataGridTextColumn
                         Width="Auto"
                         Binding="{Binding DateEnded}"

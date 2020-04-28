@@ -6,7 +6,7 @@ using ERService.RBAC;
 using ERService.Settings.Wrapper;
 using Prism.Events;
 using Prism.Regions;
-using System.ComponentModel;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +15,13 @@ namespace ERService.Settings.ViewModels
 {
     public class NumerationSettingsViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private readonly IRBACManager _rBACManager;
         private NumerationWrapper _numeration;
+        private string _numerationExample;
         private INumerationRepository _repository;
+
         public NumerationSettingsViewModel(IEventAggregator eventAggregator, INumerationRepository numerationRepository,
             IMessageDialogService messageDialogService, IRBACManager rBACManager) : base(eventAggregator, messageDialogService)
         {
@@ -32,13 +37,10 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _numeration, value); }
         }
 
-        private string _numerationExample;
-        private readonly IRBACManager _rBACManager;
-
         public string NumerationExample
         {
             get { return _numerationExample; }
-            set { SetProperty(ref _numerationExample, value); }
+            set { SetProperty(ref _numerationExample, $"1/{value}"); }
         }
 
         public override async Task LoadAsync()
@@ -60,20 +62,22 @@ namespace ERService.Settings.ViewModels
                 Numeration = new NumerationWrapper(newNumeration);
             }
 
-            Numeration.PropertyChanged += (o, a) => 
+            var initials = String.Empty;
+            try
             {
-                if (_rBACManager?.LoggedUser?.FirstName != null && _rBACManager?.LoggedUser?.LastName != null)
-                {
-                    var stringBuilder = new StringBuilder();
-                    stringBuilder.Append(_rBACManager?.LoggedUser?.FirstName[0]);
-                    stringBuilder.Append(_rBACManager?.LoggedUser?.LastName[0]);
-                    var initials = stringBuilder.ToString();
+                initials = _rBACManager.LoggedUser.Initials;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                _logger.Debug("Cant get User Initials");
+            }
 
-                    NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern, initials);
-                    return;
-                }
-                NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern);
+            Numeration.PropertyChanged += (o, a) =>
+            {
+                NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern, initials);                
             };
+
+            NumerationExample = OrderNumberGenerator.GetNumberFromPattern(Numeration.Pattern);
         }
 
         #region Events and Event Handlers
@@ -88,11 +92,6 @@ namespace ERService.Settings.ViewModels
             await _repository.SaveAsync();
         }
 
-        private void Numeration_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!HasChanges)
-                HasChanges = _repository.HasChanges();
-        }
         #endregion Events and Event Handlers
 
         #region Navigation
@@ -103,7 +102,7 @@ namespace ERService.Settings.ViewModels
         {
             await LoadAsync();
         }
-        
+
         #endregion Navigation
     }
 }

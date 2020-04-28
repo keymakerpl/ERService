@@ -25,6 +25,14 @@
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="5">

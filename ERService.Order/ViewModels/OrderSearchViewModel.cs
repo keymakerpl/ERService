@@ -11,15 +11,21 @@ namespace ERService.OrderModule.ViewModels
 {
     public class OrderSearchViewModel : SearchViewModelBase
     {
-        private bool _registerDateIsChecked;
+        private readonly IOrderStatusRepository _statusRepository;
+        private readonly IOrderTypeRepository _typeRepository;
+        private DateTime? _dateEndTo;
+        private DateTime? _dateRegisteredTo;
         private bool _endDateIsChecked;
+        private bool _registerDateIsChecked;
+        private OrderStatus _selectedOrderStatus;
+        private OrderType _selectedOrderType;
 
         public OrderSearchViewModel(
-            IOrderStatusRepository statusRepository,
+                            IOrderStatusRepository statusRepository,
             IOrderTypeRepository typeRepository,
             IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            Order = new Order() { DateRegistered = DateTime.Now, DateEnded = DateTime.Now };
+            Order = new Order() { DateRegistered = DateTime.Now.AddDays(-14).Date, DateEnded = DateTime.Now };
             Customer = new Customer();
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
@@ -28,45 +34,50 @@ namespace ERService.OrderModule.ViewModels
             _statusRepository = statusRepository;
             _typeRepository = typeRepository;
 
+            RegisterDateIsChecked = true;            
+
             LoadOrderStatusesAsync();
             LoadOrderTypesAsync();
         }
 
-        private async void LoadOrderStatusesAsync()
+        public Customer Customer { get; }
+
+        public DateTime? DateEndTo
         {
-            OrderStatuses.Clear();
-            OrderStatuses.Add(new OrderStatus() { Id = Guid.Empty, Name = "" });
-            var statuses = await _statusRepository.GetAllAsync();
-            foreach (var status in statuses)
-            {
-                OrderStatuses.Add(status);
-            }
+            get { return _dateEndTo; }
+            set { SetProperty(ref _dateEndTo, value); }
         }
 
-        private async void LoadOrderTypesAsync()
+        public DateTime? DateRegisteredTo
         {
-            OrderTypes.Clear();
-            OrderTypes.Add(new OrderType() { Id = Guid.Empty, Name = "" });
-            var types = await _typeRepository.GetAllAsync();
-            foreach (var type in types)
-            {
-                OrderTypes.Add(type);
-            }
+            get { return _dateRegisteredTo; }
+            set { SetProperty(ref _dateRegisteredTo, value); }
+        }
+
+        public bool EndDateIsChecked
+        {
+            get { return _endDateIsChecked; }
+            set { SetProperty(ref _endDateIsChecked, value); }
         }
 
         public Order Order { get; }
-        public Customer Customer { get; }
 
-        public ObservableCollection<OrderStatus> OrderStatuses { get; private set; }
+        public ObservableCollection<OrderStatus> OrderStatuses { get; }
 
-        public ObservableCollection<OrderType> OrderTypes { get; private set; }
+        public ObservableCollection<OrderType> OrderTypes { get; }
+
+        public bool RegisterDateIsChecked
+        {
+            get { return _registerDateIsChecked; }
+            set { SetProperty(ref _registerDateIsChecked, value); }
+        }
 
         public OrderStatus SelectedOrderStatus
         {
             get { return _selectedOrderStatus; }
             set
             {
-                SetProperty(ref _selectedOrderStatus, value);                
+                SetProperty(ref _selectedOrderStatus, value);
             }
         }
 
@@ -75,40 +86,8 @@ namespace ERService.OrderModule.ViewModels
             get { return _selectedOrderType; }
             set
             {
-                SetProperty(ref _selectedOrderType, value);                
+                SetProperty(ref _selectedOrderType, value);
             }
-        }
-
-        private DateTime? _dateAddedTo;
-
-        public DateTime? DateAddedTo
-        {
-            get { return _dateAddedTo; }
-            set { SetProperty(ref _dateAddedTo, value); }
-        }
-
-        private DateTime? _dateEndTo;
-        private OrderStatus _selectedOrderStatus;
-        private OrderType _selectedOrderType;
-        private readonly IOrderStatusRepository _statusRepository;
-        private readonly IOrderTypeRepository _typeRepository;
-
-        public DateTime? DateEndTo
-        {
-            get { return _dateEndTo; }
-            set { SetProperty(ref _dateEndTo, value); }
-        }
-
-        public bool RegisterDateIsChecked
-        {
-            get { return _registerDateIsChecked; }
-            set { SetProperty(ref _registerDateIsChecked, value); }
-        }
-
-        public bool EndDateIsChecked
-        {
-            get { return _endDateIsChecked; }
-            set { SetProperty(ref _endDateIsChecked, value); }
         }
 
         protected override void OnSearchExecute()
@@ -150,22 +129,44 @@ namespace ERService.OrderModule.ViewModels
             if (RegisterDateIsChecked && Order.DateRegistered != null)
             {
                 query.WhereDate(nameof(Order.DateRegistered), ">=", Order.DateRegistered.Date);
-                if (DateAddedTo.HasValue)
+                if (DateRegisteredTo.HasValue)
                 {
-                    query.WhereDate(nameof(Order.DateRegistered), "<=", DateAddedTo.Value.Date);
+                    query.WhereDate(nameof(Order.DateRegistered), "<=", DateRegisteredTo.Value.Date);
                 }
             }
 
-            if (EndDateIsChecked && Order.DateEnded.HasValue) 
+            if (EndDateIsChecked && Order.DateEnded.HasValue)
             {
                 query.WhereDate(nameof(Order.DateEnded), ">=", Order.DateEnded.Value.Date);
                 if (DateEndTo.HasValue)
                 {
                     query.WhereDate(nameof(Order.DateEnded), "<=", DateEndTo.Value.Date);
                 }
-            }            
+            }
 
             EventAggregator.GetEvent<SearchQueryEvent>().Publish(new SearchQueryEventArgs() { QueryBuilder = query });
+        }
+
+        private async void LoadOrderStatusesAsync()
+        {
+            OrderStatuses.Clear();
+            OrderStatuses.Add(new OrderStatus() { Id = Guid.Empty, Name = "" });
+            var statuses = await _statusRepository.GetAllAsync();
+            foreach (var status in statuses)
+            {
+                OrderStatuses.Add(status);
+            }
+        }
+
+        private async void LoadOrderTypesAsync()
+        {
+            OrderTypes.Clear();
+            OrderTypes.Add(new OrderType() { Id = Guid.Empty, Name = "" });
+            var types = await _typeRepository.GetAllAsync();
+            foreach (var type in types)
+            {
+                OrderTypes.Add(type);
+            }
         }
     }
 }

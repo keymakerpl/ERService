@@ -1,9 +1,7 @@
-﻿using System;
-using ERService.Infrastructure.Constants;
+﻿using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Events;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -11,20 +9,41 @@ namespace ERService.Navigation.ViewModels
 {
     public class NavigationViewModel : BindableBase
     {
-        public DelegateCommand<object> OpenDetailViewCommand { get; }
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public IRegionManager _regionManager { get; }
-
-        private bool _isEnabled;
         private readonly IEventAggregator _eventAggregator;
+        private string _currentContentName;
+        private bool _isEnabled;
 
-        public bool IsEnabled
+        public NavigationViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
-            get { return _isEnabled; }
-            set { SetProperty(ref _isEnabled, value); }
+            _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
+
+            _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigated += NavigationService_Navigated;
+            _regionManager.Regions[RegionNames.ContentRegion].NavigationService.NavigationFailed += NavigationService_NavigationFailed;
+
+            IsEnabled = false;
+
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((o) => { IsEnabled = true; }, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((o) => { IsEnabled = false; }, true);            
+
+            OpenDetailViewCommand = new DelegateCommand<string>(OnOpenDetailViewExecute);
         }
 
-        private string _currentContentName;
+        private void NavigationService_NavigationFailed(object sender, RegionNavigationFailedEventArgs e)
+        {
+            var message = $"Navigation failed: {e.Error}";
+            _logger.Debug(message);
+            _logger.Error(message);
+        }
+
+        private void NavigationService_Navigated(object sender, RegionNavigationEventArgs e)
+        {
+            _logger.Debug($"Navigated to: {e.Uri}");
+        }
+
+        public IRegionManager _regionManager { get; }
 
         public string CurrentContentName
         {
@@ -32,28 +51,17 @@ namespace ERService.Navigation.ViewModels
             set { SetProperty(ref _currentContentName, value); }
         }
 
-        public NavigationViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public bool IsEnabled
         {
-            _regionManager = regionManager;
-            _eventAggregator = eventAggregator;
-
-            IsEnabled = false;
-
-            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((o) => { IsEnabled = true; }, true);
-            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((o) => { IsEnabled = false; }, true);
-            _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Subscribe(OnContentChanged, true);
-
-            OpenDetailViewCommand = new DelegateCommand<object>(OnOpenDetailViewExecute);
+            get { return _isEnabled; }
+            set { SetProperty(ref _isEnabled, value); }
         }
 
-        private void OnContentChanged(AfterDetailOpenedEventArgs args)
-        {
-            CurrentContentName = args.DisplayableName;
-        }
+        public DelegateCommand<string> OpenDetailViewCommand { get; }
 
-        private void OnOpenDetailViewExecute(object viewName)
+        private void OnOpenDetailViewExecute(string viewName)
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName.ToString());
+            _regionManager.Regions[RegionNames.ContentRegion].RequestNavigate(viewName);
         }
     }
 }

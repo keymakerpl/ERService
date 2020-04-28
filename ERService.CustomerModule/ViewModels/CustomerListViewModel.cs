@@ -58,7 +58,7 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Publish(new AfterSideMenuButtonToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.CustomerSearchView });
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.CustomerSearchView });
         }
 
         //TODO: Refactor with OnMouseDoubleClick

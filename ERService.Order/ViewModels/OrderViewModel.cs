@@ -9,7 +9,6 @@ using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Helpers;
 using ERService.Infrastructure.Interfaces;
 using ERService.OrderModule.Data.Repository;
-using ERService.OrderModule.OrderNumeration;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
 using ERService.RBAC;
@@ -20,7 +19,6 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,10 +29,8 @@ namespace ERService.OrderModule.ViewModels
         private readonly IHardwareTypeRepository _hardwareTypesRepository;
         private readonly IRBACManager _rBACManager;
         private readonly ISettingsManager _settingsManager;
-        private readonly IPrintTemplateRepository _templateRepository;
-        private string _cost;
-        private CustomerWrapper _customer;
-        private string _externalNumber;
+        private readonly IPrintTemplateRepository _templateRepository;        
+        private CustomerWrapper _customer;        
         private HardwareWrapper _hardware;
         private IRegionNavigationService _navigationService;
         private INumerationRepository _numerationRepository;
@@ -48,7 +44,7 @@ namespace ERService.OrderModule.ViewModels
         private IOrderStatusRepository _statusRepository;
         private IOrderTypeRepository _typeRepository;
 
-        //TODO: Za duży konstruktor, Dodać IOrderContext.
+        //TODO: Za duży konstruktor? Dodać IOrderContext?
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator, IHardwareTypeRepository hardwareTypesRepository,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
@@ -77,11 +73,9 @@ namespace ERService.OrderModule.ViewModels
             ShowCustomerDetailFlyoutCommand = new DelegateCommand(OnShowCustomerFlyoutExecute);
         }
 
-        public DelegateCommand AddAttachmentCommand { get; private set; }
+        public DelegateCommand AddAttachmentCommand { get; }
 
-        public ObservableCollection<Blob> Attachments { get; private set; }
-
-        public string Cost { get => _cost; set { SetProperty(ref _cost, value); } }
+        public ObservableCollection<Blob> Attachments { get; }
 
         public CustomerWrapper Customer
         {
@@ -89,9 +83,7 @@ namespace ERService.OrderModule.ViewModels
             set { SetProperty(ref _customer, value); }
         }
 
-        public string ExternalNumber { get => _externalNumber; set { SetProperty(ref _externalNumber, value); } }
-
-        public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand GoBackCommand { get; }
 
         public HardwareWrapper Hardware
         {
@@ -99,19 +91,19 @@ namespace ERService.OrderModule.ViewModels
             set { SetProperty(ref _hardware, value); }
         }
 
-        public ObservableCollection<HardwareType> HardwareTypes { get; private set; }
-
         public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
-        public ObservableCollection<OrderStatus> OrderStatuses { get; private set; }
+        public ObservableCollection<HardwareType> HardwareTypes { get; }
 
-        public ObservableCollection<OrderType> OrderTypes { get; private set; }
+        public ObservableCollection<OrderStatus> OrderStatuses { get; }
+
+        public ObservableCollection<OrderType> OrderTypes { get; }
+
+        public ObservableCollection<PrintTemplate> PrintTemplates { get; }
 
         public DelegateCommand<object> PrintCommand { get; }
 
-        public ObservableCollection<PrintTemplate> PrintTemplates { get; private set; }
-
-        public DelegateCommand RemoveAttachmentCommand { get; private set; }
+        public DelegateCommand RemoveAttachmentCommand { get; }
 
         public Blob SelectedAttachment
         {
@@ -149,11 +141,11 @@ namespace ERService.OrderModule.ViewModels
 
         public DelegateCommand ShowHardwareDetailFlyoutCommand { get; }
 
-        private void RaiseSideMenuButtonToggled(SideFlyouts flyout, Guid detailID, string viewName)
+        private void RaiseSideMenuExpandToggled(SideFlyouts flyout, Guid detailID, string viewName)
         {
             _eventAggregator
-                                        .GetEvent<AfterSideMenuButtonToggled>()
-                                        .Publish(new AfterSideMenuButtonToggledArgs
+                                        .GetEvent<AfterSideMenuExpandToggled>()
+                                        .Publish(new AfterSideMenuExpandToggledArgs
                                         {
                                             Flyout = flyout,
                                             DetailID = detailID,
@@ -188,6 +180,7 @@ namespace ERService.OrderModule.ViewModels
         #endregion Navigation
 
         #region Overrides
+
         public override async Task LoadAsync(Guid id)
         {
             var order = await _orderRepository.GetByIdAsync(id);
@@ -278,12 +271,12 @@ namespace ERService.OrderModule.ViewModels
 
         private void OnShowCustomerFlyoutExecute()
         {
-            RaiseSideMenuButtonToggled(SideFlyouts.DetailFlyout, Customer.Id, ViewNames.CustomerFlyoutDetailView);
+            RaiseSideMenuExpandToggled(SideFlyouts.DetailFlyout, Customer.Id, ViewNames.CustomerFlyoutDetailView);
         }
 
         private void OnShowHardwareFlyoutExecute()
         {
-            RaiseSideMenuButtonToggled(SideFlyouts.DetailFlyout, Hardware.Id, ViewNames.HardwareFlyoutDetailView);
+            RaiseSideMenuExpandToggled(SideFlyouts.DetailFlyout, Hardware.Id, ViewNames.HardwareFlyoutDetailView);
         }
 
         private void InitializeCustomer()

@@ -25,6 +25,14 @@
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
     </UserControl.Resources>
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -78,18 +86,18 @@
                             Height="25"
                             IsChecked="{Binding RegisterDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{DynamicResource MetroCircleToggleButtonStyle}" />
-                        <Label Margin="0,5,0,5" Content="Data dodania od:" />
+                        <Label Margin="0,5,0,5" Content="Data rejestracji od:" />
                         <DatePicker
-                            Margin="21,5,5,5"
+                            Margin="14,5,5,5"
                             IsEnabled="{Binding RegisterDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedDate="{Binding Order.DateAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                            SelectedDate="{Binding Order.DateRegistered, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Label Margin="5,5,0,5" Content="Do:" />
                         <DatePicker
                             Margin="0,5,5,5"
                             IsEnabled="{Binding RegisterDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedDate="{Binding DateAddedTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                            SelectedDate="{Binding DateRegisteredTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <ToggleButton
@@ -110,6 +118,41 @@
                             IsEnabled="{Binding EndDateIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             SelectedDate="{Binding DateEndTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
                     </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label Margin="5" Content="Typ naprawy:" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Margin="5"
+                            DisplayMemberPath="Name"
+                            IsSynchronizedWithCurrentItem="True"
+                            ItemsSource="{Binding OrderTypes}"
+                            SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding SelectedOrderType.Name}"
+                            SelectedValuePath="Name" />
+                        <Label
+                            Grid.Row="1"
+                            Margin="5"
+                            Content="Status naprawy:" />
+                        <ComboBox
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            Margin="5"
+                            DisplayMemberPath="Name"
+                            IsSynchronizedWithCurrentItem="True"
+                            ItemsSource="{Binding OrderStatuses}"
+                            SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding SelectedOrderStatus.Name}"
+                            SelectedValuePath="Name" />
+                    </Grid>
+
                 </StackPanel>
             </Grid>
 
@@ -123,7 +166,7 @@
                 <GroupBox.Style>
                     <Style />
                 </GroupBox.Style>
-                <Grid Margin="1">
+                <Grid Margin="5,10,5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
@@ -132,50 +175,24 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Label Content="Imię:" />
+                    <Label VerticalAlignment="Center" Content="Imię:" />
                     <TextBox
                         Grid.Column="1"
-                        Margin="2"
+                        Margin="5"
                         Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Label Grid.Row="1" Content="Nazwisko:" />
+                    <Label
+                        Grid.Row="1"
+                        VerticalAlignment="Center"
+                        Content="Nazwisko:" />
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="2"
+                        Margin="5"
                         Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </GroupBox>
 
-            <Label
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="5"
-                Content="Typ naprawy:" />
-            <ComboBox
-                Grid.Row="5"
-                Grid.Column="1"
-                Margin="5"
-                DisplayMemberPath="Name"
-                IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding OrderTypes}"
-                SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValue="{Binding SelectedOrderType.Name}"
-                SelectedValuePath="Name" />
-            <Label
-                Grid.Row="6"
-                Grid.Column="0"
-                Margin="5"
-                Content="Status naprawy:" />
-            <ComboBox
-                Grid.Row="6"
-                Grid.Column="1"
-                Margin="5"
-                DisplayMemberPath="Name"
-                IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding OrderStatuses}"
-                SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValue="{Binding SelectedOrderStatus.Name}"
-                SelectedValuePath="Name" />
+
             <Grid.InputBindings>
                 <KeyBinding Key="Return" Command="{Binding SearchCommand}" />
             </Grid.InputBindings>

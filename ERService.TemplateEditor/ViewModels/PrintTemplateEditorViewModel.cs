@@ -70,9 +70,9 @@ namespace ERService.TemplateEditor.ViewModels
 
         public override bool KeepAlive => false;
 
-        public DelegateCommand<object> AddIndexToEditorCommand { get; private set; }
-        public DelegateCommand<object> SelectTemplateCommand { get; private set; }
-        public DelegateCommand PrintCommand { get; private set; }
+        public DelegateCommand<object> AddIndexToEditorCommand { get; }
+        public DelegateCommand<object> SelectTemplateCommand { get; }
+        public DelegateCommand PrintCommand { get; }
         public ObservableCollection<IndexLookupItem> Indexes { get; }
         public ObservableCollection<PrintTemplate> PrintTemplates { get; }
 
@@ -117,6 +117,7 @@ namespace ERService.TemplateEditor.ViewModels
                     HasChanges = _templeteRepository.HasChanges();
                     SaveCommand.RaiseCanExecuteChanged();
                 }
+                SaveCommand.RaiseCanExecuteChanged();
             };
 
             SaveCommand.RaiseCanExecuteChanged();
@@ -176,8 +177,7 @@ namespace ERService.TemplateEditor.ViewModels
 
         protected override void OnCancelEditExecute()
         {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
+            _navigatonContext.NavigationService.Journal.GoBack();
         }
 
         protected override bool OnSaveCanExecute()
@@ -207,6 +207,7 @@ namespace ERService.TemplateEditor.ViewModels
         }
 
         private object[] ModelWrappers;
+
         private NavigationContext _navigatonContext;
     }
 }

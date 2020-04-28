@@ -37,16 +37,29 @@ namespace ERService.Application.ViewModels
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
 
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(OnUserLogedin, true);
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout, true);
-            _eventAggregator.GetEvent<AfterSideMenuButtonToggled>().Subscribe(OnSideMenuButtonToggled);
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Subscribe(OnSideMenuExpandToggled);
 
             var assembly = Assembly.GetEntryAssembly();
-            ApplicationName = $"{assembly.GetName().Name} {assembly.GetName().Version}";
+            ApplicationName = $"{assembly.GetName().Name} {assembly.GetName().Version}";            
 
             ShowLoginWindow();
         }
 
-        private void OnSideMenuButtonToggled(AfterSideMenuButtonToggledArgs args)
+        private void OnUserLogedin(UserAuthorizationEventArgs args)
+        {
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Unsubscribe(OnUserLogedin);
+            _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigating += NavigationService_Navigating;
+        }
+
+        private void NavigationService_Navigating(object sender, RegionNavigationEventArgs e)
+        {
+            NotificationFlyoutIsExpanded = false;
+            RightFlyoutIsExpanded = false;
+        }
+
+        private void OnSideMenuExpandToggled(AfterSideMenuExpandToggledArgs args)
         {
             switch (args.Flyout)
             {
@@ -88,7 +101,9 @@ namespace ERService.Application.ViewModels
         private void OnUserLogedout(UserAuthorizationEventArgs args)
         {
             _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            ToggleNotificationFlyout();
+
+            RightFlyoutIsExpanded = false;
+            NotificationFlyoutIsExpanded = false;
             ShowLoginWindow();
         }
 

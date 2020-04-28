@@ -13,17 +13,20 @@ namespace ERService.ViewModels
     public class LoggedUserViewModel : DetailViewModelBase
     {
         private readonly IRegionManager _regionManager;
-
-        private string _userName;
         private readonly IRBACManager _rBACManager;
+        private string _userName;
 
-        public LoggedUserViewModel(IRBACManager rBACManager, IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+        public LoggedUserViewModel(
+            IRBACManager rBACManager,
+            IRegionManager regionManager,
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             UserLogoutCommand = new DelegateCommand(OnUserLogoutExecute);
             UserSettingsCommand = new DelegateCommand(OnUserSettingsExecute);
 
             _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(OnUserLogged, true);
-            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLoggedout, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLoggedout, true);            
 
             _regionManager = regionManager;
             _rBACManager = rBACManager;
@@ -44,7 +47,7 @@ namespace ERService.ViewModels
             UserName = !String.IsNullOrEmpty(args.UserLastName) ? $"{args.UserName} {args.UserLastName}" : args.UserLogin;
         }
 
-        private void OnUserLoggedout(UserAuthorizationEventArgs obj)
+        private void OnUserLoggedout(UserAuthorizationEventArgs args)
         {
             UserName = String.Empty;
         }
@@ -58,10 +61,12 @@ namespace ERService.ViewModels
         {
             if (_rBACManager.LoggedUser == null) return;
 
-            var parameters = new NavigationParameters();
-            parameters.Add("ID", _rBACManager.LoggedUser.Id);
-
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs
+            {
+                DetailID = _rBACManager.LoggedUser.Id,
+                Flyout = SideFlyouts.DetailFlyout,
+                ViewName = ViewNames.UserDetailView
+            });
         }
 
         #region NAVIGATION

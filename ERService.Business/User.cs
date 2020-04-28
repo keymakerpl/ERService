@@ -30,7 +30,7 @@ namespace ERService.Business
         public string FullName => $"{FirstName ?? Login} {LastName ?? ""}";
 
         [NotMapped]
-        public string Initials => FirstName.Substring(0, 1) + LastName.Substring(0, 1);
+        public string Initials => FirstName?.Substring(0, 1) + LastName?.Substring(0, 1);
 
         [Phone]
         [MaxLength(50)]

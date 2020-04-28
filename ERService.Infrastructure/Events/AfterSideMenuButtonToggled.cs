@@ -3,11 +3,11 @@ using System;
 
 namespace ERService.Infrastructure.Events
 {
-    public class AfterSideMenuButtonToggled : PubSubEvent<AfterSideMenuButtonToggledArgs>
+    public class AfterSideMenuExpandToggled : PubSubEvent<AfterSideMenuExpandToggledArgs>
     {
     }
 
-    public class AfterSideMenuButtonToggledArgs
+    public class AfterSideMenuExpandToggledArgs
     {
         public SideFlyouts Flyout { get; set; }
         public Guid DetailID { get; set; }

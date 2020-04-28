@@ -24,7 +24,7 @@
             Header="Ustawienia szablonów">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="20*" />
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -39,7 +39,7 @@
                     Margin="0,5,0,0"
                     BorderBrush="LightGray"
                     BorderThickness="0,0,1,0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto">
                         <ListView
                             Name="TemplatesList"
                             BorderThickness="0"

@@ -72,7 +72,7 @@ namespace ERService.Settings.ViewModels
                 }
             }
 
-            TabIndex = 0;
+            TabIndex = navigationContext.Parameters.GetValue<int>("TabIndex");            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

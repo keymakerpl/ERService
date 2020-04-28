@@ -41,6 +41,7 @@
                     Height="30"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    metroControls:VisibilityHelper.IsVisible="{Binding IsToogleButtonVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     BorderThickness="0"
                     Command="{Binding SideMenuToggleCommand}"
                     Foreground="White"

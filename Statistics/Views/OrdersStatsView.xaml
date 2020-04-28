@@ -21,10 +21,10 @@
         </Grid.ColumnDefinitions>
 
         <lvc:PieChart
-            Margin="50"
+            Margin="100"
             DataTooltip="{x:Null}"
             Hoverable="False"
-            LegendLocation="Bottom">
+            LegendLocation="Left">
             <lvc:PieChart.Series>
                 <lvc:PieSeries
                     Title="Zakończone"
@@ -47,8 +47,11 @@
             </lvc:PieChart.Series>
         </lvc:PieChart>
 
-        <Grid Grid.Column="1">
-            <StackPanel>
+        <Border
+            Grid.Column="1"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0">
+            <StackPanel Margin="5,0,0,0">
                 <Label
                     Margin="5"
                     Content="Data od:"
@@ -87,7 +90,7 @@
                     FontWeight="SemiBold"
                     IsChecked="{Binding IsClosedVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
-        </Grid>
+        </Border>
 
     </Grid>
 </UserControl>
