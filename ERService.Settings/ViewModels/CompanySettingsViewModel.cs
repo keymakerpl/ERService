@@ -79,42 +79,9 @@ namespace ERService.Settings.ViewModels
         private async void UpdateImage()
         {
             var file = SelectedImageFile;
-            SelectedImageSource = await GenerateBitmap(file, 320);
+            SelectedImageSource = await ImageHelper.GenerateBitmap(file, 320);
         }
-
-        //TODO: refactor, move to infrastructure
-        private Task<BitmapImage> GenerateBitmap(string file, int scale)
-        {
-            return Task.Run(() =>
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = new Uri(file);
-                image.DecodePixelWidth = scale;
-                image.EndInit();
-                image.Freeze();
-
-                return image;
-            });
-        }
-
-        private Task<BitmapImage> GenerateBitmap(Stream stream, int scale)
-        {
-            return Task.Run(() =>
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = stream;
-                image.DecodePixelWidth = scale;
-                image.EndInit();
-                image.Freeze();
-
-                return image;
-            });
-        }
-
+        
         private async void OnLoadLogoExecute()
         {
             var openFileDialog = new OpenFileDialog();
@@ -127,7 +94,7 @@ namespace ERService.Settings.ViewModels
                 var fileBinarry = FileUtils.GetFileBinary(openFileDialog.FileName);
                 using (var stream = new MemoryStream(fileBinarry))
                 {
-                    SelectedImageSource = await GenerateBitmap(stream, 320);
+                    SelectedImageSource = await ImageHelper.GenerateBitmap(stream, 320);
                 }
 
                 LogoImage = new ERimage();
@@ -184,9 +151,9 @@ namespace ERService.Settings.ViewModels
             {
                 using (var stream = new MemoryStream(image.ImageData))
                 {
-                    SelectedImageSource = await GenerateBitmap(stream, 320);
+                    SelectedImageSource = await ImageHelper.GenerateBitmap(stream, 320);
                 }
             }
         }
-    }
+    }    
 }

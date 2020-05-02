@@ -91,6 +91,9 @@
     <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HtmlRenderer.PdfSharp">
+      <Version>1.5.0.6</Version>
+    </PackageReference>
     <PackageReference Include="MahApps.Metro.IconPacks">
       <Version>3.0.0-alpha0206</Version>
     </PackageReference>

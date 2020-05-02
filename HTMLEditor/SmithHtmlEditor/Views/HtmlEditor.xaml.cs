@@ -28,9 +28,7 @@ namespace Smith.WPF.HtmlEditor
         private string stylesheet;
         bool isDocReady;
 
-        #endregion
-
-        IEventAggregator _eventAggregator { get; } = ServiceLocator.Current.GetInstance<IEventAggregator>();
+        #endregion        
 
         #region Constructor
 
@@ -41,30 +39,6 @@ namespace Smith.WPF.HtmlEditor
             InitStyles();
             InitEvents();
             InitTimer();
-        }
-
-        private void OnPrintExecute()
-        {
-            SetHeaderAndFooter();
-            VisualEditor.ShowPrintDialog();
-            SetHeaderAndFooter(true);
-        }
-
-        private string _oldFooterValue;
-        private string _oldHeaderValue;
-        private void SetHeaderAndFooter(bool setOldValues = false)
-        {
-            string registryPath = "Software\\Microsoft\\Internet Explorer\\PageSetup";
-            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(registryPath, true);
-            
-            _oldHeaderValue = (string)registryKey.GetValue("header");
-            _oldFooterValue = (string)registryKey.GetValue("footer");
-
-            var headerNewValue = setOldValues ? _oldHeaderValue: "";
-            var footerNewValue = setOldValues ? _oldFooterValue : "";
-
-            registryKey.SetValue("header", headerNewValue);
-            registryKey.SetValue("footer", footerNewValue);
         }
 
         #endregion
@@ -120,9 +94,7 @@ namespace Smith.WPF.HtmlEditor
             LineColorContextMenu.Opened += new RoutedEventHandler(OnLineColorContextMenuOpened);
             LineColorContextMenu.Closed += new RoutedEventHandler(OnLineColorContextMenuClosed);
             FontColorPicker.SelectedColorChanged += new EventHandler<PropertyChangedEventArgs<Color>>(OnFontColorPickerSelectedColorChanged);
-            LineColorPicker.SelectedColorChanged += new EventHandler<PropertyChangedEventArgs<Color>>(OnLineColorPickerSelectedColorChanged);
-
-            _eventAggregator.GetEvent<PrintEvent>().Subscribe(OnPrintExecute);
+            LineColorPicker.SelectedColorChanged += new EventHandler<PropertyChangedEventArgs<Color>>(OnLineColorPickerSelectedColorChanged);            
         }
 
         private void OnCodeModeChecked(object sender, RoutedEventArgs e)
@@ -599,11 +571,7 @@ namespace Smith.WPF.HtmlEditor
         }
 
         #endregion
-
-        /// <summary>
-        /// 获取字数统计。
-        /// Get word count.
-        /// </summary>
+        
         public int WordCount
         {
             get
@@ -625,7 +593,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取或设置编辑器中的HTML内容。
         /// Get or set the html content.
         /// </summary>
         public string ContentHtml
@@ -662,7 +629,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取HTML文档对象。
         /// Get the html document of editor.
         /// </summary>
         public HtmlDocument Document
@@ -671,7 +637,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，撤销命令是否可执行。
         /// Get a value that indicated if the undo command is enabled.
         /// </summary>
         public bool CanUndo
@@ -686,7 +651,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，指示重做命令是否可执行。
         /// Get a value that indicated if the redo command is enabled.
         /// </summary>
         public bool CanRedo
@@ -701,7 +665,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，指示剪切命令是否可执行。
         /// Get a value that indicated if the cut command is enabled.
         /// </summary>
         public bool CanCut
@@ -716,7 +679,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，指示复制命令是否可执行。
         /// Get a value that indicated if the copy command is enabled.
         /// </summary>
         public bool CanCopy
@@ -731,7 +693,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，指示粘贴命令是否可执行。
         /// Get a value that indicated if the paste command is enabled.
         /// </summary>
         public bool CanPaste
@@ -746,7 +707,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 获取一个值，指示删除命令是否可执行。
         /// Get a value that indicated if the delete command is enabled.
         /// </summary>
         public bool CanDelete
@@ -765,7 +725,6 @@ namespace Smith.WPF.HtmlEditor
         #region Execute Commands
 
         /// <summary>
-        /// 执行撤销命令。
         /// Execute the undo command.
         /// </summary>
         public void Undo()
@@ -775,7 +734,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行重做命令。
         /// Execute the redo command.
         /// </summary>
         public void Redo()
@@ -785,7 +743,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行剪切命令。
         /// Execute the cut command.
         /// </summary>
         public void Cut()
@@ -795,7 +752,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行复制命令。
         /// Execute the copy command.
         /// </summary>
         public void Copy()
@@ -805,7 +761,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行粘贴命令。
         /// Execute the paste command.
         /// </summary>
         public void Paste()
@@ -815,7 +770,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行删除命令。
         /// Execute the delete command.
         /// </summary>
         public void Delete()
@@ -825,7 +779,6 @@ namespace Smith.WPF.HtmlEditor
         }
 
         /// <summary>
-        /// 执行全选命令。
         /// Execute the select all command.
         /// </summary>
         public void SelectAll()
@@ -987,10 +940,7 @@ namespace Smith.WPF.HtmlEditor
         {
             e.CanExecute = (htmldoc != null && mode == EditMode.Visual);
         }
-
-        /// <summary>
-        /// 插入超链接事件
-        /// </summary>
+        
         private void InsertHyperlinkExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (htmldoc != null)
@@ -1004,10 +954,7 @@ namespace Smith.WPF.HtmlEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 插入图像事件
-        /// </summary>
+        
         private void InsertImageExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (htmldoc != null)
@@ -1021,10 +968,7 @@ namespace Smith.WPF.HtmlEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 插入表格事件
-        /// </summary>
+        
         private void InsertTableExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (htmldoc != null)

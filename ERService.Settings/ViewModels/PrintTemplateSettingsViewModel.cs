@@ -7,6 +7,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
 {
@@ -82,14 +83,14 @@ namespace ERService.Settings.ViewModels
         #region Navigation
         public override bool KeepAlive => true;
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Load();
+            await LoadAsync();
         }
         #endregion
 
-        #region Load
-        public override async void Load()
+        #region Load    
+        public override async Task LoadAsync()
         {
             Templates.Clear();
 

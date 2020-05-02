@@ -9,7 +9,7 @@ namespace Smith.WPF.HtmlEditor
 {
     public class HtmlObject : INotifyPropertyChanged
     {
-        #region INotifyPropertyChanged 成员
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -180,7 +180,7 @@ namespace Smith.WPF.HtmlEditor
             }
         }
 
-        #region 字段
+        #region 
 
         BitmapImage fdImage;
         ImageAlignment fdAlignment;

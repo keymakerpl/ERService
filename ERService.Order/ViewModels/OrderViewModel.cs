@@ -2,6 +2,7 @@
 using ERService.CustomerModule.Wrapper;
 using ERService.HardwareModule;
 using ERService.HardwareModule.Data.Repository;
+using ERService.Infrastructure.Attributes;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
@@ -24,6 +25,12 @@ using System.Threading.Tasks;
 
 namespace ERService.OrderModule.ViewModels
 {
+    public class CompanyLogo
+    {
+        [Interpreter(Name = "Logo firmy", Pattern = "[%o_CompanyLogo%]")]
+        public byte[] ImageSource { get; set; }
+    }
+
     public class OrderViewModel : DetailViewModelBase
     {
         private readonly IHardwareTypeRepository _hardwareTypesRepository;
@@ -43,12 +50,13 @@ namespace ERService.OrderModule.ViewModels
         private OrderType _selectedOrderType;
         private IOrderStatusRepository _statusRepository;
         private IOrderTypeRepository _typeRepository;
+        private readonly IImagesCollection _imagesCollection;
 
         //TODO: Za duży konstruktor? Dodać IOrderContext?
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator, IHardwareTypeRepository hardwareTypesRepository,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
-            IPrintTemplateRepository templateRepository, ISettingsManager settingsManager) : base(eventAggregator, messageDialogService)
+            IPrintTemplateRepository templateRepository, ISettingsManager settingsManager, IImagesCollection imagesCollection) : base(eventAggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
             _typeRepository = typeRepository;
@@ -71,6 +79,7 @@ namespace ERService.OrderModule.ViewModels
             PrintCommand = new DelegateCommand<object>(OnPrintExecute);
             ShowHardwareDetailFlyoutCommand = new DelegateCommand(OnShowHardwareFlyoutExecute);
             ShowCustomerDetailFlyoutCommand = new DelegateCommand(OnShowCustomerFlyoutExecute);
+            _imagesCollection = imagesCollection;
         }
 
         public DelegateCommand AddAttachmentCommand { get; }
@@ -240,6 +249,11 @@ namespace ERService.OrderModule.ViewModels
             var template = parameter as PrintTemplate;
             if (template != null)
             {
+                var logo = new CompanyLogo()
+                {
+                    ImageSource = _imagesCollection["logo"].ImageData
+                };
+
                 var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
                 var parameters = new NavigationParameters();
                 parameters.Add("ID", template.Id);
@@ -251,6 +265,7 @@ namespace ERService.OrderModule.ViewModels
                     Hardware,
                     Order,
                     companyConfig,
+                    logo,
                     new AddressWrapper(Customer.Model.CustomerAddresses.FirstOrDefault())
                 });
 

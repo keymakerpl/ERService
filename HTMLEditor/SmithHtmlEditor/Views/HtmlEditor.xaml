@@ -242,7 +242,7 @@
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
-                    <ComboBox x:Name="FontSizeList" Width="42">
+                    <ComboBox x:Name="FontSizeList" Width="45">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ComboBoxItem}">
                                 <Setter Property="FontSize" Value="{Binding Size}" />
@@ -380,7 +380,7 @@
                     </ToggleButton>
                 </ToolBar>
             </ToolBarTray>
-            <Grid>
+            <Grid HorizontalAlignment="Stretch">
                 <TextBox
                     x:Name="CodeEditor"
                     AcceptsReturn="True"
@@ -388,7 +388,7 @@
                     AutoWordSelection="True"
                     TextWrapping="Wrap"
                     VerticalScrollBarVisibility="Auto" />
-                <WindowsFormsHost x:Name="BrowserHost">
+                <WindowsFormsHost x:Name="BrowserHost" HorizontalAlignment="Stretch">
                     <wf:WebBrowser x:Name="VisualEditor" />
                 </WindowsFormsHost>
             </Grid>

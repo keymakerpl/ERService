@@ -14,12 +14,10 @@ using System.Net;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.IO;
+using ERService.Infrastructure.Helpers;
 
 namespace Smith.WPF.HtmlEditor
 {
-    /// <summary>
-    /// ImageDialog.xaml 的交互逻辑
-    /// </summary>
     public partial class ImageDialog : Window
     {
         ImageObject bindingContext;
@@ -116,7 +114,7 @@ namespace Smith.WPF.HtmlEditor
             using (System.Windows.Forms.OpenFileDialog dialog =
                  new System.Windows.Forms.OpenFileDialog())
             {
-                dialog.Filter = "所有格式|*.jpg;*.jpeg;*.png;*gif|JPEG|*.jpg;*.jpeg|PNG|*.png|GIF|*.gif";
+                dialog.Filter = "Pictures|*.jpg;*.jpeg;*.png;*gif|JPEG|*.jpg;*.jpeg|PNG|*.png|GIF|*.gif";
                 dialog.FilterIndex = 0;
                 if (System.Windows.Forms.DialogResult.OK == dialog.ShowDialog())
                 {
@@ -130,22 +128,17 @@ namespace Smith.WPF.HtmlEditor
         {
             if(!string.IsNullOrEmpty(UrlText.Text)) LoadImageAsyn(UrlText.Text);
         }
-
-        /// <summary>
-        /// 加载图像，用于加载本地图像
-        /// </summary>
+        
         void LoadImage(string uri)
         {
-            StatusPrompt.Content = "正在加载";
+            StatusPrompt.Content = "content";
             PreviewImage.Source = null;
-            bindingContext.Image = null; 
-
-            // 加载图像
+            bindingContext.Image = null;             
+            
             Uri u = new Uri(uri, UriKind.RelativeOrAbsolute);
             BitmapImage img = new BitmapImage(u);
             PreviewImage.Source = img;
 
-            // 更新绑定上下文
             bindingContext.ImageUrl = u.ToString();
             bindingContext.Image = img;
             bindingContext.OriginalWidth = img.PixelWidth;
@@ -154,36 +147,27 @@ namespace Smith.WPF.HtmlEditor
             ResizeSlider.Value = 100;
             ScrollToCenter();
         }
-
-        /// <summary>
-        /// 异步加载图像，用于加载网络上的图像
-        /// </summary>
+        
         void LoadImageAsyn(string uri)
         {
-            StatusPrompt.Content = "正在下载";
+            StatusPrompt.Content = "content";
             PreviewImage.Source = null;
             bindingContext.Image = null;
             TopContentArea.IsEnabled = false;
-
-            // 异步下载图像
+            
             Uri u = new Uri(uri, UriKind.RelativeOrAbsolute);
             BitmapImage img = new BitmapImage(u);
             img.DownloadCompleted += new EventHandler(ImageDownloadCompleted);
             img.DownloadFailed += new EventHandler<ExceptionEventArgs>(ImageDownloadFailed);
         }
-
-        /// <summary>
-        /// 图像下载完成时调用
-        /// </summary>
+        
         void ImageDownloadCompleted(object sender, EventArgs e)
         {
-            // 异步下载图像完成
-            StatusPrompt.Content = "下载完成";
+            StatusPrompt.Content = "content";
             TopContentArea.IsEnabled = true;
             BitmapImage img = (BitmapImage)sender;
             PreviewImage.Source = img;
-
-            // 更新绑定上下文
+            
             bindingContext.ImageUrl = img.UriSource.ToString();
             bindingContext.Image = img;
             bindingContext.OriginalWidth = img.PixelWidth;
@@ -192,17 +176,12 @@ namespace Smith.WPF.HtmlEditor
             ResizeSlider.Value = 100;
             ScrollToCenter();
         }
-
-        /// <summary>
-        /// 图像下载失败时调用
-        /// </summary>
+        
         void ImageDownloadFailed(object sender, ExceptionEventArgs e)
         {
-            // 异步下载图像失败
-            StatusPrompt.Content = "无法加载图像";
+            StatusPrompt.Content = "content";
             TopContentArea.IsEnabled = true;
-
-            // 更新绑定上下文
+            
             bindingContext.Image = null;
             bindingContext.Width = 0;
             bindingContext.Height = 0;

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Dynamic;
 using ERService.Infrastructure.Interfaces;
-using ERService.Business;
-using System.Linq.Expressions;
 using ERService.Settings.Wrapper;
 
 namespace ERService.Settings.Manager

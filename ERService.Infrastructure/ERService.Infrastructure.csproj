@@ -98,6 +98,7 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\FileUtils.cs" />
     <Compile Include="Helpers\IImagesCollection.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagesCollection.cs" />
     <Compile Include="Helpers\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\InverseBooleanToVisibilityConverter.cs" />

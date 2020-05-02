@@ -56,7 +56,7 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="75*" />
+                <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -162,6 +162,7 @@
 
             <GroupBox
                 Grid.Row="1"
+                Width="250"
                 Margin="5"
                 BorderThickness="0"
                 Header="Znaczniki"
@@ -169,7 +170,7 @@
 
                 <ListView
                     BorderThickness="0"
-                    ItemsSource="{Binding Indexes}"
+                    ItemsSource="{Binding Indexes, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                     <ListView.ItemTemplate>
@@ -199,18 +200,28 @@
                                                 Foreground="DimGray"
                                                 Text="{Binding IndexPattern}" />
                                         </WrapPanel>
-                                        <Button
-                                            Grid.RowSpan="2"
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            BorderThickness="0"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView, Mode=FindAncestor}, Path=DataContext.AddIndexToEditorCommand}"
-                                            CommandParameter="{Binding IndexPattern}"
-                                            Foreground="DimGray"
-                                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                            <iconPacks:PackIconMaterialLight Kind="ArrowRightCircle" />
-                                        </Button>
+                                        <Grid Grid.RowSpan="2" Grid.Column="1">
+                                            <Button
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                BorderThickness="1"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=local:PrintTemplateEditorView, Mode=FindAncestor}, Path=DataContext.AddIndexToEditorCommand}"
+                                                CommandParameter="{Binding IndexPattern}"
+                                                Foreground="DimGray"
+                                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
+                                            </Button>
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Cursor" Value="Hand" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                        </Grid>
+
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -224,12 +235,15 @@
                 Grid.Row="1"
                 Grid.RowSpan="3"
                 Grid.Column="1"
+                HorizontalAlignment="Stretch"
                 BorderBrush="SlateGray"
                 BorderThickness="0"
                 FocusManager.FocusedElement="{Binding ElementName=Editor}">
                 <editor:HtmlEditor
                     x:Name="Editor"
                     Margin="0,0,0,5"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
                     editorhelpers:IndexToInsert.InsertPattern="{Binding PatternToInsert, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     BindingContent="{Binding PrintTemplate.Template, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     IsToolbarVisible="{Binding IsToolbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"

@@ -13,27 +13,13 @@ namespace ERService.TemplateEditor.Interpreter
     public class Interpreter : IInterpreter
     {
         private IContext _context;
-        private object[] _modelWrappers;
-        private IndexExpression _expression;
+        private object[] _dataSource;
+        private Expression[] _expressions;
         private readonly ISettingsManager _settingsManager;
 
         public IContext Context { set => _context = value; }
-        public object[] Wrappers { set => _modelWrappers = value; }
-        public Expression Expression 
-        { 
-            set 
-            {
-                switch (value)
-                {
-                    case Expression.IndexExpression:
-                        _expression = new IndexExpression();
-                        break;
-                    default:
-                        _expression = new IndexExpression();
-                        break;
-                }
-            } 
-        }
+        public object[] DataSource { set => _dataSource = value; }
+        public Expression[] Expressions { set => _expressions = value; }
 
         public Interpreter(ISettingsManager settingsManager)
         {
@@ -45,16 +31,21 @@ namespace ERService.TemplateEditor.Interpreter
             var result = new Collection<Index>();
             var fromAssemblys = await GetIndexesFromAssemblies();
 
-            result.AddRange(fromAssemblys); 
+            foreach (var indx in fromAssemblys)
+            {
+                result.Add(indx);
+            } 
 
             return result;
         }
 
         private async Task<Collection<Index>> GetIndexesFromAssemblies()
         {
-            var result = GetIndexes();
+            //var result = GetIndexes();
+            var task = new Task<Collection<Index>>(() => GetIndexes());
+            task.Start();
 
-            return await Task.FromResult(result);
+            return await task;
         }
 
         private Collection<Index> GetIndexes()
@@ -63,6 +54,9 @@ namespace ERService.TemplateEditor.Interpreter
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
+                if ((assembly.FullName.IndexOf("ERSERVICE", StringComparison.OrdinalIgnoreCase) == -1))
+                    continue;
+
                 foreach (var type in assembly.GetTypes())
                 {
                     foreach (var prop in type.GetProperties())
@@ -86,7 +80,7 @@ namespace ERService.TemplateEditor.Interpreter
 
         public IContext GetInterpretedContext()
         {
-            foreach (var model in _modelWrappers)
+            foreach (var model in _dataSource)
             {
                 if (model == null) continue;
 
@@ -101,9 +95,15 @@ namespace ERService.TemplateEditor.Interpreter
                             var attribute = interpreterAttributes[i] as InterpreterAttribute;
                             if (attribute == null) continue;
 
-                            _expression.Key = attribute.Pattern;
-                            _expression.Value = prop.GetValue(model, null);
-                            _expression.Interpret(_context);
+                            foreach (var expr in _expressions)
+                            {
+                                var expression = ExpressionFactory.GetExpression(
+                                    expr,
+                                    attribute.Pattern,
+                                    prop.GetValue(model, null));                                
+
+                                expression.Interpret(_context);
+                            }
                         }
                     }
                 }
@@ -115,5 +115,17 @@ namespace ERService.TemplateEditor.Interpreter
     public enum Expression
     {
         IndexExpression
+    }
+
+    public static class ExpressionFactory
+    {
+        public static IExpression GetExpression(Expression expression, string key, object value)
+        {
+            switch (expression)
+            {
+                default:
+                    return new IndexExpression(key, value);
+            }
+        }
     }
 }

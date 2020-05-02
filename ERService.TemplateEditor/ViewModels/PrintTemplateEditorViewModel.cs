@@ -3,9 +3,11 @@ using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Helpers;
 using ERService.TemplateEditor.Data.Repository;
 using ERService.TemplateEditor.Interpreter;
 using ERService.TemplateEditor.Wrapper;
+using PdfSharp;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -13,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace ERService.TemplateEditor.ViewModels
 {
@@ -28,6 +32,7 @@ namespace ERService.TemplateEditor.ViewModels
         private readonly IPrintTemplateRepository _templeteRepository;
         private readonly IRegionManager _regionManager;
         private readonly IInterpreter _interpreter;
+        private readonly WebBrowser _myWebBrowser;
         private string _patternToInsert;
 
         public PrintTemplateEditorViewModel(IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
@@ -36,6 +41,7 @@ namespace ERService.TemplateEditor.ViewModels
             _templeteRepository = templeteRepository;
             _regionManager = regionManager;
             _interpreter = interpreter;
+            _myWebBrowser = new WebBrowser();
 
             Indexes = new ObservableCollection<IndexLookupItem>();
             PrintTemplates = new ObservableCollection<PrintTemplate>();
@@ -48,15 +54,26 @@ namespace ERService.TemplateEditor.ViewModels
 
         private void OnPrintExecute()
         {
-            _eventAggregator.GetEvent<PrintEvent>().Publish();
+            _myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
+            _myWebBrowser.DocumentText = PrintTemplate.Template;
         }
 
-        private void OnSelectTemplateExecute(object arg)
+        private void myWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            _myWebBrowser.ShowPrintDialog();
+        }
+
+        private void OnOpenPDFExecute()
+        {
+            var pdf = PdfGenerator.GeneratePdf(PrintTemplate.Template, PageSize.A4);
+        }
+
+        private async void OnSelectTemplateExecute(object arg)
         {
             var template = arg as PrintTemplate;
             if (template != null)
             {
-                InitializeTemplate(template);
+                await InitializeTemplate(template);
             }
         }
 
@@ -82,22 +99,18 @@ namespace ERService.TemplateEditor.ViewModels
         public override async Task LoadAsync(Guid id)
         {
             var template = id != Guid.Empty ? await _templeteRepository.GetByIdAsync(id) : GetNewDetail();
-
+            
+            await InitializeTemplate(template);
             await LoadIndexList();
-            InitializeTemplate(template);
         }
 
-        private async void InitializeTemplate(PrintTemplate template)
+        private async Task InitializeTemplate(PrintTemplate template)
         {            
             PrintTemplate = new PrintTemplateWrapper(template);
 
             if (ModelWrappers != null)
             {
-                _interpreter.Context = new Context(template.Template);
-                _interpreter.Expression = Expression.IndexExpression;
-                _interpreter.Wrappers = ModelWrappers;
-
-                var intepretedTemplate = _interpreter.GetInterpretedContext();
+                IContext intepretedTemplate = GetIntepretedTemplate(template);
 
                 PrintTemplate.Template = intepretedTemplate.Output;
                 IsNavigationBarVisible = true;
@@ -121,7 +134,17 @@ namespace ERService.TemplateEditor.ViewModels
             };
 
             SaveCommand.RaiseCanExecuteChanged();
-        } 
+        }
+
+        private IContext GetIntepretedTemplate(PrintTemplate template)
+        {
+            _interpreter.Context = new Context(template.Template);
+            _interpreter.Expressions = new Expression[] { Expression.IndexExpression };
+            _interpreter.DataSource = ModelWrappers;
+
+            var intepretedTemplate = _interpreter.GetInterpretedContext();
+            return intepretedTemplate;
+        }
 
         private PrintTemplate GetNewDetail()
         {
@@ -209,5 +232,6 @@ namespace ERService.TemplateEditor.ViewModels
         private object[] ModelWrappers;
 
         private NavigationContext _navigatonContext;
+        private readonly IImagesCollection _imagesCollection;
     }
 }

@@ -47,10 +47,7 @@ namespace Smith.WPF.HtmlEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 响应粘贴事件
-        /// </summary>
+        
         static void HandlePasting(object sender, DataObjectPastingEventArgs e)
         {
             string content = e.DataObject.GetData(typeof(string)) as string;
@@ -58,28 +55,19 @@ namespace Smith.WPF.HtmlEditor
             e.CancelCommand();
             e.Handled = true;
         }
-
-        /// <summary>
-        /// 响应失去焦点事件
-        /// </summary>
+        
         static void HandleLostFocus(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
             if (tb != null) tb.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
         }        
-
-        /// <summary>
-        /// 响应文本输入事件
-        /// </summary>
+        
         static void HandleTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = true;
             HandleInput((TextBox)sender, e.Text);
         }
-
-        /// <summary>
-        /// 响应键盘按键事件
-        /// </summary>
+        
         static void HandleKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
@@ -97,10 +85,7 @@ namespace Smith.WPF.HtmlEditor
                 HandleDeleteKeyInput((TextBox)sender);
             }
         }
-
-        /// <summary>
-        /// 处理文本输入
-        /// </summary>
+        
         static void HandleInput(TextBox textBox, string inputValue)
         {
             inputValue = inputValue.Trim();
@@ -121,10 +106,7 @@ namespace Smith.WPF.HtmlEditor
                 textBox.CaretIndex = caret + inputValue.Length;
             }
         }
-
-        /// <summary>
-        /// 处理退格键输入
-        /// </summary>
+        
         static void HandleBackspaceKeyInput(TextBox textBox)
         {
             if (textBox.SelectionLength > 0)
@@ -148,10 +130,7 @@ namespace Smith.WPF.HtmlEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 处理删除键操作
-        /// </summary>
+        
         static void HandleDeleteKeyInput(TextBox textBox)
         {
             if (textBox.SelectionLength > 0)
@@ -175,10 +154,7 @@ namespace Smith.WPF.HtmlEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 检验输入是否有效
-        /// </summary>
+        
         static bool ValidChanges(string value)
         {
             int val;

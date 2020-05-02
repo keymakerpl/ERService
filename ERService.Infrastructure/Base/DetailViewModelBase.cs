@@ -157,7 +157,7 @@ namespace ERService.Infrastructure.Base
             {
                 await saveFunc();
 
-                _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano nowy element.", NotificationTypes.Success);
+                _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano element.", NotificationTypes.Success);
             }
             catch (DbUpdateConcurrencyException e) // rowversion się zmienił - ktoś inny zmienił dane
             {
