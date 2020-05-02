@@ -92,6 +92,7 @@
     <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\SearchQueryEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Helpers\BarcodeGenerator.cs" />
     <Compile Include="Helpers\BooleanOrConverter.cs" />
     <Compile Include="Helpers\Cryptography.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
@@ -158,6 +159,9 @@
     </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
+    </PackageReference>
+    <PackageReference Include="NetBarcode">
+      <Version>1.0.8</Version>
     </PackageReference>
     <PackageReference Include="NLog">
       <Version>4.6.8</Version>

@@ -39,8 +39,8 @@
                     Command="{Binding CancelCommand}"
                     Foreground="Gray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Anuluj">
-                    <iconPacks:PackIconMaterial Kind="CloseCircle" />
+                    ToolTip="Powrót">
+                    <iconPacks:PackIconEntypo Kind="Back" />
                 </Button>
                 <Button
                     Width="40"

@@ -1,9 +1,6 @@
 ﻿using ERService.Infrastructure.Base.Common;
 using ERService.Infrastructure.Helpers;
-using Moq;
-using System;
 using System.IO;
-using Unity;
 using Xunit;
 
 namespace InfrastructureLibTestXUnit.Helpers
