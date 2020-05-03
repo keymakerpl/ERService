@@ -33,4 +33,27 @@ namespace ERService.Infrastructure.Helpers
             return new SolidColorBrush(Colors.Transparent);
         }
     }
+
+    [ValueConversion(typeof(int), typeof(Brush))]
+    public class ProgressIntToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(Brush))
+                throw new InvalidOperationException("The target must be a System.Windows.Media.Brush");
+
+            if ((int)value < 25)
+                return new SolidColorBrush(Colors.Red);
+
+            if ((int)value < 100)
+                return new SolidColorBrush(Colors.Orange);
+
+            return new SolidColorBrush(Colors.Green);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new SolidColorBrush(Colors.Transparent);
+        }
+    }
 }

@@ -68,7 +68,7 @@ namespace ERService.OrderModule.ViewModels
             set {_selectedOrder = value; SelectedModel = value?.Model; DeleteCommand.RaiseCanExecuteChanged(); }
         }
 
-        public ObservableCollection<OrderWrapper> Orders { get; private set; }
+        public ObservableCollection<OrderWrapper> Orders { get; set; }
         public bool KeepAlive => true;
 
         #region Events

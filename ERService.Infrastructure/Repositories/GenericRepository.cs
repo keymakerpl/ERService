@@ -79,6 +79,38 @@ namespace ERService.Infrastructure.Repositories
 
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
+        
+        public virtual IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, object>>[] includeProps)
+        {            
+            IQueryable<TEntity> queryable = Context.Set<TEntity>();
+
+            if (filter != null)
+            {
+                queryable = queryable.Where(filter);
+            }
+
+            //if (includeProperties != null)
+            //{
+            //    foreach (var includeProperty in includeProperties.Split
+            //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            //    {
+            //        query = query.Include(includeProperty);
+            //    }
+            //}
+
+            if (orderBy != null)
+            {
+                return orderBy(queryable).ToList();
+            }
+            else
+            {
+                var result = includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty)).ToList();
+                return result;
+            }
+        }
 
         public virtual async Task<bool> SaveAsync()
         {

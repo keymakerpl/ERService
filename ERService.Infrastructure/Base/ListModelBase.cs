@@ -57,11 +57,11 @@ namespace ERService.Infrastructure.Base
             params Expression<Func<TEntity, object>>[] includeProps)
         {
             Models.Clear();
-            var models = FindByInclude(predicate, includeProps);
+            var models = Get(predicate, null, includeProps);
             foreach (var model in models)
             {
                 Models.Add(model);
-            }
+            }            
         }
 
         public virtual async void LoadAsync(Query queryBuilder)

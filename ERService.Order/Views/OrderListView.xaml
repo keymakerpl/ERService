@@ -85,7 +85,7 @@
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
-                ItemsSource="{Binding Orders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Orders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
                 SelectionMode="Single"
                 Style="{StaticResource AzureDataGrid}">
@@ -140,12 +140,31 @@
                         EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                         ElementStyle="{StaticResource DataGridColumnStyle}"
                         Header="Status" />
-                    <DataGridTextColumn
+                    <!--<DataGridTextColumn
                         Width="*"
                         Binding="{Binding Model.Progress}"
                         EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                         ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Postęp" />
+                        Header="Postęp" />-->
+                    <DataGridTemplateColumn
+                        Width="*"
+                        Header="Postęp"
+                        Visibility="Visible">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ProgressBar
+                                    Margin="3,0,3,0"
+                                    Background="AliceBlue"
+                                    Value="{Binding Model.Progress}">
+                                    <ProgressBar.Style>
+                                        <Style TargetType="ProgressBar">
+                                            <Setter Property="Foreground" Value="{Binding Model.Progress, Converter={StaticResource ProgressIntToBrushConverter}}" />
+                                        </Style>
+                                    </ProgressBar.Style>
+                                </ProgressBar>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn
                         Width="*"
                         Binding="{Binding Model.ExternalNumber}"

@@ -108,29 +108,11 @@
                 BorderThickness="1,0,0,0"
                 Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <StackPanel Margin="5" VerticalAlignment="Bottom">
+                    <Button Command="{Binding CancelCommand}" Style="{StaticResource CancelButtonCircle}" />
                     <Button
-                        Width="40"
-                        Height="40"
-                        Margin="5"
-                        Background="GhostWhite"
-                        Command="{Binding CancelCommand}"
-                        Foreground="Gray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                        ToolTip="Powrót">
-                        <iconPacks:PackIconEntypo Kind="Back" />
-                    </Button>
-                    <Button
-                        Width="40"
-                        Height="40"
-                        Margin="5"
-                        Background="GhostWhite"
                         Command="{Binding SaveCommand}"
-                        Foreground="Gray"
-                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                        ToolTip="Zapisz"
-                        Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                        <iconPacks:PackIconModern Kind="Save" />
-                    </Button>
+                        Style="{StaticResource SaveButtonCircle}"
+                        Visibility="{Binding IsReadOnly, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
                 </StackPanel>
             </Border>
 

@@ -108,7 +108,7 @@
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Helpers\Serializer.cs" />
-    <Compile Include="Helpers\StatusGroupIntToBrushConverter.cs" />
+    <Compile Include="Helpers\IntToBrushConverters.cs" />
     <Compile Include="Interfaces\ILicenseManager.cs" />
     <Compile Include="Interfaces\ILicenseProvider.cs" />
     <Compile Include="Interfaces\ILicenseProviderFactory.cs" />
