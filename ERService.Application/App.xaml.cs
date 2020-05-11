@@ -17,7 +17,6 @@ using MahApps.Metro.Controls.Dialogs;
 using ERService.Infrastructure.Dialogs;
 using ERService.TemplateEditor;
 using ERService.Licensing;
-using System.Threading;
 using System.Globalization;
 using System.Windows.Markup;
 using ERService.MSSQLDataAccess;
@@ -32,6 +31,7 @@ using ERService.Infrastructure.Notifications.ToastNotifications;
 using ERService.Services.Tasks;
 using ERService.Services.Services;
 using ERService.Statistics;
+using Hangfire.Server;
 
 namespace ERService.Application
 {
@@ -74,6 +74,9 @@ namespace ERService.Application
         protected override void OnExit(ExitEventArgs e)
         {
             NLog.LogManager.Shutdown();
+            var jobServer = Container.Resolve<IBackgroundProcessingServer>();
+            jobServer.SendStop();
+            jobServer.Dispose();
 
             base.OnExit(e);
         }

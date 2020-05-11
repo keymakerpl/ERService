@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ERService.RBAC.Data.Repository
 {
-    public class RBACRepository
+    public static class RBACRepository
     {
         public class UserRepository : GenericRepository<User, ERServiceDbContext>, IUserRepository
         {
@@ -31,6 +31,15 @@ namespace ERService.RBAC.Data.Repository
                       .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
                       .Include(r => r.Role)
                       .ToList();
+            }
+
+            public override async Task<User> GetByIdAsync(Guid id)
+            {
+                return await Context.Set<User>()
+                    .Where(i => i.Id == id)
+                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
+                    .Include(r => r.Role)
+                    .FirstOrDefaultAsync();
             }
         }
 

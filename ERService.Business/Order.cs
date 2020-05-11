@@ -70,6 +70,7 @@ namespace ERService.Business
 
         public ICollection<Blob> Attachments { get; set; }
 
+        public Guid? UserId { get; set; }
         public User User { get; set; }
 
         [ConcurrencyCheck]

@@ -73,125 +73,115 @@
             <ContentControl prism:RegionManager.RegionName="OrderSearchRegion" />
         </Border>
 
-        <Border
-            x:Name="ListBorder"
-            Grid.Row="0"
-            Margin="10,5,10,0"
-            BorderBrush="LightGray"
-            BorderThickness="0">
-            <DataGrid
-                helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                IsReadOnly="True"
-                ItemsSource="{Binding Orders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
-                SelectionMode="Single"
-                Style="{StaticResource AzureDataGrid}">
+        <DataGrid
+            Margin="5"
+            helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            HorizontalScrollBarVisibility="Auto"
+            IsReadOnly="True"
+            ItemsSource="{Binding Models, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
+            SelectionMode="Single"
+            Style="{StaticResource AzureDataGrid}">
 
-                <DataGrid.Resources>
-                    <Style BasedOn="{StaticResource AzureDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="Foreground" Value="Black" />
-                        <Setter Property="FontSize" Value="11" />
-                    </Style>
-                </DataGrid.Resources>
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource AzureDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="FontSize" Value="11" />
+                </Style>
+            </DataGrid.Resources>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Number}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Numer" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding DateRegistered}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Data rejestracji" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding DateEnded}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Data zakończenia" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Fault}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Opis usterki" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Cost}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Koszt" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.OrderType.Name}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Typ" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.OrderStatus.Name}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Status" />
-                    <!--<DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.Progress}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Postęp" />-->
-                    <DataGridTemplateColumn
-                        Width="*"
-                        Header="Postęp"
-                        Visibility="Visible">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ProgressBar
-                                    Margin="3,0,3,0"
-                                    Background="AliceBlue"
-                                    Value="{Binding Model.Progress}">
-                                    <ProgressBar.Style>
-                                        <Style TargetType="ProgressBar">
-                                            <Setter Property="Foreground" Value="{Binding Model.Progress, Converter={StaticResource ProgressIntToBrushConverter}}" />
-                                        </Style>
-                                    </ProgressBar.Style>
-                                </ProgressBar>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.ExternalNumber}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Numer zewnętrzny" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.Customer.FullName}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Klient" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Model.Hardwares[0].Name}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Sprzęt" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Comment}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Notatki" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding OrderNumber}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Numer" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding DateRegistered}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Data rejestracji" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding DateEnded}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Data zakończenia" />
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding Fault}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Opis usterki" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding Cost}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Koszt" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding OrderType.Name}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Typ" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding OrderStatus.Name}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Status" />
+                <DataGridTemplateColumn
+                    Width="100"
+                    Header="Postęp"
+                    Visibility="Visible">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ProgressBar
+                                Margin="3,0,3,0"
+                                Background="AliceBlue"
+                                Value="{Binding Progress}">
+                                <ProgressBar.Style>
+                                    <Style TargetType="ProgressBar">
+                                        <Setter Property="Foreground" Value="{Binding Progress, Converter={StaticResource ProgressIntToBrushConverter}}" />
+                                    </Style>
+                                </ProgressBar.Style>
+                            </ProgressBar>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ExternalNumber}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Numer zewnętrzny" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding Customer.FullName}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Klient" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding Hardwares[0].Name}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Sprzęt" />
+                <DataGridTextColumn
+                    MinWidth="100"
+                    MaxWidth="200"
+                    Binding="{Binding Comment}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Notatki" />
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </UserControl>

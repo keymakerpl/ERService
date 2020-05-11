@@ -7,6 +7,7 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ERService.Statistics.ViewModels
 {
@@ -14,8 +15,13 @@ namespace ERService.Statistics.ViewModels
     {
         private readonly IOrderRepository _orderRepository;
 
+        private DateTime _dateFrom;
+        private DateTime _dateTo;
         private ChartValues<int> _finishedCount;
         private ChartValues<int> _inProgressCount;
+        private bool _isClosedVisible;
+        private bool _isInProgressVisible;
+        private bool _isOpenVisible;
         private ChartValues<int> _openCount;
 
         public OrdersStatsViewModel(IOrderRepository orderRepository, IEventAggregator eventaggregator, IMessageDialogService messageDialogService)
@@ -39,6 +45,18 @@ namespace ERService.Statistics.ViewModels
             Title = "Naprawy";
         }
 
+        public DateTime DateFrom
+        {
+            get { return _dateFrom; }
+            set { SetProperty(ref _dateFrom, value); }
+        }
+
+        public DateTime DateTo
+        {
+            get { return _dateTo; }
+            set { SetProperty(ref _dateTo, value); }
+        }
+
         public ChartValues<int> FinishedCount
         {
             get { return _finishedCount; }
@@ -51,41 +69,18 @@ namespace ERService.Statistics.ViewModels
             private set { SetProperty(ref _inProgressCount, value); }
         }
 
-        public ChartValues<int> OpenCount
-        {
-            get { return _openCount; }
-            private set { SetProperty(ref _openCount, value); }
-        }
-
-        private DateTime _dateFrom;
-        public DateTime DateFrom
-        {
-            get { return _dateFrom; }
-            set { SetProperty(ref _dateFrom, value); }
-        }
-
-        private DateTime _dateTo;
-        public DateTime DateTo
-        {
-            get { return _dateTo; }
-            set { SetProperty(ref _dateTo, value); }
-        }
-
-        private bool _isClosedVisible;
         public bool IsClosedVisible
         {
             get { return _isClosedVisible; }
             set { SetProperty(ref _isClosedVisible, value); }
         }
 
-        private bool _isInProgressVisible;
         public bool IsInProgressVisible
         {
             get { return _isInProgressVisible; }
             set { SetProperty(ref _isInProgressVisible, value); }
         }
 
-        private bool _isOpenVisible;
         public bool IsOpenVisible
         {
             get { return _isOpenVisible; }
@@ -94,14 +89,20 @@ namespace ERService.Statistics.ViewModels
 
         public override bool KeepAlive => true;
 
+        public ChartValues<int> OpenCount
+        {
+            get { return _openCount; }
+            private set { SetProperty(ref _openCount, value); }
+        }
+
+        public Func<ChartPoint, string> PointLabel { get; set; }
+
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
 
-        public Func<ChartPoint, string> PointLabel { get; set; }
-
-        public override void Load()
+        public override async Task LoadAsync()
         {
             OpenCount.Clear();
             InProgressCount.Clear();
@@ -109,19 +110,33 @@ namespace ERService.Statistics.ViewModels
 
             var dateTo = _dateTo.AddDays(1);
 
-            var openCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Open && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();            
-            OpenCount.Add(openCount);
+            await _orderRepository.FindByIncludeAsync(
+                o => o.OrderStatus.Group == Business.StatusGroup.Open && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+                s => s.OrderStatus)
+                .ContinueWith(async (t) =>
+                {
+                    var openCount = t.Result.Count();
+                    OpenCount.Add(openCount);
 
-            var inProgressCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.InProgress && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();
-            InProgressCount.Add(inProgressCount);
+                    var inProgressCount = await _orderRepository.FindByIncludeAsync(
+                        o => o.OrderStatus.Group == Business.StatusGroup.InProgress && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+                        s => s.OrderStatus);
 
-            var finishedCount = _orderRepository.FindByInclude(o => o.OrderStatus.Group == Business.StatusGroup.Finished && (o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo), s => s.OrderStatus).Count();
-            FinishedCount.Add(finishedCount);
+                    InProgressCount.Add(inProgressCount.Count());
+                })
+                .ContinueWith(async (t) =>
+                {
+                    var finishedCount = await _orderRepository.FindByIncludeAsync(
+                        o => o.OrderStatus.Group == Business.StatusGroup.Finished && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+                        s => s.OrderStatus);
+
+                    FinishedCount.Add(finishedCount.Count());
+                });
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Load();
+            await LoadAsync();
         }
 
         private void Chart_OnDataClick(ChartPoint chartpoint)

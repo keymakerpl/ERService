@@ -7,11 +7,11 @@ using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Constants;
 using ERService.RBAC;
 using ERService.Infrastructure.Dialogs;
-using System.Windows;
 using Prism.Commands;
 using ERService.Infrastructure.Events;
 using System.Linq;
 using System.Threading.Tasks;
+using ERService.Infrastructure.Repositories;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -43,10 +43,13 @@ namespace ERService.CustomerModule.ViewModels
         {
             try
             {
-                await GetIDsBy(args.QueryBuilder)
-                                                    .ContinueWith((t) => 
+                var parameters = new object[0];
+                var queryString = args.QueryBuilder.Compile(out parameters);
+
+                await GetIDsBy<Guid>(queryString, parameters)
+                                                    .ContinueWith(async (t) => 
                                                     {
-                                                        Load(c => t.Result.Contains(c.Id), a => a.CustomerAddresses);
+                                                        await LoadAsync(c => t.Result.Contains(c.Id), a => a.CustomerAddresses);
                                                     }, 
                                                     TaskContinuationOptions.ExecuteSynchronously);                
             }
@@ -58,10 +61,13 @@ namespace ERService.CustomerModule.ViewModels
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.CustomerSearchView });
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs()
+            {
+                Flyout = SideFlyouts.DetailFlyout,
+                ViewName = ViewNames.CustomerSearchView
+            });
         }
-
-        //TODO: Refactor with OnMouseDoubleClick
+        
         public async override void OnAddExecute()
         {
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.CanAddCustomer))
@@ -96,9 +102,7 @@ namespace ERService.CustomerModule.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    //TODO: exception hunter
-                    MessageBox.Show("Ups... " + Environment.NewLine +
-                    Environment.NewLine + ex.Message);
+                    _logger.Error(ex);
                 }
             }
         }
@@ -124,7 +128,7 @@ namespace ERService.CustomerModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Load(c => c.Id != Guid.Empty, o => o.Orders);
+            
         }
 
         public bool KeepAlive => true;

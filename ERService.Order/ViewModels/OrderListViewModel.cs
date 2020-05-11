@@ -3,18 +3,15 @@ using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Events;
+using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
-using ERService.OrderModule.Wrapper;
 using ERService.RBAC;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Windows;
 using System.Linq;
-using ERService.Infrastructure.Repositories;
-using Prism.Commands;
+using System.Threading.Tasks;
 
 namespace ERService.OrderModule.ViewModels
 {
@@ -24,10 +21,8 @@ namespace ERService.OrderModule.ViewModels
 
         private IMessageDialogService _dialogService;
 
-        public DelegateCommand SearchCommand { get; }
-
         private IRBACManager _rbacManager;
-
+        private Order _selectedOrder;
         public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
             IMessageDialogService messageDialogService, IEventAggregator eventAggregator) : base(context, regionManager, eventAggregator)
         {
@@ -37,41 +32,42 @@ namespace ERService.OrderModule.ViewModels
             SearchCommand = new DelegateCommand(OnSearchExecute);
 
             _eventAggregator.GetEvent<SearchQueryEvent>().Subscribe(OnSearchRequest);
+        }        
 
-            Orders = new ObservableCollection<OrderWrapper>();
-            Models.CollectionChanged += Models_CollectionChanged;
+        public DelegateCommand SearchCommand { get; }
+
+        public Order SelectedOrder
+        {
+            get { return _selectedOrder; }
+            set { _selectedOrder = value; SelectedModel = value; DeleteCommand.RaiseCanExecuteChanged(); }
         }
+
+        #region Events
 
         private void OnSearchExecute()
         {
-            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs() { Flyout = SideFlyouts.DetailFlyout, ViewName = ViewNames.OrderSearchView });
+            _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Publish(new AfterSideMenuExpandToggledArgs()
+            {
+                Flyout = SideFlyouts.DetailFlyout,
+                ViewName = ViewNames.OrderSearchView
+            });
         }
 
         private async void OnSearchRequest(SearchQueryEventArgs args)
         {
             try
             {
-                Orders.Clear();
-                var ids = await GetIDsBy(args.QueryBuilder);
-                Load(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
+                var parameters = new object[0];
+                var queryString = args.QueryBuilder.Compile(out parameters);
+
+                var ids = await GetIDsBy<Guid>(queryString, parameters);
+                await LoadAsync(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
         }
-
-        private OrderWrapper _selectedOrder;
-        public OrderWrapper SelectedOrder
-        {
-            get { return _selectedOrder; }
-            set {_selectedOrder = value; SelectedModel = value?.Model; DeleteCommand.RaiseCanExecuteChanged(); }
-        }
-
-        public ObservableCollection<OrderWrapper> Orders { get; set; }
-        public bool KeepAlive => true;
-
-        #region Events
 
         public async override void OnAddExecute()
         {
@@ -99,18 +95,19 @@ namespace ERService.OrderModule.ViewModels
             {
                 try
                 {
-                    Remove(SelectedOrder.Model);
-                    Orders.Remove(SelectedOrder);
-                    await SaveAsync();
+                    Remove(SelectedOrder);                    
+                    await SaveAsync().ContinueWith(async t => 
+                    {
+                        await RefreshListAsync();
+                    }
+                    , TaskContinuationOptions.ExecuteSynchronously);
                 }
                 catch (Exception ex)
                 {
-                    //TODO: exception hunter
-                    MessageBox.Show("Ups... " + Environment.NewLine +
-                    Environment.NewLine + ex.Message);
+                    _logger.Error(ex);
                 }
             }
-        } 
+        }
 
         public override void OnMouseDoubleClickExecute()
         {
@@ -122,11 +119,14 @@ namespace ERService.OrderModule.ViewModels
 
                 ShowDetail(parameters);
             }
-        }        
+        }
 
-        #endregion
+        #endregion Events
 
         #region Navigation
+
+        public bool KeepAlive => true;
+
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             continuationCallback(true);
@@ -149,18 +149,9 @@ namespace ERService.OrderModule.ViewModels
                 var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
                 query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", orderNumber);
 
-                OnSearchRequest(new SearchQueryEventArgs() { QueryBuilder = query } );
+                OnSearchRequest(new SearchQueryEventArgs() { QueryBuilder = query });
             }
-        }
-
-        private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems == null) return;
-            foreach (var item in e.NewItems)
-            {
-                Orders.Add(new OrderWrapper((Order)item));
-            }
-        }
+        }        
 
         #endregion Navigation
     }

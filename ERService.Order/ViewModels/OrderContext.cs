@@ -5,12 +5,14 @@ using ERService.HardwareModule;
 using ERService.HardwareModule.Data.Repository;
 using ERService.HardwareModule.ViewModels;
 using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Data.Repository;
 using ERService.OrderModule.OrderNumeration;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
 using Prism.Events;
+using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -40,12 +42,14 @@ namespace ERService.OrderModule.ViewModels
         private HardwareType _selectedHardwareType;
         private OrderStatus _selectedOrderStatus;
         private OrderType _selectedOrderType;
+        private readonly IRegionManager _regionManager;
 
-        public OrderContext(IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IOrderRepository orderRepository,
+        public OrderContext(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IOrderRepository orderRepository,
             ICustomerRepository customerRepository, ICustomItemRepository customItemRepository, IHwCustomItemRepository hwCustomItemRepository,
             IHardwareTypeRepository hardwareTypeRepository, IOrderStatusRepository orderStatusRepository, IOrderTypeRepository orderTypeRepository,
             INumerationRepository numerationRepository) : base(eventAggregator, messageDialogService)
         {
+            _regionManager = regionManager;
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _customItemRepository = customItemRepository;
@@ -64,7 +68,7 @@ namespace ERService.OrderModule.ViewModels
 
             Attachments = new ObservableCollection<Blob>();            
 
-            Initialize();
+            Initialize();            
         }
 
         public ObservableCollection<Blob> Attachments { get; }
@@ -212,7 +216,9 @@ namespace ERService.OrderModule.ViewModels
 
             if (numeration.Any())
             {
-                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration.FirstOrDefault().Pattern);
+                order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration
+                    .FirstOrDefault()
+                    .Pattern);
             }
 
             order.DateRegistered = DateTime.Now;
@@ -247,8 +253,19 @@ namespace ERService.OrderModule.ViewModels
             await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
             {
                 HasChanges =    _orderRepository.HasChanges()
-                            &&  _customerRepository.HasChanges();
-            });
+                            &&  _customerRepository.HasChanges();                
+            })
+            .ContinueWith(async t => 
+            {
+                var dbProperties = await _orderRepository.GetDatabaseValuesAsync(Order.Model);
+                var id = dbProperties["Id"];
+
+                var parameters = new NavigationParameters();
+                parameters.Add("ID", id);
+                parameters.Add("GoBackView", ViewNames.OrderListView);
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
+            }, 
+            TaskContinuationOptions.ExecuteSynchronously);
         }        
 
         private async void InitializeCustomersCombo()

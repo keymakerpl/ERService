@@ -9,9 +9,16 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ERService.Infrastructure.Base
 {
+    public class FilterParameters<TEntity> where TEntity : class
+    {
+        public Expression<Func<TEntity, bool>> Predicate { get; set; }
+        public Expression<Func<TEntity, object>>[] IncludeProp { get; set; }
+    }
+
     public abstract class ListModelBase<TEntity, TContext> : GenericRepository<TEntity, TContext>, IListModelBase<TEntity>
         where TEntity : class
         where TContext : DbContext
@@ -32,7 +39,16 @@ namespace ERService.Infrastructure.Base
             _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid);
             _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();
 
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(OnDetailSaved, true);
+
             Models = new ObservableCollection<TEntity>();
+        }
+
+        public FilterParameters<TEntity> CurrentFilterParameters { get; set; }
+
+        private async void OnDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            await RefreshListAsync();
         }
 
         public DelegateCommand AddCommand { get; set; }
@@ -53,38 +69,24 @@ namespace ERService.Infrastructure.Base
             set { _isReadOnly = value; AddCommand.RaiseCanExecuteChanged(); }
         }
 
-        public virtual void Load(Expression<Func<TEntity, bool>> predicate,
+        public virtual async Task LoadAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
+            CurrentFilterParameters = new FilterParameters<TEntity>
+            {
+                Predicate = predicate,
+                IncludeProp = includeProps
+            };
+
             Models.Clear();
-            var models = Get(predicate, null, includeProps);
+            var models = await FindByIncludeAsync(predicate, includeProps);
             foreach (var model in models)
             {
                 Models.Add(model);
             }            
         }
 
-        public virtual async void LoadAsync(Query queryBuilder)
-        {
-            Models.Clear();
-            var models = await FindByAsync(queryBuilder);
-            foreach (var model in models)
-            {
-                Models.Add(model);
-            }
-        }
-
-        public virtual async void LoadAsync()
-        {
-            Models.Clear();
-            var models = await GetAllAsync();
-            foreach (var model in models)
-            {
-                Models.Add(model);
-            }
-        }
-
-        public abstract void OnAddExecute();        
+        public abstract void OnAddExecute();
 
         private bool OnAddCanExecute()
         {
@@ -104,21 +106,21 @@ namespace ERService.Infrastructure.Base
         }
 
         public abstract void OnMouseDoubleClickExecute();
-
-        //TODO: Refactor .requestNavigate
+        
         public virtual void ShowDetail(NavigationParameters parameters)
         {
-            var region = parameters.GetValue<string>("REGION");
-            if (region != null)
-            {
-                region = parameters["REGION"].ToString();
-            }
-            else region = RegionNames.ContentRegion;
+            var viewName = parameters.GetValue<string>("ViewFullName");
+            var region = parameters.GetValue<string>("REGION") ?? RegionNames.ContentRegion;
+            _regionManager.Regions[region].RequestNavigate(viewName, parameters);
+        }
 
-            var viewName = parameters["ViewFullName"].ToString();
+        public virtual async Task RefreshListAsync()
+        {
+            if (CurrentFilterParameters == null)
+                return;
 
-            //_regionManager.Regions[region].RemoveAll();
-            _regionManager.RequestNavigate(region, viewName, parameters);
+            await ReloadEntities();
+            await LoadAsync(CurrentFilterParameters.Predicate, CurrentFilterParameters.IncludeProp);
         }
     }
 }

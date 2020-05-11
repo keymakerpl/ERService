@@ -167,6 +167,8 @@ namespace ERService.OrderModule.ViewModels
 
         public override bool KeepAlive => false;
 
+        private string GoBackView { get; set; }
+
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
@@ -174,13 +176,15 @@ namespace ERService.OrderModule.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            _navigationService = navigationContext.NavigationService;
+            _navigationService = navigationContext.NavigationService;            
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
-            if (id != null)
+            if (id != null && id != Guid.Empty)
             {
                 await LoadAsync(id);
             }
+
+            GoBackView = navigationContext.Parameters.GetValue<string>("GoBackView");
 
             if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditOrder))
                 IsReadOnly = true;
@@ -206,7 +210,15 @@ namespace ERService.OrderModule.ViewModels
 
         protected override void OnCancelEditExecute()
         {
-            _navigationService.Journal.GoBack();
+            if (!String.IsNullOrEmpty(GoBackView))
+            {
+                _navigationService.Journal.Clear();
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, GoBackView);
+            }
+            else
+            {
+                _navigationService.Journal.GoBack();
+            }
         }
 
         protected override bool OnSaveCanExecute()

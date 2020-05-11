@@ -38,11 +38,14 @@ namespace ERService.OrderModule.Tasks
 
             _logger.Debug($"LastUpdateTime: {LastUpdateTime}");
 
-            var ids = await _orderRepository.GetIDsBy(query);
+            var parameters = new object[0];
+            var queryString = query.Compile(out parameters);
 
-            if (ids.Length > 0)
+            var ids = await _orderRepository.GetIDsBy<Guid>(queryString, parameters);
+
+            if (ids.Count > 0)
             {
-                RaiseNewOrdersAdded(ids);
+                RaiseNewOrdersAdded(ids.ToArray());
                 LastUpdateTime = DateTime.Now;
             }            
         }

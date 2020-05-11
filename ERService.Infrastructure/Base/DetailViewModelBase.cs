@@ -156,6 +156,7 @@ namespace ERService.Infrastructure.Base
             try
             {
                 await saveFunc();
+                RaiseDetailSavedEvent(ID, Title);
 
                 _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano element.", NotificationTypes.Success);
             }
@@ -166,7 +167,7 @@ namespace ERService.Infrastructure.Base
                 {
                     await _messageDialogService
                         .ShowInformationMessageAsync(this, "Usunięty element...", "Element został w międzyczasie usunięty przez innego użytkownika.");
-                    RaiseDetailSavedEvent(ID, Title);
+                    
                     return;
                 }
 
@@ -179,12 +180,14 @@ namespace ERService.Infrastructure.Base
                     var entry = e.Entries.Single(); //pobierz krotkę której nie można zapisać
                     entry.OriginalValues.SetValues(entry.GetDatabaseValues()); //pobierz aktualne dane z db (aby zaktualizować rowversion w current row)
                     await saveFunc(); //zapisz
+
+                    RaiseDetailSavedEvent(ID, Title);
                 }
                 else
                 {
                     await e.Entries.Single().ReloadAsync(); //przeładuj cache krotki z bazy
                     await LoadAsync(ID); //załaduj ponownie model
-                }
+                }                
             }
             catch (Exception e)
             {

@@ -28,28 +28,8 @@
             BorderBrush="LightGray"
             BorderThickness="1,0,0,0">
             <StackPanel Margin="5">
-                <Button
-                    Width="40"
-                    Height="40"
-                    Margin="5"
-                    Background="GhostWhite"
-                    Command="{Binding CancelCommand}"
-                    Foreground="Gray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Anuluj">
-                    <iconPacks:PackIconMaterial Kind="CloseCircle" />
-                </Button>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Margin="5"
-                    Background="GhostWhite"
-                    Command="{Binding SaveCommand}"
-                    Foreground="Gray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Zapisz">
-                    <iconPacks:PackIconMaterialLight Kind="ContentSave" />
-                </Button>
+                <Button Command="{Binding CancelCommand}" Style="{StaticResource CancelButtonCircle}" />
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource SaveButtonCircle}" />
                 <metroControls:DropDownButton
                     Width="40"
                     Height="40"
@@ -68,7 +48,8 @@
                     FontSize="16"
                     Foreground="Gray"
                     ItemsSource="{Binding PrintTemplates}"
-                    ToolTip="Drukuj">
+                    ToolTip="Drukuj"
+                    Visibility="Collapsed">
                     <metroControls:DropDownButton.ItemContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
                             <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=local:OrderWizardView}}" />

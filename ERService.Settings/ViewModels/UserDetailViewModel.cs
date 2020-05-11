@@ -13,6 +13,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace ERService.Settings.ViewModels
@@ -56,12 +57,9 @@ namespace ERService.Settings.ViewModels
 
         public ObservableCollection<Role> UserRoles { get; }
 
-        public override void Load(Guid id)
+        public override async Task LoadAsync(Guid id)
         {
-            var user = id != Guid.Empty ? _userRepository
-                        .FindByInclude(u => u.Id == id, r => r.Role)
-                        .ToList()
-                        .FirstOrDefault()
+            var user = id != Guid.Empty ? await _userRepository.GetByIdAsync(id)                        
                         : GetNewDetail();
 
             ID = id;
@@ -70,13 +68,13 @@ namespace ERService.Settings.ViewModels
             Initialize(user);
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
 
-            Load(id);
+            await LoadAsync(id);
 
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
                 IsReadOnly = true;

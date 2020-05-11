@@ -25,8 +25,12 @@ namespace ERService.HardwareModule.Data.Repository
                                 .Join(nameof(HardwareType), $"{nameof(Hardware)}.{nameof(Hardware.HardwareTypeID)}"
                                 , $"{nameof(HardwareType)}.{nameof(HardwareType.Id)}");
 
-            var ids = await GetIDsBy(query);
-            return ids;
+            var parameters = new object[0];
+            var queryString = query.Compile(out parameters);
+
+            var ids = await GetIDsBy<Guid>(queryString, parameters);
+
+            return ids.ToArray();
         }
     }
 }

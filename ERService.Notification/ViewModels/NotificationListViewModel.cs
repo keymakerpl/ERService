@@ -55,8 +55,11 @@ namespace ERService.Notification.ViewModels
             query.OrderByDesc(nameof(Order.DateAdded));
             query.Limit(4);
 
-            var ids = await _orderRepository.GetIDsBy(query);
-            LoadOrders(ids);
+            var parameters = new object[0];
+            var queryString = query.Compile(out parameters);
+
+            var ids = await _orderRepository.GetIDsBy<Guid>(queryString, parameters);
+            await LoadOrders(ids.ToArray());
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
@@ -64,9 +67,9 @@ namespace ERService.Notification.ViewModels
             await LoadAsync();
         }
 
-        private void LoadOrders(Guid[] ids)
+        private async Task LoadOrders(Guid[] ids)
         {
-            var orders = _orderRepository.FindByInclude(o => ids.Contains(o.Id), o => o.Customer);
+            var orders = await _orderRepository.FindByIncludeAsync(o => ids.Contains(o.Id), o => o.Customer);
 
             foreach (var order in orders)
             {
@@ -86,13 +89,13 @@ namespace ERService.Notification.ViewModels
             }
         }
 
-        private void OnNewOrdersAdded(AfterNewOrdersAddedEventArgs args)
+        private async void OnNewOrdersAdded(AfterNewOrdersAddedEventArgs args)
         {
             if (args.NewItemsIDs.Length == 0)
                 return;
 
             var ids = args.NewItemsIDs;
-            LoadOrders(ids);
+            await LoadOrders(ids);
         }
 
         private void OnShowOrderExecute(object args)

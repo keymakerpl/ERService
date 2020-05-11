@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using ERService.Infrastructure.Repositories;
 using Prism.Commands;
 using Prism.Regions;
@@ -15,11 +16,11 @@ namespace ERService.Infrastructure.Base
         ObservableCollection<T> Models { get; set; }
         T SelectedModel { get; set; }
         bool IsReadOnly { get; set; }
-
-        void LoadAsync();
-        void LoadAsync(Query queryBuilder);
-        void Load(Expression<Func<T, bool>> predicate,
+        
+        Task LoadAsync(Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] includeProps);
+
+        Task RefreshListAsync();
 
         void ShowDetail(NavigationParameters parameters);
         void OnMouseDoubleClickExecute();

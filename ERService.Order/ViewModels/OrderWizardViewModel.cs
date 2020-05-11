@@ -134,9 +134,8 @@ namespace ERService.OrderModule.ViewModels
             if (!TryValidate())
                 return;
 
-            _orderWizardContext.Save();
             _canNavigateAfterSave = true;
-            _navigationContext.NavigationService.Journal.GoBack();
+            _orderWizardContext.Save();
         }
         
         private void OnGoBackExecute()
@@ -170,6 +169,11 @@ namespace ERService.OrderModule.ViewModels
                     _regionManager.RequestNavigate(RegionNames.OrderWizardStageRegion, ViewNames.OrderWizardCustomerView);
                     break;
             }
+        }
+
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            _regionManager.Regions[RegionNames.OrderWizardStageRegion].RemoveAll();
         }
 
         private void InitializeRegionContext()

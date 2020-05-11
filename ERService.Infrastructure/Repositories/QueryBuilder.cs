@@ -1,17 +1,34 @@
 ﻿using SqlKata;
+using SqlKata.Compilers;
 
 namespace ERService.Infrastructure.Repositories
 {
     public class QueryBuilder : Query
     {
-        private readonly string _tableName;
-
         public QueryBuilder(string tableName) : base(tableName)
         {
-            _tableName = tableName;
+            TableName = tableName;
         }
 
-        public string TableName => _tableName;
+        public string TableName { get; }        
+    }
+
+    public static class QueryExtensions
+    {
+        public static string Compile(this Query query, out object[] bindings)
+        {
+            var compiler = GetCompiler();
+            var sqlResult = compiler.Compile(query);
+            var queryString = sqlResult.Sql;
+            bindings = sqlResult.Bindings.ToArray();
+
+            return queryString;
+        }
+
+        private static SqlServerCompiler GetCompiler()
+        {
+            return new SqlServerCompiler();
+        }
     }
 
     public static class SQLOperators

@@ -89,7 +89,6 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Background="GhostWhite"
-                CornerRadius="0 15 0 0"
                 Style="{StaticResource DefaultBorderStyle}">
                 <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.RowDefinitions>
@@ -255,7 +254,6 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Background="GhostWhite"
-            CornerRadius="0 15 0 0"
             Style="{StaticResource DefaultBorderStyle}">
             <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid.RowDefinitions>

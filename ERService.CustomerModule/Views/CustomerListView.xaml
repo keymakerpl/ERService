@@ -73,100 +73,94 @@
             <ContentControl prism:RegionManager.RegionName="CustomerSearchRegion" />
         </Border>
 
-        <Border
-            x:Name="ListBorder"
-            Grid.Row="0"
-            Margin="10,5,10,10"
-            BorderBrush="LightGray"
-            BorderThickness="0">
-            <DataGrid
-                helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                IsReadOnly="True"
-                ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectionMode="Single"
-                Style="{StaticResource AzureDataGrid}">
+        <DataGrid
+            Margin="5"
+            helpers:RowDoubleClickHandler.MethodName="OnMouseDoubleClickExecute"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Single"
+            Style="{StaticResource AzureDataGrid}">
 
-                <DataGrid.Resources>
-                    <Style BasedOn="{StaticResource AzureDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="Foreground" Value="Black" />
-                        <Setter Property="FontSize" Value="11" />
-                    </Style>
-                </DataGrid.Resources>
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource AzureDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="FontSize" Value="11" />
+                </Style>
+            </DataGrid.Resources>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding LastName}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Nazwisko" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding FirstName}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Imię" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding CompanyName}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Firma" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding NIP}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="NIP" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding PhoneNumber}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Telefon" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding PhoneNumber2}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Telefon 2" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Email}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="E-mail" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding CustomerAddresses[0].Street}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Ulica" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding CustomerAddresses[0].HouseNumber}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Nr. budynku" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding CustomerAddresses[0].City}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Miasto" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding CustomerAddresses[0].Postcode}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        Header="Kod" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding LastName}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Nazwisko" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding FirstName}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Imię" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding CompanyName}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Firma" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding NIP}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="NIP" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding PhoneNumber}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Telefon" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding PhoneNumber2}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Telefon 2" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Email}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="E-mail" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding CustomerAddresses[0].Street}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Ulica" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding CustomerAddresses[0].HouseNumber}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Nr. budynku" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding CustomerAddresses[0].City}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Miasto" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding CustomerAddresses[0].Postcode}"
+                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Kod" />
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 

@@ -311,7 +311,7 @@
                             Grid.Column="0"
                             Margin="10,0,0,0"
                             VerticalAlignment="Center"
-                            Content="Data dodania:"
+                            Content="Data rejestracji:"
                             FontSize="14" />
 
                         <metroControls:DateTimePicker
