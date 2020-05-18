@@ -19,8 +19,8 @@ namespace ERService.Header.ViewModels
             _regionManager = regionManager;
 
             _eventAggregator.GetEvent<AfterNewOrdersAddedEvent>().Subscribe(OnNewOrdersAdded, true);
-            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((a) => IsToogleButtonVisible = true);
-            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((a) => IsToogleButtonVisible = false);
+            _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe((a) => IsToogleButtonVisible = true, true);
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe((a) => IsToogleButtonVisible = false, true);
 
             SideMenuToggleCommand = new DelegateCommand(OnSideMenuToggleExecute);
         }

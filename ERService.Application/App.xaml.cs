@@ -5,7 +5,6 @@ using ERService.Infrastructure.Helpers;
 using ERService.Navigation;
 using ERService.RBAC;
 using ERService.Settings;
-using ERService.Settings.Views;
 using ERService.StartPage;
 using ERService.StatusBar;
 using Prism.Ioc;
@@ -21,7 +20,6 @@ using System.Globalization;
 using System.Windows.Markup;
 using ERService.MSSQLDataAccess;
 using ERService.Infrastructure.Base.Common;
-using ERService.Views;
 using ERService.Notification;
 using Prism.Regions;
 using ERService.Infrastructure.Prism.Regions;
@@ -32,6 +30,8 @@ using ERService.Services.Tasks;
 using ERService.Services.Services;
 using ERService.Statistics;
 using Hangfire.Server;
+using ERService.Startup;
+using ERService.Views;
 
 namespace ERService.Application
 {
@@ -74,9 +74,9 @@ namespace ERService.Application
         protected override void OnExit(ExitEventArgs e)
         {
             NLog.LogManager.Shutdown();
-            var jobServer = Container.Resolve<IBackgroundProcessingServer>();
-            jobServer.SendStop();
-            jobServer.Dispose();
+            //var jobServer = Container.Resolve<IBackgroundProcessingServer>();
+            //jobServer.SendStop();
+            //jobServer.Dispose();
 
             base.OnExit(e);
         }
@@ -85,34 +85,34 @@ namespace ERService.Application
         {
             base.ConfigureModuleCatalog(moduleCatalog);
 
-            moduleCatalog.AddModule(typeof(MSSQLDataAccessModule));
+            moduleCatalog.AddModule<MSSQLDataAccessModule>(ModuleNames.SQLDataAccessModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<RBACModule>(ModuleNames.RBACModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule<ServicesModule>(ModuleNames.ServicesModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule<NotificationModule>(ModuleNames.NotificationModule, InitializationMode.OnDemand);
             moduleCatalog.AddModule<StatisticsModule>(ModuleNames.StatisticsModule, InitializationMode.OnDemand);
-            moduleCatalog.AddModule(typeof(LicensingModule));
-            moduleCatalog.AddModule(typeof(NavigationModule));
-            moduleCatalog.AddModule(typeof(HeaderModule));
-            moduleCatalog.AddModule(typeof(StatusBarModule));
-            moduleCatalog.AddModule(typeof(SettingsModule));
-            moduleCatalog.AddModule(typeof(StartPageModule));
-            moduleCatalog.AddModule(typeof(RBACModule));
-            moduleCatalog.AddModule(typeof(TemplateEditorModule));
-            moduleCatalog.AddModule(typeof(HardwareModule.HardwareModule));
-            moduleCatalog.AddModule(typeof(OrderModule.OrderModule));
-            moduleCatalog.AddModule(typeof(CustomerModule.CustomerModule));
+            moduleCatalog.AddModule<LicensingModule>(ModuleNames.LicensingModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<NavigationModule>(ModuleNames.NavigationModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<HeaderModule>(ModuleNames.HeaderModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<StatusBarModule>(ModuleNames.StatusBarModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<SettingsModule>(ModuleNames.SettingsModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<StartPageModule>(ModuleNames.StartPageModule, InitializationMode.OnDemand);            
+            moduleCatalog.AddModule<TemplateEditorModule>(ModuleNames.TemplateEditorModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<HardwareModule.HardwareModule>(ModuleNames.HardwareModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<OrderModule.OrderModule>(ModuleNames.OrderModule, InitializationMode.OnDemand);
+            moduleCatalog.AddModule<CustomerModule.CustomerModule>(ModuleNames.CustomerModule, InitializationMode.OnDemand);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry   .RegisterSingleton<IBackgroundTaskRegistration, BackgroundTaskRegistration>()
-                                .RegisterSingleton<IConfig, Config>()                                                                                                                                            
+                                .RegisterSingleton<IConfig, Config>()
+                                .Register<IERBootstrap, ERBootstrap>()
                                 .Register<IPasswordHasher, PasswordHasher>()
                                 .Register<IDialogCoordinator, DialogCoordinator>()
                                 .Register<IMessageDialogService, MessageDialogService>()
-                                .Register<IToastNotificationService, ToastNotificationService>();            
+                                .Register<IToastNotificationService, ToastNotificationService>();
 
-            containerRegistry.RegisterForNavigation<LoggedUserView>(ViewNames.LoggedUserView); 
-            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);                
+            containerRegistry.RegisterForNavigation<LoginView>(ViewNames.LoginView);
         }
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)

@@ -8,7 +8,7 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 
-namespace ERService.ViewModels
+namespace ERService.Notification.ViewModels
 {
     public class LoggedUserViewModel : DetailViewModelBase
     {

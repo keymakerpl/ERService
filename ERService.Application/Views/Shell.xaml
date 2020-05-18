@@ -1,9 +1,9 @@
-﻿<Controls:MetroWindow
+﻿<mah:MetroWindow
     x:Class="ERService.Application.Views.Shell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    xmlns:controls="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:not="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
     xmlns:prism="http://prismlibrary.com/"
     Title="ERService 1.0.0"
     Width="1280"
@@ -17,9 +17,9 @@
     WindowStartupLocation="CenterScreen"
     WindowTransitionsEnabled="False">
 
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout
                 Width="200"
                 IsOpen="{Binding NotificationFlyoutIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Position="Right"
@@ -27,31 +27,23 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ContentControl prism:RegionManager.RegionName="NotificationRegion" />
-                    <Border
-                        Grid.Row="1"
-                        Margin="15"
-                        BorderBrush="Gray"
-                        BorderThickness="0,1,0,0">
-                        <ContentControl prism:RegionManager.RegionName="LoggedUserRegion" />
-                    </Border>
                 </Grid>
-            </Controls:Flyout>
-            <Controls:Flyout
+            </mah:Flyout>
+            <mah:Flyout
                 Width="350"
                 IsOpen="{Binding RightFlyoutIsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Position="Right"
                 Theme="Dark">
                 <ContentControl prism:RegionManager.RegionName="DetailFlyoutRegion" />
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -143,12 +135,24 @@
             <ContentControl prism:RegionManager.RegionName="ContentRegion" DockPanel.Dock="Left" />
         </DockPanel>
 
-        <controls:NotificationArea
+        <not:NotificationArea
             x:Name="WindowArea"
             Grid.RowSpan="4"
             Grid.ColumnSpan="2"
             MaxItems="6"
             Position="BottomRight" />
 
+        <mah:MetroProgressBar
+            Grid.RowSpan="4"
+            Grid.ColumnSpan="2"
+            Width="250"
+            Height="15"
+            Margin="15"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            mah:VisibilityHelper.IsVisible="{Binding IsProgressBarVisible}"
+            Foreground="DarkGray"
+            IsIndeterminate="True" />
+
     </Grid>
-</Controls:MetroWindow>
+</mah:MetroWindow>

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Events;
+using ERService.Startup;
 using ERService.Views;
 using Prism.Events;
+using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -11,6 +15,7 @@ namespace ERService.Application.ViewModels
 {
     public class ShellViewModel : BindableBase
     {
+        private readonly IERBootstrap _bootstrap;
         private IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
         public string ApplicationName { get; }
@@ -32,25 +37,69 @@ namespace ERService.Application.ViewModels
             }
         }
 
-        public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        private bool _isProgressBarVisible;
+        public bool IsProgressBarVisible
         {
+            get { return _isProgressBarVisible; }
+            set { SetProperty(ref _isProgressBarVisible, value); }
+        }
+
+        public ShellViewModel(IERBootstrap bootstrap, IRegionManager regionManager, IEventAggregator eventAggregator)
+        {
+            _bootstrap = bootstrap;
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Subscribe(OnUserLogedin, true);
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout, true);
             _eventAggregator.GetEvent<AfterSideMenuExpandToggled>().Subscribe(OnSideMenuExpandToggled);
+            _eventAggregator.GetEvent<ShowProgressBarEvent>().Subscribe(OnShowProgressBarChanged, true);
 
             var assembly = Assembly.GetEntryAssembly();
-            ApplicationName = $"{assembly.GetName().Name} {assembly.GetName().Version}";            
+            var major = assembly.GetName().Version.Major;
+            var minor = assembly.GetName().Version.Minor;
 
-            ShowLoginWindow();
+            ApplicationName = $"{assembly.GetName().Name} v{major}.{minor}";
+
+            Initialize();
+        }
+
+        private void OnShowProgressBarChanged(ShowProgressBarEventArgs args)
+        {
+            IsProgressBarVisible = args.IsShowing;
+        }
+
+        private void Initialize()
+        {
+            var t = Task.Run(() => 
+            {
+                _eventAggregator.GetEvent<ShowProgressBarEvent>().Publish(new ShowProgressBarEventArgs { IsShowing = true });
+                _bootstrap.ColdStart();
+                _eventAggregator.GetEvent<ShowProgressBarEvent>().Publish(new ShowProgressBarEventArgs { IsShowing = false });
+            });
+
+            t.ContinueWith((task) => 
+            {
+                if (task.Status == TaskStatus.RanToCompletion)
+                {
+                    ShowLoginWindow();
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnUserLogedin(UserAuthorizationEventArgs args)
         {
             _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Unsubscribe(OnUserLogedin);
             _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigating += NavigationService_Navigating;
+        }
+
+        private void OnUserLogedout(UserAuthorizationEventArgs args)
+        {
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+
+            RightFlyoutIsExpanded = false;
+            NotificationFlyoutIsExpanded = false;
+            ShowLoginWindow();
         }
 
         private void NavigationService_Navigating(object sender, RegionNavigationEventArgs e)
@@ -96,20 +145,11 @@ namespace ERService.Application.ViewModels
             {
                 _regionManager.Regions[RegionNames.DetailFlyoutRegion].RemoveAll();
             }
-        }
-
-        private void OnUserLogedout(UserAuthorizationEventArgs args)
-        {
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-
-            RightFlyoutIsExpanded = false;
-            NotificationFlyoutIsExpanded = false;
-            ShowLoginWindow();
-        }
+        }        
 
         private void ShowLoginWindow()
         {
-            _regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(LoginView));
+            _regionManager.Regions[RegionNames.ContentRegion].RequestNavigate(ViewNames.LoginView);
         }
     }
 }

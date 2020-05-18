@@ -91,10 +91,12 @@
     <Compile Include="Base\IView.cs" />
     <Compile Include="Events\PrintEvent.cs" />
     <Compile Include="Events\SearchQueryEvent.cs" />
+    <Compile Include="Events\ShowProgressBarEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
     <Compile Include="Helpers\BarcodeGenerator.cs" />
     <Compile Include="Helpers\BooleanOrConverter.cs" />
     <Compile Include="Helpers\Cryptography.cs" />
+    <Compile Include="Helpers\Data\DbHelper.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\FileUtils.cs" />
@@ -159,6 +161,9 @@
     </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
+    </PackageReference>
+    <PackageReference Include="MySql.Data">
+      <Version>8.0.18</Version>
     </PackageReference>
     <PackageReference Include="NetBarcode">
       <Version>1.0.8</Version>

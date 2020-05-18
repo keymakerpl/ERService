@@ -26,8 +26,7 @@ namespace ERService.OrderModule
 
         public void OnInitialized(IContainerProvider containerProvider)
         {            
-            _taskRegistration.Register(new BackgroundTask<NewOrdersNotificationTask>(CronExpressions.EveryOneMinute));            
-            _logger.Info("Initialized");
+            _taskRegistration.Register(new BackgroundTask<NewOrdersNotificationTask>(CronExpressions.EveryOneMinute));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

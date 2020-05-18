@@ -42,9 +42,13 @@
             </DataTemplate>
         </Grid.Resources>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
         <Controls:HamburgerMenu
             x:Name="HamburgerMenuControl"
+            Width="180"
             DisplayMode="CompactInline"
             Foreground="Black"
             HamburgerVisibility="Collapsed"
@@ -53,14 +57,19 @@
             ItemTemplate="{StaticResource MenuItemTemplate}"
             OptionsItemTemplate="{StaticResource MenuItemTemplate}"
             PaneBackground="Transparent">
-            <Controls:HamburgerMenu.Effect>
-                <BlurEffect />
-            </Controls:HamburgerMenu.Effect>
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                    <ei:GoToStateAction StateName="Collapsed" />
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                    <ei:GoToStateAction StateName="Opened" />
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
 
             <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                 <DataTemplate>
                     <Grid
-                        Name="root"
+                        x:Name="root"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                         <TextBlock
@@ -123,7 +132,7 @@
                     <Controls:HamburgerMenuGlyphItem
                         Command="{Binding OpenDetailViewCommand}"
                         CommandParameter="StatisticsTabView"
-                        Glyph=""
+                        Glyph="&#xE9D9;"
                         Label="Statystyki" />
 
                     <Controls:HamburgerMenuGlyphItem
@@ -143,30 +152,42 @@
                 </Controls:HamburgerMenuItemCollection>
             </Controls:HamburgerMenu.OptionsItemsSource>
 
-            <i:Interaction.Triggers>
-                <ei:DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:HamburgerMenu}}}" Value="True">
-                    <ei:GoToStateAction StateName="Normal" />
-                </ei:DataTrigger>
-                <ei:DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:HamburgerMenu}}}" Value="False">
-                    <ei:GoToStateAction StateName="Blured" />
-                </ei:DataTrigger>
-            </i:Interaction.Triggers>
-
         </Controls:HamburgerMenu>
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisibilityStates">
+            <VisualStateGroup x:Name="CloseStates">
                 <VisualStateGroup.Transitions>
-                    <VisualTransition GeneratedDuration="0:0:1" To="Normal" />
-                    <VisualTransition GeneratedDuration="0:0:1" To="Blured" />
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Collapsed">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Opened">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                        <Storyboard />
+                    </VisualTransition>
                 </VisualStateGroup.Transitions>
-                <VisualState x:Name="Normal">
+                <VisualState x:Name="Collapsed">
                     <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HamburgerMenuControl" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HamburgerMenuControl" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HamburgerMenuControl" Storyboard.TargetProperty="(UIElement.Opacity)">
                             <EasingDoubleKeyFrame KeyTime="0" Value="0" />
                         </DoubleAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-                <VisualState x:Name="Blured" />
+                <VisualState x:Name="Opened">
+                    <Storyboard>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HamburgerMenuControl" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="180" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HamburgerMenuControl" Storyboard.TargetProperty="(UIElement.Opacity)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>

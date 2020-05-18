@@ -47,7 +47,7 @@ namespace ERService.Infrastructure.Repositories
             return await query.Where(predicate).ToListAsync();
         }        
 
-        public virtual async Task<List<T>> GetIDsBy<T>(string sqlQuery, object[] parameters) 
+        public virtual async Task<List<T>> GetBy<T>(string sqlQuery, object[] parameters) 
         {
             var result = await Context.Database.SqlQuery<T>(sqlQuery, parameters).ToListAsync();
 

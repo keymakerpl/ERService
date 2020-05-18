@@ -1,24 +1,27 @@
-﻿using ERService.Infrastructure.Constants;
+﻿using ERService.Infrastructure.Base;
+using ERService.Infrastructure.Constants;
+using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Events;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 
 namespace ERService.Navigation.ViewModels
 {
-    public class NavigationViewModel : BindableBase
+    public class NavigationViewModel : DetailViewModelBase
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
-        private readonly IEventAggregator _eventAggregator;
+        
         private string _currentContentName;
         private bool _isEnabled;
 
-        public NavigationViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public NavigationViewModel(
+            IRegionManager regionManager,
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService) 
+            : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;
-            _eventAggregator = eventAggregator;
 
             _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigated += NavigationService_Navigated;
             _regionManager.Regions[RegionNames.ContentRegion].NavigationService.NavigationFailed += NavigationService_NavigationFailed;

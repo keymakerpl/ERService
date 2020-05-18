@@ -21,7 +21,6 @@ namespace ERService.RBAC
         private List<Role> _roles;
         private List<User> _users;
         private IUserRepository _userRepository;
-        private User _loggedUser;
 
         public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, IAclRepository aclRepository,
             IPasswordHasher passwordHasher, IEventAggregator eventAggregator, IAclVerbRepository aclVerbRepository)
@@ -36,13 +35,18 @@ namespace ERService.RBAC
             _aclsIDsToDelete = new List<Guid>();
 
             _users = new List<User>();
-            _roles = new List<Role>();
+            _roles = new List<Role>();            
         }
 
-        public void Load()
+        public async Task LoadAsync()
         {
-            LoadUsers();
-            LoadRoles();
+            await LoadUsers().ContinueWith(async (t) => 
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    await LoadRoles();
+                }
+            });            
         }
 
         public void AddAclToRole(AclVerb aclVerb)
@@ -64,7 +68,6 @@ namespace ERService.RBAC
 
         public bool Login(string login, string password)
         {
-            //TODO: Null Guard
             var user = _users.SingleOrDefault(u => u.Login == login);
             if (user == null) return false;
 
@@ -72,7 +75,12 @@ namespace ERService.RBAC
             {
                 _eventAggregator.GetEvent<AfterUserLoggedinEvent>()
                     .Publish(new UserAuthorizationEventArgs
-                    { UserID = user.Id, UserLogin = user.Login, UserName = user.FirstName, UserLastName = user.LastName });
+                    {
+                        UserID = user.Id,
+                        UserLogin = user.Login,
+                        UserName = user.FirstName,
+                        UserLastName = user.LastName
+                    });
 
                 LoggedUser = user;
                 return true;
@@ -86,7 +94,11 @@ namespace ERService.RBAC
             if (LoggedUser == null) return;
 
             _eventAggregator.GetEvent<AfterUserLoggedoutEvent>()
-                .Publish(new UserAuthorizationEventArgs { UserID = LoggedUser.Id, UserLogin = LoggedUser.Login });
+                .Publish(new UserAuthorizationEventArgs
+                {
+                    UserID = LoggedUser.Id,
+                    UserLogin = LoggedUser.Login
+                });
 
             LoggedUser = null;            
         }
@@ -188,31 +200,33 @@ namespace ERService.RBAC
             return false;
         }
 
-        private void LoadRoles()
+        private async Task LoadRoles()
         {
             _roles.Clear();
-            var roles = _roleRepository.GetAll();
+            var roles = await _roleRepository.GetAllAsync();
             if (roles != null)
             {
-                _roles.AddRange(roles);
+                foreach (var role in roles)
+                {
+                    _roles.Add(role);
+                }
             }
         }
 
-        private void LoadUsers()
+        private async Task LoadUsers()
         {
             _users.Clear();
-            var users = _userRepository.GetAll();
+            var users = await _userRepository.GetAllAsync();
             if (users != null)
             {
-                _users.AddRange(users);
+                foreach (var user in users)
+                {
+                    _users.Add(user);
+                }
             }
-        }        
-
-        public User LoggedUser
-        {
-            get { return _loggedUser; }
-            set { _loggedUser = value; }
         }
+
+        public User LoggedUser { get; set; }
 
         private async Task RemoveACLs(List<Guid> list)
         {

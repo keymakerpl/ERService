@@ -46,7 +46,7 @@ namespace ERService.CustomerModule.ViewModels
                 var parameters = new object[0];
                 var queryString = args.QueryBuilder.Compile(out parameters);
 
-                await GetIDsBy<Guid>(queryString, parameters)
+                await GetBy<Guid>(queryString, parameters)
                                                     .ContinueWith(async (t) => 
                                                     {
                                                         await LoadAsync(c => t.Result.Contains(c.Id), a => a.CustomerAddresses);

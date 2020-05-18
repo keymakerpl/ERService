@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ERService.Views
+namespace ERService.Notification.Views
 {
     /// <summary>
     /// Interaction logic for LoggedUserView.xaml

@@ -41,7 +41,7 @@ namespace ERService.OrderModule.Tasks
             var parameters = new object[0];
             var queryString = query.Compile(out parameters);
 
-            var ids = await _orderRepository.GetIDsBy<Guid>(queryString, parameters);
+            var ids = await _orderRepository.GetBy<Guid>(queryString, parameters);
 
             if (ids.Count > 0)
             {

@@ -11,7 +11,7 @@ namespace ERService.Statistics
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _logger.Debug("Initialized");
+
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

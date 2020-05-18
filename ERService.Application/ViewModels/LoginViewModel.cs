@@ -1,20 +1,20 @@
-﻿using CommonServiceLocator;
-using ERService.Infrastructure.Base.Common;
+﻿using ERService.Infrastructure.Base.Common;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Helpers;
+using ERService.Infrastructure.Helpers.Data;
 using ERService.MSSQLDataAccess;
 using ERService.RBAC;
-using MySql.Data.MySqlClient;
+using ERService.Startup;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -24,36 +24,45 @@ namespace ERService.ViewModels
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private readonly IConfig _config;
+        private readonly IERBootstrap _bootstrap;
+        private readonly IRegionManager _regionManager;
+        private readonly IRBACManager _rBACManager;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IMessageDialogService _messageDialogService;
+        private DatabaseProviders _databaseProvider;
         private string _dbPassword;
         private string _dbServer;
         private string _dbUser;
-        private bool _isExpanded;
         private string _login;
-        private readonly IConfig _config;
-        private IRBACManager _rBACManager;
-        private IEventAggregator _eventAggregator;
-        private DatabaseProviders _databaseProvider;
-        private IMessageDialogService _messageDialogService;
-        private readonly IRegionManager _regionManager;
-        private readonly IModuleManager _moduleManager;
+        private bool _isExpanded;
 
-        public LoginViewModel(IModuleManager moduleManager, IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IConfig config)
+        public LoginViewModel(
+            IERBootstrap bootstrap,
+            IRegionManager regionManager,
+            IRBACManager rBACManager,
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService,
+            IConfig config)
         {
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
+            _bootstrap = bootstrap;
             _regionManager = regionManager;
+            _rBACManager = rBACManager;
             _config = config;
-            _moduleManager = moduleManager;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
             ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
 
             Providers = new List<KeyValuePair<DatabaseProviders, string>>();
 
-            Initialize();            
+            Initialize();
         }
 
-        public ICommand ConnectCommand { get; private set; }
+        public ICommand ConnectCommand { get; }
+
+        public ICommand LoginCommand { get; }
 
         public DatabaseProviders DatabaseProvider
         {
@@ -87,8 +96,6 @@ namespace ERService.ViewModels
             set { SetProperty(ref _login, value); }
         }
 
-        public ICommand LoginCommand { get; private set; }
-
         public List<KeyValuePair<DatabaseProviders, string>> Providers { get; set; }
 
         public void ToggleIsExpanded()
@@ -110,7 +117,6 @@ namespace ERService.ViewModels
         {
             FillProvidersCombo();
 
-
             try
             {
                 Login = _config.LastLogin;
@@ -126,10 +132,9 @@ namespace ERService.ViewModels
                 DbUser = "";
                 DbPassword = "";
                 DatabaseProvider = DatabaseProviders.MSSQLServerLocalDb;
-                //TODO: log
 
-                Console.WriteLine($"[DEBUG] LoginViewModel error: {ex.Message}");
-
+                _logger.Error(ex);
+                _logger.Debug(ex);
             }
         }
 
@@ -142,8 +147,8 @@ namespace ERService.ViewModels
             }
 
             var connectionString = ConnectionStringBuilder.Construct(DatabaseProvider, DbServer, DbUser, DbPassword);
-            if (ServerHeartBeat(connectionString))
-            {                
+            if (DbHelper.ServerHeartBeat(connectionString, DatabaseProvider))
+            {
                 var result = await _messageDialogService.ShowConfirmationMessageAsync(this, "Połączenie poprawne...", "Połączono z bazą danych. " +
                     "Zmiana parametrów połączenia wymaga ponownego uruchomienia aplikacji. Czy zapisać zmiany i uruchomić ponownie teraz?");
 
@@ -158,9 +163,13 @@ namespace ERService.ViewModels
                     System.Windows.Application.Current.Shutdown();
                 }
             }
+            else
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...", "Nie można ustanowić połączenia dla podanych ustawień.");
+            }
         }
 
-        private void OnLoginCommandExecute(object parameter)
+        private async void OnLoginCommandExecute(object parameter)
         {
             if (String.IsNullOrWhiteSpace(Login))
                 ShowWrongLoginDataMessage();
@@ -172,85 +181,63 @@ namespace ERService.ViewModels
             }
 
             var connectionString = ConnectionStringProvider.Current;
-            if (!ServerHeartBeat(connectionString)) return;
-
-            try
+            if (!DbHelper.ServerHeartBeat(connectionString, DatabaseProvider))
             {
-                _rBACManager = ServiceLocator.Current.GetInstance<IRBACManager>();
-                _rBACManager.Load();
-            }
-            catch (Exception ex)
-            {
-                _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...", "Więcej informacji znajduje się w logu.");
-                _logger.Error(ex);
-                _logger.Debug(ex);
+                await _messageDialogService.ShowInformationMessageAsync(this, "Błąd połączenia z bazą danych...", "Więcej informacji znajduje się w pliku log.");
                 return;
             }
 
             var passwordBox = parameter as PasswordBox;
-            if (passwordBox != null && _rBACManager != null)
+            if (passwordBox != null)
             {
                 if (!_rBACManager.Login(Login, passwordBox.Password))
                 {
                     ShowWrongLoginDataMessage();
                     return;
                 }
-
-                var parameters = new NavigationParameters();
-                parameters.Add("UserName", _rBACManager.LoggedUser.FullName);
-                _regionManager.RequestNavigate(RegionNames.LoggedUserRegion, ViewNames.LoggedUserView, parameters);
-
-                _moduleManager.LoadModule(ModuleNames.ServicesModule);
-                _moduleManager.LoadModule(ModuleNames.NotificationModule);
-                _moduleManager.LoadModule(ModuleNames.StatisticsModule);
+                ContinueInitialization();
             }
         }
 
-        //TODO: move to helpers
-        private bool ServerHeartBeat(string connectionString)
+        private void ContinueInitialization()
         {
-            if (DatabaseProvider == DatabaseProviders.MSSQLServer)
+            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+
+            var t = Task.Run(() =>
             {
-                using (SqlConnection connection = new SqlConnection(connectionString.Replace(";Initial Catalog=ERService", String.Empty)))
+                
+                _eventAggregator.GetEvent<ShowProgressBarEvent>().Publish(new ShowProgressBarEventArgs { IsShowing = true });                
+                _bootstrap.HotStart();
+                _eventAggregator.GetEvent<ShowProgressBarEvent>().Publish(new ShowProgressBarEventArgs { IsShowing = false });
+            });
+
+            t.ContinueWith((task) =>
+            {
+                if (task.Status == TaskStatus.RanToCompletion)
                 {
-                    try
-                    {
-                        connection.Open();
-                        return true;
-                    }
-                    catch (SqlException ex)
-                    {
-                        //TODO: logger
-                        _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", "Nie udało się połączyć z bazą danych, więcej informacji znajduje się w pliku dziennika.");
+                    _regionManager.RequestNavigate(RegionNames.HeaderRegion, ViewNames.HeaderView);
+                    _regionManager.RequestNavigate(RegionNames.NotificationRegion, ViewNames.NotificationListView);                    
+                    _regionManager.RequestNavigate(RegionNames.NavigationRegion, ViewNames.NavigationView);
+                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
 
-                        Console.WriteLine($"[DEBUG] Connection error: {ex.Message}");
-
-                        return false;
-                    }
+                    _eventAggregator.GetEvent<AfterUserLoggedinEvent>().Publish(new UserAuthorizationEventArgs
+                    {
+                        UserID = _rBACManager.LoggedUser.Id,
+                        UserName = _rBACManager.LoggedUser.FirstName,
+                        UserLastName = _rBACManager.LoggedUser.LastName,
+                        UserLogin = _rBACManager.LoggedUser.Login,
+                    });
                 }
-            }
-            else if (DatabaseProvider == DatabaseProviders.MySQLServer)
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            t.ContinueWith((task) => 
             {
-                using (var connection = new MySqlConnection(connectionString.Replace(";database=ERService", String.Empty)))
+                if (task.Status == TaskStatus.Faulted)
                 {
-                    try
-                    {
-                        connection.Open();
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        _messageDialogService.ShowInformationMessageAsync(this, "Brak połączenia...", ex.Message);
-                        return false;
-                    }
+                    _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.LoginView);
                 }
-            }
-            else if (DatabaseProvider == DatabaseProviders.MSSQLServerLocalDb)
-            {
-                return true;
-            }
-
-            return false;
+            }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private void ShowWrongLoginDataMessage()

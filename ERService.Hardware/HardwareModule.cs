@@ -13,7 +13,7 @@ namespace ERService.HardwareModule
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _logger.Info("Initialized");
+
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

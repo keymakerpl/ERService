@@ -63,8 +63,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\LoggedUserViewModel.cs" />
     <Compile Include="ViewModels\NotificationElementViewModel.cs" />
     <Compile Include="ViewModels\NotificationListViewModel.cs" />
+    <Compile Include="Views\LoggedUserView.xaml.cs">
+      <DependentUpon>LoggedUserView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NotificationElementView.xaml.cs">
       <DependentUpon>NotificationElementView.xaml</DependentUpon>
     </Compile>
@@ -94,8 +98,16 @@
       <Project>{0EF3F2EB-B309-4F06-A14D-949B81B5B308}</Project>
       <Name>ERService.Order</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ERService.RBACManager\ERService.RBAC.csproj">
+      <Project>{760DD7CC-474C-4386-BF15-71A4D2B24AE6}</Project>
+      <Name>ERService.RBAC</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\LoggedUserView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\NotificationElementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -74,15 +74,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\LoggedUserViewModel.cs" />
+    <Compile Include="Startup\ERBootstrap.cs" />
+    <Compile Include="Startup\IERBootstrap.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\LoggedUserView.xaml.cs">
-      <DependentUpon>LoggedUserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -151,10 +149,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\LoggedUserView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,7 +159,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Startup\" />
     <Folder Include="Views\Services\" />
   </ItemGroup>
   <ItemGroup>

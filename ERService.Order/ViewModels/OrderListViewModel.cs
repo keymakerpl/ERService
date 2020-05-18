@@ -60,7 +60,7 @@ namespace ERService.OrderModule.ViewModels
                 var parameters = new object[0];
                 var queryString = args.QueryBuilder.Compile(out parameters);
 
-                var ids = await GetIDsBy<Guid>(queryString, parameters);
+                var ids = await GetBy<Guid>(queryString, parameters);
                 await LoadAsync(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
             }
             catch (Exception ex)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Windows.Threading;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Events;
 using ERService.StatusBar.Views;
@@ -20,7 +22,7 @@ namespace ERService.StatusBar
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _regionManager.RegisterViewWithRegion(RegionNames.StatusbarRegion, typeof(StatusBarView));
+            
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

@@ -24,6 +24,7 @@ namespace ERService.Settings
             containerRegistry.Register<ISettingsManager, SettingsManager>();
             containerRegistry.Register<IImagesCollection, ImagesCollection>();
 
+            containerRegistry.RegisterForNavigation<SettingsView>(ViewNames.SettingsView);
             containerRegistry.RegisterForNavigation<GeneralSettingsView>(ViewNames.GeneralSettingsView);
             containerRegistry.RegisterForNavigation<HardwareTypesView>(ViewNames.HardwareTypesView);
             containerRegistry.RegisterForNavigation<StatusConfigView>(ViewNames.StatusConfigView);

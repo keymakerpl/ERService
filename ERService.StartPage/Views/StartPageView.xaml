@@ -41,147 +41,151 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Border
-            Margin="10"
-            BorderBrush="#FF83919F"
-            BorderThickness="0">
-            <WrapPanel
-                Grid.Row="0"
-                MaxWidth="650"
-                Margin="15"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+        <controls:TransitioningContentControl
+            Margin="0,-5,0,10"
+            TabIndex="0"
+            Transition="Right">
+            <Border
+                Margin="10"
+                BorderBrush="#FF83919F"
+                BorderThickness="0">
+                <WrapPanel
+                    Grid.Row="0"
+                    MaxWidth="650"
+                    Margin="15"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
 
-                <controls:Tile
-                    Title="Dodaj nową naprawę"
-                    Width="200"
-                    Background="CadetBlue"
-                    Command="{Binding AddOrderCommand}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <iconPacks:PackIconModern
-                        Width="40"
-                        Height="40"
-                        Kind="Add" />
-                </controls:Tile>
+                    <controls:Tile
+                        Title="Dodaj nową naprawę"
+                        Width="200"
+                        Background="CadetBlue"
+                        Command="{Binding AddOrderCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconModern
+                            Width="40"
+                            Height="40"
+                            Kind="Add" />
+                    </controls:Tile>
 
-                <controls:Tile
-                    Title="Naprawy"
-                    Background="Gray"
-                    Command="{Binding OrdersCommand}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <iconPacks:PackIconModern
-                        Width="50"
-                        Height="50"
-                        Kind="Tools" />
-                </controls:Tile>
+                    <controls:Tile
+                        Title="Naprawy"
+                        Background="Gray"
+                        Command="{Binding OrdersCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconModern
+                            Width="50"
+                            Height="50"
+                            Kind="Tools" />
+                    </controls:Tile>
 
-                <controls:Tile
-                    Title="Klienci"
-                    Width="200"
-                    Background="SteelBlue"
-                    Command="{Binding CustomersCommand}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <iconPacks:PackIconModern
-                        Width="50"
-                        Height="50"
-                        Kind="People" />
-                </controls:Tile>
+                    <controls:Tile
+                        Title="Klienci"
+                        Width="200"
+                        Background="SteelBlue"
+                        Command="{Binding CustomersCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconModern
+                            Width="50"
+                            Height="50"
+                            Kind="People" />
+                    </controls:Tile>
 
-                <controls:Tile
-                    Title="Ustawienia"
-                    Background="LightSlateGray"
-                    Command="{Binding SettingsCommand}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <iconPacks:PackIconModern
-                        Width="50"
-                        Height="50"
-                        Kind="Cogs" />
-                </controls:Tile>
+                    <controls:Tile
+                        Title="Ustawienia"
+                        Background="LightSlateGray"
+                        Command="{Binding SettingsCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconModern
+                            Width="50"
+                            Height="50"
+                            Kind="Cogs" />
+                    </controls:Tile>
 
-                <controls:Tile
-                    Title="Statystyki"
-                    Background="DimGray"
-                    Command="{Binding StatsCommand}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <iconPacks:PackIconModern
-                        Width="50"
-                        Height="50"
-                        Kind="GraphBar" />
-                </controls:Tile>
+                    <controls:Tile
+                        Title="Statystyki"
+                        Background="DimGray"
+                        Command="{Binding StatsCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconModern
+                            Width="50"
+                            Height="50"
+                            Kind="GraphBar" />
+                    </controls:Tile>
 
-                <controls:Tile
-                    Title="Szukaj naprawy"
-                    Width="275"
-                    Background="#FF428D9E"
-                    Command="{Binding SearchCommand}"
-                    CommandParameter="{Binding ElementName=searchText, Path=Text}"
-                    FontWeight="SemiBold"
-                    Foreground="Wheat"
-                    Style="{StaticResource SmallTileStyle}">
-                    <controls:Tile.Effect>
-                        <DropShadowEffect />
-                    </controls:Tile.Effect>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <controls:Tile
+                        Title="Szukaj naprawy"
+                        Width="275"
+                        Background="#FF428D9E"
+                        Command="{Binding SearchCommand}"
+                        CommandParameter="{Binding ElementName=searchText, Path=Text}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
 
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox
-                                    Name="searchText"
-                                    Width="150"
-                                    Height="25"
-                                    Background="Wheat" />
-                                <iconPacks:PackIconModern
-                                    Width="25"
-                                    Height="25"
-                                    Margin="10,0,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Kind="Magnify" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox
+                                        Name="searchText"
+                                        Width="150"
+                                        Height="25"
+                                        Background="Wheat" />
+                                    <iconPacks:PackIconModern
+                                        Width="25"
+                                        Height="25"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="Magnify" />
+                                </StackPanel>
+
                             </StackPanel>
+                        </Grid>
+                        <controls:Tile.InputBindings>
+                            <KeyBinding
+                                Key="Return"
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=searchText, Path=Text}" />
+                        </controls:Tile.InputBindings>
+                    </controls:Tile>
 
-                        </StackPanel>
-                    </Grid>
-                    <controls:Tile.InputBindings>
-                        <KeyBinding
-                            Key="Return"
-                            Command="{Binding SearchCommand}"
-                            CommandParameter="{Binding ElementName=searchText, Path=Text}" />
-                    </controls:Tile.InputBindings>
-                </controls:Tile>
-
-            </WrapPanel>
-        </Border>
-
+                </WrapPanel>
+            </Border>
+        </controls:TransitioningContentControl>
 
     </Grid>
 </UserControl>
