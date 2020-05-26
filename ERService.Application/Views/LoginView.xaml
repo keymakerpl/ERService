@@ -38,7 +38,8 @@
             Background="#FF404040"
             BorderBrush="Transparent"
             BorderThickness="1"
-            CornerRadius="5">
+            CornerRadius="5"
+            UseLayoutRounding="True">
             <Border.Effect>
                 <DropShadowEffect />
             </Border.Effect>

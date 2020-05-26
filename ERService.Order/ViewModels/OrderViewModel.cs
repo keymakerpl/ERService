@@ -20,6 +20,8 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +35,8 @@ namespace ERService.OrderModule.ViewModels
 
     public class OrderViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IHardwareTypeRepository _hardwareTypesRepository;
         private readonly IRBACManager _rBACManager;
         private readonly ISettingsManager _settingsManager;
@@ -52,7 +56,7 @@ namespace ERService.OrderModule.ViewModels
         private IOrderTypeRepository _typeRepository;
         private readonly IImagesCollection _imagesCollection;
 
-        //TODO: Za duży konstruktor? Dodać IOrderContext?
+        //TODO: Za duży konstruktor? Dodać IOrderContext? UnitOfWork?
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
             IOrderStatusRepository statusRepository, IEventAggregator eventAggregator, IHardwareTypeRepository hardwareTypesRepository,
             INumerationRepository numerationRepository, IMessageDialogService messageDialogService, IRBACManager rBACManager,
@@ -67,6 +71,7 @@ namespace ERService.OrderModule.ViewModels
             _templateRepository = templateRepository;
             _settingsManager = settingsManager;
             _regionManager = regionManager;
+            _imagesCollection = imagesCollection;
 
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
@@ -77,9 +82,9 @@ namespace ERService.OrderModule.ViewModels
             AddAttachmentCommand = new DelegateCommand(OnAddAttachmentExecute);
             RemoveAttachmentCommand = new DelegateCommand(OnRemoveAttachmentExecute, OnRemoveAttachmentCanExecute);
             PrintCommand = new DelegateCommand<object>(OnPrintExecute);
+            ShowAttachmentCommand = new DelegateCommand<Guid?>(OnShowAttachmentCommand);
             ShowHardwareDetailFlyoutCommand = new DelegateCommand(OnShowHardwareFlyoutExecute);
             ShowCustomerDetailFlyoutCommand = new DelegateCommand(OnShowCustomerFlyoutExecute);
-            _imagesCollection = imagesCollection;
         }
 
         public DelegateCommand AddAttachmentCommand { get; }
@@ -132,7 +137,7 @@ namespace ERService.OrderModule.ViewModels
             set
             {
                 SetProperty(ref _selectedOrderStatus, value);
-                Order.Model.OrderStatusId = value?.Id;
+                Order.OrderStatusId = value?.Id;
             }
         }
 
@@ -142,13 +147,15 @@ namespace ERService.OrderModule.ViewModels
             set
             {
                 SetProperty(ref _selectedOrderType, value);
-                Order.Model.OrderTypeId = value.Id;
+                Order.OrderTypeId = value?.Id;
             }
         }
 
         public DelegateCommand ShowCustomerDetailFlyoutCommand { get; }
 
         public DelegateCommand ShowHardwareDetailFlyoutCommand { get; }
+
+        public DelegateCommand<Guid?> ShowAttachmentCommand { get; }
 
         private void RaiseSideMenuExpandToggled(SideFlyouts flyout, Guid detailID, string viewName)
         {
@@ -161,6 +168,28 @@ namespace ERService.OrderModule.ViewModels
                                             ViewName = viewName,
                                             IsReadOnly = true
                                         });
+        }
+
+        public void OnShowAttachmentCommand(Guid? id)
+        {
+            if (!id.HasValue && id == Guid.Empty)
+                return;
+
+            try
+            {
+                var att = Attachments.FirstOrDefault(a => a.Id == id);
+                if (att != null)
+                {
+                    var path = Path.GetTempPath() + att.FileName;
+                    File.WriteAllBytes(path, att.Data);
+                    Process.Start(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                _logger.Debug(ex);
+            }
         }
 
         #region Navigation
@@ -200,8 +229,8 @@ namespace ERService.OrderModule.ViewModels
             
             ID = id;
 
-            InitializeComboBoxes();
-            InitializePrintTemplates();
+            await InitializeComboBoxes();
+            await InitializePrintTemplates();
             InitializeOrder(order);
             InitializeHardware();
             InitializeCustomer();
@@ -237,6 +266,8 @@ namespace ERService.OrderModule.ViewModels
             });
         }
 
+        #endregion Overrides
+
         private void OnAddAttachmentExecute()
         {
             //TODO: Make open file dialog service
@@ -252,7 +283,7 @@ namespace ERService.OrderModule.ViewModels
                 attachment.Checksum = Cryptography.CalculateMD5(openFileDialog.FileName);
 
                 Attachments.Add(attachment);
-                Order.Model.Attachments.Add(attachment);
+                Order.Model.Attachments.Add(attachment);                
             }
         }
 
@@ -360,16 +391,22 @@ namespace ERService.OrderModule.ViewModels
             {
                 Attachments.Add(att);
             }
+
+            Attachments.CollectionChanged += (s, a) => 
+            {
+                HasChanges = true;
+                SaveCommand.RaiseCanExecuteChanged();
+            };
         }
 
-        private void InitializeComboBoxes()
+        private async Task InitializeComboBoxes()
         {
-            LoadOrderStatusesAsync();
-            LoadOrderTypesAsync();
-            LoadHardwareTypesAsync();
+            await LoadOrderStatusesAsync();
+            await LoadOrderTypesAsync();
+            await LoadHardwareTypesAsync();
         }        
 
-        private async void InitializePrintTemplates()
+        private async Task InitializePrintTemplates()
         {
             PrintTemplates.Clear();
             var templates = await _templateRepository.GetAllAsync();
@@ -379,7 +416,7 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        private async void LoadHardwareTypesAsync()
+        private async Task LoadHardwareTypesAsync()
         {
             HardwareTypes.Clear();
             var types = await _hardwareTypesRepository.GetAllAsync();
@@ -389,7 +426,7 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        private async void LoadOrderStatusesAsync()
+        private async Task LoadOrderStatusesAsync()
         {
             OrderStatuses.Clear();
             var statuses = await _statusRepository.GetAllAsync();
@@ -401,7 +438,7 @@ namespace ERService.OrderModule.ViewModels
             SelectedOrderStatus = Order.Model.OrderStatus;
         }
 
-        private async void LoadOrderTypesAsync()
+        private async Task LoadOrderTypesAsync()
         {
             OrderTypes.Clear();
             var types = await _typeRepository.GetAllAsync();
@@ -411,8 +448,6 @@ namespace ERService.OrderModule.ViewModels
             }
 
             SelectedOrderType = Order.Model.OrderType;
-        }        
-
-        #endregion Overrides
+        }                
     }
 }

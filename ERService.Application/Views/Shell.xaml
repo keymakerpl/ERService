@@ -2,10 +2,11 @@
     x:Class="ERService.Application.Views.Shell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:not="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
     xmlns:prism="http://prismlibrary.com/"
-    Title="ERService 1.0.0"
+    Title="ERService"
     Width="1280"
     Height="820"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -14,8 +15,7 @@
     ResizeMode="CanResizeWithGrip"
     ShowIconOnTitleBar="True"
     ShowTitleBar="True"
-    WindowStartupLocation="CenterScreen"
-    WindowTransitionsEnabled="False">
+    WindowStartupLocation="CenterScreen">
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
@@ -48,7 +48,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="75" />
+            <RowDefinition Height="65" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -62,7 +62,10 @@
             Background="#FF383838"
             LastChildFill="True">
             <DockPanel.Effect>
-                <DropShadowEffect Direction="200" />
+                <DropShadowEffect
+                    BlurRadius="8"
+                    Direction="270"
+                    ShadowDepth="3" />
             </DockPanel.Effect>
 
             <Grid>
@@ -72,18 +75,42 @@
                 </Grid.ColumnDefinitions>
             </Grid>
 
-            <TextBlock
-                Margin="15,5,15,5"
-                VerticalAlignment="Center"
-                FontFamily="OCRA"
-                FontSize="24"
-                FontWeight="ExtraBold"
-                Foreground="Wheat"
-                Text="{Binding ApplicationName}">
-                <TextBlock.Effect>
-                    <DropShadowEffect />
-                </TextBlock.Effect>
-            </TextBlock>
+            <StackPanel Margin="15,5,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconOcticons
+                        Margin="5,0,5,2"
+                        VerticalAlignment="Center"
+                        Foreground="LightBlue"
+                        Kind="CircuitBoard">
+                        <iconPacks:PackIconOcticons.Effect>
+                            <DropShadowEffect />
+                        </iconPacks:PackIconOcticons.Effect>
+                    </iconPacks:PackIconOcticons>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="OCRA"
+                        FontSize="22"
+                        FontWeight="ExtraBold"
+                        Foreground="Wheat"
+                        Text="{Binding ApplicationName}">
+                        <TextBlock.Effect>
+                            <DropShadowEffect />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    FontFamily="OCRA"
+                    FontSize="12"
+                    FontWeight="ExtraBold"
+                    Foreground="LightGray"
+                    Text="{Binding ApplicationVersion}"
+                    UseLayoutRounding="True">
+                    <TextBlock.Effect>
+                        <DropShadowEffect />
+                    </TextBlock.Effect>
+                </TextBlock>
+            </StackPanel>
 
             <ContentControl
                 Grid.Column="1"
@@ -153,6 +180,17 @@
             mah:VisibilityHelper.IsVisible="{Binding IsProgressBarVisible}"
             Foreground="DarkGray"
             IsIndeterminate="True" />
+
+        <TextBlock
+            Grid.RowSpan="4"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            mah:VisibilityHelper.IsVisible="{Binding IsCenterLogoVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            FontFamily="Impact"
+            FontSize="48"
+            Foreground="LightGray"
+            Text="ERService" />
 
     </Grid>
 </mah:MetroWindow>

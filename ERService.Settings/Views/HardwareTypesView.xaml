@@ -69,7 +69,6 @@
                                     <DataGridTextColumn
                                         Width="*"
                                         Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                                         ElementStyle="{StaticResource DataGridColumnStyle}"
                                         Header="Typy urządzeń" />
                                 </DataGrid.Columns>
@@ -113,7 +112,6 @@
                                     <DataGridTextColumn
                                         Width="*"
                                         Binding="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                                         ElementStyle="{StaticResource DataGridColumnStyle}"
                                         Header="Pola zdefiniowane" />
                                 </DataGrid.Columns>

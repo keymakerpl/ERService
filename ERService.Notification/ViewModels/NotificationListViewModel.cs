@@ -79,7 +79,7 @@ namespace ERService.Notification.ViewModels
                 .Select($"{nameof(Order)}.{nameof(Order.Id)}")
                 .OrderByDesc(nameof(Order.DateAdded))
                 .Limit(4);
-
+            
             await FillTable(lastOrdersQuery, LastOrders);
 
             var outdatedOrdersQuery = new QueryBuilder(nameof(Order))

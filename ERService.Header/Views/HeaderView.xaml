@@ -29,11 +29,12 @@
 
         <metroControls:Badged
             Grid.Column="1"
-            Margin="5"
+            Margin="0,2,10,0"
             Badge="{Binding BadgeValue, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
             BadgeBackground="LightBlue"
             BadgeForeground="Black"
-            BadgePlacementMode="TopLeft">
+            BadgePlacementMode="TopLeft"
+            ToolTip="Pokaż menu dodatkowe">
             <Grid>
                 <Button
                     x:Name="button"

@@ -32,7 +32,7 @@ namespace ERService.OrderModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry   .Register(typeof(NewOrdersNotificationTask))
-                                .RegisterSingleton<IOrderRepository, OrderRepository>()
+                                .Register<IOrderRepository, OrderRepository>()
                                 .Register<IOrderStatusRepository, OrderStatusRepository>()
                                 .Register<IOrderTypeRepository, OrderTypeRepository>()
                                 .Register<IBlobRepository, BlobRepository>()

@@ -51,7 +51,7 @@
                 BorderThickness="0">
                 <WrapPanel
                     Grid.Row="0"
-                    MaxWidth="650"
+                    MaxWidth="700"
                     Margin="15"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -64,18 +64,20 @@
                         Command="{Binding AddOrderCommand}"
                         FontWeight="SemiBold"
                         Foreground="Wheat"
-                        Style="{StaticResource SmallTileStyle}">
+                        Style="{StaticResource SmallTileStyle}"
+                        UseLayoutRounding="True">
                         <controls:Tile.Effect>
                             <DropShadowEffect />
                         </controls:Tile.Effect>
                         <iconPacks:PackIconModern
-                            Width="40"
-                            Height="40"
+                            Width="30"
+                            Height="30"
                             Kind="Add" />
                     </controls:Tile>
 
                     <controls:Tile
                         Title="Naprawy"
+                        Width="175"
                         Background="Gray"
                         Command="{Binding OrdersCommand}"
                         FontWeight="SemiBold"
@@ -85,14 +87,14 @@
                             <DropShadowEffect />
                         </controls:Tile.Effect>
                         <iconPacks:PackIconModern
-                            Width="50"
-                            Height="50"
+                            Width="40"
+                            Height="40"
                             Kind="Tools" />
                     </controls:Tile>
 
                     <controls:Tile
                         Title="Klienci"
-                        Width="200"
+                        Width="250"
                         Background="SteelBlue"
                         Command="{Binding CustomersCommand}"
                         FontWeight="SemiBold"
@@ -102,8 +104,8 @@
                             <DropShadowEffect />
                         </controls:Tile.Effect>
                         <iconPacks:PackIconModern
-                            Width="50"
-                            Height="50"
+                            Width="40"
+                            Height="40"
                             Kind="People" />
                     </controls:Tile>
 
@@ -118,8 +120,8 @@
                             <DropShadowEffect />
                         </controls:Tile.Effect>
                         <iconPacks:PackIconModern
-                            Width="50"
-                            Height="50"
+                            Width="40"
+                            Height="40"
                             Kind="Cogs" />
                     </controls:Tile>
 
@@ -134,14 +136,14 @@
                             <DropShadowEffect />
                         </controls:Tile.Effect>
                         <iconPacks:PackIconModern
-                            Width="50"
-                            Height="50"
+                            Width="40"
+                            Height="40"
                             Kind="GraphBar" />
                     </controls:Tile>
 
                     <controls:Tile
-                        Title="Szukaj naprawy"
-                        Width="275"
+                        Title="Numer naprawy"
+                        Width="240"
                         Background="#FF428D9E"
                         Command="{Binding SearchCommand}"
                         CommandParameter="{Binding ElementName=searchText, Path=Text}"
@@ -163,10 +165,11 @@
                                         Name="searchText"
                                         Width="150"
                                         Height="25"
-                                        Background="Wheat" />
+                                        Background="Wheat"
+                                        ToolTip="Wprowadź numer naprawy" />
                                     <iconPacks:PackIconModern
-                                        Width="25"
-                                        Height="25"
+                                        Width="15"
+                                        Height="15"
                                         Margin="10,0,0,0"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
@@ -175,12 +178,29 @@
 
                             </StackPanel>
                         </Grid>
+
                         <controls:Tile.InputBindings>
                             <KeyBinding
                                 Key="Return"
                                 Command="{Binding SearchCommand}"
                                 CommandParameter="{Binding ElementName=searchText, Path=Text}" />
                         </controls:Tile.InputBindings>
+                    </controls:Tile>
+
+                    <controls:Tile
+                        Title="Kod kreskowy"
+                        Background="LightSlateGray"
+                        Command="{Binding SettingsCommand}"
+                        FontWeight="SemiBold"
+                        Foreground="Wheat"
+                        Style="{StaticResource SmallTileStyle}">
+                        <controls:Tile.Effect>
+                            <DropShadowEffect />
+                        </controls:Tile.Effect>
+                        <iconPacks:PackIconMaterial
+                            Width="40"
+                            Height="40"
+                            Kind="BarcodeScan" />
                     </controls:Tile>
 
                 </WrapPanel>

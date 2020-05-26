@@ -18,8 +18,8 @@ namespace ERService.OrderModule.ViewModels
     public class OrderWizardViewModel : DetailViewModelBase
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private NavigationContext _navigationContext;
         
+        private NavigationContext _navigationContext;
         private readonly IOrderContext _orderWizardContext;
         private readonly IPrintTemplateRepository _printTemplateRepository;
         private readonly ISettingsManager _settingsManager;

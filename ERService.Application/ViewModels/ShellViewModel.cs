@@ -16,9 +16,10 @@ namespace ERService.Application.ViewModels
     public class ShellViewModel : BindableBase
     {
         private readonly IERBootstrap _bootstrap;
-        private IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
         public string ApplicationName { get; }
+        public string ApplicationVersion { get; }
 
         private bool _notificationFlyoutIsExpanded;
         public bool NotificationFlyoutIsExpanded
@@ -44,6 +45,13 @@ namespace ERService.Application.ViewModels
             set { SetProperty(ref _isProgressBarVisible, value); }
         }
 
+        private bool _isCenterLogoVisible = true;
+        public bool IsCenterLogoVisible
+        {
+            get { return _isCenterLogoVisible; }
+            private set { SetProperty(ref _isCenterLogoVisible, value); }
+        }
+
         public ShellViewModel(IERBootstrap bootstrap, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _bootstrap = bootstrap;
@@ -58,8 +66,10 @@ namespace ERService.Application.ViewModels
             var assembly = Assembly.GetEntryAssembly();
             var major = assembly.GetName().Version.Major;
             var minor = assembly.GetName().Version.Minor;
+            var build = assembly.GetName().Version.Build;
 
-            ApplicationName = $"{assembly.GetName().Name} v{major}.{minor}";
+            ApplicationName = $"{assembly.GetName().Name}";
+            ApplicationVersion = $"v{major}.{minor}.{build}";
 
             Initialize();
         }
@@ -82,6 +92,7 @@ namespace ERService.Application.ViewModels
             {
                 if (task.Status == TaskStatus.RanToCompletion)
                 {
+                    IsCenterLogoVisible = false;
                     ShowLoginWindow();
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());

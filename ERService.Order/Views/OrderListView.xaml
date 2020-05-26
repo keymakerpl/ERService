@@ -28,10 +28,10 @@
             Margin="20,0,20,0"
             BorderBrush="LightGray"
             BorderThickness="0,1,0,0">
-            <DockPanel
+            <StackPanel
                 Margin="10,0,25,5"
                 HorizontalAlignment="Right"
-                FlowDirection="RightToLeft">
+                Orientation="Horizontal">
                 <Button
                     Width="35"
                     Height="35"
@@ -41,6 +41,17 @@
                     Foreground="SlateGray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                     <iconPacks:PackIconFontAwesome Kind="TrashAltRegular" />
+                </Button>
+                <Button
+                    Width="35"
+                    Height="35"
+                    Margin="5,10,5,10"
+                    BorderThickness="1"
+                    Command="{Binding BarcodeSearchCommand}"
+                    Foreground="SlateGray"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                    ToolTip="Szukaj po kodzie kreskowym">
+                    <iconPacks:PackIconMaterial Kind="BarcodeScan" />
                 </Button>
                 <Button
                     Width="35"
@@ -62,7 +73,7 @@
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                     <iconPacks:PackIconMaterial Kind="Plus" />
                 </Button>
-            </DockPanel>
+            </StackPanel>
         </Border>
 
         <Border
@@ -97,43 +108,35 @@
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding OrderNumber}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
-                    ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Numer" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding DateRegistered}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Data rejestracji" />
                 <DataGridTextColumn
                     Width="Auto"
-                    Binding="{Binding DateEnded}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                    Binding="{Binding DateEnded, StringFormat='{}{0:dd/MM/yyyy}'}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
-                    Header="Data zakończenia" />
+                    Header="Termin" />
                 <DataGridTextColumn
                     Width="120"
                     Binding="{Binding Fault}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Opis usterki" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding Cost}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Koszt" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding OrderType.Name}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Typ" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding OrderStatus.Name}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Status" />
                 <DataGridTemplateColumn
@@ -158,26 +161,22 @@
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding ExternalNumber}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Numer zewnętrzny" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding Customer.FullName}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Klient" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding Hardwares[0].Name}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Sprzęt" />
                 <DataGridTextColumn
                     MinWidth="100"
                     MaxWidth="200"
                     Binding="{Binding Comment}"
-                    EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Notatki" />
             </DataGrid.Columns>

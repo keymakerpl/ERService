@@ -29,6 +29,8 @@ namespace ERService.OrderModule.Wrapper
         private int _progress;
 
         private string _solution;
+        private Guid? _orderStatusId;
+        private Guid? _orderTypeId;
 
         public OrderWrapper(Order model) : base(model)
         {
@@ -50,18 +52,27 @@ namespace ERService.OrderModule.Wrapper
             set { SetProperty(ref _cost, value); }
         }        
 
-        [Interpreter(Name = "Data zakończenia", Pattern = "[%o_DateEnded%]")]
+        [Interpreter(Name = "Termin zakończenia", Pattern = "[%o_DateEnded%]")]
         public DateTime? DateEnded
         {
             get { return GetValue<DateTime?>(); }
-            set { SetProperty(ref _dateEnded, value.Value.Date.Add(DateTime.Now.TimeOfDay)); }
-        }        
+            set { SetProperty(ref _dateEnded, value.Value.Date.AddDays(1).AddMilliseconds(-100)); }
+        }
 
         [Interpreter(Name = "Data rejestracji", Pattern = "[%o_DateRegistered%]")]
         public DateTime DateRegistered
         {
             get { return GetValue<DateTime>(); }
             set { SetProperty(ref _dateRegistered, value); }
+        }
+
+        /// <summary>
+        /// Właściwość pomocnicza do ustawiania czasu w dacie rejestracji przez kontrolke DateTimePicker
+        /// </summary>
+        public TimeSpan TimeRegistered
+        {
+            get { return DateRegistered.TimeOfDay; }
+            set { DateRegistered = DateRegistered.Date.Add(value); RaisePropertyChanged(); }
         }
 
         [Interpreter(Name = "Numer zewnętrzny", Pattern = "[%o_externalNumber%]")]
@@ -141,13 +152,16 @@ namespace ERService.OrderModule.Wrapper
             }
         }
 
-        /// <summary>
-        /// Właściwość pomocnicza do ustawiania czasu w dacie rejestracji przez kontrolke DateTimePicker
-        /// </summary>
-        public TimeSpan TimeRegistered
+        public Guid? OrderStatusId
         {
-            get { return DateRegistered.TimeOfDay; }
-            set { DateRegistered = DateRegistered.Date.Add(value); RaisePropertyChanged(); }
+            get { return GetValue<Guid?>(); }
+            internal set { SetProperty(ref _orderStatusId, value); }
+        }
+
+        public Guid? OrderTypeId
+        {
+            get { return GetValue<Guid?>(); }
+            internal set { SetProperty(ref _orderTypeId, value); }
         }
     }
 }

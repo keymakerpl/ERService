@@ -74,9 +74,9 @@ namespace ERService.Application
         protected override void OnExit(ExitEventArgs e)
         {
             NLog.LogManager.Shutdown();
-            //var jobServer = Container.Resolve<IBackgroundProcessingServer>();
-            //jobServer.SendStop();
-            //jobServer.Dispose();
+            var jobServer = Container.Resolve<IBackgroundProcessingServer>();
+            jobServer.SendStop();
+            jobServer.Dispose();
 
             base.OnExit(e);
         }
