@@ -364,7 +364,11 @@ namespace ERService.OrderModule.ViewModels
 
         private void InitializeOrder(Order order)
         {
+            _selectedOrderType = OrderTypes.FirstOrDefault(t => t.Id == order.OrderType.Id);
+            _selectedOrderStatus = OrderStatuses.FirstOrDefault(s => s.Id == order.OrderStatus.Id);
+
             Order = new OrderWrapper(order);
+
             Order.PropertyChanged += ((sender, args) =>
             {
                 if (!HasChanges)
@@ -380,6 +384,12 @@ namespace ERService.OrderModule.ViewModels
 
                 SaveCommand.RaiseCanExecuteChanged();                
             });
+
+            if (Order.Id != Guid.Empty)
+            {
+                Title = $"Naprawa numer: {Order.Number}";
+                RaiseDetailOpenedEvent(Order.Id, Title);
+            }
 
             SaveCommand.RaiseCanExecuteChanged();            
         }
@@ -434,8 +444,6 @@ namespace ERService.OrderModule.ViewModels
             {
                 OrderStatuses.Add(status);
             }
-
-            SelectedOrderStatus = Order.Model.OrderStatus;
         }
 
         private async Task LoadOrderTypesAsync()
@@ -446,8 +454,6 @@ namespace ERService.OrderModule.ViewModels
             {
                 OrderTypes.Add(type);
             }
-
-            SelectedOrderType = Order.Model.OrderType;
         }                
     }
 }

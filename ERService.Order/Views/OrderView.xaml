@@ -4,14 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:i1="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.OrderModule.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
-    Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="750"
     d:DesignWidth="800"
+    metroControls:DialogParticipation.Register="{Binding}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
@@ -44,7 +47,7 @@
                     BorderBrush="LightGray"
                     BorderThickness="0"
                     ButtonStyle="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    Content=""
+                    Content="&#xE2F6;"
                     DisplayMemberPath="Name"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="16"
@@ -52,8 +55,8 @@
                     ItemsSource="{Binding PrintTemplates}"
                     ToolTip="Drukuj">
                     <metroControls:DropDownButton.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
-                            <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=local:OrderView}}" />
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
+                            <Setter Property="Command" Value="{Binding DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType={x:Type local:OrderView}}}" />
                             <Setter Property="CommandParameter" Value="{Binding}" />
                         </Style>
                     </metroControls:DropDownButton.ItemContainerStyle>
@@ -64,55 +67,44 @@
         <Border BorderBrush="LightGray" BorderThickness="0,0,1,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="5">
-                    <Border Style="{StaticResource DefaultBorderStyle}">
+                    <Border x:Name="border" Style="{StaticResource DefaultBorderStyle}">
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
-                                <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="5"
-                                Content="Numer naprawy:"
-                                FontSize="16"
-                                FontWeight="DemiBold" />
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                HorizontalAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{Binding Order.Number, Mode=OneWay}"
-                                FontSize="18"
-                                FontWeight="Bold" />
 
                             <Label
-                                Grid.Row="1"
                                 Grid.Column="0"
-                                Margin="10,0,0,0"
-                                Content="Postęp naprawy:" />
+                                Margin="0,0,0,0"
+                                VerticalAlignment="Center"
+                                Content="Postęp naprawy:"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
                             <Slider
                                 x:Name="slider"
-                                Grid.Row="1"
                                 Grid.Column="1"
+                                Height="20"
                                 Margin="5"
+                                VerticalAlignment="Center"
                                 AutoToolTipPlacement="BottomRight"
                                 AutoToolTipPrecision="0"
                                 Maximum="100"
                                 Minimum="0"
                                 Style="{DynamicResource FlatSlider}"
-                                ToolTipService.ToolTip="{Binding Path=Value, ElementName=slider}"
+                                ToolTipService.ToolTip="{Binding Value, ElementName=slider}"
                                 Value="{Binding Order.Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <Label
-                                Grid.Row="1"
                                 Grid.Column="2"
-                                Padding="1"
-                                Content="{Binding Order.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                Margin="1"
+                                VerticalAlignment="Center"
+                                Content="{Binding Order.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="SemiBold"
+                                Foreground="{Binding Order.Progress, Converter={StaticResource ProgressIntToBrushConverter}}" />
                         </Grid>
                     </Border>
                     <Border Style="{StaticResource DefaultBorderStyle}">
@@ -130,7 +122,7 @@
                             <Label
                                 Grid.Column="0"
                                 Content="Klient:"
-                                FontSize="16"
+                                FontSize="14"
                                 FontWeight="DemiBold" />
 
                             <Label
@@ -161,6 +153,15 @@
                                 Grid.RowSpan="3"
                                 Grid.Column="2"
                                 VerticalAlignment="Top">
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
                                 <Button
                                     Width="25"
                                     Height="25"
@@ -171,15 +172,6 @@
                                     ToolTip="Pokaż szczegóły klienta">
                                     <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
                                 </Button>
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Cursor" Value="Hand" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
                             </Grid>
                         </Grid>
                     </Border>
@@ -246,6 +238,15 @@
                                 Grid.RowSpan="3"
                                 Grid.Column="2"
                                 VerticalAlignment="Top">
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
                                 <Button
                                     Width="25"
                                     Height="25"
@@ -256,15 +257,6 @@
                                     ToolTip="Pokaż szczegóły urządzenia">
                                     <iconPacks:PackIconModern Foreground="Gray" Kind="InformationCircle" />
                                 </Button>
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Cursor" Value="Hand" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
                             </Grid>
                         </Grid>
                     </Border>
@@ -474,13 +466,13 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="1" Background="Transparent">
-                                        <Label Content="{Binding FileName}" />
                                         <Grid.InputBindings>
                                             <MouseBinding
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType=local:OrderView, Mode=FindAncestor}, Path=DataContext.ShowAttachmentCommand}"
+                                                Command="{Binding DataContext.ShowAttachmentCommand, RelativeSource={RelativeSource AncestorType={x:Type local:OrderView}, Mode=FindAncestor}}"
                                                 CommandParameter="{Binding Id}"
                                                 Gesture="LeftDoubleClick" />
                                         </Grid.InputBindings>
+                                        <Label Content="{Binding FileName}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -530,12 +522,13 @@
                             Grid.Column="0"
                             Margin="5"
                             AcceptsReturn="True"
-                            MinLines="3"
+                            MinLines="4"
                             Text="{Binding Order.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             TextWrapping="Wrap" />
                     </Grid>
                 </Border>
             </StackPanel>
         </ScrollViewer>
+
     </Grid>
 </UserControl>

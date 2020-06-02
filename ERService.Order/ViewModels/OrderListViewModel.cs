@@ -5,6 +5,7 @@ using ERService.Infrastructure.Dialogs;
 using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Repositories;
 using ERService.MSSQLDataAccess;
+using ERService.OrderModule.Data.Repository;
 using ERService.RBAC;
 using Prism.Commands;
 using Prism.Events;
@@ -22,11 +23,19 @@ namespace ERService.OrderModule.ViewModels
         private IMessageDialogService _dialogService;
 
         private IRBACManager _rbacManager;
+        private readonly IBlobRepository _blobRepository;
         private Order _selectedOrder;
-        public OrderListViewModel(ERServiceDbContext context, IRegionManager regionManager, IRBACManager rBACManager,
-            IMessageDialogService messageDialogService, IEventAggregator eventAggregator) : base(context, regionManager, eventAggregator)
+
+        public OrderListViewModel(
+            ERServiceDbContext context,
+            IRegionManager regionManager,
+            IRBACManager rBACManager,
+            IBlobRepository blobRepository,
+            IMessageDialogService messageDialogService,
+            IEventAggregator eventAggregator) : base(context, regionManager, eventAggregator)
         {
             _rbacManager = rBACManager;
+            _blobRepository = blobRepository;
             _dialogService = messageDialogService;
 
             SearchCommand = new DelegateCommand(OnSearchExecute);
@@ -89,13 +98,13 @@ namespace ERService.OrderModule.ViewModels
             }
 
             var confirmDialogResult = await _dialogService.ShowConfirmationMessageAsync(this, "Usuwanie zlecenia..."
-                , $"Czy usunąć zlecenie numer: {SelectedOrder.Number}?");
+                , $"Czy usunąć zlecenie numer: {SelectedOrder.OrderNumber}?");
 
             if (confirmDialogResult == DialogResult.OK)
             {
                 try
                 {
-                    Remove(SelectedOrder);                    
+                    Remove(SelectedOrder);
                     await SaveAsync().ContinueWith(async t => 
                     {
                         await RefreshListAsync();
@@ -104,6 +113,7 @@ namespace ERService.OrderModule.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    _logger.Debug(ex);
                     _logger.Error(ex);
                 }
             }

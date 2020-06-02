@@ -76,11 +76,15 @@
     </ApplicationDefinition>
     <Compile Include="Startup\ERBootstrap.cs" />
     <Compile Include="Startup\IERBootstrap.cs" />
+    <Compile Include="ViewModels\DetailHeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\DetailHeaderView.xaml.cs">
+      <DependentUpon>DetailHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -149,6 +153,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\DetailHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,0 +1,70 @@
+﻿<UserControl
+    x:Class="ERService.Views.DetailHeaderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:ERService.Views"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="75"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <Grid Margin="10,5,10,0">
+        <Border
+            x:Name="border"
+            Height="0"
+            Background="#757575"
+            Style="{StaticResource DefaultBorderStyle}"
+            UseLayoutRounding="True">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding DataContext.IsCollapsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:DetailHeaderView}}}" Value="False">
+                    <ei:GoToStateAction StateName="Visible" />
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding DataContext.IsCollapsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:DetailHeaderView}}}" Value="True">
+                    <ei:GoToStateAction StateName="Collapsed" />
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+            <Label
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="{Binding DetailTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Foreground="Wheat"
+                UseLayoutRounding="True">
+                <Label.Effect>
+                    <DropShadowEffect BlurRadius="1" ShadowDepth="2" />
+                </Label.Effect>
+            </Label>
+        </Border>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisibilityStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Collapsed">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Visible">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <CubicEase EasingMode="EaseInOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Collapsed" />
+                <VisualState x:Name="Visible">
+                    <Storyboard>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="35" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>

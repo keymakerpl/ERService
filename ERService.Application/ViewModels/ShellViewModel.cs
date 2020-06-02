@@ -92,6 +92,8 @@ namespace ERService.Application.ViewModels
             {
                 if (task.Status == TaskStatus.RanToCompletion)
                 {
+                    _regionManager.RegisterViewWithRegion(RegionNames.DetailHeaderRegion, typeof(DetailHeaderView));
+
                     IsCenterLogoVisible = false;
                     ShowLoginWindow();
                 }

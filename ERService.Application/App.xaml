@@ -142,18 +142,41 @@
                         </Style.Triggers>
                     </Style>-->
 
-                    <Style x:Key="DefaultBorderStyle" TargetType="Border">
+                    <Style
+                        x:Key="DefaultBorderStyle"
+                        x:Name="border"
+                        TargetType="Border">
                         <Setter Property="BorderBrush" Value="Transparent" />
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="CornerRadius" Value="5" />
                         <Setter Property="Margin" Value="5" />
-                        <Setter Property="Background" Value="#F9F9F9" />
+                        <Setter Property="Opacity" Value="100" />
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush x:Name="BorderColor" Color="#F8F7F7" />
+                            </Setter.Value>
+                        </Setter>
                         <Setter Property="UseLayoutRounding" Value="True" />
                         <Setter Property="Effect">
                             <Setter.Value>
-                                <DropShadowEffect ShadowDepth="1" />
+                                <DropShadowEffect BlurRadius="3" ShadowDepth="1" />
                             </Setter.Value>
                         </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="Visibility" Value="Visible">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="(Effect).Opacity"
+                                                From="0.0"
+                                                To="1.0"
+                                                Duration="0:0:0.8" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
 
                     <Style

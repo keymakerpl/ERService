@@ -107,6 +107,8 @@ namespace ERService.OrderModule.ViewModels
                 GoForwardCommand.RaiseCanExecuteChanged();
                 GoBackwardCommand.RaiseCanExecuteChanged();
             };
+
+            RaiseDetailOpenedEvent(Guid.Empty, "Dodawanie nowej naprawy...");
         }
 
         private async void InitializePrintTemplates()
@@ -173,6 +175,7 @@ namespace ERService.OrderModule.ViewModels
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            base.OnNavigatedFrom(navigationContext);
             _regionManager.Regions[RegionNames.OrderWizardStageRegion].RemoveAll();
         }
 

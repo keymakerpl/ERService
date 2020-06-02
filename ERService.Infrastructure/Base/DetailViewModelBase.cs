@@ -38,8 +38,8 @@ namespace ERService.Infrastructure.Base
             _eventAggregator.GetEvent<AfterLicenseValidationRequestEvent>().Subscribe((e) => IsReadOnly = !e.IsValid, true);
             _eventAggregator.GetEvent<LicenseValidationRequestEvent>().Publish();            
         }
-        
-        public DelegateCommand SaveCommand { get; private set; }
+
+        public DelegateCommand SaveCommand { get; }
         public DelegateCommand CancelCommand { get; set; }
         public DelegateCommand CloseCommand { get; set; }
         
@@ -65,14 +65,7 @@ namespace ERService.Infrastructure.Base
             get { return _title; }
             protected set
             {
-                _title = value;
-                _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Publish(new AfterDetailOpenedEventArgs
-                {
-                    DisplayableName = value, Id = ID,
-                    ViewModelName = this.ToString()
-                });
-
-                RaisePropertyChanged();
+                SetProperty(ref _title, value);
             }
         }
 
@@ -123,8 +116,21 @@ namespace ERService.Infrastructure.Base
             throw new NotImplementedException();
         }
 
+        protected virtual void RaiseDetailOpenedEvent(Guid modelId, string displayMember)
+        {
+            _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Publish(new AfterDetailOpenedEventArgs
+            {
+                Id = modelId,
+                DisplayableName = displayMember,
+                ViewModelName = GetType().Name
+            });
+        }
+
         protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
         {
+            var title = String.IsNullOrWhiteSpace(displayMember) ? "Zapisano..." : displayMember;
+            _messageDialogService.ShowInsideContainer(title, "Zapisano poprawnie element.", NotificationTypes.Success);
+
             _eventAggregator.GetEvent<AfterDetailSavedEvent>()
                 .Publish(new AfterDetailSavedEventArgs()
                 {
@@ -156,9 +162,7 @@ namespace ERService.Infrastructure.Base
             try
             {
                 await saveFunc();
-                RaiseDetailSavedEvent(ID, Title);
-
-                _messageDialogService.ShowInsideContainer("Zapisano...", "Zapisano element.", NotificationTypes.Success);
+                RaiseDetailSavedEvent(ID, Title);                
             }
             catch (DbUpdateConcurrencyException e) // rowversion się zmienił - ktoś inny zmienił dane
             {
@@ -216,7 +220,7 @@ namespace ERService.Infrastructure.Base
 
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+
         }
 
         public virtual bool IsNavigationTarget(NavigationContext navigationContext)
@@ -226,7 +230,11 @@ namespace ERService.Infrastructure.Base
 
         public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
+            _eventAggregator.GetEvent<AfterDetailClosedEvent>().Publish(new AfterDetailClosedEventArgs
+            {
+                Id = ID,
+                ViewModelName = GetType().Name
+            });
         }
 
         public virtual bool KeepAlive => false;

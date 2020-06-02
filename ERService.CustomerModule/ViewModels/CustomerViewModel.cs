@@ -38,7 +38,7 @@ namespace ERService.CustomerModule.ViewModels
 
         public ICustomerWrapper Customer { get => _customer; set { SetProperty(ref _customer, value); } }
         public CustomerAddress CustomerAddress { get => _customerAddress ?? new CustomerAddress(); set { SetProperty(ref _customerAddress, value); } }
-        public DelegateCommand OrdersCommand { get; private set; }
+        public DelegateCommand OrdersCommand { get; }
 
         public override async Task LoadAsync(Guid id)
         {
@@ -123,7 +123,11 @@ namespace ERService.CustomerModule.ViewModels
             {
                 Customer.LastName = ""; 
                 Customer.PhoneNumber = "";
-            }            
+            }
+            else if (_navigationService.Region.Name.Equals(RegionNames.ContentRegion))
+            {
+                RaiseDetailOpenedEvent(Customer.Id, $"Klient {customer.FullName}");
+            }
         }
 
         protected override void OnCancelEditExecute()

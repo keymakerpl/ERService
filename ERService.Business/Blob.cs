@@ -21,9 +21,6 @@ namespace ERService.Business
 
         public int Size { get; set; }
 
-        public Guid? OrderId { get; set; }
-        public Order Order { get; set; }
-
         [Required]
         public byte[] Data { get; set; }
     }

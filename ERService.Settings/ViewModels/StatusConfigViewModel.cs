@@ -1,16 +1,12 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Base;
-using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
-using MahApps.Metro.Controls.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -24,6 +20,8 @@ namespace ERService.Settings.ViewModels
 
     public class StatusConfigViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IOrderStatusRepository _orderStatusRepository;
         private IOrderTypeRepository _orderTypeRepository;
         private OrderStatusWrapper _selectedOrderStatus;
@@ -106,7 +104,7 @@ namespace ERService.Settings.ViewModels
         {
             await LoadStatuses();
             await LoadTypes();
-            LoadLookups(); //TODO: async
+            LoadLookups(); 
         }
 
         private void LoadLookups()
@@ -132,6 +130,8 @@ namespace ERService.Settings.ViewModels
                 wrappedStatus.PropertyChanged += WrappedStatus_PropertyChanged;
                 OrderStatuses.Add(wrappedStatus);
             }
+
+            OrderStatuses.CollectionChanged += (s, a) => SaveCommand.RaiseCanExecuteChanged();
         }
 
         private async Task LoadTypes()
@@ -149,18 +149,20 @@ namespace ERService.Settings.ViewModels
                 wrappedType.PropertyChanged += WrappedType_PropertyChanged;
                 OrderTypes.Add(wrappedType);
             }
+
+            OrderTypes.CollectionChanged += (s, a) => SaveCommand.RaiseCanExecuteChanged();
         }
 
         #region Events and Event Handlers
         protected override bool OnSaveCanExecute()
         {
-            return (_orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges());
+            return _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges() || HasChanges;
         }
 
         protected async override void OnSaveExecute()
         {
-            await _orderStatusRepository.SaveAsync();
-            await _orderTypeRepository.SaveAsync();
+            await SaveWithOptimisticConcurrencyAsync(_orderStatusRepository.SaveAsync, () => { });
+            await SaveWithOptimisticConcurrencyAsync(_orderTypeRepository.SaveAsync, () => { });            
 
             HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }

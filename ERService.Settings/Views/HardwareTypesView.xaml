@@ -60,7 +60,8 @@
                             Height="250"
                             BorderBrush="LightGray"
                             BorderThickness="0"
-                            Style="{StaticResource DefaultBorderStyle}">
+                            Style="{StaticResource DefaultBorderStyle}"
+                            UseLayoutRounding="True">
                             <DataGrid
                                 ItemsSource="{Binding HardwareTypes}"
                                 SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay}"
@@ -103,7 +104,8 @@
                         <Border
                             Height="250"
                             BorderThickness="0"
-                            Style="{StaticResource DefaultBorderStyle}">
+                            Style="{StaticResource DefaultBorderStyle}"
+                            UseLayoutRounding="True">
                             <DataGrid
                                 ItemsSource="{Binding CustomItems}"
                                 SelectedItem="{Binding SelectedCustomItem, Mode=TwoWay}"
