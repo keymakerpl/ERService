@@ -94,7 +94,7 @@
 
                     <controls:Tile
                         Title="Klienci"
-                        Width="250"
+                        Width="230"
                         Background="SteelBlue"
                         Command="{Binding CustomersCommand}"
                         FontWeight="SemiBold"
@@ -111,6 +111,7 @@
 
                     <controls:Tile
                         Title="Ustawienia"
+                        Width="155"
                         Background="LightSlateGray"
                         Command="{Binding SettingsCommand}"
                         FontWeight="SemiBold"
@@ -127,6 +128,7 @@
 
                     <controls:Tile
                         Title="Statystyki"
+                        Width="180"
                         Background="DimGray"
                         Command="{Binding StatsCommand}"
                         FontWeight="SemiBold"
@@ -143,7 +145,7 @@
 
                     <controls:Tile
                         Title="Numer naprawy"
-                        Width="240"
+                        Width="270"
                         Background="#FF428D9E"
                         Command="{Binding SearchCommand}"
                         CommandParameter="{Binding ElementName=searchText, Path=Text}"
@@ -163,7 +165,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox
                                         Name="searchText"
-                                        Width="150"
+                                        Width="180"
                                         Height="25"
                                         Background="Wheat"
                                         ToolTip="Wprowadź numer naprawy" />
@@ -185,22 +187,6 @@
                                 Command="{Binding SearchCommand}"
                                 CommandParameter="{Binding ElementName=searchText, Path=Text}" />
                         </controls:Tile.InputBindings>
-                    </controls:Tile>
-
-                    <controls:Tile
-                        Title="Kod kreskowy"
-                        Background="LightSlateGray"
-                        Command="{Binding SettingsCommand}"
-                        FontWeight="SemiBold"
-                        Foreground="Wheat"
-                        Style="{StaticResource SmallTileStyle}">
-                        <controls:Tile.Effect>
-                            <DropShadowEffect />
-                        </controls:Tile.Effect>
-                        <iconPacks:PackIconMaterial
-                            Width="40"
-                            Height="40"
-                            Kind="BarcodeScan" />
                     </controls:Tile>
 
                 </WrapPanel>

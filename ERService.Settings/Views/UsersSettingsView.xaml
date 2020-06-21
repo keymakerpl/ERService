@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Settings.Views"
@@ -65,7 +64,7 @@
                     <StackPanel>
                         <ListView
                             BorderThickness="0"
-                            ItemsSource="{Binding Users}"
+                            ItemsSource="{Binding Users, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ListView.Resources>
                                 <Style x:Key="FocusVisual">
@@ -294,7 +293,7 @@
                     <StackPanel>
                         <ListView
                             BorderThickness="0"
-                            ItemsSource="{Binding Roles}"
+                            ItemsSource="{Binding Roles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             SelectedItem="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -318,7 +317,7 @@
                     </StackPanel>
                     <StackPanel
                         Grid.Row="1"
-                        FlowDirection="RightToLeft"
+                        HorizontalAlignment="Right"
                         Orientation="Horizontal">
                         <Button
                             Width="25"
@@ -329,6 +328,17 @@
                             Foreground="SlateGray"
                             Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                             <iconPacks:PackIconFontAwesome Padding="2" Kind="TrashAltRegular" />
+                        </Button>
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            Command="{Binding EditRoleCommand}"
+                            Foreground="SlateGray"
+                            Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                            <iconPacks:PackIconModern Padding="2" Kind="Edit" />
                         </Button>
                         <Button
                             Width="25"
@@ -355,30 +365,30 @@
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView BorderThickness="0" ItemsSource="{Binding RoleACLs}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <WrapPanel VerticalAlignment="Center">
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding AclVerb.Name}" />
-                                        </WrapPanel>
-                                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                                            <mah:ToggleSwitch
-                                                FontSize="12"
-                                                IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                OffLabel="Zabronione"
-                                                OnLabel="Dozwolone" />
-                                        </WrapPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollViewer>
+
+                    <ListView BorderThickness="0" ItemsSource="{Binding RoleACLs}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel VerticalAlignment="Center">
+                                        <TextBlock FontWeight="SemiBold" Text="{Binding AclVerb.Name}" />
+                                    </WrapPanel>
+                                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                                        <mah:ToggleSwitch
+                                            FontSize="12"
+                                            IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            OffLabel="Zabronione"
+                                            OnLabel="Dozwolone" />
+                                    </WrapPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
                 </Grid>
             </GroupBox>
         </Grid>

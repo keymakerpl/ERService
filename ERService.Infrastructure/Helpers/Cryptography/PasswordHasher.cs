@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 
 namespace ERService.Infrastructure.Helpers
 {
-    //TODO: move to cryptography
     public class PasswordHasher : IPasswordHasher
     {
         public void GenerateSaltedHash(string password, out string hash, out string salt)

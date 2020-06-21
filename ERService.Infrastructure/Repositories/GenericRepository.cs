@@ -30,6 +30,11 @@ namespace ERService.Infrastructure.Repositories
             return await Context.Set<TEntity>().ToListAsync();
         }
 
+        public virtual TEntity GetById(Guid id)
+        {
+            return Context.Set<TEntity>().Find(id);
+        }
+
         public virtual async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
@@ -45,21 +50,25 @@ namespace ERService.Infrastructure.Repositories
         {
             var query = GetAllIncluding(includeProps);
             return await query.Where(predicate).ToListAsync();
-        }        
-
-        public virtual async Task<List<T>> GetBy<T>(string sqlQuery, object[] parameters) 
-        {
-            var result = await Context.Database.SqlQuery<T>(sqlQuery, parameters).ToListAsync();
-
-            return result;
-        }        
+        }
 
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)
         {
             IQueryable<TEntity> queryable = Context.Set<TEntity>();
-
             return includeProps.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
+
+        public virtual async Task<List<T>> GetAsync<T>(string sqlQuery, object[] parameters) 
+        {
+            var result = await Context.Database.SqlQuery<T>(sqlQuery, parameters).ToListAsync();
+            return result;
+        }
+
+        public virtual List<T> Get<T>(string sqlQuery, object[] parameters)
+        {
+            var result = Context.Database.SqlQuery<T>(sqlQuery, parameters).ToList();
+            return result;
+        }        
 
         public virtual async Task<bool> SaveAsync()
         {
@@ -67,7 +76,8 @@ namespace ERService.Infrastructure.Repositories
             if (objectContextAdapter != null)
             {
                 objectContextAdapter.ObjectContext.DetectChanges();
-                foreach (ObjectStateEntry entry in objectContextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added))
+                var addedObjects = objectContextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added);
+                foreach (ObjectStateEntry entry in addedObjects)
                 {
                     var added = entry.Entity as IModificationHistory;
                     if (added != null && added.DateAdded == DateTime.MinValue)
@@ -91,17 +101,17 @@ namespace ERService.Infrastructure.Repositories
             return savedElements > 0;
         }
 
-        public bool HasChanges()
+        public virtual bool HasChanges()
         {
             return Context.ChangeTracker.HasChanges();
         }
 
-        public void Add(TEntity model)
+        public virtual void Add(TEntity model)
         {
             Context.Set<TEntity>().Add(model);
         }
 
-        public void Remove(TEntity model)
+        public virtual void Remove(TEntity model)
         {
             try
             {
@@ -114,7 +124,7 @@ namespace ERService.Infrastructure.Repositories
             }
         }
 
-        public void RollBackChanges()
+        public virtual void RollBackChanges()
         {
             var changedEntries = Context.ChangeTracker
                                     .Entries()
@@ -136,30 +146,42 @@ namespace ERService.Infrastructure.Repositories
                         break;
                 }
             }
-        }        
+        }
 
-        public async Task<DbPropertyValues> GetDatabaseValuesAsync(object entity)
+        public virtual void ReloadEntities()
+        {
+            var entries = Context.ChangeTracker.Entries<TEntity>().Select(e => e.Entity).ToList();
+            var objectContextAdapter = Context as IObjectContextAdapter;
+            if (objectContextAdapter != null)
+            {
+                objectContextAdapter.ObjectContext.Refresh(RefreshMode.ClientWins, entries);
+            }
+        }
+
+        public virtual async Task ReloadEntitiesAsync()
+        {
+            var entries = Context.ChangeTracker.Entries<TEntity>().Select(e => e.Entity).ToList();
+            var objectContextAdapter = Context as IObjectContextAdapter;
+            if (objectContextAdapter != null)
+            {
+                await objectContextAdapter.ObjectContext.RefreshAsync(RefreshMode.ClientWins, entries);
+            }            
+        }
+
+        public virtual void ReloadEntity(TEntity entity)
+        {
+            Context.Entry(entity).Reload();            
+        }
+
+        public virtual async Task ReloadEntityAsync(TEntity entity)
+        {
+            await Context.Entry(entity).ReloadAsync();            
+        }
+
+        public virtual async Task<DbPropertyValues> GetDatabaseValuesAsync(object entity)
         {
             var result = await Context.Entry(entity).GetDatabaseValuesAsync();
             return result;
-        }
-
-        public async Task ReloadEntities()
-        {
-            var entries = Context.ChangeTracker.Entries<TEntity>();
-            foreach (var entry in entries)
-            {
-                await entry.ReloadAsync();
-            }
-        }
-
-        public void ReloadNavigationProperty<TElement>(Expression<Func<TEntity, ICollection<TElement>>> navigationProperty) where TElement : class
-        {
-            var entries = Context.ChangeTracker.Entries<TEntity>();
-            foreach (var entry in entries)
-            {
-                entry.Collection(navigationProperty).Query();
-            }
         }
     }
 }

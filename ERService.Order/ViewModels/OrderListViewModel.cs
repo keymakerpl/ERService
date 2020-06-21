@@ -21,7 +21,6 @@ namespace ERService.OrderModule.ViewModels
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private IMessageDialogService _dialogService;
-
         private IRBACManager _rbacManager;
         private readonly IBlobRepository _blobRepository;
         private Order _selectedOrder;
@@ -69,7 +68,7 @@ namespace ERService.OrderModule.ViewModels
                 var parameters = new object[0];
                 var queryString = args.QueryBuilder.Compile(out parameters);
 
-                var ids = await GetBy<Guid>(queryString, parameters);
+                var ids = await GetAsync<Guid>(queryString, parameters);
                 await LoadAsync(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
             }
             catch (Exception ex)

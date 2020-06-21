@@ -39,20 +39,12 @@ namespace ERService.Settings.ViewModels
             EditUserCommand = new DelegateCommand(OnEditUserExecute, OnEditUserCanExecute);
             RemoveUserCommand = new DelegateCommand(OnRemoveUserExecute, OnRemoveUserCanExecute);
             AddRoleCommand = new DelegateCommand(OnAddRoleExecute);
-            EditRoleCommand = new DelegateCommand(OnEditRoleExecute);
+            EditRoleCommand = new DelegateCommand(OnEditRoleExecute, OnEditRoleCanExecute);
             RemoveRoleCommand = new DelegateCommand(OnRemoveRoleExecute, OnRemoveRoleCanExecute);
 
             _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(OnUserDetailSaved);
         }
-
-        private async void OnUserDetailSaved(AfterDetailSavedEventArgs args)
-        {
-            if (args.ViewModelName == typeof(UserDetailViewModel).Name)
-            {
-                await LoadUsers();
-            }
-        }
-
+        
         public DelegateCommand AddRoleCommand { get; }
         public DelegateCommand AddUserCommand { get; }
         public DelegateCommand EditRoleCommand { get; }
@@ -66,7 +58,13 @@ namespace ERService.Settings.ViewModels
         public Role SelectedRole
         {
             get { return _selectedRole; }
-            set { SetProperty(ref _selectedRole, value); LoadRoleAcls(value); RemoveRoleCommand.RaiseCanExecuteChanged(); }
+            set
+            {
+                SetProperty(ref _selectedRole, value);
+                LoadRoleAcls(value);
+                RemoveRoleCommand.RaiseCanExecuteChanged();
+                EditRoleCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public User SelectedUser
@@ -79,10 +77,10 @@ namespace ERService.Settings.ViewModels
             }
         }
 
-        public override async Task LoadAsync()
+        public override void Load()
         {
-            await LoadUsers();
-            await LoadRoles();
+            LoadUsers();
+            LoadRoles();
         }
 
         private void LoadRoleAcls(Role role)
@@ -96,29 +94,33 @@ namespace ERService.Settings.ViewModels
             }
         }
 
-        private async Task LoadRoles()
+        private void LoadRoles()
         {
             Roles.Clear();
-            var roles = await _rbacManager.GetAllRolesAsync();
-
-            foreach (var role in roles)
+            foreach (var role in _rbacManager.Roles)
             {
                 Roles.Add(role);
             }
         }
 
-        private async Task LoadUsers()
+        private void LoadUsers()
         {
             Users.Clear();
-            var users = await _rbacManager.GetAllUsersAsync();
-
-            foreach (var user in users)
+            foreach (var user in _rbacManager.Users)
             {
                 Users.Add(user);
             }
         }
 
         #region Events and Event Handlers
+
+        private void OnUserDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == typeof(UserDetailViewModel).Name)
+            {
+                LoadUsers();
+            }
+        }
 
         protected override void OnCancelEditExecute()
         {
@@ -136,9 +138,13 @@ namespace ERService.Settings.ViewModels
 
         protected override async void OnSaveExecute()
         {
-            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
+            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, async () => 
+            {
+                HasChanges = _rbacManager.HasChanges();
+                SaveCommand.RaiseCanExecuteChanged();
 
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.StartPageView);
+                await _rbacManager.Refresh();
+            });
         }
 
         private async void OnAddRoleExecute()
@@ -150,7 +156,7 @@ namespace ERService.Settings.ViewModels
             }
 
             var dialogResult = await _messageDialogService
-                .ShowInputMessageAsync(this, "Nowa rola", "Podaj nazwę dla nowej roli:");
+                .ShowInputMessageAsync(this, "Nowa rola...", "Podaj nazwę nowej roli:");
 
             if (!String.IsNullOrWhiteSpace(dialogResult))
             {
@@ -158,7 +164,6 @@ namespace ERService.Settings.ViewModels
                 {
                     await _messageDialogService
                         .ShowInformationMessageAsync(this, "Rola już istnieje...", "Rola o podanej nazwie już istnieje.");
-                    return;
                 }
                 else
                 {
@@ -183,13 +188,21 @@ namespace ERService.Settings.ViewModels
                     Flyout = SideFlyouts.DetailFlyout,
                     ViewName = ViewNames.UserDetailView
                 });
-
-            //_regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView);
         }
 
-        private void OnEditRoleExecute()
+        private async void OnEditRoleExecute()
         {
-            throw new NotImplementedException();
+            var newRoleName = await _messageDialogService.ShowInputMessageAsync(this, "Edycja roli...", "Wprowadź nową nazwę roli:");
+            if (!String.IsNullOrWhiteSpace(newRoleName))
+            {
+                SelectedRole.Name = newRoleName;
+                LoadRoles();
+            }
+        }
+
+        private bool OnRemoveRoleCanExecute()
+        {
+            return SelectedRole != null;
         }
 
         private bool OnEditUserCanExecute()
@@ -213,7 +226,7 @@ namespace ERService.Settings.ViewModels
             //_regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
         }
 
-        private bool OnRemoveRoleCanExecute()
+        private bool OnEditRoleCanExecute()
         {
             return SelectedRole != null;
         }
@@ -240,7 +253,7 @@ namespace ERService.Settings.ViewModels
                     .ShowInformationMessageAsync(this, "Nie można usunąć roli...", "Nie można usunąć obecnie używanej roli.");
             }
 
-            if (SelectedRole.Users.Any())
+            if (Users.Any(u => u.RoleId == SelectedRole.Id))
             {
                 await _messageDialogService.ShowInformationMessageAsync(this, "Rola w użyciu...", "Wybrana rola jest w użyciu, nie można jej usunąć.");
                 return;
@@ -298,9 +311,9 @@ namespace ERService.Settings.ViewModels
 
         public override bool KeepAlive => true;
 
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            await LoadAsync();
+            Load();
 
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
                 IsReadOnly = true;

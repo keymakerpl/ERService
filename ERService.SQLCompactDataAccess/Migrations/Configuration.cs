@@ -77,7 +77,7 @@ namespace ERService.MSSQLDataAccess.Migrations
                 context.Roles.AddOrUpdate(n => n.Name,
                 new Role()
                 {
-                    Name = "Administrator",
+                    Name = "Domyœlna",
                     IsSystem = true
                 });
 
@@ -85,7 +85,8 @@ namespace ERService.MSSQLDataAccess.Migrations
             }
 
             // Przypisz Verby do Acli
-            var roleId = context.Roles.FirstOrDefault(r => r.Name == "Administrator").Id;
+            var role = context.Roles.FirstOrDefault(r => r.Name == "Domyœlna");
+            var roleId = role.Id;
             var acls = context.ACLs.Where(a => a.RoleId == roleId);
             foreach (var acl in acls)
             {
@@ -109,9 +110,9 @@ namespace ERService.MSSQLDataAccess.Migrations
                     IsActive = true,
                     IsAdmin = true,
                     IsSystem = true,
-                    RoleId = context.Roles.Single(r => r.Name == "Administrator").Id,
-                    PasswordHash = "/HMO54rRxNa+SBxAH3Mamqn2gbiaydN80pO9BNyPxcB5LMCPTobg6fR9rTTLgo8w9lV4IFdnR0QyKUTfMgFdRvTxQMGIK0zOKXdDT3uQg86Qa7DPAMkiAYv/ipg+9mUbuGwhvSCTEAfA8yQ4JXKiNo6acqWKlSsHN9Ezh48dwX1D4GupU4DsSRigeGZ0eIMoLuH0ofPwCMWeLo/tzaJirGwzeBHvECqWeLjhLaBKQaXPvvrMxzAOaaYSFmFmiSmJoM4hxaj0Y9Sg/vyritqkmN6cjvcPFj71bJTk79Jh8t7rFSR4qUNzqfKC6t6X3lHL2Xh3VAarhxJ+h5P5AsbYMQ==",
-                    Salt = "ScbGvPwGi2xjUD5wfe0/Ty3Rot3e6G4NRpXbrIpJ8tf4U6H+dQe414sbeJey3NPifszbOpI0BxSa1O/npi32AQ=="
+                    RoleId = context.Roles.Single(r => r.Name == "Domyœlna").Id,
+                    PasswordHash = "TxLVWrN0l5eCTgSgWzu+9DD0hjm9GHUQFke/ixgRhXG5fL6GqohNNRUozIuQnpMQ/AMUgo5O7Sm9XPExBvK5fyULJUVdIMOT/mupzdeDDP6L/5Zlc8IBBOIwXmRszQq7VjPxff6rvMMscS3KCvk7B3LYHZmdkpYWnndqsPwaCmlb8UdUvsZYbfT4ycUr4SqO2lrhVzy5decN8PtlCMKM9dAoYwqKppkN5Bw5Ge9Rt61dCNkefgmWkMMnXJI3mmpTTSOzTPjdIqaSmV4jFnpih6oSPwgTXWjsqGJprpL7y8fztD/hSCjluLGgfXBAsYiqcgDD2gKsmjGqbHVLT+6dcg==",
+                    Salt = "h1WROAWPPhJjGE9FWtKit3rolD9Sobb5BDNaO9k+TvBJpEooFM8kIRRyizkrEZ8JGm/zfbncrcePUMKhFXN8tQ=="
                 }
                 );
 

@@ -18,7 +18,7 @@
     <Grid>
 
         <TabControl
-            Margin="8,10,8,5"
+            Margin="8,0,8,5"
             prism:RegionManager.RegionName="SettingsTabControlRegion"
             SelectedIndex="{Binding TabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TabControl.Resources>

@@ -25,16 +25,15 @@ namespace ERService.Settings.ViewModels
         private IRBACManager _rbacManager;
         private IRegionManager _regionManager;
         private IPasswordHasher _passwordHasher;
-        private IUserRepository _userRepository;
-        private IRegionNavigationService _navigationService;
+        private IRegionNavigationService _navigationService;        
+        private bool PasswordChanged;
 
-        public UserDetailViewModel(IUserRepository userRepository, IEventAggregator eventAggregator, 
+        public UserDetailViewModel(IEventAggregator eventAggregator, 
             IRegionManager regionManager, IRBACManager rBACManager,
             IPasswordHasher passwordHasher, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             _rbacManager = rBACManager;
             _regionManager = regionManager;
-            _userRepository = userRepository;
             _passwordHasher = passwordHasher;
 
             UserRoles = new ObservableCollection<Role>();
@@ -46,7 +45,7 @@ namespace ERService.Settings.ViewModels
         public Role SelectedRole
         {
             get { return _selectedRole; }
-            set { SetProperty(ref _selectedRole, value); User.Model.RoleId = value.Id; }
+            set { SetProperty(ref _selectedRole, value); User.RoleId = value.Id; }
         }
 
         public UserWrapper User
@@ -57,9 +56,9 @@ namespace ERService.Settings.ViewModels
 
         public ObservableCollection<Role> UserRoles { get; }
 
-        public override async Task LoadAsync(Guid id)
+        public override void Load(Guid id)
         {
-            var user = id != Guid.Empty ? await _userRepository.GetByIdAsync(id)                        
+            var user = id != Guid.Empty ? _rbacManager[id]
                         : GetNewDetail();
 
             ID = id;
@@ -68,13 +67,13 @@ namespace ERService.Settings.ViewModels
             Initialize(user);
         }
 
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
 
-            await LoadAsync(id);
+            Load(id);
 
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
                 IsReadOnly = true;
@@ -92,15 +91,20 @@ namespace ERService.Settings.ViewModels
 
         protected async void OnSaveExecute(object parameter)
         {
-            HashPassword(parameter);
-
-            await SaveWithOptimisticConcurrencyAsync(_userRepository.SaveAsync, () =>
+            var confirmPswd = await ConfirmPassword();
+            if (!confirmPswd)
             {
-                HasChanges = _userRepository.HasChanges();
+                await _messageDialogService.ShowInformationMessageAsync(this, "Hasła są różne...", "Wprowadzone hasło różni się od zmienionego hasła");
+                return;
+            }
+
+            HashPassword();
+
+            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () =>
+            {
+                HasChanges = _rbacManager.HasChanges();
                 ID = User.Id;
                 
-                RaiseDetailSavedEvent(ID, User.FullName);
-
                 _eventAggregator
                     .GetEvent<AfterSideMenuExpandToggled>()
                     .Publish(new AfterSideMenuExpandToggledArgs
@@ -110,28 +114,32 @@ namespace ERService.Settings.ViewModels
             });
         }
 
+        private async Task<bool> ConfirmPassword()
+        {
+            if (!PasswordChanged)
+                return true;
+
+            var password = await _messageDialogService.ShowInputMessageAsync(this, "Hasło zostało zmienione...", "Wprowadź ponownie nowe hasło:");
+            return password == User.Password;
+        }
+
         private User GetNewDetail()
         {
             var user = new User();
+            _rbacManager.AddUser(user);
 
-            _userRepository.Add(user);
             return user;
         }
-
-        //TODO: Refactor? - To nie jest solid. Zasada pojedynczej odpowiedzialnosci, przeniesc do RBAC
-        private void HashPassword(object parameter)
+        
+        private void HashPassword()
         {
-            string hashedPassword = "";
-            string salt = "";
-            var passwordBox = parameter as PasswordBox;
-            if (passwordBox != null)
+            if (PasswordChanged || ID == Guid.Empty)
             {
-                var encryptedPassword = passwordBox.Password;
-                _passwordHasher.GenerateSaltedHash(encryptedPassword, out hashedPassword, out salt);
-            }
+                string hashedPassword = "";
+                string salt = "";
 
-            if (!String.IsNullOrWhiteSpace(hashedPassword) && !String.IsNullOrWhiteSpace(salt))
-            {
+                _passwordHasher.GenerateSaltedHash(User.Password, out hashedPassword, out salt);
+
                 User.PasswordHash = hashedPassword;
                 User.Salt = salt;
             }
@@ -139,7 +147,7 @@ namespace ERService.Settings.ViewModels
 
         private void Initialize(User user)
         {
-            if (user == null) return;
+            if (user == null) return; 
 
             User = new UserWrapper(user);
 
@@ -147,13 +155,16 @@ namespace ERService.Settings.ViewModels
             {
                 if (!HasChanges)
                 {
-                    HasChanges = _userRepository.HasChanges();
+                    HasChanges = _rbacManager.HasChanges();
                 }
-                
-                if (args.PropertyName == nameof(User.HasErrors))
+
+                if (!HasChanges && args.PropertyName == nameof(UserWrapper.Password))
                 {
-                    SaveCommand.RaiseCanExecuteChanged();
+                    HasChanges = true;
+                    PasswordChanged = true;
                 }
+
+                SaveCommand.RaiseCanExecuteChanged();
             });
 
             SaveCommand.RaiseCanExecuteChanged();
@@ -161,19 +172,25 @@ namespace ERService.Settings.ViewModels
             if (User.Id == Guid.Empty)
             {
                 User.Login = "";
-            }
-        }
+                User.Password = "";
+                User.IsActive = true;
+                User.IsAdmin = false;
 
-        private async void InitializeRoleCombo()
-        {
-            var roles = await _rbacManager.GetAllRolesAsync();
-            foreach (var role in roles)
-            {
-                UserRoles.Add(role);
+                var role = UserRoles.FirstOrDefault(r => r.IsSystem);
+                if (role != null)
+                    SelectedRole = role;
             }
 
             if (ID != Guid.Empty && User.Model.Role != null)
                 SelectedRole = User.Model.Role;
+        }
+
+        private void InitializeRoleCombo()
+        {
+            foreach (var role in _rbacManager.Roles)
+            {
+                UserRoles.Add(role);
+            }            
         }
     }
 }

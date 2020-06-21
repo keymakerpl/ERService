@@ -3,6 +3,7 @@ using ERService.Infrastructure.Dialogs;
 using ERService.RBAC;
 using Prism.Mvvm;
 using Prism.Regions;
+using System.Collections.Generic;
 
 namespace ERService.Settings.ViewModels
 {
@@ -54,15 +55,27 @@ namespace ERService.Settings.ViewModels
                 _regionManager.Regions[RegionNames.SettingsTabControlRegion].RemoveAll();
             }
 
-            var tabViews = new string[6] 
+            var tabViews = new List<string>()
             {
                 ViewNames.GeneralSettingsView,
                 ViewNames.HardwareTypesView,
-                ViewNames.StatusConfigView,
-                ViewNames.NumerationSettingsView,
-                ViewNames.UserSettingsView,
-                ViewNames.PrintTemplateSettingsView
+                ViewNames.StatusConfigView,                
             };
+
+            if (_rBACManager.LoggedUserHasPermission(AclVerbNames.NumerationConfiguration))
+            {
+                tabViews.Add(ViewNames.NumerationSettingsView);
+            }
+
+            if (_rBACManager.LoggedUserHasPermission(AclVerbNames.PrintConfiguration))
+            {
+                tabViews.Add(ViewNames.PrintTemplateSettingsView);
+            }
+
+            if (_rBACManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
+            {
+                tabViews.Add(ViewNames.UserSettingsView);
+            }
 
             foreach (var view in tabViews)
             {

@@ -53,7 +53,7 @@ namespace ERService.ViewModels
             _config = config;
 
             LoginCommand = new DelegateCommand<object>(OnLoginCommandExecute);
-            ConnectCommand = new DelegateCommand<object>(OnConnectExecute);
+            ConnectCommand = new DelegateCommand<object>(OnConnectExecute);            
 
             Providers = new List<KeyValuePair<DatabaseProviders, string>>();
 
@@ -70,19 +70,19 @@ namespace ERService.ViewModels
             set { SetProperty(ref _databaseProvider, value); }
         }
 
+        public string DbUser
+        {
+            get { return _dbUser; }
+            set { SetProperty(ref _dbUser, value); }
+        }
+
         public string DbPassword
         {
             get { return _dbPassword; }
             set { SetProperty(ref _dbPassword, value); }
         }
 
-        public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }
-
-        public string DbUser
-        {
-            get { return _dbUser; }
-            set { SetProperty(ref _dbUser, value); }
-        }
+        public string DbServer { get => _dbServer; set => SetProperty(ref _dbServer, value); }        
 
         public bool IsExpanded
         {
@@ -171,9 +171,6 @@ namespace ERService.ViewModels
 
         private async void OnLoginCommandExecute(object parameter)
         {
-            if (String.IsNullOrWhiteSpace(Login))
-                ShowWrongLoginDataMessage();
-
             if (_config.LastLogin != Login)
             {
                 _config.LastLogin = Login;
@@ -193,6 +190,8 @@ namespace ERService.ViewModels
                 if (!_rBACManager.Login(Login, passwordBox.Password))
                 {
                     ShowWrongLoginDataMessage();
+                    _logger.Info($"Login failed for user: {Login}");
+
                     return;
                 }
                 ContinueInitialization();
@@ -236,13 +235,14 @@ namespace ERService.ViewModels
                 {
                     _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
                     _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.LoginView);
+                    _eventAggregator.GetEvent<ShowProgressBarEvent>().Publish(new ShowProgressBarEventArgs { IsShowing = false });
                 }
             }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private void ShowWrongLoginDataMessage()
         {
-            _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");
+            _messageDialogService.ShowInformationMessageAsync(this, "Nieprawidłowe dane logowania...", "Podałeś nieprawidłowy login lub hasło.");            
         }
     }
 }

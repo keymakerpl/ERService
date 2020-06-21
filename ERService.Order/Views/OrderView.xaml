@@ -4,9 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:i1="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.OrderModule.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -64,10 +62,17 @@
             </StackPanel>
         </Border>
 
-        <Border BorderBrush="LightGray" BorderThickness="0,0,1,0">
+        <Border
+            helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            BorderBrush="LightGray"
+            BorderThickness="0,0,1,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="5">
-                    <Border x:Name="border" Style="{StaticResource DefaultBorderStyle}">
+                    <Border
+                        x:Name="border"
+                        BorderBrush="{Binding Order.Progress, Converter={StaticResource ProgressIntToBrushConverter}}"
+                        BorderThickness="2"
+                        Style="{StaticResource DefaultBorderStyle}">
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -390,6 +395,7 @@
         <ScrollViewer
             Grid.Column="1"
             Margin="5"
+            helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
             VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Border Style="{StaticResource DefaultBorderStyle}">

@@ -7,6 +7,7 @@
     xmlns:helpers="clr-namespace:ERService.Infrastructure.Helpers;assembly=ERService.Infrastructure"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Settings.Views"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     Dialog:DialogParticipation.Register="{Binding}"
@@ -73,7 +74,7 @@
                     Grid.Column="1"
                     MinWidth="150"
                     Margin="0,5,0,15"
-                    Text="{Binding User.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                    Text="{Binding User.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Label
                     Grid.Row="1"
                     Grid.Column="0"
@@ -84,7 +85,14 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     MinWidth="150"
-                    Margin="0,5,0,15" />
+                    Margin="0,5,0,15"
+                    helpers:PasswordBoxAssistant.BindPassword="True"
+                    helpers:PasswordBoxAssistant.BoundPassword="{Binding User.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    mah:PasswordBoxHelper.CapsLockIcon="!"
+                    mah:TextBoxHelper.ClearTextButton="True"
+                    Background="White"
+                    CaretBrush="Black"
+                    Foreground="Black" />
                 <Label
                     Grid.Row="2"
                     Margin="0,5,0,15"
@@ -93,7 +101,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,5,0,15"
-                    Text="{Binding User.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                    Text="{Binding User.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Label
                     Grid.Row="3"
                     Margin="0,5,0,15"
@@ -102,7 +110,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="0,5,0,15"
-                    Text="{Binding User.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                    Text="{Binding User.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Label
                     Grid.Row="4"
                     Margin="0,5,0,15"
@@ -111,7 +119,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="0,5,0,15"
-                    Text="{Binding User.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                    Text="{Binding User.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label
                     Grid.Row="5"
@@ -123,6 +131,7 @@
                     Grid.Column="3"
                     Margin="0,5,0,15"
                     DisplayMemberPath="Name"
+                    IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     IsSynchronizedWithCurrentItem="True"
                     ItemsSource="{Binding UserRoles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -138,11 +147,13 @@
                     <CheckBox
                         Margin="5"
                         Content="Administrator"
-                        IsChecked="{Binding User.IsAdmin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        IsChecked="{Binding User.IsAdmin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="5"
                         Content="Aktywny"
-                        IsChecked="{Binding User.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        IsChecked="{Binding User.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <Button

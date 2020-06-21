@@ -71,7 +71,7 @@ namespace ERService.CustomerModule.ViewModels
                 await LoadAsync(id);
             }
 
-            if (!_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditCustomer))
+            if (id != Guid.Empty && !_rBACManager.LoggedUserHasPermission(AclVerbNames.CanEditCustomer))
                 IsReadOnly = true;
         }
 

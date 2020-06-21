@@ -1,4 +1,5 @@
 ﻿using ERService.Business;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,44 +9,44 @@ namespace ERService.RBAC
     {
         Task LoadAsync();
 
-        void AddAclToRole(AclVerb aclVerb);
-
-        void AddRole(Role role);
-
-        void AddUserToRole(User user, Role role);
-
-        void RemoveRole(Role role);
-
-        void RemoveUser(User user);
+        Task Refresh();
 
         User LoggedUser { get; set; }
 
         bool Login(string login, string password);
 
-        void Logout();        
+        void Logout();
 
-        List<Acl> GetAclList();
+        List<User> Users { get; set; }
 
-        Task<IEnumerable<Role>> GetAllRolesAsync();
+        void AddUser(User user);
 
-        Task<IEnumerable<User>> GetAllUsersAsync();
+        void RemoveUser(User user);
+
+        List<Role> Roles { get; set; }
+
+        void AddRole(Role role);
+
+        void RemoveRole(Role role);
 
         Task<Role> GetNewRole(string roleName);
 
         List<Acl> GetRolePermissions(Role role);
 
-        Role GetUserRole(User user);     
-
         Task<bool> RoleExistsAsync(string roleName);
 
-        bool LoggedUserHasPermission(string verbName);        
+        bool LoggedUserHasPermission(string verbName);
 
-        bool UserExists(string login);
-
-        bool UserIsInRole(string login, Role role);
+        List<Acl> GetAclList();
 
         Task SaveAsync();
 
         void RollBackChanges();        
+
+        User this[string login] { get; }        
+
+        User this[Guid id] { get; }
+
+        bool HasChanges();
     }
 }

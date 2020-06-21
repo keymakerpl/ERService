@@ -1,6 +1,7 @@
 ﻿using ERService.Business;
 using ERService.Infrastructure.Events;
 using ERService.Infrastructure.Helpers;
+using ERService.Infrastructure.Repositories;
 using ERService.RBAC.Data.Repository;
 using Prism.Events;
 using System;
@@ -12,14 +13,14 @@ namespace ERService.RBAC
 {
     public class RBACManager : IRBACManager
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IAclRepository _aclRepository;
         private IEnumerable<Guid> _aclsIDsToDelete;
         private IAclVerbRepository _aclVerbRepository;
         private IEventAggregator _eventAggregator;
         private IPasswordHasher _passwordHasher;
         private IRoleRepository _roleRepository;
-        private List<Role> _roles;
-        private List<User> _users;
         private IUserRepository _userRepository;
 
         public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, IAclRepository aclRepository,
@@ -32,43 +33,25 @@ namespace ERService.RBAC
             _passwordHasher = passwordHasher;
             _eventAggregator = eventAggregator;
 
-            _aclsIDsToDelete = new List<Guid>();
+            _aclsIDsToDelete = new List<Guid>(); //TODO: Czy można się tego pozbyć?
 
-            _users = new List<User>();
-            _roles = new List<Role>();            
+            Users = new List<User>();
+            Roles = new List<Role>();
         }
-
+        
         public async Task LoadAsync()
         {
-            await LoadUsers().ContinueWith(async (t) => 
-            {
-                if (t.Status == TaskStatus.RanToCompletion)
-                {
-                    await LoadRoles();
-                }
-            });            
-        }
-
-        public void AddAclToRole(AclVerb aclVerb)
-        {
-        }
-
-        /// <summary>
-        /// Add role to repository
-        /// </summary>
-        /// <param name="roleName">Role</param>
-        public void AddRole(Role role)
-        {
-            _roleRepository.Add(role);
-        }
-
-        public void AddUserToRole(User user, Role role)
-        {
-        }
+            await LoadUsers().ContinueWith(async (_) => await LoadRoles(), TaskContinuationOptions.ExecuteSynchronously);            
+        }        
 
         public bool Login(string login, string password)
         {
-            var user = _users.SingleOrDefault(u => u.Login == login);
+            if (String.IsNullOrWhiteSpace(login))
+            {
+                return false;
+            }
+
+            var user = Users.SingleOrDefault(u => u.Login == login);
             if (user == null) return false;
 
             if (_passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt))
@@ -100,30 +83,130 @@ namespace ERService.RBAC
                     UserLogin = LoggedUser.Login
                 });
 
-            LoggedUser = null;            
-        }
-
-        public List<Acl> GetAclList()
+            LoggedUser = null;
+        }        
+        
+        public async Task SaveAsync()
         {
-            return new List<Acl>();
+            await _roleRepository.SaveAsync();
+            await _userRepository.SaveAsync();
+
+            if (_aclsIDsToDelete.Count() > 0)
+            {
+                await RemoveACLs(_aclsIDsToDelete.ToList());
+                await _aclRepository.SaveAsync();
+            }
         }
 
-        public async Task<List<AclVerb>> GetAclVerbsAsync()
+        public void RollBackChanges()
         {
-            var aclVerbs = await _aclVerbRepository.GetAllAsync();
-
-            return aclVerbs.ToList();
+            _roleRepository.RollBackChanges();
+            _userRepository.RollBackChanges();
+            _aclRepository.RollBackChanges();
         }
 
-        public async Task<IEnumerable<Role>> GetAllRolesAsync()
+        public bool HasChanges()
         {
-            return await _roleRepository.GetAllAsync();
+                return _userRepository.HasChanges()
+                    || _roleRepository.HasChanges()
+                    || _aclRepository.HasChanges()
+                    || _aclVerbRepository.HasChanges();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task Refresh()
         {
-            return await _userRepository.GetAllAsync();
+            await _aclRepository.ReloadEntitiesAsync();
+            await _userRepository.ReloadEntitiesAsync().ContinueWith(async (t) => 
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    await LoadAsync();
+                }
+
+                if (t.Exception != null)
+                {
+                    _logger.Debug(t.Exception);
+                }
+            });            
         }
+
+        #region User
+
+        public User LoggedUser { get; set; }
+
+        public List<User> Users { get; set; }        
+
+        private async Task LoadUsers()
+        {
+            Users.Clear();
+            var users = await _userRepository.GetAllAsync();
+            if (users != null)
+            {
+                foreach (var user in users)
+                {
+                    Users.Add(user);
+                }
+            }
+        }
+
+        public void AddUser(User user)
+        {
+            Users.Add(user);
+            _userRepository.Add(user);
+        }
+
+        public void RemoveUser(User user)
+        {
+            Users.Remove(user);
+            _userRepository.Remove(user);
+        }
+
+        #endregion
+
+        #region Role
+
+        public List<Role> Roles { get; set; }
+
+        private async Task LoadRoles()
+        {
+            Roles.Clear();
+            var roles = await _roleRepository.GetAllAsync();
+            if (roles != null)
+            {
+                foreach (var role in roles)
+                {
+                    Roles.Add(role);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add role to repository
+        /// </summary>
+        /// <param name="roleName">Role</param>
+        public void AddRole(Role role)
+        {
+            Roles.Add(role);
+            _roleRepository.Add(role);
+        }
+
+        public void RemoveRole(Role role)
+        {
+            _aclsIDsToDelete = role.ACLs.Select(a => a.Id).ToList();
+            Roles.Remove(role);
+            _roleRepository.Remove(role);
+        }
+
+        public async Task<bool> RoleExistsAsync(string roleName)
+        {
+            var t = await Task.Run<bool>(() =>
+            {
+                var exists = Roles.Any(r => r.Name == roleName);
+                return exists;
+            });
+
+            return t;
+        }        
 
         public async Task<Role> GetNewRole(string roleName)
         {
@@ -137,6 +220,22 @@ namespace ERService.RBAC
             var role = new Role { Name = roleName, IsSystem = false, ACLs = acls };
 
             return role;
+        }        
+        
+        #endregion
+
+        #region ACL
+
+        public async Task<List<AclVerb>> GetAclVerbsAsync()
+        {
+            var aclVerbs = await _aclVerbRepository.GetAllAsync();
+
+            return aclVerbs.ToList();
+        }
+
+        public List<Acl> GetAclList()
+        {
+            return new List<Acl>();
         }
 
         public List<Acl> GetRolePermissions(Role role)
@@ -144,93 +243,9 @@ namespace ERService.RBAC
             return new List<Acl>();
         }
 
-        public Role GetUserRole(User user)
+        private async Task RemoveACLs(List<Guid> ids)
         {
-            return new Role();
-        }
-
-        public void RemoveRole(Role role)
-        {
-            _aclsIDsToDelete = role.ACLs.Select(a => a.Id).ToList();
-            _roleRepository.Remove(role);
-        }
-
-        public void RemoveUser(User user)
-        {
-            _userRepository.Remove(user);
-        }
-
-        public bool RoleExists(string roleName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool LoggedUserHasPermission(string verbName)
-        {
-            var acl = LoggedUser.Role.ACLs.SingleOrDefault(a => a.AclVerb.Name == verbName);
-
-            return acl != null && acl.Value == 1;
-        }
-
-        public async Task<bool> RoleExistsAsync(string roleName)
-        {
-            var role = await _roleRepository.FindByAsync(r => r.Name == roleName);
-
-            return role.Any();
-        }
-
-        public async Task SaveAsync()
-        {
-            await _roleRepository.SaveAsync();
-            await _userRepository.SaveAsync();
-            if (_aclsIDsToDelete.Count() > 0)
-            {
-                await RemoveACLs(_aclsIDsToDelete.ToList());
-                await _aclRepository.SaveAsync();
-            }
-        }
-
-        public bool UserExists(string login)
-        {
-            return false;
-        }
-
-        public bool UserIsInRole(string login, Role role)
-        {
-            return false;
-        }
-
-        private async Task LoadRoles()
-        {
-            _roles.Clear();
-            var roles = await _roleRepository.GetAllAsync();
-            if (roles != null)
-            {
-                foreach (var role in roles)
-                {
-                    _roles.Add(role);
-                }
-            }
-        }
-
-        private async Task LoadUsers()
-        {
-            _users.Clear();
-            var users = await _userRepository.GetAllAsync();
-            if (users != null)
-            {
-                foreach (var user in users)
-                {
-                    _users.Add(user);
-                }
-            }
-        }
-
-        public User LoggedUser { get; set; }
-
-        private async Task RemoveACLs(List<Guid> list)
-        {
-            var aclsToDelete = await _aclRepository.FindByAsync(a => list.Contains(a.Id));
+            var aclsToDelete = await _aclRepository.FindByAsync(a => ids.Contains(a.Id));
 
             foreach (var acl in aclsToDelete)
             {
@@ -238,50 +253,45 @@ namespace ERService.RBAC
             }
         }
 
-        public void RollBackChanges()
+        public bool LoggedUserHasPermission(string verbName)
         {
-            _roleRepository.RollBackChanges();
-            _userRepository.RollBackChanges();
-        }
-    }
+            if (!LoggedUser.RoleId.HasValue)
+                return false;
 
-    public class ACLVerbCollection : IACLVerbCollection
-    {
-        private IAclVerbRepository _aclVerbRepository;
+            var sql = new QueryBuilder(nameof(Acl));
 
-        public List<AclVerb> ACLVerbs { get; private set; }
+                sql .Select(nameof(Acl.Value))
+                    .Join(nameof(AclVerb), nameof(Acl.AclVerbId), $"{nameof(AclVerb)}.{nameof(AclVerb.Id)}")
+                    .Where(nameof(Acl.RoleId), LoggedUser.RoleId)
+                    .Where(nameof(AclVerb.Name), verbName);
 
-        public ACLVerbCollection(IAclVerbRepository aclVerbRepository)
-        {
-            _aclVerbRepository = aclVerbRepository;
+            var parameters = new object[0];
+            var query = sql.Compile(out parameters);
 
-            ACLVerbs = new List<AclVerb>();
-
-            LoadVerbs();
+            var result = _aclRepository.Get<int?>(query, parameters).FirstOrDefault();
+            return result.HasValue && result == 1;
         }
 
-        private async void LoadVerbs()
-        {
-            ACLVerbs.Clear();
-            var verbs = await _aclVerbRepository.GetAllAsync();
-            foreach (var verb in verbs)
-            {
-                ACLVerbs.Add(verb);
-            }
-        }
+        #endregion
 
-        public AclVerb this[string verbName]
+        #region Index
+
+        public User this[string login]
         {
             get
             {
-                var acl = GetAclVerb(verbName);
-                return acl;
+                return Users.SingleOrDefault(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
             }
         }
 
-        private AclVerb GetAclVerb(string verbName)
+        public User this[Guid userId]
         {
-            return ACLVerbs.SingleOrDefault(v => v.Name == verbName);
+            get
+            {
+                return Users.SingleOrDefault(u => u.Id == userId);
+            }
         }
+
+        #endregion
     }
 }

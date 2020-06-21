@@ -23,6 +23,8 @@ namespace ERService.Infrastructure.Base
         where TEntity : class
         where TContext : DbContext
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public readonly IRegionManager _regionManager;
         public readonly IEventAggregator _eventAggregator;
         private TEntity _selectedModel;
@@ -119,8 +121,20 @@ namespace ERService.Infrastructure.Base
             if (CurrentFilterParameters == null)
                 return;
 
-            await ReloadEntities();
-            await LoadAsync(CurrentFilterParameters.Predicate, CurrentFilterParameters.IncludeProp);
+            await ReloadEntitiesAsync().ContinueWith(async (t) => 
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+
+                    await LoadAsync(CurrentFilterParameters.Predicate, CurrentFilterParameters.IncludeProp);
+                }
+
+                if (t.Status == TaskStatus.Faulted && t.Exception != null)
+                {
+                    _logger.Debug(t.Exception);
+                }
+            }, 
+            TaskContinuationOptions.ExecuteSynchronously);
         }
     }
 }

@@ -34,6 +34,30 @@ namespace ERService.Settings.Wrapper
             set { SetProperty(ref _passwordHash, value); }
         }
 
+        private string _salt;
+
+        public string Salt
+        {
+            get { return GetValue<string>(); }
+            set { SetProperty(ref _salt, value); }
+        }
+
+        private string _password;
+
+        public string Password
+        {
+            get { return _password; }
+            set
+            {
+                if (_password != value)
+                {
+                    RaisePropertyChanged();
+                }
+
+                _password = value;                
+            }
+        }
+
         private string _firstName;
 
         public string FirstName
@@ -71,7 +95,10 @@ namespace ERService.Settings.Wrapper
         public string PhoneNumber
         {
             get { return GetValue<string>(); }
-            set { SetProperty(ref _phoneNumber, value); }
+            set
+            {
+                SetProperty(ref _phoneNumber, String.IsNullOrEmpty(value) ? null : value);
+            }
         }
 
         private bool _isActive;
@@ -90,12 +117,10 @@ namespace ERService.Settings.Wrapper
             set { SetProperty(ref _isAdmin, value); }
         }
 
-        private string _salt;
-
-        public string Salt
+        public bool IsSystem
         {
-            get { return GetValue<string>(); }
-            set { SetProperty(ref _salt, value); }
+            get { return GetValue<bool>(); }
+            set { SetProperty(ref _isSystem, value); }
         }
 
         private Guid? _roleId;
@@ -106,6 +131,8 @@ namespace ERService.Settings.Wrapper
         }
 
         private Role _role;
+        private bool _isSystem;
+
         public Role Role
         {
             get { return GetValue<Role>(); }

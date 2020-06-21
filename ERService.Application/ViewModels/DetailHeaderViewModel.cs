@@ -14,11 +14,22 @@ namespace ERService.ViewModels
         public DetailHeaderViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<AfterUserLoggedoutEvent>().Subscribe(OnUserLogedout);
             _eventAggregator.GetEvent<AfterDetailOpenedEvent>().Subscribe(OnDetailOpened);
             _eventAggregator.GetEvent<AfterDetailClosedEvent>().Subscribe(OnDetailClosed);
         }
 
+        private void OnUserLogedout(UserAuthorizationEventArgs args)
+        {
+            Hide();
+        }
+
         private void OnDetailClosed(AfterDetailClosedEventArgs args)
+        {
+            Hide();
+        }
+
+        private void Hide()
         {
             IsCollapsed = true;
             DetailTitle = String.Empty;

@@ -35,13 +35,13 @@
             x:Name="border"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Background="#FF404040"
+            Background="#686868"
             BorderBrush="Transparent"
-            BorderThickness="1"
-            CornerRadius="5"
+            BorderThickness="0"
+            CornerRadius="3"
             UseLayoutRounding="True">
             <Border.Effect>
-                <DropShadowEffect />
+                <DropShadowEffect ShadowDepth="3" />
             </Border.Effect>
             <StackPanel Margin="10,20,10,15" Orientation="Horizontal">
                 <Grid x:Name="loginGrid" Height="130">
@@ -63,17 +63,30 @@
                         VerticalAlignment="Center"
                         Content="&#xE13D;"
                         FontFamily="Segoe MDL2 Assets"
-                        FontSize="16" />
+                        FontSize="16"
+                        FontWeight="SemiBold">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
 
                     <Label
                         Grid.Column="1"
                         Margin="5"
                         Content="Użytkownik:"
-                        FontSize="14" />
+                        FontSize="14"
+                        FontWeight="SemiBold">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <TextBox
                         Grid.Column="2"
+                        Height="25"
                         MinWidth="150"
+                        MaxWidth="150"
                         Margin="5"
+                        VerticalContentAlignment="Center"
                         Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <TextBox.InputBindings>
                             <KeyBinding
@@ -88,13 +101,21 @@
                         Grid.Column="1"
                         Margin="5"
                         Content="Hasło:"
-                        FontSize="14" />
+                        FontSize="14"
+                        FontWeight="SemiBold">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <PasswordBox
                         x:Name="PasswordBox"
                         Grid.Row="1"
                         Grid.Column="2"
+                        Height="25"
                         MinWidth="150"
-                        Margin="5">
+                        MaxWidth="150"
+                        Margin="5"
+                        VerticalContentAlignment="Center">
                         <PasswordBox.InputBindings>
                             <KeyBinding
                                 Key="Return"
@@ -107,20 +128,20 @@
                         Grid.Row="2"
                         Grid.Column="2"
                         Width="90"
-                        Height="37"
+                        Height="35"
                         Margin="0,10,5,0"
                         HorizontalAlignment="Right"
                         Command="{Binding LoginCommand}"
                         CommandParameter="{Binding ElementName=PasswordBox}">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialLight
-                                Width="17"
-                                Height="17"
-                                Margin="3,0,5,0"
+                                Width="15"
+                                Height="15"
+                                Margin="0,0,5,0"
                                 VerticalAlignment="Center"
                                 Kind="Login" />
                             <TextBlock
-                                Margin="2,4,4,4"
+                                Margin="0"
                                 VerticalAlignment="Center"
                                 FontSize="13"
                                 Text="Zaloguj" />
@@ -203,9 +224,14 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Label Margin="5" Content="Silnik bazy:" />
+                    <Label Margin="5" Content="Silnik bazy:">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <ComboBox
                         Grid.Column="1"
+                        Height="25"
                         MinWidth="150"
                         Margin="5"
                         DisplayMemberPath="Value"
@@ -215,29 +241,44 @@
                     <Label
                         Grid.Row="1"
                         Margin="5"
-                        Content="Serwer:" />
+                        Content="Serwer:">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
+                        Height="25"
                         Margin="5"
                         Text="{Binding DbServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Label
                         Grid.Row="2"
                         Margin="5"
-                        Content="Użytkownik:" />
+                        Content="Użytkownik:">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
+                        Height="25"
                         Margin="5"
                         Text="{Binding DbUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Label
                         Grid.Row="3"
                         Margin="5"
-                        Content="Hasło:" />
+                        Content="Hasło:">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="3" />
+                        </Label.Effect>
+                    </Label>
                     <PasswordBox
                         x:Name="DbPasswordBox"
                         Grid.Row="3"
                         Grid.Column="1"
+                        Height="25"
                         Margin="5"
                         metroControls:PasswordBoxHelper.CapsLockIcon="true"
                         metroControls:PasswordBoxHelper.CapsLockWarningToolTip="true" />
@@ -245,20 +286,20 @@
                         Grid.Row="4"
                         Grid.Column="1"
                         Width="90"
-                        Height="40"
+                        Height="35"
                         Margin="0,0,5,0"
                         HorizontalAlignment="Right"
                         Command="{Binding ConnectCommand}"
                         CommandParameter="{Binding ElementName=DbPasswordBox}">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconOcticons
-                                Width="17"
-                                Height="17"
-                                Margin="3,0,5,0"
+                                Width="15"
+                                Height="15"
+                                Margin="0,0,5,0"
                                 VerticalAlignment="Center"
                                 Kind="Link" />
                             <TextBlock
-                                Margin="2,4,4,4"
+                                Margin="0"
                                 VerticalAlignment="Center"
                                 FontSize="13"
                                 Text="Połącz" />

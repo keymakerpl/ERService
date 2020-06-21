@@ -129,7 +129,7 @@ namespace ERService.Infrastructure.Base
         protected virtual void RaiseDetailSavedEvent(Guid modelId, string displayMember)
         {
             var title = String.IsNullOrWhiteSpace(displayMember) ? "Zapisano..." : displayMember;
-            _messageDialogService.ShowInsideContainer(title, "Zapisano poprawnie element.", NotificationTypes.Success);
+            _messageDialogService.ShowInsideContainer(title, "Zmiany zostały poprawnie zapisane.", NotificationTypes.Success);
 
             _eventAggregator.GetEvent<AfterDetailSavedEvent>()
                 .Publish(new AfterDetailSavedEventArgs()
@@ -198,7 +198,7 @@ namespace ERService.Infrastructure.Base
                 _logger.Debug(e);
                 _logger.Error(e);
 
-                _messageDialogService.ShowInsideContainer("Błąd zapisu...", "Szczegóły błędu znajdziesz w dzienniku.", NotificationTypes.Error);
+                _messageDialogService.ShowInsideContainer("Błąd...", "Szczegóły błędu znajdują się w dzienniku aplikacji.", NotificationTypes.Error);
                 return;
             }
 
@@ -218,15 +218,15 @@ namespace ERService.Infrastructure.Base
             continuationCallback(dialogResult);
         }
 
-        public virtual void OnNavigatedTo(NavigationContext navigationContext)
-        {
-
-        }
-
         public virtual bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
+
+        public virtual void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
+        }        
 
         public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {

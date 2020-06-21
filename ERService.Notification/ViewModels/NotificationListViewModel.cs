@@ -102,7 +102,7 @@ namespace ERService.Notification.ViewModels
 
         private async Task<List<Guid>> GetIDs(object[] parameters, string queryString)
         {
-            return await _orderRepository.GetBy<Guid>(queryString, parameters).ConfigureAwait(false);
+            return await _orderRepository.GetAsync<Guid>(queryString, parameters).ConfigureAwait(false);
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)

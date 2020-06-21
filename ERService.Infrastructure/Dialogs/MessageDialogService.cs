@@ -26,8 +26,10 @@ namespace ERService.Infrastructure.Dialogs
                 DialogResult.OK : DialogResult.Cancel;
         }
 
-        public async Task<string> ShowInputMessageAsync(object context, string title, string message)
+        public async Task<string> ShowInputMessageAsync(object context, string title, string message, string confirmText = null, string cancelText = null)
         {
+            var settings = new MetroDialogSettings { AffirmativeButtonText = confirmText ?? "OK", NegativeButtonText = cancelText ?? "Anuluj" };
+
             return await _dialogCoordinator.ShowInputAsync(context, title, message, _confirmDialogSettings);
         }
 

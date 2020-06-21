@@ -76,9 +76,9 @@ namespace RBACLibTestsXUnit
         }
 
         [Fact]
-        public async void GetAllUsersAsync_ShouldReturnNonEmptyIEnumerable()
+        public void GetAllUsersAsync_ShouldReturnNonEmptyIEnumerable()
         {
-            var users = await _rbacManager.GetAllUsersAsync();
+            var users = _rbacManager.Users;
 
             Assert.Equal(2, users.Count());
 
@@ -90,9 +90,9 @@ namespace RBACLibTestsXUnit
         }        
 
         [Fact]
-        public async void GetAllRolesAsync_ShouldReturnNonEmptyIEnumerable()
+        public void GetAllRolesAsync_ShouldReturnNonEmptyIEnumerable()
         {
-            var roles = await _rbacManager.GetAllRolesAsync();
+            var roles = _rbacManager.Roles;
 
             Assert.Equal(2, roles.Count());
 
@@ -138,6 +138,12 @@ namespace RBACLibTestsXUnit
             var verbs = await _rbacManager.GetAclVerbsAsync();
 
             Assert.True(verbs.Any());
+        }
+
+        [Fact]
+        public void LoggedUserShouldEqualOneOfUsers()
+        {
+
         }
 
         [Theory]

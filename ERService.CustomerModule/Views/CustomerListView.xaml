@@ -80,7 +80,7 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             IsReadOnly="True"
-            ItemsSource="{Binding Models, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding Models, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionMode="Single"
             Style="{StaticResource AzureDataGrid}">

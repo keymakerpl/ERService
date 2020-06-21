@@ -96,6 +96,7 @@
     <Compile Include="Helpers\BarcodeGenerator.cs" />
     <Compile Include="Helpers\Converters\BooleanOrConverter.cs" />
     <Compile Include="Helpers\Cryptography\Cryptography.cs" />
+    <Compile Include="Helpers\Cryptography\PasswordBoxAssistant.cs" />
     <Compile Include="Helpers\Data\DbHelper.cs" />
     <Compile Include="Helpers\DropDownButtonBehavior.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -105,8 +106,8 @@
     <Compile Include="Helpers\ImagesCollection.cs" />
     <Compile Include="Helpers\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Helpers\Converters\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="Helpers\IPasswordHasher.cs" />
-    <Compile Include="Helpers\PasswordHasher.cs" />
+    <Compile Include="Helpers\Cryptography\IPasswordHasher.cs" />
+    <Compile Include="Helpers\Cryptography\PasswordHasher.cs" />
     <Compile Include="Helpers\AttachedProperties.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Helpers\Serialization\Serializer.cs" />

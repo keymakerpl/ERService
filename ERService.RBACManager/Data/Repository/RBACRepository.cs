@@ -13,16 +13,10 @@ namespace ERService.RBAC.Data.Repository
     {
         public class UserRepository : GenericRepository<User, ERServiceDbContext>, IUserRepository
         {
+            private static readonly object SyncObject = new object();
+
             public UserRepository(ERServiceDbContext context) : base(context)
             {
-            }
-
-            public override async Task<IEnumerable<User>> GetAllAsync()
-            {
-                return await Context.Set<User>()
-                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
-                    .Include(r => r.Role)
-                    .ToListAsync();
             }
 
             public IEnumerable<User> GetAll()
@@ -31,6 +25,26 @@ namespace ERService.RBAC.Data.Repository
                       .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
                       .Include(r => r.Role)
                       .ToList();
+            }
+
+            public override async Task<IEnumerable<User>> GetAllAsync()
+            {
+                return await Context.Set<User>()
+                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
+                    .Include(r => r.Role)
+                    .ToListAsync();
+            }            
+
+            public override User GetById(Guid id)
+            {
+                lock (SyncObject)
+                {
+                    return Context.Set<User>()
+                    .Where(i => i.Id == id)
+                    .Include(u => u.Role.ACLs.Select(a => a.AclVerb))
+                    .Include(r => r.Role)
+                    .FirstOrDefault();
+                }
             }
 
             public override async Task<User> GetByIdAsync(Guid id)

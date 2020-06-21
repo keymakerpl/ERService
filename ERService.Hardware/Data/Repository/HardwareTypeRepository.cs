@@ -28,7 +28,7 @@ namespace ERService.HardwareModule.Data.Repository
             var parameters = new object[0];
             var queryString = query.Compile(out parameters);
 
-            var ids = await GetBy<Guid>(queryString, parameters);
+            var ids = await GetAsync<Guid>(queryString, parameters);
 
             return ids.ToArray();
         }
