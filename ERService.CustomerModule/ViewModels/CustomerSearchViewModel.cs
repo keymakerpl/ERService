@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ERService.Business;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Events;
@@ -7,7 +8,6 @@ using Prism.Events;
 
 namespace ERService.CustomerModule.ViewModels
 {
-    //TODO: refactor do bardziej abstrakcyjnej klasy
     public class CustomerSearchViewModel : SearchViewModelBase
     {
         public Customer Customer { get; }
@@ -18,64 +18,75 @@ namespace ERService.CustomerModule.ViewModels
             Customer =  new Customer();
             CustomerAddress = new CustomerAddress();
         }
-
-        //TODO: przebudować tak aby budował zapytnie przez refleksje na propertisach w customerwrapper
+        
         protected override void OnSearchExecute()
         {
-            var query = new QueryBuilder(nameof(Customer)).Select($"{nameof(Customer)}.{nameof(Customer.Id)}");
-
-            if (!String.IsNullOrWhiteSpace(CustomerAddress.Street) || !String.IsNullOrWhiteSpace(CustomerAddress.HouseNumber) 
-                || !String.IsNullOrWhiteSpace(CustomerAddress.City) || !String.IsNullOrWhiteSpace(CustomerAddress.Postcode))
-            {
-                query.LeftJoin(nameof(Business.CustomerAddress), $"{nameof(CustomerAddress)}.{nameof(CustomerAddress.CustomerId)}", $"{nameof(Customer)}.{nameof(Customer.Id)}");
-
-                query.WhereContains(nameof(CustomerAddress.Street), CustomerAddress.Street);
-                query.WhereContains(nameof(CustomerAddress.HouseNumber), CustomerAddress.HouseNumber);
-                query.WhereContains(nameof(CustomerAddress.City), CustomerAddress.City);
-                query.WhereContains(nameof(CustomerAddress.Postcode), CustomerAddress.Postcode ?? "");
-            }
+            var predicate = PredicateBuilder.True<Customer>();
 
             if (!String.IsNullOrWhiteSpace(Customer.FirstName))
             {
-                query.WhereContains(nameof(Customer.FirstName), Customer.FirstName);
+                predicate = predicate.And(c => c.FirstName.Contains(Customer.FirstName));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.LastName))
             {
-                query.WhereContains(nameof(Customer.LastName), Customer.LastName);
+                predicate = predicate.And(c => c.LastName.Contains(Customer.LastName));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.CompanyName))
             {
-                query.WhereContains(nameof(Customer.CompanyName), Customer.CompanyName);
+                predicate = predicate.And(c => c.CompanyName.Contains(Customer.CompanyName));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.Email))
             {
-                query.WhereContains(nameof(Customer.Email), Customer.Email);
+                predicate = predicate.And(c => c.Email.Contains(Customer.Email));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.Email2))
             {
-                query.WhereContains(nameof(Customer.Email2), Customer.Email2);
+                predicate = predicate.And(c => c.Email2.Contains(Customer.Email2));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.NIP))
             {
-                query.WhereContains(nameof(Customer.NIP), Customer.NIP);
+                var nip = Customer.NIP.Replace("-", string.Empty).Replace(" ", string.Empty).Trim();
+                predicate = predicate.And(c => c.NIP.Replace("-", string.Empty).Replace(" ", string.Empty).Trim().Contains(nip));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.PhoneNumber))
             {
-                query.WhereContains(nameof(Customer.PhoneNumber), Customer.PhoneNumber);
+                var number = Customer.PhoneNumber.Replace(" ", string.Empty).Replace("-", string.Empty).Trim();
+                predicate = predicate.And(c => c.PhoneNumber.Replace(" ", string.Empty).Replace("-", string.Empty).Trim().Contains(number));
             }
 
             if (!String.IsNullOrWhiteSpace(Customer.PhoneNumber2))
             {
-                query.WhereContains(nameof(Customer.PhoneNumber2), Customer.PhoneNumber2);
-            }            
+                var number = Customer.PhoneNumber2.Replace(" ", string.Empty).Replace("-", string.Empty).Trim();
+                predicate = predicate.And(c => c.PhoneNumber2.Replace(" ", string.Empty).Replace("-", string.Empty).Trim().Contains(number));
+            }
 
-            EventAggregator.GetEvent<SearchQueryEvent>().Publish(new SearchQueryEventArgs() { QueryBuilder = query });
+            if (!String.IsNullOrWhiteSpace(CustomerAddress.Street))
+            {
+                predicate = predicate.And(c => c.CustomerAddresses.Any(a => a.Street.Contains(CustomerAddress.Street)));
+            }
+
+            if (!String.IsNullOrWhiteSpace(CustomerAddress.HouseNumber))
+            {
+                predicate = predicate.And(c => c.CustomerAddresses.Any(a => a.HouseNumber.Contains(CustomerAddress.HouseNumber)));
+            }
+
+            if (!String.IsNullOrWhiteSpace(CustomerAddress.City))
+            {
+                predicate = predicate.And(c => c.CustomerAddresses.Any(a => a.City.Contains(CustomerAddress.City)));
+            }
+
+            if (!String.IsNullOrWhiteSpace(CustomerAddress.Postcode))
+            {
+                predicate = predicate.And(c => c.CustomerAddresses.Any(a => a.Postcode.Contains(CustomerAddress.Postcode)));
+            }
+
+            EventAggregator.GetEvent<SearchEvent<Customer>>().Publish(new SearchEventArgs<Customer>() { Predicate = predicate});
         }
     }
 }

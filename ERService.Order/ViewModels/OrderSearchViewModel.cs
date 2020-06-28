@@ -54,6 +54,12 @@ namespace ERService.OrderModule.ViewModels
             set { SetProperty(ref _dateRegisteredTo, value); }
         }
 
+        public bool RegisterDateIsChecked
+        {
+            get { return _registerDateIsChecked; }
+            set { SetProperty(ref _registerDateIsChecked, value); }
+        }
+
         public bool EndDateIsChecked
         {
             get { return _endDateIsChecked; }
@@ -64,13 +70,7 @@ namespace ERService.OrderModule.ViewModels
 
         public ObservableCollection<OrderStatus> OrderStatuses { get; }
 
-        public ObservableCollection<OrderType> OrderTypes { get; }
-
-        public bool RegisterDateIsChecked
-        {
-            get { return _registerDateIsChecked; }
-            set { SetProperty(ref _registerDateIsChecked, value); }
-        }
+        public ObservableCollection<OrderType> OrderTypes { get; }        
 
         public OrderStatus SelectedOrderStatus
         {
@@ -92,59 +92,60 @@ namespace ERService.OrderModule.ViewModels
 
         protected override void OnSearchExecute()
         {
-            var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
-
-            query.LeftJoin(nameof(Customer), $"{nameof(Customer)}.{nameof(Customer.Id)}", $"{nameof(Order)}.{nameof(Order.CustomerId)}");
+            var predicate = PredicateBuilder.True<Order>();
 
             if (!String.IsNullOrEmpty(Customer.FirstName))
             {
-                query.WhereLike(nameof(Customer.FirstName), Customer.FirstName);
+                predicate = predicate.And(o => o.Customer.FirstName.Contains(Customer.FirstName));
             }
 
             if (!String.IsNullOrEmpty(Customer.LastName))
             {
-                query.WhereLike(nameof(Customer.LastName), Customer.LastName);
+                predicate = predicate.And(o => o.Customer.LastName.Contains(Customer.LastName));
             }
 
             if (!String.IsNullOrWhiteSpace(Order.Number))
             {
-                query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", Order.Number);
+                predicate = predicate.And(o => string.Concat(o.OrderId, "/", o.Number) == Order.Number);
             }
 
             if (SelectedOrderStatus != null && SelectedOrderStatus.Id != Guid.Empty)
             {
-                query.Where(nameof(Order.OrderStatusId), SelectedOrderStatus.Id);
+                predicate = predicate.And(o => o.OrderStatusId == SelectedOrderStatus.Id);
             }
 
             if (SelectedOrderType != null && SelectedOrderType.Id != Guid.Empty)
             {
-                query.Where(nameof(Order.OrderTypeId), SelectedOrderType.Id);
+                predicate = predicate.And(o => o.OrderTypeId == SelectedOrderType.Id);
             }
 
             if (!String.IsNullOrWhiteSpace(Order.ExternalNumber))
             {
-                query.Where(nameof(Order.ExternalNumber), Order.ExternalNumber);
+                predicate = predicate.And(o => o.ExternalNumber == Order.ExternalNumber);
             }
 
             if (RegisterDateIsChecked && Order.DateRegistered != null)
             {
-                query.WhereDate(nameof(Order.DateRegistered), ">=", Order.DateRegistered.Date);
+                predicate = predicate.And(o => o.DateRegistered >= Order.DateRegistered.Date);
                 if (DateRegisteredTo.HasValue)
                 {
-                    query.WhereDate(nameof(Order.DateRegistered), "<=", DateRegisteredTo.Value.Date);
+                    var dateTo = DateRegisteredTo.Value.Date.AddDays(1).AddMilliseconds(-1);
+                    predicate = predicate.And(o => o.DateRegistered <= dateTo);
                 }
             }
 
             if (EndDateIsChecked && Order.DateEnded.HasValue)
             {
-                query.WhereDate(nameof(Order.DateEnded), ">=", Order.DateEnded.Value.Date);
+                var dateEndFrom = Order.DateEnded.Value.Date;
+                predicate = predicate.And(o => o.DateEnded >= dateEndFrom);
                 if (DateEndTo.HasValue)
                 {
-                    query.WhereDate(nameof(Order.DateEnded), "<=", DateEndTo.Value.Date);
+                    var dateEndTo = DateEndTo.Value.Date.AddDays(1).AddMilliseconds(-1);
+                    predicate = predicate.And(o => o.DateEnded <= dateEndTo);
                 }
             }
 
-            EventAggregator.GetEvent<SearchQueryEvent>().Publish(new SearchQueryEventArgs() { QueryBuilder = query });
+            EventAggregator.GetEvent<SearchEvent<Order>>().Publish(new SearchEventArgs<Order>() { Predicate = predicate });
         }
 
         private async void LoadOrderStatusesAsync()

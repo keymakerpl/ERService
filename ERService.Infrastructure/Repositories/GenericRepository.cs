@@ -1,4 +1,5 @@
 ﻿using ERService.Infrastructure.Interfaces;
+using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -48,8 +49,8 @@ namespace ERService.Infrastructure.Repositories
         public virtual async Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProps)
         {
-            var query = GetAllIncluding(includeProps);
-            return await query.Where(predicate).ToListAsync();
+            var query = GetAllIncluding(includeProps);            
+            return await query.AsExpandable().Where(predicate).ToListAsync();
         }
 
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProps)

@@ -33,7 +33,7 @@ namespace ERService.OrderModule.Tasks
 
         public async Task Run()
         {
-            var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
+            var query = new SQLQueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
             query.Where(nameof(Order.DateAdded), SQLOperators.GreaterOrEqual, LastUpdateTime.Value);
 
             _logger.Debug($"LastUpdateTime: {LastUpdateTime}");

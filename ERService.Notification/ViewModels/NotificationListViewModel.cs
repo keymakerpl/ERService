@@ -75,14 +75,14 @@ namespace ERService.Notification.ViewModels
 
         public override async Task LoadAsync()
         {
-            var lastOrdersQuery = new QueryBuilder(nameof(Order))
+            var lastOrdersQuery = new SQLQueryBuilder(nameof(Order))
                 .Select($"{nameof(Order)}.{nameof(Order.Id)}")
                 .OrderByDesc(nameof(Order.DateAdded))
                 .Limit(4);
             
             await FillTable(lastOrdersQuery, LastOrders);
 
-            var outdatedOrdersQuery = new QueryBuilder(nameof(Order))
+            var outdatedOrdersQuery = new SQLQueryBuilder(nameof(Order))
                 .Select($"{nameof(Order)}.{nameof(Order.Id)}")
                 .WhereNotNull(nameof(Order.DateEnded))
                 .WhereDate(nameof(Order.DateEnded), SQLOperators.LessOrEqual, DateTime.Now)

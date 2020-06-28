@@ -20,7 +20,7 @@ namespace ERService.HardwareModule.Data.Repository
         /// <returns>Array of Hardware IDs</returns>
         public async Task<Guid[]> GetHardwareIDsWith(Guid hardwareTypeID)
         {
-            var query = new QueryBuilder(nameof(Hardware))
+            var query = new SQLQueryBuilder(nameof(Hardware))
                                 .Select($"{nameof(Hardware)}.{nameof(Hardware.Id)}")
                                 .Join(nameof(HardwareType), $"{nameof(Hardware)}.{nameof(Hardware.HardwareTypeID)}"
                                 , $"{nameof(HardwareType)}.{nameof(HardwareType.Id)}");

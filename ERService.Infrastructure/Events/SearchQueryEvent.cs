@@ -1,14 +1,15 @@
 ﻿using Prism.Events;
-using SqlKata;
+using System;
+using System.Linq.Expressions;
 
 namespace ERService.Infrastructure.Events
 {
-    public class SearchQueryEvent : PubSubEvent<SearchQueryEventArgs>
+    public class SearchEvent<TEntity> : PubSubEvent<SearchEventArgs<TEntity>>
     {
     }
 
-    public class SearchQueryEventArgs
+    public class SearchEventArgs<TEntity>
     {
-        public Query QueryBuilder { get; set; }
+        public Expression<Func<TEntity, bool>> Predicate { get; set; }
     }
 }

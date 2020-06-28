@@ -258,7 +258,7 @@ namespace ERService.RBAC
             if (!LoggedUser.RoleId.HasValue)
                 return false;
 
-            var sql = new QueryBuilder(nameof(Acl));
+            var sql = new SQLQueryBuilder(nameof(Acl));
 
                 sql .Select(nameof(Acl.Value))
                     .Join(nameof(AclVerb), nameof(Acl.AclVerbId), $"{nameof(AclVerb)}.{nameof(AclVerb.Id)}")

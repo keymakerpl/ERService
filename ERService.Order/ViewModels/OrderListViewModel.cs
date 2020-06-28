@@ -39,7 +39,7 @@ namespace ERService.OrderModule.ViewModels
 
             SearchCommand = new DelegateCommand(OnSearchExecute);
 
-            _eventAggregator.GetEvent<SearchQueryEvent>().Subscribe(OnSearchRequest);
+            _eventAggregator.GetEvent<SearchEvent<Order>>().Subscribe(OnSearchRequest);
         }        
 
         public DelegateCommand SearchCommand { get; }
@@ -61,15 +61,12 @@ namespace ERService.OrderModule.ViewModels
             });
         }
 
-        private async void OnSearchRequest(SearchQueryEventArgs args)
+        private async void OnSearchRequest(SearchEventArgs<Order> args)
         {
             try
             {
-                var parameters = new object[0];
-                var queryString = args.QueryBuilder.Compile(out parameters);
-
-                var ids = await GetAsync<Guid>(queryString, parameters);
-                await LoadAsync(o => ids.Contains(o.Id), h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
+                var predicate = args.Predicate;
+                await LoadAsync(predicate, h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
             }
             catch (Exception ex)
             {
@@ -150,15 +147,13 @@ namespace ERService.OrderModule.ViewModels
         {
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var orderNumber = navigationContext.Parameters.GetValue<string>("OrderNumber");
             if (orderNumber != null)
             {
-                var query = new QueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
-                query.WhereRaw($"(CAST([{nameof(Order.OrderId)}] AS NVARCHAR)+'/'+[{nameof(Order.Number)}]) = ?", orderNumber);
-
-                OnSearchRequest(new SearchQueryEventArgs() { QueryBuilder = query });
+                var predicate = PredicateBuilder.True<Order>().And(o => orderNumber == $"{o.OrderId}/{o.OrderNumber}");
+                await LoadAsync(predicate, h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
             }
         }        
 

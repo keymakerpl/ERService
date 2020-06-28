@@ -162,9 +162,10 @@
                 Grid.ColumnSpan="2"
                 BorderBrush="Wheat"
                 BorderThickness="0,1,0,0"
+                Foreground="Wheat"
                 Header="Klient">
                 <GroupBox.Style>
-                    <Style />
+                    <Style TargetType="GroupBox" />
                 </GroupBox.Style>
                 <Grid Margin="5,10,5,0">
                     <Grid.ColumnDefinitions>

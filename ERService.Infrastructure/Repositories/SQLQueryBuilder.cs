@@ -3,9 +3,9 @@ using SqlKata.Compilers;
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class QueryBuilder : Query
+    public class SQLQueryBuilder : Query
     {
-        public QueryBuilder(string tableName) : base(tableName)
+        public SQLQueryBuilder(string tableName) : base(tableName)
         {
             TableName = tableName;
         }
@@ -13,7 +13,7 @@ namespace ERService.Infrastructure.Repositories
         public string TableName { get; }        
     }
 
-    public static class QueryExtensions
+    public static class SQLQueryBuilderExtensions
     {
         public static string Compile(this Query query, out object[] bindings)
         {

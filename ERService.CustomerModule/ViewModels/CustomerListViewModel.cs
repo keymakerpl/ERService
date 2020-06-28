@@ -12,6 +12,7 @@ using ERService.Infrastructure.Events;
 using System.Linq;
 using System.Threading.Tasks;
 using ERService.Infrastructure.Repositories;
+using System.Linq.Expressions;
 
 namespace ERService.CustomerModule.ViewModels
 {
@@ -36,23 +37,20 @@ namespace ERService.CustomerModule.ViewModels
 
             SearchCommand = new DelegateCommand(OnSearchExecute);
 
-            _eventAggregator.GetEvent<SearchQueryEvent>().Subscribe(OnSearchRequest);
+            _eventAggregator.GetEvent<SearchEvent<Customer>>().Subscribe(OnSearchRequest);
         }
 
-        private async void OnSearchRequest(SearchQueryEventArgs args)
+        private async void OnSearchRequest(SearchEventArgs<Customer> args)
         {
             try
             {
-                var parameters = new object[0];
-                var queryString = args.QueryBuilder.Compile(out parameters);
-
-                var ids = await GetAsync<Guid>(queryString, parameters);
-
-                await LoadAsync(c => ids.Contains(c.Id), a => a.CustomerAddresses);
+                var predicate = args.Predicate;
+                await LoadAsync(predicate, a => a.CustomerAddresses);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+                _logger.Debug(ex);
             }
         }
 
