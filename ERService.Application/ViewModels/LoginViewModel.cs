@@ -171,7 +171,7 @@ namespace ERService.ViewModels
 
         private async void OnLoginCommandExecute(object parameter)
         {
-            if (_config.LastLogin != Login)
+            if (!String.IsNullOrWhiteSpace(Login) && _config.LastLogin != Login)
             {
                 _config.LastLogin = Login;
                 _config.SaveConfig();

@@ -7,6 +7,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -192,6 +193,11 @@ namespace ERService.Infrastructure.Base
                     await e.Entries.Single().ReloadAsync(); //przeładuj cache krotki z bazy
                     await LoadAsync(ID); //załaduj ponownie model
                 }                
+            }
+            catch (DbEntityValidationException ve)
+            {
+                _logger.Debug(ve);
+                _logger.Error(ve);
             }
             catch (Exception e)
             {

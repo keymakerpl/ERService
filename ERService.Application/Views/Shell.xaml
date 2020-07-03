@@ -162,7 +162,8 @@
             x:Name="WindowArea"
             Grid.RowSpan="4"
             Grid.ColumnSpan="2"
-            MaxItems="6"
+            Height="Auto"
+            MaxItems="5"
             Position="BottomRight" />
 
         <mah:MetroProgressBar

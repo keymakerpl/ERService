@@ -98,6 +98,14 @@ namespace ERService.Application.ViewModels
                     ShowLoginWindow();
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            PropertyChanged += (s, a) => 
+            {
+                if (a.PropertyName == nameof(RightFlyoutIsExpanded) && !RightFlyoutIsExpanded)
+                {
+                    _regionManager.Regions[RegionNames.DetailFlyoutRegion].RemoveAll();
+                }
+            };
         }
 
         private void OnUserLogedin(UserAuthorizationEventArgs args)

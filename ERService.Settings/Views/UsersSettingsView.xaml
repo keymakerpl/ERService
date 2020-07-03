@@ -61,181 +61,179 @@
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel>
-                        <ListView
-                            BorderThickness="0"
-                            ItemsSource="{Binding Users, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <ListView.Resources>
-                                <Style x:Key="FocusVisual">
-                                    <Setter Property="Control.Template">
-                                        <Setter.Value>
-                                            <ControlTemplate>
-                                                <Rectangle
-                                                    Margin="2"
-                                                    SnapsToDevicePixels="true"
-                                                    Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                                    StrokeDashArray="1 2"
-                                                    StrokeThickness="1" />
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                                <SolidColorBrush x:Key="Item.MouseOver.Background" Color="Transparent" />
-                                <SolidColorBrush x:Key="Item.MouseOver.Border" Color="LightGray" />
-                                <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="Transparent" />
-                                <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="DimGray" />
-                                <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="Transparent" />
-                                <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="DimGray" />
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <Setter Property="SnapsToDevicePixels" Value="True" />
-                                    <Setter Property="Padding" Value="4,1" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                    <Setter Property="BorderThickness" Value="2,0,0,0" />
-                                    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border
-                                                    x:Name="Bd"
-                                                    Padding="{TemplateBinding Padding}"
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    SnapsToDevicePixels="true">
-                                                    <ContentPresenter
-                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <MultiTrigger>
-                                                        <MultiTrigger.Conditions>
-                                                            <Condition Property="IsMouseOver" Value="True" />
-                                                        </MultiTrigger.Conditions>
-                                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.MouseOver.Background}" />
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.MouseOver.Border}" />
-                                                        <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
-                                                    </MultiTrigger>
-                                                    <MultiTrigger>
-                                                        <MultiTrigger.Conditions>
-                                                            <Condition Property="Selector.IsSelectionActive" Value="False" />
-                                                            <Condition Property="IsSelected" Value="True" />
-                                                        </MultiTrigger.Conditions>
-                                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedInactive.Background}" />
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.SelectedInactive.Border}" />
-                                                        <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
-                                                    </MultiTrigger>
-                                                    <MultiTrigger>
-                                                        <MultiTrigger.Conditions>
-                                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
-                                                            <Condition Property="IsSelected" Value="True" />
-                                                        </MultiTrigger.Conditions>
-                                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedActive.Background}" />
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.SelectedActive.Border}" />
-                                                        <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
-                                                    </MultiTrigger>
-                                                    <Trigger Property="IsEnabled" Value="False">
-                                                        <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.Resources>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Margin="2"
-                                        Background="White"
-                                        BorderBrush="LightGray"
-                                        BorderThickness="0"
-                                        CornerRadius="2">
-                                        <Grid Margin="5">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-
-                                            <iconPacks:PackIconMaterial
-                                                Grid.ColumnSpan="2"
+                    <ListView
+                        BorderThickness="0"
+                        ItemsSource="{Binding Users, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.Resources>
+                            <Style x:Key="FocusVisual">
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Rectangle
                                                 Margin="2"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Top"
-                                                Foreground="Gray"
-                                                Kind="AccountCardDetails" />
+                                                SnapsToDevicePixels="true"
+                                                Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                StrokeDashArray="1 2"
+                                                StrokeThickness="1" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <SolidColorBrush x:Key="Item.MouseOver.Background" Color="Transparent" />
+                            <SolidColorBrush x:Key="Item.MouseOver.Border" Color="LightGray" />
+                            <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="Transparent" />
+                            <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="DimGray" />
+                            <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="Transparent" />
+                            <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="DimGray" />
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                <Setter Property="Padding" Value="4,1" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="2,0,0,0" />
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border
+                                                x:Name="Bd"
+                                                Padding="{TemplateBinding Padding}"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="true">
+                                                <ContentPresenter
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.MouseOver.Background}" />
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.MouseOver.Border}" />
+                                                    <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                                        <Condition Property="IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedInactive.Background}" />
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.SelectedInactive.Border}" />
+                                                    <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                        <Condition Property="IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedActive.Background}" />
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Item.SelectedActive.Border}" />
+                                                    <Setter TargetName="Bd" Property="BorderThickness" Value="2,0,0,0" />
+                                                </MultiTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Margin="2"
+                                    Background="GhostWhite"
+                                    BorderBrush="LightGray"
+                                    BorderThickness="0"
+                                    CornerRadius="2">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
 
-                                            <WrapPanel>
-                                                <TextBlock
-                                                    Margin="5"
-                                                    VerticalAlignment="Bottom"
-                                                    FontStyle="Italic"
-                                                    Foreground="DarkSlateGray"
-                                                    Text="Login:" />
-                                                <TextBlock
-                                                    MinWidth="100"
-                                                    Margin="5"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding Login}" />
-                                            </WrapPanel>
-                                            <WrapPanel
-                                                Grid.Row="1"
-                                                Grid.Column="0"
-                                                Margin="0,0,5,0">
-                                                <TextBlock
-                                                    Margin="5"
-                                                    VerticalAlignment="Bottom"
-                                                    FontStyle="Italic"
-                                                    Foreground="DarkSlateGray"
-                                                    Text="Imię:" />
-                                                <TextBlock
-                                                    MinWidth="100"
-                                                    Margin="5"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding FirstName}" />
-                                                <TextBlock
-                                                    Margin="5"
-                                                    VerticalAlignment="Bottom"
-                                                    FontStyle="Italic"
-                                                    Foreground="DarkSlateGray"
-                                                    Text="Nazwisko:" />
-                                                <TextBlock
-                                                    MinWidth="80"
-                                                    Margin="5"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding LastName}" />
-                                                <TextBlock
-                                                    Margin="5"
-                                                    VerticalAlignment="Bottom"
-                                                    FontStyle="Italic"
-                                                    Foreground="DarkSlateGray"
-                                                    Text="Rola:" />
-                                                <TextBlock
-                                                    Margin="5"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding Role.Name}" />
-                                            </WrapPanel>
-                                        </Grid>
-                                        <Border.Effect>
-                                            <DropShadowEffect ShadowDepth="2" />
-                                        </Border.Effect>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
+                                        <iconPacks:PackIconMaterial
+                                            Grid.ColumnSpan="2"
+                                            Margin="2"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Foreground="Gray"
+                                            Kind="AccountCardDetails" />
+
+                                        <WrapPanel>
+                                            <TextBlock
+                                                Margin="5"
+                                                VerticalAlignment="Bottom"
+                                                FontStyle="Italic"
+                                                Foreground="DarkSlateGray"
+                                                Text="Login:" />
+                                            <TextBlock
+                                                MinWidth="100"
+                                                Margin="5"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Text="{Binding Login}" />
+                                        </WrapPanel>
+                                        <WrapPanel
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="0,0,5,0">
+                                            <TextBlock
+                                                Margin="5"
+                                                VerticalAlignment="Bottom"
+                                                FontStyle="Italic"
+                                                Foreground="DarkSlateGray"
+                                                Text="Imię:" />
+                                            <TextBlock
+                                                MinWidth="100"
+                                                Margin="5"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Text="{Binding FirstName}" />
+                                            <TextBlock
+                                                Margin="5"
+                                                VerticalAlignment="Bottom"
+                                                FontStyle="Italic"
+                                                Foreground="DarkSlateGray"
+                                                Text="Nazwisko:" />
+                                            <TextBlock
+                                                MinWidth="80"
+                                                Margin="5"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Text="{Binding LastName}" />
+                                            <TextBlock
+                                                Margin="5"
+                                                VerticalAlignment="Bottom"
+                                                FontStyle="Italic"
+                                                Foreground="DarkSlateGray"
+                                                Text="Rola:" />
+                                            <TextBlock
+                                                Margin="5"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Text="{Binding Role.Name}" />
+                                        </WrapPanel>
+                                    </Grid>
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="2" />
+                                    </Border.Effect>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     <StackPanel
                         Grid.Row="1"
                         FlowDirection="RightToLeft"

@@ -1,4 +1,5 @@
-﻿using Prism.Ioc;
+﻿using ERService.Infrastructure.Repositories;
+using Prism.Ioc;
 using Prism.Modularity;
 
 namespace ERService.MSSQLDataAccess
@@ -11,7 +12,7 @@ namespace ERService.MSSQLDataAccess
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.Register<IUnitOfWork, UnitOfWork>();
         }
     }
 }

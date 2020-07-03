@@ -18,17 +18,19 @@ namespace ERService.RBAC
         private IAclRepository _aclRepository;
         private IEnumerable<Guid> _aclsIDsToDelete;
         private IAclVerbRepository _aclVerbRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private IEventAggregator _eventAggregator;
         private IPasswordHasher _passwordHasher;
         private IRoleRepository _roleRepository;
         private IUserRepository _userRepository;
 
         public RBACManager(IUserRepository userRepository, IRoleRepository roleRepository, IAclRepository aclRepository,
-            IPasswordHasher passwordHasher, IEventAggregator eventAggregator, IAclVerbRepository aclVerbRepository)
+            IPasswordHasher passwordHasher, IEventAggregator eventAggregator, IAclVerbRepository aclVerbRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _aclVerbRepository = aclVerbRepository;
+            _unitOfWork = unitOfWork;
             _aclRepository = aclRepository;
             _passwordHasher = passwordHasher;
             _eventAggregator = eventAggregator;
@@ -41,7 +43,8 @@ namespace ERService.RBAC
         
         public async Task LoadAsync()
         {
-            await LoadUsers().ContinueWith(async (_) => await LoadRoles(), TaskContinuationOptions.ExecuteSynchronously);            
+            await LoadUsers();
+            await LoadRoles();
         }        
 
         public bool Login(string login, string password)
@@ -113,21 +116,11 @@ namespace ERService.RBAC
                     || _aclVerbRepository.HasChanges();
         }
 
-        public async Task Refresh()
+        public async Task RefreshAsync()
         {
             await _aclRepository.ReloadEntitiesAsync();
-            await _userRepository.ReloadEntitiesAsync().ContinueWith(async (t) => 
-            {
-                if (t.Status == TaskStatus.RanToCompletion)
-                {
-                    await LoadAsync();
-                }
-
-                if (t.Exception != null)
-                {
-                    _logger.Debug(t.Exception);
-                }
-            });            
+            await _userRepository.ReloadEntitiesAsync();
+            await LoadAsync();
         }
 
         #region User
@@ -138,15 +131,14 @@ namespace ERService.RBAC
 
         private async Task LoadUsers()
         {
-            Users.Clear();
             var users = await _userRepository.GetAllAsync();
-            if (users != null)
+
+            Users.Clear();
+            foreach (var user in users)
             {
-                foreach (var user in users)
-                {
-                    Users.Add(user);
-                }
+                Users.Add(user);
             }
+
         }
 
         public void AddUser(User user)

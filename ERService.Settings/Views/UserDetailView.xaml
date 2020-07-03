@@ -89,10 +89,25 @@
                     helpers:PasswordBoxAssistant.BindPassword="True"
                     helpers:PasswordBoxAssistant.BoundPassword="{Binding User.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     mah:PasswordBoxHelper.CapsLockIcon="!"
-                    mah:TextBoxHelper.ClearTextButton="True"
                     Background="White"
                     CaretBrush="Black"
                     Foreground="Black" />
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,5,0,15"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    ToolTip="Usuń hasło">
+                    <Button
+                        Padding="3"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding RemovePasswordCommand}">
+                        <iconPacks:PackIconModern Foreground="Gray" Kind="CheckmarkCross" />
+                    </Button>
+                </Grid>
                 <Label
                     Grid.Row="2"
                     Margin="0,5,0,15"
@@ -130,6 +145,7 @@
                     Grid.Row="5"
                     Grid.Column="3"
                     Margin="0,5,0,15"
+                    Background="White"
                     DisplayMemberPath="Name"
                     IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     IsSynchronizedWithCurrentItem="True"
@@ -147,28 +163,36 @@
                     <CheckBox
                         Margin="5"
                         Content="Administrator"
+                        Foreground="Wheat"
                         IsChecked="{Binding User.IsAdmin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="5"
                         Content="Aktywny"
+                        Foreground="Wheat"
                         IsChecked="{Binding User.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         IsEnabled="{Binding User.IsSystem, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
-                <Button
-                    Grid.Row="7"
-                    Grid.ColumnSpan="2"
-                    Width="25"
-                    Height="25"
-                    Margin="5"
-                    HorizontalAlignment="Right"
-                    BorderThickness="1"
-                    Command="{Binding SaveCommand}"
-                    Foreground="SlateGray"
-                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                    <iconPacks:PackIconOcticons Padding="2" Kind="Check" />
-                </Button>
+                <Grid Grid.Row="7" Grid.ColumnSpan="2">
+                    <Button
+                        Margin="5"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        BorderThickness="1"
+                        Command="{Binding SaveCommand}"
+                        Foreground="Wheat"
+                        Style="{StaticResource SaveButtonCircle}" />
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
 
             </Grid>
         </Grid>

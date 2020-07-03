@@ -210,7 +210,15 @@ namespace ERService.OrderModule.ViewModels
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
             if (id != null && id != Guid.Empty)
             {
-                await LoadAsync(id);
+                try
+                {
+                    await LoadAsync(id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                    _logger.Debug(ex);
+                }
             }
 
             GoBackView = navigationContext.Parameters.GetValue<string>("GoBackView");

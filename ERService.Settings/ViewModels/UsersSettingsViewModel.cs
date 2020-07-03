@@ -12,11 +12,14 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Linq;
 using ERService.Infrastructure.Events;
+using System.Windows.Threading;
 
 namespace ERService.Settings.ViewModels
 {
     public class UsersSettingsViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IRBACManager _rbacManager;
         private IRegionManager _regionManager;
         private Role _selectedRole;
@@ -114,11 +117,20 @@ namespace ERService.Settings.ViewModels
 
         #region Events and Event Handlers
 
-        private void OnUserDetailSaved(AfterDetailSavedEventArgs args)
+        private async void OnUserDetailSaved(AfterDetailSavedEventArgs args)
         {
             if (args.ViewModelName == typeof(UserDetailViewModel).Name)
             {
-                LoadUsers();
+                try
+                {
+                    await _rbacManager.RefreshAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                    _logger.Info(ex);
+                }
+                Load();
             }
         }
 
@@ -143,7 +155,7 @@ namespace ERService.Settings.ViewModels
                 HasChanges = _rbacManager.HasChanges();
                 SaveCommand.RaiseCanExecuteChanged();
 
-                await _rbacManager.Refresh();
+                await _rbacManager.RefreshAsync();
             });
         }
 
@@ -170,6 +182,8 @@ namespace ERService.Settings.ViewModels
                     var role = await _rbacManager.GetNewRole(dialogResult);
                     _rbacManager.AddRole(role);
                     Roles.Add(role);
+
+                    await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
                 }
             }
         }
@@ -188,22 +202,7 @@ namespace ERService.Settings.ViewModels
                     Flyout = SideFlyouts.DetailFlyout,
                     ViewName = ViewNames.UserDetailView
                 });
-        }
-
-        private async void OnEditRoleExecute()
-        {
-            var newRoleName = await _messageDialogService.ShowInputMessageAsync(this, "Edycja roli...", "Wprowadź nową nazwę roli:");
-            if (!String.IsNullOrWhiteSpace(newRoleName))
-            {
-                SelectedRole.Name = newRoleName;
-                LoadRoles();
-            }
-        }
-
-        private bool OnRemoveRoleCanExecute()
-        {
-            return SelectedRole != null;
-        }
+        }        
 
         private bool OnEditUserCanExecute()
         {
@@ -224,6 +223,21 @@ namespace ERService.Settings.ViewModels
                 });
 
             //_regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.UserDetailView, parameters);
+        }
+
+        private async void OnEditRoleExecute()
+        {
+            var newRoleName = await _messageDialogService.ShowInputMessageAsync(this, "Edycja roli...", "Wprowadź nową nazwę roli:");
+            if (!String.IsNullOrWhiteSpace(newRoleName))
+            {
+                SelectedRole.Name = newRoleName;
+                LoadRoles();
+            }
+        }
+
+        private bool OnRemoveRoleCanExecute()
+        {
+            return SelectedRole != null;
         }
 
         private bool OnEditRoleCanExecute()
@@ -267,6 +281,8 @@ namespace ERService.Settings.ViewModels
             _rbacManager.RemoveRole(SelectedRole);
             Roles.Remove(SelectedRole);
             RoleACLs.Clear();
+
+            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
         }
 
         private bool OnRemoveUserCanExecute()

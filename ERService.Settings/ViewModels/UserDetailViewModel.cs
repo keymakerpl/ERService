@@ -21,26 +21,30 @@ namespace ERService.Settings.ViewModels
     public class UserDetailViewModel : DetailViewModelBase
     {
         private UserWrapper _user;
-        private Role _selectedRole;
-        private IRBACManager _rbacManager;
+        private Role _selectedRole;        
         private IRegionManager _regionManager;
+        private readonly IUserRepository _userRepository;
+        private readonly IRBACManager _rbacManager;
         private IPasswordHasher _passwordHasher;
         private IRegionNavigationService _navigationService;        
         private bool PasswordChanged;
 
         public UserDetailViewModel(IEventAggregator eventAggregator, 
-            IRegionManager regionManager, IRBACManager rBACManager,
+            IRegionManager regionManager, IUserRepository userRepository, IRBACManager rBACManager,
             IPasswordHasher passwordHasher, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
-            _rbacManager = rBACManager;
             _regionManager = regionManager;
+            _userRepository = userRepository;
+            _rbacManager = rBACManager;
             _passwordHasher = passwordHasher;
 
             UserRoles = new ObservableCollection<Role>();
             SaveCommand = new DelegateCommand<object>(OnSaveExecute, OnSaveCanExecute);
+            RemovePasswordCommand = new DelegateCommand(() => User.Password = "");
         }
 
         public new DelegateCommand<object> SaveCommand { get; set; }
+        public DelegateCommand RemovePasswordCommand { get; }
 
         public Role SelectedRole
         {
@@ -56,9 +60,9 @@ namespace ERService.Settings.ViewModels
 
         public ObservableCollection<Role> UserRoles { get; }
 
-        public override void Load(Guid id)
+        public override async Task LoadAsync(Guid id)
         {
-            var user = id != Guid.Empty ? _rbacManager[id]
+            var user = id != Guid.Empty ? await _userRepository.GetByIdAsync(id)
                         : GetNewDetail();
 
             ID = id;
@@ -67,13 +71,13 @@ namespace ERService.Settings.ViewModels
             Initialize(user);
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _navigationService = navigationContext.NavigationService;
 
             var id = navigationContext.Parameters.GetValue<Guid>("ID");
 
-            Load(id);
+            await LoadAsync(id);
 
             if (!_rbacManager.LoggedUserHasPermission(AclVerbNames.UserConfiguration))
                 IsReadOnly = true;
@@ -100,9 +104,9 @@ namespace ERService.Settings.ViewModels
 
             HashPassword();
 
-            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () =>
+            await SaveWithOptimisticConcurrencyAsync(_userRepository.SaveAsync, () =>
             {
-                HasChanges = _rbacManager.HasChanges();
+                HasChanges = _userRepository.HasChanges();
                 ID = User.Id;
                 
                 _eventAggregator
@@ -126,7 +130,7 @@ namespace ERService.Settings.ViewModels
         private User GetNewDetail()
         {
             var user = new User();
-            _rbacManager.AddUser(user);
+            _userRepository.Add(user);
 
             return user;
         }
@@ -155,7 +159,7 @@ namespace ERService.Settings.ViewModels
             {
                 if (!HasChanges)
                 {
-                    HasChanges = _rbacManager.HasChanges();
+                    HasChanges = _userRepository.HasChanges();
                 }
 
                 if (!HasChanges && args.PropertyName == nameof(UserWrapper.Password))

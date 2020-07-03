@@ -9,7 +9,7 @@ namespace ERService.RBAC
     {
         Task LoadAsync();
 
-        Task Refresh();
+        Task RefreshAsync();
 
         User LoggedUser { get; set; }
 

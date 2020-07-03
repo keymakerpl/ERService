@@ -166,7 +166,7 @@ namespace ERService.Infrastructure.Repositories
             if (objectContextAdapter != null)
             {
                 await objectContextAdapter.ObjectContext.RefreshAsync(RefreshMode.ClientWins, entries);
-            }            
+            }
         }
 
         public virtual void ReloadEntity(TEntity entity)
