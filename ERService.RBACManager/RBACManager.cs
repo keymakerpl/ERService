@@ -54,7 +54,7 @@ namespace ERService.RBAC
                 return false;
             }
 
-            var user = Users.SingleOrDefault(u => u.Login == login);
+            var user = Users.SingleOrDefault(u => u.Login == login && u.IsActive);
             if (user == null) return false;
 
             if (_passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt))
@@ -91,13 +91,21 @@ namespace ERService.RBAC
         
         public async Task SaveAsync()
         {
-            await _roleRepository.SaveAsync();
-            await _userRepository.SaveAsync();
-
-            if (_aclsIDsToDelete.Count() > 0)
+            try
             {
-                await RemoveACLs(_aclsIDsToDelete.ToList());
-                await _aclRepository.SaveAsync();
+                await _roleRepository.SaveAsync();
+                await _userRepository.SaveAsync();
+
+                if (_aclsIDsToDelete.Count() > 0)
+                {
+                    await RemoveACLs(_aclsIDsToDelete.ToList());
+                    await _aclRepository.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex);
+                _logger.Error(ex);
             }
         }
 
@@ -250,17 +258,19 @@ namespace ERService.RBAC
             if (!LoggedUser.RoleId.HasValue)
                 return false;
 
-            var sql = new SQLQueryBuilder(nameof(Acl));
+            if (LoggedUser.IsAdmin || LoggedUser.IsSystem)
+                return true;
+
+            var sql = SQLQueryBuilder.CreateQuery(nameof(Acl));
 
                 sql .Select(nameof(Acl.Value))
                     .Join(nameof(AclVerb), nameof(Acl.AclVerbId), $"{nameof(AclVerb)}.{nameof(AclVerb.Id)}")
                     .Where(nameof(Acl.RoleId), LoggedUser.RoleId)
                     .Where(nameof(AclVerb.Name), verbName);
 
-            var parameters = new object[0];
-            var query = sql.Compile(out parameters);
+            var sqlQuery = sql.Compile();
 
-            var result = _aclRepository.Get<int?>(query, parameters).FirstOrDefault();
+            var result = _aclRepository.Get<int?>(sqlQuery.Query, sqlQuery.Parameters).FirstOrDefault();
             return result.HasValue && result == 1;
         }
 

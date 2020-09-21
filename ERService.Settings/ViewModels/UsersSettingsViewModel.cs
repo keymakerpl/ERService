@@ -150,12 +150,10 @@ namespace ERService.Settings.ViewModels
 
         protected override async void OnSaveExecute()
         {
-            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, async () => 
+            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => 
             {
                 HasChanges = _rbacManager.HasChanges();
                 SaveCommand.RaiseCanExecuteChanged();
-
-                await _rbacManager.RefreshAsync();
             });
         }
 
@@ -182,8 +180,6 @@ namespace ERService.Settings.ViewModels
                     var role = await _rbacManager.GetNewRole(dialogResult);
                     _rbacManager.AddRole(role);
                     Roles.Add(role);
-
-                    await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
                 }
             }
         }
@@ -281,8 +277,6 @@ namespace ERService.Settings.ViewModels
             _rbacManager.RemoveRole(SelectedRole);
             Roles.Remove(SelectedRole);
             RoleACLs.Clear();
-
-            await SaveWithOptimisticConcurrencyAsync(_rbacManager.SaveAsync, () => { });
         }
 
         private bool OnRemoveUserCanExecute()
@@ -313,7 +307,7 @@ namespace ERService.Settings.ViewModels
             }
 
             var confirmDialogResult = await _messageDialogService
-                .ShowConfirmationMessageAsync(this, "Czy usunąć użytkownika?", $"Czy usunąć użytkownika {SelectedUser.FirstName} {SelectedUser.LastName}?");
+                .ShowConfirmationMessageAsync(this, "Czy usunąć użytkownika?", $"Czy usunąć użytkownika {SelectedUser.FirstName ?? SelectedUser.Login} {SelectedUser.LastName}?");
 
             if (confirmDialogResult == DialogResult.Cancel) return;
 

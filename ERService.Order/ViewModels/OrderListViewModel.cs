@@ -66,7 +66,7 @@ namespace ERService.OrderModule.ViewModels
             try
             {
                 var predicate = args.Predicate;
-                await LoadAsync(predicate, h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType);
+                await LoadAsync(predicate, h => h.Hardwares, c => c.Customer, s => s.OrderStatus, t => t.OrderType, u => u.User);
             }
             catch (Exception ex)
             {

@@ -5,6 +5,7 @@
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ERService.Statistics.Views"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,13 +22,14 @@
         </Grid.ColumnDefinitions>
 
         <lvc:PieChart
+            Name="Chart"
             Margin="100"
             DataTooltip="{x:Null}"
             Hoverable="False"
             LegendLocation="Left">
             <lvc:PieChart.Series>
                 <lvc:PieSeries
-                    Title="Zakończone"
+                    Title="Zamknięte"
                     DataLabels="True"
                     LabelPoint="{Binding PointLabel}"
                     Values="{Binding FinishedCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -51,45 +53,76 @@
             Grid.Column="1"
             BorderBrush="LightGray"
             BorderThickness="1,0,0,0">
-            <StackPanel Margin="5,0,0,0">
-                <Label
-                    Margin="5"
-                    Content="Data od:"
-                    FontWeight="SemiBold" />
-                <DatePicker
-                    Width="110"
-                    Margin="5"
-                    SelectedDate="{Binding DateFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <Label
-                    Margin="5"
-                    Content="Data do:"
-                    FontWeight="SemiBold" />
-                <DatePicker
-                    Width="110"
-                    Margin="5"
-                    SelectedDate="{Binding DateTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    x:Name="OpenCheckBox"
-                    Margin="5,25,5,5"
-                    BorderThickness="2"
-                    Content="Otwarte"
-                    FontWeight="SemiBold"
-                    IsChecked="{Binding IsOpenVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    x:Name="InProgressCheckBox"
-                    Margin="5"
-                    BorderThickness="2"
-                    Content="W trakcie"
-                    FontWeight="SemiBold"
-                    IsChecked="{Binding IsInProgressVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    x:Name="ClosedCheckBox"
-                    Margin="5"
-                    BorderThickness="2"
-                    Content="Zamknięte"
-                    FontWeight="SemiBold"
-                    IsChecked="{Binding IsClosedVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="5,0,0,0">
+                    <Label
+                        Margin="5"
+                        Content="Data rejestracji od:"
+                        FontWeight="SemiBold" />
+                    <DatePicker
+                        Width="110"
+                        Margin="5"
+                        SelectedDate="{Binding DateFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Label
+                        Margin="5"
+                        Content="Data rejestracji do:"
+                        FontWeight="SemiBold" />
+                    <DatePicker
+                        Width="110"
+                        Margin="5"
+                        SelectedDate="{Binding DateTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        x:Name="OpenCheckBox"
+                        Margin="5,25,5,5"
+                        BorderThickness="2"
+                        Content="Otwarte"
+                        FontWeight="SemiBold"
+                        IsChecked="{Binding IsOpenVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        x:Name="InProgressCheckBox"
+                        Margin="5"
+                        BorderThickness="2"
+                        Content="W trakcie"
+                        FontWeight="SemiBold"
+                        IsChecked="{Binding IsInProgressVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        x:Name="ClosedCheckBox"
+                        Margin="5"
+                        BorderThickness="2"
+                        Content="Zamknięte"
+                        FontWeight="SemiBold"
+                        IsChecked="{Binding IsClosedVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <Grid Grid.Row="1" Margin="0,25,0,25">
+                    <Button
+                        Width="55"
+                        Height="55"
+                        BorderThickness="0"
+                        Command="{Binding SaveToPDFCommand}"
+                        CommandParameter="{Binding ElementName=Chart}"
+                        Foreground="Gray"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        ToolTip="Zapisz do pliku PDF">
+                        <iconPacks:PackIconModern
+                            Width="35"
+                            Height="35"
+                            Kind="PageFilePdfTag" />
+                    </Button>
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+            </Grid>
         </Border>
 
     </Grid>

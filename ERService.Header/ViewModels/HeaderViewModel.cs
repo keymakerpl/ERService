@@ -41,7 +41,14 @@ namespace ERService.Header.ViewModels
 
         private void OnNewOrdersAdded(AfterNewOrdersAddedEventArgs args)
         {
-            BadgeValue = args.NewItemsIDs.Length;
+            if (BadgeValue == null)
+            {
+                BadgeValue = args.NewItemsIDs.Length;
+            }
+            else
+            {
+                BadgeValue += args.NewItemsIDs.Length;
+            }
         }
 
         private void OnSideMenuToggleExecute()

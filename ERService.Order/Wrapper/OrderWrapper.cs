@@ -31,6 +31,7 @@ namespace ERService.OrderModule.Wrapper
         private string _solution;
         private Guid? _orderStatusId;
         private Guid? _orderTypeId;
+        private User _user;
 
         public OrderWrapper(Order model) : base(model)
         {
@@ -56,7 +57,7 @@ namespace ERService.OrderModule.Wrapper
         public DateTime? DateEnded
         {
             get { return GetValue<DateTime?>(); }
-            set { SetProperty(ref _dateEnded, value.Value.Date.AddDays(1).AddMilliseconds(-100)); }
+            set { SetProperty(ref _dateEnded, value.Value.Date.AddDays(1).AddMilliseconds(-1)); }
         }
 
         [Interpreter(Name = "Data rejestracji", Pattern = "[%o_DateRegistered%]")]
@@ -163,5 +164,22 @@ namespace ERService.OrderModule.Wrapper
             get { return GetValue<Guid?>(); }
             internal set { SetProperty(ref _orderTypeId, value); }
         }
+
+        private Guid? _userId;
+
+        public Guid? UserId
+        {
+            get { return GetValue<Guid?>(); }
+            set { SetProperty(ref _userId, value); }
+        }
+        
+        public User User
+        {
+            get { return GetValue<User>(); }
+            set { SetProperty(ref _user, value); }
+        }
+
+        [Interpreter(Name = "Serwisant", Pattern = "[%o_user%]")]
+        public string UserFullName { get => User.FullName; }
     }
 }

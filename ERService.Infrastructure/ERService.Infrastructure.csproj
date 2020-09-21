@@ -93,6 +93,7 @@
     <Compile Include="Events\SearchQueryEvent.cs" />
     <Compile Include="Events\ShowProgressBarEvent.cs" />
     <Compile Include="Events\UserAuthorizationEventArgs.cs" />
+    <Compile Include="Extensions\ChartExtenssions.cs" />
     <Compile Include="Helpers\BarcodeGenerator.cs" />
     <Compile Include="Helpers\Converters\BooleanOrConverter.cs" />
     <Compile Include="Helpers\Cryptography\Cryptography.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Helpers\Cryptography\IPasswordHasher.cs" />
     <Compile Include="Helpers\Cryptography\PasswordHasher.cs" />
     <Compile Include="Helpers\AttachedProperties.cs" />
+    <Compile Include="Helpers\PDFHelper.cs" />
     <Compile Include="Helpers\RowDoubleClickHandler.cs" />
     <Compile Include="Helpers\Serialization\Serializer.cs" />
     <Compile Include="Helpers\Converters\IntToBrushConverters.cs" />
@@ -163,8 +165,17 @@
     <PackageReference Include="EntityFramework">
       <Version>6.4.0</Version>
     </PackageReference>
+    <PackageReference Include="iTextSharp-LGPL">
+      <Version>4.1.6</Version>
+    </PackageReference>
     <PackageReference Include="LinqKit">
       <Version>1.1.17</Version>
+    </PackageReference>
+    <PackageReference Include="LiveCharts">
+      <Version>0.9.7</Version>
+    </PackageReference>
+    <PackageReference Include="LiveCharts.Wpf">
+      <Version>0.9.7</Version>
     </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>

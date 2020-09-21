@@ -50,7 +50,8 @@
                     Command="{Binding BarcodeSearchCommand}"
                     Foreground="SlateGray"
                     Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                    ToolTip="Szukaj po kodzie kreskowym">
+                    ToolTip="Szukaj po kodzie kreskowym"
+                    Visibility="Collapsed">
                     <iconPacks:PackIconMaterial Kind="BarcodeScan" />
                 </Button>
                 <Button
@@ -173,6 +174,11 @@
                     Binding="{Binding Hardwares[0].Name}"
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     Header="Sprzęt" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding User.FullName}"
+                    ElementStyle="{StaticResource DataGridColumnStyle}"
+                    Header="Serwisant" />
                 <DataGridTextColumn
                     MinWidth="100"
                     MaxWidth="200"

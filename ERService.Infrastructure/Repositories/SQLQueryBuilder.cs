@@ -3,32 +3,47 @@ using SqlKata.Compilers;
 
 namespace ERService.Infrastructure.Repositories
 {
-    public class SQLQueryBuilder : Query
+    public static class SQLQueryBuilder
     {
-        public SQLQueryBuilder(string tableName) : base(tableName)
+        public static Query CreateQuery()
         {
-            TableName = tableName;
-        }
+            return new Query();
+        } 
 
-        public string TableName { get; }        
+        public static Query CreateQuery(string tableName)
+        {
+            return new Query(tableName);
+        }
     }
 
     public static class SQLQueryBuilderExtensions
     {
-        public static string Compile(this Query query, out object[] bindings)
+        public static SQLQuery Compile(this Query query)
         {
             var compiler = GetCompiler();
             var sqlResult = compiler.Compile(query);
             var queryString = sqlResult.Sql;
-            bindings = sqlResult.Bindings.ToArray();
+            var bindings = sqlResult.Bindings.ToArray();
 
-            return queryString;
+            return new SQLQuery(queryString, bindings);
         }
 
         private static SqlServerCompiler GetCompiler()
         {
             return new SqlServerCompiler();
         }
+    }
+
+    public class SQLQuery
+    {
+        public SQLQuery(string query, object[] parameters)
+        {
+            Query = query;
+            Parameters = parameters;
+        }
+
+        public string Query { get;}
+        public object[] Parameters { get;}
     }
 
     public static class SQLOperators

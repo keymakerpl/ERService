@@ -207,12 +207,6 @@
                                                             FontSize="12"
                                                             FontStyle="Italic"
                                                             Foreground="Black"
-                                                            Text="Grupa:" />
-                                                        <TextBlock
-                                                            Margin="5"
-                                                            FontSize="12"
-                                                            FontStyle="Italic"
-                                                            Foreground="Black"
                                                             Text="{Binding GroupDisplayableName}" />
                                                     </WrapPanel>
                                                 </Grid>

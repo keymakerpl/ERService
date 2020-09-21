@@ -23,6 +23,7 @@ namespace ERService.OrderModule.Repository
                                 .Include(a => a.Attachments)
                                 .Include(os => os.OrderStatus)
                                 .Include(ot => ot.OrderType)
+                                .Include(u => u.User)
                                 .SingleAsync(o => o.Id == id);
         }
     }

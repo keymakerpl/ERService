@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 
 namespace ERService.OrderModule.ViewModels
 {
+    // TODO: przenieść to?
     public class CompanyLogo
     {
         [Interpreter(Name = "Logo firmy", Pattern = "[%o_CompanyLogo%]")]
@@ -55,6 +56,7 @@ namespace ERService.OrderModule.ViewModels
         private IOrderStatusRepository _statusRepository;
         private IOrderTypeRepository _typeRepository;
         private readonly IImagesCollection _imagesCollection;
+        private User _selectedUser;
 
         //TODO: Za duży konstruktor? Dodać IOrderContext? UnitOfWork?
         public OrderViewModel(IRegionManager regionManager, IOrderRepository orderRepository, IOrderTypeRepository typeRepository,
@@ -76,6 +78,7 @@ namespace ERService.OrderModule.ViewModels
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
             HardwareTypes = new ObservableCollection<HardwareType>();
+            Users = new ObservableCollection<User>();
             Attachments = new ObservableCollection<Blob>();
             PrintTemplates = new ObservableCollection<PrintTemplate>();
 
@@ -108,6 +111,8 @@ namespace ERService.OrderModule.ViewModels
         public OrderWrapper Order { get => _order; set { SetProperty(ref _order, value); } }
 
         public ObservableCollection<HardwareType> HardwareTypes { get; }
+
+        public ObservableCollection<User> Users { get; }
 
         public ObservableCollection<OrderStatus> OrderStatuses { get; }
 
@@ -148,6 +153,16 @@ namespace ERService.OrderModule.ViewModels
             {
                 SetProperty(ref _selectedOrderType, value);
                 Order.OrderTypeId = value?.Id;
+            }
+        }
+
+        public User SelectedUser
+        {
+            get { return _selectedUser; }
+            set
+            {
+                SetProperty(ref _selectedUser, value);
+                Order.UserId = value?.Id;
             }
         }
 
@@ -265,12 +280,21 @@ namespace ERService.OrderModule.ViewModels
 
         protected async override void OnSaveExecute()
         {
+            if (SelectedOrderStatus != null)
+                Order.Model.OrderStatusId = SelectedOrderStatus.Id;
+
+            if (SelectedOrderType != null)
+                Order.Model.OrderTypeId = SelectedOrderType.Id;
+
             await SaveWithOptimisticConcurrencyAsync(_orderRepository.SaveAsync, () =>
             {
                 HasChanges = _orderRepository.HasChanges();
                 ID = Order.Id;
 
-                _navigationService.Journal.GoBack();
+                if (!String.IsNullOrWhiteSpace(GoBackView))
+                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderListView);
+                else
+                    _navigationService.Journal.GoBack();
             });
         }
 
@@ -372,10 +396,11 @@ namespace ERService.OrderModule.ViewModels
 
         private void InitializeOrder(Order order)
         {
-            _selectedOrderType = OrderTypes.FirstOrDefault(t => t.Id == order.OrderType.Id);
-            _selectedOrderStatus = OrderStatuses.FirstOrDefault(s => s.Id == order.OrderStatus.Id);
-
             Order = new OrderWrapper(order);
+
+            SelectedOrderType = OrderTypes.FirstOrDefault(t => t.Id == order.OrderType.Id);
+            SelectedOrderStatus = OrderStatuses.FirstOrDefault(s => s.Id == order.OrderStatus.Id);
+            SelectedUser = Users.FirstOrDefault(u => u.Id == order.User?.Id);
 
             Order.PropertyChanged += ((sender, args) =>
             {
@@ -422,17 +447,17 @@ namespace ERService.OrderModule.ViewModels
             await LoadOrderStatusesAsync();
             await LoadOrderTypesAsync();
             await LoadHardwareTypesAsync();
-        }        
-
-        private async Task InitializePrintTemplates()
-        {
-            PrintTemplates.Clear();
-            var templates = await _templateRepository.GetAllAsync();
-            foreach (var template in templates)
-            {
-                PrintTemplates.Add(template);
-            }
+            LoadUsers();
         }
+
+        private void LoadUsers()
+        {
+            Users.Clear();
+            foreach (var user in _rBACManager.Users)
+            {
+                Users.Add(user);
+            }
+        }        
 
         private async Task LoadHardwareTypesAsync()
         {
@@ -462,6 +487,16 @@ namespace ERService.OrderModule.ViewModels
             {
                 OrderTypes.Add(type);
             }
-        }                
+        }
+
+        private async Task InitializePrintTemplates()
+        {
+            PrintTemplates.Clear();
+            var templates = await _templateRepository.GetAllAsync();
+            foreach (var template in templates)
+            {
+                PrintTemplates.Add(template);
+            }
+        }
     }
 }

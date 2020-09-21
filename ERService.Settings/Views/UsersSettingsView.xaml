@@ -148,12 +148,10 @@
                         </ListView.Resources>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border
-                                    Margin="2"
-                                    Background="GhostWhite"
-                                    BorderBrush="LightGray"
-                                    BorderThickness="0"
-                                    CornerRadius="2">
+                                <Border>
+                                    <Border.Style>
+                                        <Style BasedOn="{StaticResource DefaultBorderStyle}" TargetType="Border" />
+                                    </Border.Style>
                                     <Grid Margin="5">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />

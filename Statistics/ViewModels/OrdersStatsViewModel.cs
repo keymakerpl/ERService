@@ -1,35 +1,55 @@
-﻿using ERService.Infrastructure.Base;
+﻿using ERService.Business;
+using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Helpers;
 using ERService.OrderModule.Repository;
 using LiveCharts;
 using LiveCharts.Wpf;
+using Microsoft.Win32;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using ERService.Infrastructure.Notifications.ToastNotifications;
+using System.Diagnostics;
+using LiveCharts.Wpf.Charts.Base;
+using ERService.Infrastructure.Extensions;
 
 namespace ERService.Statistics.ViewModels
 {
     public class OrdersStatsViewModel : DetailViewModelBase
     {
-        private readonly IOrderRepository _orderRepository;
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private readonly IOrderRepository _orderRepository;
+        private readonly IImagesCollection _imagesCollection;
         private DateTime _dateFrom;
         private DateTime _dateTo;
+
+        public DelegateCommand<Chart> SaveToPDFCommand { get; }
+
         private ChartValues<int> _finishedCount;
         private ChartValues<int> _inProgressCount;
+        private ChartValues<int> _openCount;
         private bool _isClosedVisible;
         private bool _isInProgressVisible;
         private bool _isOpenVisible;
-        private ChartValues<int> _openCount;
 
-        public OrdersStatsViewModel(IOrderRepository orderRepository, IEventAggregator eventaggregator, IMessageDialogService messageDialogService)
+        public OrdersStatsViewModel(
+            IOrderRepository orderRepository,
+            IEventAggregator eventaggregator,
+            IMessageDialogService messageDialogService,
+            IImagesCollection imagesCollection)
             : base(eventaggregator, messageDialogService)
         {
             _orderRepository = orderRepository;
-
-            PointLabel = point => $"{point.Y} ({point.Participation:P})";
+            _imagesCollection = imagesCollection;
+            
+            PointLabel = point => point.Y > 0 ? $"{point.Y} ({point.Participation:P})" : "";
 
             _finishedCount = new ChartValues<int>();
             _inProgressCount = new ChartValues<int>();
@@ -42,7 +62,60 @@ namespace ERService.Statistics.ViewModels
             _dateFrom = DateTime.Now.AddDays(-14).Date;
             _dateTo = DateTime.Now.Date;
 
+            SaveToPDFCommand = new DelegateCommand<Chart>(OnSaveToPDFExecute);
+
             Title = "Naprawy";
+
+            Initialize();
+        }
+
+        private void OnSaveToPDFExecute(Chart arg)
+        {
+            try
+            {
+                var pdfChart = arg.GetChartForPDF<PieChart>();
+                var dialog = new SaveFileDialog();
+                dialog.FileName = $"Orders_{DateTime.Now:dd_MM_yyyy}.pdf";
+                dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                dialog.Filter = "Plik PDF (*.pdf)|*.pdf";
+                var dialogResult = dialog.ShowDialog();
+
+                if (dialogResult.HasValue && dialogResult.Value)
+                {
+                    using (var imageStream = new MemoryStream())
+                    {
+                        var title = $"Zlecenia serwisowe w okresie: od {_dateFrom:dd.MM.yyyy} do {_dateTo:dd.MM.yyyy}";
+                        var logo = _imagesCollection["logo"].ImageData;
+                        var encoder = new PngBitmapEncoder();
+
+                        //TODO: Przerobić na serwisy dla DI
+                        ImageHelper.SaveVisualToStream(pdfChart, encoder, imageStream, c => ((PieChart)c).Update(true, true));
+                        PDFHelper.ConvertImageToPDF(imageStream, dialog.FileName, title, logo);
+
+                        _messageDialogService.ShowInsideContainer(
+                            "Zapisano plik PDF...",
+                            $"{dialog.FileName}",
+                            NotificationTypes.Success,
+                            onClick: () => Process.Start(dialog.FileName));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _messageDialogService.ShowInsideContainer("Błąd zapisu pliku PDF...", ex.Message, NotificationTypes.Error);
+                _logger.Error(ex);
+            }
+        }        
+
+        private void Initialize()
+        {
+            PropertyChanged += async (s, a) =>
+            {
+                if (a.PropertyName == nameof(DateFrom) || a.PropertyName == nameof(DateTo))
+                {
+                    await LoadAsync();
+                }
+            };
         }
 
         public DateTime DateFrom
@@ -69,6 +142,14 @@ namespace ERService.Statistics.ViewModels
             private set { SetProperty(ref _inProgressCount, value); }
         }
 
+        public ChartValues<int> OpenCount
+        {
+            get { return _openCount; }
+            private set { SetProperty(ref _openCount, value); }
+        }
+
+        public Func<ChartPoint, string> PointLabel { get; set; }
+
         public bool IsClosedVisible
         {
             get { return _isClosedVisible; }
@@ -89,14 +170,6 @@ namespace ERService.Statistics.ViewModels
 
         public override bool KeepAlive => true;
 
-        public ChartValues<int> OpenCount
-        {
-            get { return _openCount; }
-            private set { SetProperty(ref _openCount, value); }
-        }
-
-        public Func<ChartPoint, string> PointLabel { get; set; }
-
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
@@ -104,60 +177,33 @@ namespace ERService.Statistics.ViewModels
 
         public override async Task LoadAsync()
         {
-            OpenCount.Clear();
-            InProgressCount.Clear();
-            FinishedCount.Clear();
-
             var dateTo = _dateTo.AddDays(1);
 
-            await _orderRepository.FindByIncludeAsync(
-                o => o.OrderStatus.Group == Business.StatusGroup.Open && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
-                s => s.OrderStatus)
-                .ContinueWith(async (t) =>
-                {
-                    var openCount = t.Result.Count();
-                    OpenCount.Add(openCount);
+            var openCount = await _orderRepository.FindByIncludeAsync(
+                o => o.OrderStatus.Group == StatusGroup.Open && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+                s => s.OrderStatus);
 
-                    var inProgressCount = await _orderRepository.FindByIncludeAsync(
-                        o => o.OrderStatus.Group == Business.StatusGroup.InProgress && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+            OpenCount.Clear();
+            OpenCount.Add(openCount.Count());
+
+            var inProgressCount = await _orderRepository.FindByIncludeAsync(
+                        o => o.OrderStatus.Group == StatusGroup.InProgress && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
                         s => s.OrderStatus);
 
-                    InProgressCount.Add(inProgressCount.Count());
-                })
-                .ContinueWith(async (t) =>
-                {
-                    var finishedCount = await _orderRepository.FindByIncludeAsync(
-                        o => o.OrderStatus.Group == Business.StatusGroup.Finished && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
+            InProgressCount.Clear();
+            InProgressCount.Add(inProgressCount.Count());
+
+            var finishedCount = await _orderRepository.FindByIncludeAsync(
+                        o => o.OrderStatus.Group == StatusGroup.Finished && o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo,
                         s => s.OrderStatus);
 
-                    FinishedCount.Add(finishedCount.Count());
-                });
+            FinishedCount.Clear();
+            FinishedCount.Add(finishedCount.Count());
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             await LoadAsync();
-        }
-
-        private void Chart_OnDataClick(ChartPoint chartpoint)
-        {
-            if (chartpoint == null)
-            {
-                throw new ArgumentNullException(nameof(chartpoint));
-            }
-
-            var chart = chartpoint.ChartView as PieChart;
-            if (chart != null)
-            {
-                foreach (PieSeries series in chart.Series)
-                    series.PushOut = 0;
-            }
-
-            var selectedSeries = chartpoint.SeriesView as PieSeries;
-            if (selectedSeries != null)
-            {
-                selectedSeries.PushOut = 8;
-            }
         }
     }
 }

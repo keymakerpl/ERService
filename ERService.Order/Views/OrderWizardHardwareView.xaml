@@ -64,7 +64,6 @@
                 <Border
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
-                    Background="GhostWhite"
                     Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
@@ -125,10 +124,7 @@
                             SelectedValuePath="Id" />
                     </Grid>
                 </Border>
-                <Border
-                    VerticalAlignment="Top"
-                    Background="GhostWhite"
-                    Style="{StaticResource DefaultBorderStyle}">
+                <Border VerticalAlignment="Top" Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -196,7 +192,6 @@
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
-                    Background="GhostWhite"
                     Style="{StaticResource DefaultBorderStyle}">
                     <Grid Margin="10" HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>

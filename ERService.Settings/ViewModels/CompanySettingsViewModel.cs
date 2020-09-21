@@ -20,6 +20,8 @@ namespace ERService.Settings.ViewModels
 {
     public class CompanySettingsViewModel : DetailViewModelBase
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IRegionManager _regionManager;
         private readonly ILicenseManager _licenseManager;
         private readonly ISettingsManager _settingsManager;
@@ -119,13 +121,21 @@ namespace ERService.Settings.ViewModels
 
         protected override void OnSaveExecute()
         {
-            _settingsManager.SaveAsync();
+            try
+            {
+                _settingsManager.SaveAsync();
 
-            _imagesCollection["logo"] = LogoImage;
-            _imagesCollection.Save();
+                _imagesCollection["logo"] = LogoImage;
+                _imagesCollection.Save();
 
-            _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.SettingsView);
+                _regionManager.Regions[RegionNames.ContentRegion].RemoveAll();
+                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.SettingsView);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                _logger.Debug(ex);
+            }
         }
 
         protected override bool OnSaveCanExecute()
@@ -146,10 +156,10 @@ namespace ERService.Settings.ViewModels
 
         private async void LoadLogo()
         {
-            var image = _imagesCollection["logo"];
-            if (image != null)
+            LogoImage = _imagesCollection["logo"];
+            if (LogoImage != null)
             {
-                using (var stream = new MemoryStream(image.ImageData))
+                using (var stream = new MemoryStream(LogoImage.ImageData))
                 {
                     SelectedImageSource = await ImageHelper.GenerateBitmap(stream, 320);
                 }

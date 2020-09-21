@@ -24,6 +24,12 @@ namespace ERService.ViewModels
             Hide();
         }
 
+        private void OnDetailOpened(AfterDetailOpenedEventArgs args)
+        {
+            IsCollapsed = false;
+            DetailTitle = args.DisplayableName;
+        }
+
         private void OnDetailClosed(AfterDetailClosedEventArgs args)
         {
             Hide();
@@ -33,13 +39,7 @@ namespace ERService.ViewModels
         {
             IsCollapsed = true;
             DetailTitle = String.Empty;
-        }
-
-        private void OnDetailOpened(AfterDetailOpenedEventArgs args)
-        {
-            IsCollapsed = false;
-            DetailTitle = args.DisplayableName;
-        }
+        }        
 
         public string DetailTitle
         {

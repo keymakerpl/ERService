@@ -7,10 +7,12 @@ using ERService.HardwareModule.ViewModels;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Constants;
 using ERService.Infrastructure.Dialogs;
+using ERService.Infrastructure.Repositories;
 using ERService.OrderModule.Data.Repository;
 using ERService.OrderModule.OrderNumeration;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
+using ERService.RBAC;
 using Prism.Events;
 using Prism.Regions;
 using System;
@@ -26,11 +28,13 @@ namespace ERService.OrderModule.ViewModels
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        //todo: IUnitOfWork
         private readonly ICustomerRepository _customerRepository;
         private readonly ICustomItemRepository _customItemRepository;
         private readonly IHardwareTypeRepository _hardwareTypeRepository;
         private readonly IHwCustomItemRepository _hwCustomItemRepository;
         private readonly INumerationRepository _numerationRepository;
+        private readonly IRBACManager _rbacManager;
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderStatusRepository _orderStatusRepository;
         private readonly IOrderTypeRepository _orderTypeRepository;
@@ -42,12 +46,13 @@ namespace ERService.OrderModule.ViewModels
         private HardwareType _selectedHardwareType;
         private OrderStatus _selectedOrderStatus;
         private OrderType _selectedOrderType;
+        private User _selectedUser;
         private readonly IRegionManager _regionManager;
 
         public OrderContext(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService, IOrderRepository orderRepository,
             ICustomerRepository customerRepository, ICustomItemRepository customItemRepository, IHwCustomItemRepository hwCustomItemRepository,
             IHardwareTypeRepository hardwareTypeRepository, IOrderStatusRepository orderStatusRepository, IOrderTypeRepository orderTypeRepository,
-            INumerationRepository numerationRepository) : base(eventAggregator, messageDialogService)
+            INumerationRepository numerationRepository, IRBACManager rbacManager) : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;
             _orderRepository = orderRepository;
@@ -58,6 +63,7 @@ namespace ERService.OrderModule.ViewModels
             _orderStatusRepository = orderStatusRepository;
             _orderTypeRepository = orderTypeRepository;
             _numerationRepository = numerationRepository;
+            _rbacManager = rbacManager;
 
             Customers = new ObservableCollection<Customer>();
             HardwareTypes = new ObservableCollection<HardwareType>();
@@ -65,19 +71,20 @@ namespace ERService.OrderModule.ViewModels
             DisplayableCustomItems = new ObservableCollection<DisblayableCustomItem>();
             OrderStatuses = new ObservableCollection<OrderStatus>();
             OrderTypes = new ObservableCollection<OrderType>();
+            Attachments = new ObservableCollection<Blob>();
+            Users = new ObservableCollection<User>();
 
-            Attachments = new ObservableCollection<Blob>();            
-
-            Initialize();            
+            Initialize();
         }
 
         public ObservableCollection<Blob> Attachments { get; }
+        public ObservableCollection<User> Users { get; }
         public ObservableCollection<Customer> Customers { get; }
         public ObservableCollection<DisblayableCustomItem> DisplayableCustomItems { get; }
         public ObservableCollection<HwCustomItem> HardwareCustomItems { get; }
         public ObservableCollection<HardwareType> HardwareTypes { get; }
         public ObservableCollection<OrderStatus> OrderStatuses { get; }
-        public ObservableCollection<OrderType> OrderTypes { get; }
+        public ObservableCollection<OrderType> OrderTypes { get; }        
 
         public CustomerWrapper Customer { get => _customer; set => SetProperty(ref _customer, value); }
         public CustomerAddress CustomerAddress { get; private set; }
@@ -112,8 +119,7 @@ namespace ERService.OrderModule.ViewModels
             get { return _selectedOrderStatus; }
             set
             {
-                SetProperty(ref _selectedOrderStatus, value);
-                Order.Model.OrderStatusId = value?.Id;
+                SetProperty(ref _selectedOrderStatus, value);                
             }
         }
 
@@ -122,20 +128,31 @@ namespace ERService.OrderModule.ViewModels
             get { return _selectedOrderType; }
             set
             {
-                SetProperty(ref _selectedOrderType, value);
-                Order.Model.OrderTypeId = value.Id;
+                SetProperty(ref _selectedOrderType, value);                
             }
-        }                
+        }
+
+        public User SelectedUser
+        {
+            get { return _selectedUser; }
+            set
+            {
+                SetProperty(ref _selectedUser, value);
+                Order.UserId = value?.Id;
+            }
+        }
+
+        public string NextNumber { get; private set; }
 
         private async void Initialize()
         {
-            InitializeCustomersCombo();
+            await InitializeCustomersCombo();
 
             if (Customer == null)
                 InitializeCustomer(new Customer());
 
             if (Hardware == null)
-                InitializeHardware(new Hardware());
+                await InitializeHardware(new Hardware());
 
             if (Order == null)
                 await InitializeOrder(new Order());
@@ -165,7 +182,17 @@ namespace ERService.OrderModule.ViewModels
             };
 
             await LoadHardwareCustomItemsAsync();
-        }        
+            LoadUsers();
+        }
+
+        private void LoadUsers()
+        {
+            Users.Clear();
+            foreach (var user in _rbacManager.Users)
+            {
+                Users.Add(user);
+            }
+        }
 
         public void InitializeAddress(CustomerAddress customerAddress)
         {
@@ -190,7 +217,7 @@ namespace ERService.OrderModule.ViewModels
             }
         }
 
-        public async void InitializeHardware(Hardware hardware)
+        public async Task InitializeHardware(Hardware hardware)
         {
             Hardware = new HardwareWrapper(hardware);
 
@@ -219,12 +246,33 @@ namespace ERService.OrderModule.ViewModels
                 order.Number = OrderNumberGenerator.GetNumberFromPattern(numeration
                     .FirstOrDefault()
                     .Pattern);
-            }
+
+                var nextNumber = await GetNextNumber();
+                if (nextNumber != null)
+                {
+                    NextNumber = $"{++nextNumber}/{order.Number}";
+                }
+            }            
 
             order.DateRegistered = DateTime.Now;
 
             _orderRepository.Add(order);
-            Order = new OrderWrapper(order);            
+            Order = new OrderWrapper(order);
+        }
+
+        private async Task<int?> GetNextNumber()
+        {
+            int? result = null;
+            await Task.Run(() => 
+            {
+                var query = SQLQueryBuilder.CreateQuery(nameof(Business.Order));
+                query.AsMax(nameof(Business.Order.OrderId));
+
+                var sqlQuery = query.Compile();
+                result = _orderRepository.Get<int>(sqlQuery.Query, sqlQuery.Parameters).FirstOrDefault();
+                
+            });
+            return result;
         }
 
         public async Task Save()
@@ -236,6 +284,16 @@ namespace ERService.OrderModule.ViewModels
             else
             {
                 Order.Model.Customer = Customer.Model;
+            }
+
+            if (SelectedOrderStatus != null)
+            {
+                Order.Model.OrderStatusId = SelectedOrderStatus.Id;
+            }
+
+            if (SelectedOrderType != null)
+            {
+                Order.Model.OrderTypeId = SelectedOrderType.Id;
             }
 
             Hardware.Model.HardwareCustomItems.Clear();
@@ -257,18 +315,21 @@ namespace ERService.OrderModule.ViewModels
             })
             .ContinueWith(async t => 
             {
-                var dbProperties = await _orderRepository.GetDatabaseValuesAsync(Order.Model);
-                var id = dbProperties["Id"];
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    var dbProperties = await _orderRepository.GetDatabaseValuesAsync(Order.Model);
+                    var id = dbProperties[nameof(Business.Order.Id)];
 
-                var parameters = new NavigationParameters();
-                parameters.Add("ID", id);
-                parameters.Add("GoBackView", ViewNames.OrderListView);
-                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
+                    var parameters = new NavigationParameters();
+                    parameters.Add("ID", id);
+                    parameters.Add("GoBackView", ViewNames.OrderListView);
+                    _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.OrderView, parameters);
+                }
             }, 
             TaskContinuationOptions.ExecuteSynchronously);
-        }        
+        }
 
-        private async void InitializeCustomersCombo()
+        private async Task InitializeCustomersCombo()
         {
             try
             {

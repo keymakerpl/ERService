@@ -28,26 +28,25 @@ namespace ERService.OrderModule.Tasks
             _messageService = messageService;
 
             if (!LastUpdateTime.HasValue)
-                LastUpdateTime = DateTime.Now;           
+                LastUpdateTime = DateTime.Now;     
         }
 
         public async Task Run()
         {
-            var query = new SQLQueryBuilder(nameof(Order)).Select($"{nameof(Order)}.{nameof(Order.Id)}");
-            query.Where(nameof(Order.DateAdded), SQLOperators.GreaterOrEqual, LastUpdateTime.Value);
+            var query = SQLQueryBuilder.CreateQuery(nameof(Order))
+                .Select($"{nameof(Order)}.{nameof(Order.Id)}")
+                .Where(nameof(Order.DateAdded), SQLOperators.GreaterOrEqual, LastUpdateTime.Value);
 
             _logger.Debug($"LastUpdateTime: {LastUpdateTime}");
 
-            var parameters = new object[0];
-            var queryString = query.Compile(out parameters);
-
-            var ids = await _orderRepository.GetAsync<Guid>(queryString, parameters);
+            var sqlQuery = query.Compile();
+            var ids = await _orderRepository.GetAsync<Guid>(sqlQuery.Query, sqlQuery.Parameters);
 
             if (ids.Count > 0)
             {
                 RaiseNewOrdersAdded(ids.ToArray());
                 LastUpdateTime = DateTime.Now;
-            }            
+            }
         }
 
         private void RaiseNewOrdersAdded(Guid[] ids)

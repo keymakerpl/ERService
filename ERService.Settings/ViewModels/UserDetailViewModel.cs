@@ -191,7 +191,7 @@ namespace ERService.Settings.ViewModels
 
         private void InitializeRoleCombo()
         {
-            foreach (var role in _rbacManager.Roles)
+            foreach (var role in _rbacManager.Roles.Where(r => r.Id != Guid.Empty))
             {
                 UserRoles.Add(role);
             }            

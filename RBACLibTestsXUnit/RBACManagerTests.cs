@@ -50,8 +50,8 @@ namespace RBACLibTestsXUnit
             aclVerbRepositoryMock.Setup(v => v.GetAllAsync())
                 .Returns(Task.FromResult(GetACLVerbs()));
 
-            _rbacManager = new RBACManager(_userRepositoryMock.Object, _roleRepositoryMock.Object, aclRepositoryMock.Object,
-                container.Resolve<IPasswordHasher>(), eventAggregatorMock.Object, aclVerbRepositoryMock.Object);
+            //_rbacManager = new RBACManager(_userRepositoryMock.Object, _roleRepositoryMock.Object, aclRepositoryMock.Object,
+            //    container.Resolve<IPasswordHasher>(), eventAggregatorMock.Object, aclVerbRepositoryMock.Object);
         }
 
         private IEnumerable<User> GetUsers()

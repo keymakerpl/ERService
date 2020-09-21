@@ -71,7 +71,7 @@
                     <Border
                         x:Name="border"
                         BorderBrush="{Binding Order.Progress, Converter={StaticResource ProgressIntToBrushConverter}}"
-                        BorderThickness="2"
+                        BorderThickness="1"
                         Style="{StaticResource DefaultBorderStyle}">
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
@@ -134,24 +134,32 @@
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="Imię:" />
                             <Label
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Width="250"
                                 HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="{Binding Customer.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <Label
                                 Grid.Row="2"
                                 Grid.Column="0"
                                 Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="Nazwisko:" />
                             <Label
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 Width="250"
                                 HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="{Binding Customer.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <Grid
@@ -287,8 +295,8 @@
                                 DisplayMemberPath="Name"
                                 IsSynchronizedWithCurrentItem="True"
                                 ItemsSource="{Binding OrderStatuses}"
-                                SelectedItem="{Binding Order.OrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValue="{Binding Order.OrderStatus.Name}"
+                                SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding SelectedOrderStatus.Name}"
                                 SelectedValuePath="Name" />
 
                             <Label
@@ -305,8 +313,8 @@
                                 DisplayMemberPath="Name"
                                 IsSynchronizedWithCurrentItem="True"
                                 ItemsSource="{Binding OrderTypes}"
-                                SelectedItem="{Binding Order.OrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValue="{Binding Order.OrderType.Name}"
+                                SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding SelectedOrderType.Name}"
                                 SelectedValuePath="Name" />
 
                         </Grid>
@@ -386,6 +394,27 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Text="{Binding Order.Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource DefaultBorderStyle}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                VerticalContentAlignment="Center"
+                                Content="Serwisant:"
+                                FontWeight="SemiBold" />
+                            <ComboBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                DisplayMemberPath="FullName"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding Users}"
+                                SelectedItem="{Binding SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
                 </StackPanel>

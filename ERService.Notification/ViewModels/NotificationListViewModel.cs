@@ -75,14 +75,14 @@ namespace ERService.Notification.ViewModels
 
         public override async Task LoadAsync()
         {
-            var lastOrdersQuery = new SQLQueryBuilder(nameof(Order))
+            var lastOrdersQuery = SQLQueryBuilder.CreateQuery(nameof(Order))
                 .Select($"{nameof(Order)}.{nameof(Order.Id)}")
                 .OrderByDesc(nameof(Order.DateAdded))
                 .Limit(4);
             
             await FillTable(lastOrdersQuery, LastOrders);
 
-            var outdatedOrdersQuery = new SQLQueryBuilder(nameof(Order))
+            var outdatedOrdersQuery = SQLQueryBuilder.CreateQuery(nameof(Order))
                 .Select($"{nameof(Order)}.{nameof(Order.Id)}")
                 .WhereNotNull(nameof(Order.DateEnded))
                 .WhereDate(nameof(Order.DateEnded), SQLOperators.LessOrEqual, DateTime.Now)
@@ -94,13 +94,12 @@ namespace ERService.Notification.ViewModels
 
         private async Task FillTable(SqlKata.Query query, ObservableQueue<DisplayableOrderItem> listToFill)
         {
-            var parameters = new object[0];
-            var queryString = query.Compile(out parameters);
-            var ids = await GetIDs(parameters, queryString);
+            var queryString = query.Compile();
+            var ids = await GetIDs(queryString.Query, queryString.Parameters);
             await LoadOrders(ids.ToArray(), listToFill);
         }
 
-        private async Task<List<Guid>> GetIDs(object[] parameters, string queryString)
+        private async Task<List<Guid>> GetIDs(string queryString, object[] parameters)
         {
             return await _orderRepository.GetAsync<Guid>(queryString, parameters).ConfigureAwait(false);
         }

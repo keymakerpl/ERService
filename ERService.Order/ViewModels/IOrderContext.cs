@@ -34,7 +34,7 @@ namespace ERService.OrderModule.ViewModels
 
         void InitializeAddress(CustomerAddress customerAddress);
         void InitializeCustomer(Customer customer);
-        void InitializeHardware(Hardware hardware);
+        Task InitializeHardware(Hardware hardware);
         Task InitializeOrder(Order order);
         Task Save();
     }

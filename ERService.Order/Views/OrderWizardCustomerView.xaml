@@ -88,7 +88,6 @@
                 Padding="5"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Background="GhostWhite"
                 Style="{StaticResource DefaultBorderStyle}">
                 <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.RowDefinitions>
@@ -253,7 +252,6 @@
             Padding="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
-            Background="GhostWhite"
             Style="{StaticResource DefaultBorderStyle}">
             <Grid helpers:ReadOnlyContainer.IsReadOnly="{Binding IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid.RowDefinitions>

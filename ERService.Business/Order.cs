@@ -49,6 +49,9 @@ namespace ERService.Business
         public Guid? OrderTypeId { get; set; }
         public OrderType OrderType { get; set; }
 
+        public Guid? UserId { get; set; }
+        public User User { get; set; }
+
         [StringLength(50)]
         public string Cost { get; set; }
 
@@ -68,10 +71,7 @@ namespace ERService.Business
 
         public ICollection<Hardware> Hardwares { get; set; }
 
-        public ICollection<Blob> Attachments { get; set; }
-
-        public Guid? UserId { get; set; }
-        public User User { get; set; }
+        public ICollection<Blob> Attachments { get; set; }        
 
         [ConcurrencyCheck]
         public long RowVersion { get; set; }

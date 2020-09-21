@@ -54,12 +54,9 @@
                     </Grid.RowDefinitions>
                     <Border
                         Grid.Column="1"
-                        Height="150"
+                        Height="200"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Background="GhostWhite"
-                        BorderBrush="Gray"
-                        BorderThickness="0"
                         Style="{StaticResource DefaultBorderStyle}">
                         <Grid Margin="15" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -83,6 +80,7 @@
                                 Width="180"
                                 Height="30"
                                 Margin="5"
+                                VerticalContentAlignment="Center"
                                 Text="{Binding Numeration.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <Label
@@ -109,14 +107,11 @@
                             <DropShadowEffect ShadowDepth="2" />
                         </Border.Effect>
                     </Border>
-                    <Border
-                        Width="250"
-                        HorizontalAlignment="Center"
-                        Background="GhostWhite"
-                        BorderBrush="Gray"
-                        BorderThickness="0"
-                        Style="{StaticResource DefaultBorderStyle}">
-                        <StackPanel Margin="5" Orientation="Vertical">
+                    <Border Width="250" Style="{StaticResource DefaultBorderStyle}">
+                        <StackPanel
+                            Margin="5"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="60" />

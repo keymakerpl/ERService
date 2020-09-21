@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System;
 using System.Globalization;
 using System.Windows.Controls;
 
@@ -49,7 +50,7 @@ namespace ERService.OrderModule.ViewModels
 
         public bool WizardMode { get; }
 
-        public IOrderContext Context { get; private set; }
+        public IOrderContext Context { get; }
 
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {

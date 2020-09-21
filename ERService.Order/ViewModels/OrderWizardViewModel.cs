@@ -21,50 +21,22 @@ namespace ERService.OrderModule.ViewModels
         
         private NavigationContext _navigationContext;
         private readonly IOrderContext _orderWizardContext;
-        private readonly IPrintTemplateRepository _printTemplateRepository;
         private readonly ISettingsManager _settingsManager;
         private readonly IRegionManager _regionManager;
 
         public OrderWizardViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IMessageDialogService messageDialogService,
-            IOrderContext orderWizardContext, IPrintTemplateRepository printTemplateRepository, ISettingsManager settingsManager)
+            IOrderContext orderWizardContext, ISettingsManager settingsManager)
             : base(eventAggregator, messageDialogService)
         {
             _regionManager = regionManager;
             _orderWizardContext = orderWizardContext;
-            _printTemplateRepository = printTemplateRepository;
             _settingsManager = settingsManager;
 
             WizardMode = true;
 
-            PrintTemplates = new ObservableCollection<PrintTemplate>();
-
             GoForwardCommand = new DelegateCommand(OnGoForwardExecute, OnGoForwardCanExecute);
-            GoBackwardCommand = new DelegateCommand(OnGoBackExecute, OnGoBackwardCanExecute);
-            PrintCommand = new DelegateCommand<object>(OnPrintExecute);
-        }
-
-        private async void OnPrintExecute(object parameter)
-        {
-            var template = parameter as PrintTemplate;
-            if (template != null)
-            {
-                var companyConfig = await _settingsManager.GetConfigAsync(ConfigNames.CompanyInfoConfig);
-                var parameters = new NavigationParameters();
-                parameters.Add("ID", template.Id);
-                parameters.Add("IsReadOnly", true);
-                parameters.Add("IsToolbarVisible", false);
-                parameters.Add("ModelWrappers", new object[]
-                {
-                    _orderWizardContext.Customer,
-                    _orderWizardContext.Hardware,
-                    _orderWizardContext.Order,
-                    companyConfig,
-                    new AddressWrapper(_orderWizardContext.Customer.Model.CustomerAddresses.FirstOrDefault())
-                });
-
-                _regionManager.RequestNavigate(RegionNames.ContentRegion, ViewNames.PrintTemplateEditorView, parameters);
-            }
-        }
+            GoBackwardCommand = new DelegateCommand(OnGoBackExecute, OnGoBackwardCanExecute);            
+        }        
 
         public DelegateCommand GoBackwardCommand { get; }
         public DelegateCommand GoForwardCommand { get; }
@@ -95,30 +67,39 @@ namespace ERService.OrderModule.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             InitializeRegionContext();
-            InitializePrintTemplates();
 
             _navigationContext = navigationContext;
             _regionManager.RequestNavigate(RegionNames.OrderWizardStageRegion, ViewNames.OrderWizardCustomerView);
+
+            SetTitle(Current);
 
             _regionManager.Regions[RegionNames.OrderWizardStageRegion].NavigationService.Navigated += (s, a) =>
             {
                 Current = a.Uri.ToString();
 
+                SetTitle(Current);
+
                 GoForwardCommand.RaiseCanExecuteChanged();
                 GoBackwardCommand.RaiseCanExecuteChanged();
-            };
-
-            RaiseDetailOpenedEvent(Guid.Empty, "Dodawanie nowej naprawy...");
+            };            
         }
 
-        private async void InitializePrintTemplates()
+        private void SetTitle(string currentView)
         {
-            PrintTemplates.Clear();
-            var templates = await _printTemplateRepository.GetAllAsync();
-            foreach (var template in templates)
+            switch (currentView)
             {
-                PrintTemplates.Add(template);
+                case ViewNames.OrderWizardCustomerView:
+                    Title = "1. Nowa naprawa | Klient...";
+                    break;
+                case ViewNames.OrderWizardHardwareView:
+                    Title = "2. Nowa naprawa | Sprzęt...";
+                    break;
+                case ViewNames.OrderWizardOrderView:
+                    Title = "3. Nowa naprawa | Zgłoszenie...";
+                    break;
             }
+
+            RaiseDetailOpenedEvent(Guid.Empty, Title);
         }
 
         protected override void OnCancelEditExecute()
@@ -171,7 +152,7 @@ namespace ERService.OrderModule.ViewModels
                     _regionManager.RequestNavigate(RegionNames.OrderWizardStageRegion, ViewNames.OrderWizardCustomerView);
                     break;
             }
-        }
+        }        
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
