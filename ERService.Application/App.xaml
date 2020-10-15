@@ -21,6 +21,39 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Steel.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
+                <!--  Select colors set, options are material, metro, blue, white and black  -->
+
+                <!--  Material design colors  -->
+                <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/material.xaml" />
+                <!--  Metro colors  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/metro.xaml" />-->
+                <!--  Blue gradient  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/blue.xaml" />-->
+                <!--  white gradient  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/white.xaml" />-->
+                <!--  black gradient  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/black.xaml" />-->
+
+                <!--  Select size, options are small, medium and large  -->
+
+                <!--  small  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Size/s.xaml" />-->
+                <!--  medium  -->
+                <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Size/m.xaml" />
+                <!--  large  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Size/l.xaml" />-->
+
+                <!--  Select weight, options are light, normal and bold  -->
+                <!--  light  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Weight/light.xaml" />-->
+                <!--  normal  -->
+                <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Weight/normal.xaml" />
+                <!--  bold  -->
+                <!--<ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Weight/bold.xaml" />-->
+
+                <!--  Also add the base theme, this is required always  -->
+                <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/base.xaml" />
+
                 <!--  Standard resource, zdefiniowane style  -->
                 <ResourceDictionary>
 
@@ -63,6 +96,44 @@
                         <Setter Property="Content">
                             <Setter.Value>
                                 <iconPacks:PackIconEntypo Padding="1" Kind="Back" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style
+                        x:Key="AddSmallCircle"
+                        BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        TargetType="Button">
+                        <Setter Property="Width" Value="25" />
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Foreground" Value="SlateGray" />
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <iconPacks:PackIconOcticons
+                                    Margin="1,0,1,0"
+                                    Padding="3"
+                                    Foreground="SlateGray"
+                                    Kind="PlusSmall" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style
+                        x:Key="RemoveSmallCircle"
+                        BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        TargetType="Button">
+                        <Setter Property="Width" Value="25" />
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Foreground" Value="SlateGray" />
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <iconPacks:PackIconOcticons
+                                    Margin="1,0,1,0"
+                                    Padding="3"
+                                    Foreground="SlateGray"
+                                    Kind="X" />
                             </Setter.Value>
                         </Setter>
                     </Style>
@@ -131,6 +202,7 @@
                             </Trigger>
                         </Style.Triggers>
                         <Setter Property="Margin" Value="10,0,10,0" />
+                        <Setter Property="Background" Value="Transparent" />
                     </Style>
 
                     <!--<Style x:Key="DataGridEditingColumnStyle" TargetType="TextBox">
@@ -183,6 +255,7 @@
                         x:Key="DefaultDataGridStyle"
                         BasedOn="{StaticResource MetroDataGrid}"
                         TargetType="DataGrid">
+                        <Setter Property="Background" Value="Transparent" />
                         <Setter Property="Margin" Value="5" />
                         <Setter Property="CanUserAddRows" Value="False" />
                         <Setter Property="RowHeaderWidth" Value="0" />

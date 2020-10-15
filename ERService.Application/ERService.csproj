@@ -252,9 +252,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="functions.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="AppAndBrowser.contrast-white.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

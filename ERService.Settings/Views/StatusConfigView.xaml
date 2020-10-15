@@ -13,7 +13,7 @@
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="650"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
@@ -70,24 +70,24 @@
                         <RowDefinition Height="500" />
                     </Grid.RowDefinitions>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label
-                            Margin="5"
-                            Content="Statusy napraw:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <Border
-                            Grid.Row="1"
-                            BorderThickness="0,1,0,1"
-                            Style="{StaticResource DefaultBorderStyle}">
-                            <ListView
+                    <Border Background="#ededed" Style="{StaticResource DefaultBorderStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label
                                 Margin="5"
+                                Content="Statusy napraw:"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Opacity="0.9" />
+                            <ListView
+                                Grid.Row="1"
+                                Margin="5"
+                                Background="Transparent"
                                 BorderThickness="0"
                                 ItemsSource="{Binding Source={StaticResource SortedStatuses}}"
                                 SelectedItem="{Binding SelectedOrderStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -175,11 +175,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <Border
-                                                Height="35"
-                                                Background="{Binding Group, Converter={StaticResource StatusGroupIntToBrushConverter}}"
-                                                BorderThickness="0,0,0,0"
-                                                Style="{StaticResource DefaultBorderStyle}">
+                                            <Border Height="35" Style="{StaticResource DefaultBorderStyle}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
@@ -208,6 +204,13 @@
                                                             FontStyle="Italic"
                                                             Foreground="Black"
                                                             Text="{Binding GroupDisplayableName}" />
+                                                        <iconPacks:PackIconMaterial
+                                                            Width="10"
+                                                            Height="10"
+                                                            Margin="2,0,5,7"
+                                                            VerticalAlignment="Bottom"
+                                                            Foreground="{Binding Group, Converter={StaticResource StatusGroupIntToBrushConverter}}"
+                                                            Kind="CheckboxBlankCircle" />
                                                     </WrapPanel>
                                                 </Grid>
                                             </Border>
@@ -224,133 +227,138 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-
-                        </Border>
-                        <Border
-                            Grid.Row="2"
-                            Margin="5"
-                            controls:VisibilityHelper.IsCollapsed="{Binding IsNewStatusCollapsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Label Margin="5" Content="Nazwa:" />
-                                <TextBox
-                                    Grid.Column="1"
-                                    Width="250"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    VerticalContentAlignment="Center"
-                                    Text="{Binding NewOrderStatus.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Margin="5"
-                                    Content="Grupa:" />
-                                <ComboBox
-                                    x:Name="GroupCombo"
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Width="150"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Background="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SelectedItem.Group, Converter={StaticResource StatusGroupIntToBrushConverter}}"
-                                    DisplayMemberPath="DisplayableName"
-                                    IsSynchronizedWithCurrentItem="True"
-                                    ItemsSource="{Binding Groups}"
-                                    SelectedIndex="0"
-                                    SelectedValue="DisplayableName"
-                                    SelectedValuePath="DisplayableName">
-                                    <ComboBox.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ComboBoxItem}">
-                                            <Setter Property="Background" Value="{Binding Group, Converter={StaticResource StatusGroupIntToBrushConverter}}" />
-                                        </Style>
-                                    </ComboBox.ItemContainerStyle>
-                                </ComboBox>
-                                <Grid
-                                    Grid.RowSpan="3"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center">
-                                    <Button
-                                        Width="30"
-                                        Height="30"
-                                        Margin="10"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        BorderThickness="0"
-                                        Command="{Binding AddOrderStatusCommand}"
-                                        CommandParameter="{Binding ElementName=GroupCombo, Path=SelectedItem}"
-                                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                        ToolTip="Dodaj do listy">
-                                        <iconPacks:PackIconMaterial
-                                            Width="20"
-                                            Height="20"
-                                            Foreground="Gray"
-                                            Kind="PlaylistPlus" />
-                                    </Button>
-                                    <Grid.Style>
-                                        <Style TargetType="{x:Type Grid}">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Cursor" Value="Hand" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Grid.Style>
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <StackPanel
-                            Grid.Row="3"
-                            Margin="5"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,5,0"
-                                Command="{Binding ToggleNewStatusPaneCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="2" Kind="Add" />
-                            </Button>
-                            <Button
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,15,0"
-                                Command="{Binding RemoveOrderStatusCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconFontAwesome Padding="1" Kind="TrashAltRegular" />
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label
-                            Margin="5"
-                            Content="Typy napraw:"
-                            FontSize="14"
-                            FontWeight="SemiBold" />
-                        <Border
-                            Grid.Row="1"
-                            BorderThickness="0,1,0,1"
-                            Style="{StaticResource DefaultBorderStyle}">
-                            <ListView
+                            <Border
+                                Grid.Row="2"
                                 Margin="5"
+                                controls:VisibilityHelper.IsCollapsed="{Binding IsNewStatusCollapsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Label Margin="5" Content="Nazwa:" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Width="250"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        VerticalContentAlignment="Center"
+                                        Text="{Binding NewOrderStatus.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Margin="5"
+                                        Content="Grupa:" />
+                                    <ComboBox
+                                        x:Name="GroupCombo"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="150"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        Background="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SelectedItem.Group, Converter={StaticResource StatusGroupIntToBrushConverter}}"
+                                        DisplayMemberPath="DisplayableName"
+                                        IsSynchronizedWithCurrentItem="True"
+                                        ItemsSource="{Binding Groups}"
+                                        SelectedIndex="0"
+                                        SelectedValue="DisplayableName"
+                                        SelectedValuePath="DisplayableName">
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="{x:Type ComboBoxItem}">
+                                                <Setter Property="Background" Value="{Binding Group, Converter={StaticResource StatusGroupIntToBrushConverter}}" />
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+                                    </ComboBox>
+                                    <Grid
+                                        Grid.RowSpan="2"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                        <Button
+                                            Width="80"
+                                            Height="30"
+                                            Margin="10"
+                                            BorderThickness="1"
+                                            Command="{Binding AddOrderStatusCommand}"
+                                            CommandParameter="{Binding ElementName=GroupCombo, Path=SelectedItem}"
+                                            ToolTip="Dodaj do listy">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial
+                                                    Padding="3"
+                                                    Foreground="Black"
+                                                    Kind="Plus" />
+                                                <Label
+                                                    Margin="5,0,0,0"
+                                                    Padding="0"
+                                                    Content="Dodaj"
+                                                    Foreground="Black" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Grid.Style>
+                                            <Style TargetType="{x:Type Grid}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Style>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <StackPanel
+                                Grid.Row="3"
+                                Margin="10"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,5,0"
+                                    Command="{Binding ToggleNewStatusPaneCommand}"
+                                    Style="{StaticResource AddSmallCircle}">
+                                    <iconPacks:PackIconOcticons
+                                        Margin="1,0,1,0"
+                                        Padding="3"
+                                        Foreground="SlateGray"
+                                        Kind="PlusSmall" />
+                                </Button>
+                                <Button Command="{Binding RemoveOrderStatusCommand}" Style="{StaticResource RemoveSmallCircle}">
+                                    <iconPacks:PackIconOcticons
+                                        Margin="1,0,1,0"
+                                        Padding="3"
+                                        Foreground="SlateGray"
+                                        Kind="X" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Grid.Column="1"
+                        Background="#ededed"
+                        BorderThickness="0,1,0,1"
+                        Style="{StaticResource DefaultBorderStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Margin="5"
+                                Content="Typy napraw:"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Opacity="0.9" />
+                            <ListView
+                                Grid.Row="1"
+                                Margin="5"
+                                Background="Transparent"
                                 BorderThickness="0"
                                 ItemsSource="{Binding OrderTypes}"
                                 SelectedItem="{Binding SelectedOrderType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -438,11 +446,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <Border
-                                                Height="35"
-                                                Background="LightGray"
-                                                BorderThickness="1"
-                                                Style="{StaticResource DefaultBorderStyle}">
+                                            <Border Height="35" Style="{StaticResource DefaultBorderStyle}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
@@ -477,32 +481,19 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </Border>
-                        <StackPanel
-                            Grid.Row="2"
-                            Margin="5"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,5,0"
-                                Command="{Binding AddOrderTypeCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="2" Kind="Add" />
-                            </Button>
-                            <Button
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,15,0"
-                                Command="{Binding RemoveOrderTypeCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconFontAwesome Padding="1" Kind="TrashAltRegular" />
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                            <StackPanel
+                                Grid.Row="2"
+                                Margin="10"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,5,0"
+                                    Command="{Binding AddOrderTypeCommand}"
+                                    Style="{StaticResource AddSmallCircle}" />
+                                <Button Command="{Binding RemoveOrderTypeCommand}" Style="{StaticResource RemoveSmallCircle}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
 
                 </Grid>
 

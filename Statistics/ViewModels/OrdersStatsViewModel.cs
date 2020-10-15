@@ -73,7 +73,7 @@ namespace ERService.Statistics.ViewModels
         {
             try
             {
-                var pdfChart = arg.GetChartForPDF<PieChart>();
+                var pdfChart = arg.CloneChart<PieChart>();
                 var dialog = new SaveFileDialog();
                 dialog.FileName = $"Orders_{DateTime.Now:dd_MM_yyyy}.pdf";
                 dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -84,13 +84,13 @@ namespace ERService.Statistics.ViewModels
                 {
                     using (var imageStream = new MemoryStream())
                     {
-                        var title = $"Zlecenia serwisowe w okresie: od {_dateFrom:dd.MM.yyyy} do {_dateTo:dd.MM.yyyy}";
+                        var header = $"Zlecenia serwisowe w okresie: od {_dateFrom:dd.MM.yyyy} do {_dateTo:dd.MM.yyyy}";
                         var logo = _imagesCollection["logo"].ImageData;
                         var encoder = new PngBitmapEncoder();
 
                         //TODO: Przerobić na serwisy dla DI
                         ImageHelper.SaveVisualToStream(pdfChart, encoder, imageStream, c => ((PieChart)c).Update(true, true));
-                        PDFHelper.ConvertImageToPDF(imageStream, dialog.FileName, title, logo);
+                        PDFHelper.SaveImageToPDF(imageStream, dialog.FileName, header, logo);
 
                         _messageDialogService.ShowInsideContainer(
                             "Zapisano plik PDF...",
@@ -177,6 +177,8 @@ namespace ERService.Statistics.ViewModels
 
         public override async Task LoadAsync()
         {
+            _logger.Info("OrderStatsView LoadAsync Entered");
+
             var dateTo = _dateTo.AddDays(1);
 
             var openCount = await _orderRepository.FindByIncludeAsync(

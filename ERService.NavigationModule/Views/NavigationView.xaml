@@ -68,15 +68,12 @@
 
             <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                 <DataTemplate>
-                    <Grid
-                        x:Name="root"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
+                    <Grid x:Name="root">
                         <TextBlock
-                            VerticalAlignment="Center"
+                            FontSize="12"
                             FontStyle="Italic"
                             Foreground="Black"
-                            Text="{Binding CurrentContentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding CurrentContentViewName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </DataTemplate>
             </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>

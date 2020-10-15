@@ -1,5 +1,4 @@
 ﻿using ERService.CustomerModule.Repository;
-using ERService.HardwareModule.Data.Repository;
 using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Repository;
@@ -25,17 +24,17 @@ namespace ERService.Statistics.ViewModels
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly ICustomerRepository _customerRepository;
-        private readonly IHardwareRepository _hardwareRepository;
         private readonly IOrderRepository _orderRepository;
 
-        public BasicStatsViewModel(ICustomerRepository customerRepository, IHardwareRepository hardwareRepository, 
-            IOrderRepository orderRepository, IEventAggregator eventAggregator, IMessageDialogService messageDialogService) 
-            : base(eventAggregator, messageDialogService)
+        public BasicStatsViewModel(
+            ICustomerRepository customerRepository,
+            IOrderRepository orderRepository,
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Initialize();
 
             _customerRepository = customerRepository;
-            _hardwareRepository = hardwareRepository;
             _orderRepository = orderRepository;
 
             Title = "Ogólne";
@@ -47,7 +46,7 @@ namespace ERService.Statistics.ViewModels
                                                 .X(dt => dt.DateTime.Ticks / TimeSpan.FromDays(1).Ticks)
                                                 .Y(v => v.Value);
 
-            Charting.For<DateModel>(mapper, SeriesOrientation.Horizontal);            
+            Charting.For<DateModel>(mapper, SeriesOrientation.Horizontal);
 
             OrderValues = new ChartValues<DateModel>();
             CustomerValues = new ChartValues<DateModel>();
@@ -72,7 +71,7 @@ namespace ERService.Statistics.ViewModels
                 }
             };
 
-            PropertyChanged += async (s, a) => 
+            PropertyChanged += async (s, a) =>
             {
                 if (a.PropertyName == nameof(DateFrom) || a.PropertyName == nameof(DateTo))
                 {
@@ -105,6 +104,7 @@ namespace ERService.Statistics.ViewModels
         }
 
         private bool _isOrdersVisible;
+
         public bool IsOrdersVisible
         {
             get { return _isOrdersVisible; }
@@ -114,16 +114,17 @@ namespace ERService.Statistics.ViewModels
         //TODO: Refactor
         public override async Task LoadAsync()
         {
+            _logger.Info("BasicStats LoadAsync Entered");
+
             try
             {
                 var dateTo = _dateTo.AddDays(1);
                 var customers = await _customerRepository.FindByAsync(c => c.DateAdded >= _dateFrom && c.DateAdded <= dateTo);
-                var orders = await _orderRepository.FindByAsync(o => o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo);                
-                                
+                var orders = await _orderRepository.FindByAsync(o => o.DateRegistered >= _dateFrom && o.DateRegistered <= dateTo);
                 var customerDates = GetEmptyDateModels(_dateFrom, _dateTo)
                                                                           .Cast<DateModel>()
                                                                           .ToDictionary(dm => dm.DateTime);
-                
+
                 var customerQuery = from c in customers
                                     group c by c.DateAdded.Date into g
                                     orderby g.Key
@@ -153,6 +154,9 @@ namespace ERService.Statistics.ViewModels
 
                 OrderValues.Clear();
                 OrderValues.AddRange(orderDates.Values);
+
+                RaisePropertyChanged(nameof(CustomersCount));
+                RaisePropertyChanged(nameof(OrdersCount));
             }
             catch (Exception ex)
             {
@@ -182,6 +186,10 @@ namespace ERService.Statistics.ViewModels
         }
 
         public override bool KeepAlive => true;
+
+        public int CustomersCount => CustomerValues.Sum(dm => dm.Value);
+
+        public int OrdersCount => OrderValues.Sum(dm => dm.Value);
 
         public ChartValues<DateModel> CustomerValues { get; set; }
         public ChartValues<DateModel> OrderValues { get; set; }

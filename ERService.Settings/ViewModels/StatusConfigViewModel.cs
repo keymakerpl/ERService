@@ -3,11 +3,13 @@ using ERService.Infrastructure.Base;
 using ERService.Infrastructure.Dialogs;
 using ERService.OrderModule.Repository;
 using ERService.OrderModule.Wrapper;
+using MySqlX.XDevAPI.Common;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERService.Settings.ViewModels
@@ -29,12 +31,13 @@ namespace ERService.Settings.ViewModels
         private OrderStatusWrapper _newOrderStatus;
 
         public StatusConfigViewModel(IEventAggregator eventAggregator, IOrderStatusRepository orderStatusRepository,
-             IOrderTypeRepository orderTypeRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
+             IOrderTypeRepository orderTypeRepository, IOrderRepository orderRepository, IMessageDialogService messageDialogService) : base(eventAggregator, messageDialogService)
         {
             Title = "Konfiguracja statusów";
             
             _orderStatusRepository = orderStatusRepository;
             _orderTypeRepository = orderTypeRepository;
+            _orderRepository = orderRepository;
 
             _isNewStatusCollapsed = true;
 
@@ -48,7 +51,7 @@ namespace ERService.Settings.ViewModels
             RemoveOrderTypeCommand = new DelegateCommand(OnRemoveOrderTypeExecute, OnRemoveOrderTypeCanExecute);
             RemoveOrderStatusCommand = new DelegateCommand(OnRemoveOrderStatusExecute, OnRemoveOrderStatusCanExecute);
 
-            ToggleNewStatusPaneCommand = new DelegateCommand(OnNewStatusToggled);
+            ToggleNewStatusPaneCommand = new DelegateCommand(OnNewStatusToggled);            
         }
 
         private bool OnAddOrderStatusCanExecute(object arg)
@@ -93,7 +96,9 @@ namespace ERService.Settings.ViewModels
             set { SetProperty(ref _newOrderStatus, value); }
         }
 
-        private bool _isNewStatusCollapsed;        
+        private bool _isNewStatusCollapsed;
+        private readonly IOrderRepository _orderRepository;
+
         public bool IsNewStatusCollapsed
         {
             get { return _isNewStatusCollapsed; }
@@ -167,11 +172,17 @@ namespace ERService.Settings.ViewModels
             HasChanges = _orderStatusRepository.HasChanges() || _orderTypeRepository.HasChanges();
         }
 
-        private void OnAddOrderStatusExecute(object arg)
+        private async void OnAddOrderStatusExecute(object arg)
         {
+            if (OrderStatuses.Any(s => s.Name.Equals(NewOrderStatus.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Status naprawy...", "Status naprawy o takiej nazwie już istnieje");
+                return;
+            }
+
             var item = arg as StatusGroupLookupItem;
             if (item != null)
-                NewOrderStatus.Group = item.Group;
+                NewOrderStatus.Group = item.Group;            
 
             _orderStatusRepository.Add(NewOrderStatus.Model);                       
             OrderStatuses.Add(NewOrderStatus);
@@ -186,7 +197,14 @@ namespace ERService.Settings.ViewModels
             wrappedOrderType.PropertyChanged += WrappedType_PropertyChanged;
 
             var newTypeName = await _messageDialogService.ShowInputMessageAsync(this, "Nowy typ naprawy...", "Podaj nazwę nowego typu: ");
-            if (String.IsNullOrWhiteSpace(newTypeName)) return;
+            if (String.IsNullOrWhiteSpace(newTypeName)) 
+                return;
+
+            if (OrderTypes.Any(s => s.Name.Equals(newTypeName, StringComparison.OrdinalIgnoreCase)))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Typ naprawy...", "Typ naprawy o takiej nazwie już istnieje");
+                return;
+            }
             wrappedOrderType.Name = newTypeName;
 
             OrderTypes.Add(wrappedOrderType);
@@ -197,10 +215,22 @@ namespace ERService.Settings.ViewModels
             return SelectedOrderStatus != null;
         }
 
-        private void OnRemoveOrderStatusExecute()
+        private async void OnRemoveOrderStatusExecute()
         {
+            if (await IsOrderStatusInUse(_selectedOrderStatus.Model))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Status naprawy w użyciu...", "Status naprawy jest w użyciu, nie można go usunąć.");
+                return;
+            }
+
             _orderStatusRepository.Remove(SelectedOrderStatus.Model);
             OrderStatuses.Remove(SelectedOrderStatus);
+        }
+
+        private async Task<bool> IsOrderStatusInUse(OrderStatus model)
+        {
+            var result = await _orderRepository.FindByIncludeAsync(o => o.OrderStatusId == model.Id);
+            return result.Any();
         }
 
         private bool OnRemoveOrderTypeCanExecute()
@@ -208,10 +238,22 @@ namespace ERService.Settings.ViewModels
             return SelectedOrderType != null;
         }
 
-        private void OnRemoveOrderTypeExecute()
+        private async void OnRemoveOrderTypeExecute()
         {
+            if (await IsOrderTypeInUse(_selectedOrderType.Model))
+            {
+                await _messageDialogService.ShowInformationMessageAsync(this, "Typ naprawy w użyciu...", "Typ naprawy jest w użyciu, nie można go usunąć.");
+                return;
+            }
+
             _orderTypeRepository.Remove(SelectedOrderType.Model);
             OrderTypes.Remove(SelectedOrderType);
+        }
+
+        private async Task<bool> IsOrderTypeInUse(OrderType model)
+        {
+            var result = await _orderRepository.FindByIncludeAsync(o => o.OrderTypeId == model.Id);
+            return result.Any();
         }
 
         private void WrappedStatus_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

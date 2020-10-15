@@ -23,6 +23,7 @@ namespace ERService.Navigation.ViewModels
         {
             _regionManager = regionManager;
 
+            _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigating += NavigationService_Navigating;
             _regionManager.Regions[RegionNames.ContentRegion].NavigationService.Navigated += NavigationService_Navigated;
             _regionManager.Regions[RegionNames.ContentRegion].NavigationService.NavigationFailed += NavigationService_NavigationFailed;
 
@@ -34,6 +35,11 @@ namespace ERService.Navigation.ViewModels
             OpenDetailViewCommand = new DelegateCommand<string>(OnOpenDetailViewExecute);
         }
 
+        private void NavigationService_Navigating(object sender, RegionNavigationEventArgs e)
+        {
+            
+        }
+
         private void NavigationService_NavigationFailed(object sender, RegionNavigationFailedEventArgs e)
         {
             var message = $"Navigation failed: {e.Error}";
@@ -43,12 +49,13 @@ namespace ERService.Navigation.ViewModels
 
         private void NavigationService_Navigated(object sender, RegionNavigationEventArgs e)
         {
+            CurrentContentViewName = e.NavigationContext.NavigationService.Journal.CurrentEntry.Uri.OriginalString;
             _logger.Debug($"Navigated to: {e.Uri}");
         }
 
         public IRegionManager _regionManager { get; }
 
-        public string CurrentContentName
+        public string CurrentContentViewName
         {
             get { return _currentContentName; }
             set { SetProperty(ref _currentContentName, value); }
@@ -64,6 +71,9 @@ namespace ERService.Navigation.ViewModels
 
         private void OnOpenDetailViewExecute(string viewName)
         {
+            if (CurrentContentViewName == viewName)
+                return;
+
             _regionManager.Regions[RegionNames.ContentRegion].RequestNavigate(viewName);
         }
     }

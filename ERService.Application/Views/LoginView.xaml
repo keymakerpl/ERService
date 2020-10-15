@@ -19,7 +19,7 @@
 
     <UserControl.Resources>
         <Style TargetType="Label">
-            <Setter Property="Foreground" Value="Wheat" />
+            <Setter Property="Foreground" Value="Black" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
         <Style TargetType="TextBox">
@@ -35,14 +35,9 @@
             x:Name="border"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Background="#686868"
-            BorderBrush="Transparent"
-            BorderThickness="0"
-            CornerRadius="3"
+            Style="{StaticResource DefaultBorderStyle}"
             UseLayoutRounding="True">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="3" />
-            </Border.Effect>
+
             <StackPanel Margin="10,20,10,15" Orientation="Horizontal">
                 <Grid x:Name="loginGrid" Height="130">
                     <Grid.ColumnDefinitions>
@@ -64,22 +59,16 @@
                         Content="&#xE13D;"
                         FontFamily="Segoe MDL2 Assets"
                         FontSize="16"
-                        FontWeight="SemiBold">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        FontWeight="SemiBold"
+                        Foreground="Gray"
+                        Opacity="0.9" />
 
                     <Label
                         Grid.Column="1"
                         Margin="5"
                         Content="Użytkownik:"
                         FontSize="14"
-                        FontWeight="SemiBold">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        FontWeight="SemiBold" />
                     <TextBox
                         Grid.Column="2"
                         Height="25"
@@ -102,11 +91,7 @@
                         Margin="5"
                         Content="Hasło:"
                         FontSize="14"
-                        FontWeight="SemiBold">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        FontWeight="SemiBold" />
                     <PasswordBox
                         x:Name="PasswordBox"
                         Grid.Row="1"
@@ -131,6 +116,7 @@
                         Height="35"
                         Margin="0,10,5,0"
                         HorizontalAlignment="Right"
+                        BorderThickness="1"
                         Command="{Binding LoginCommand}"
                         CommandParameter="{Binding ElementName=PasswordBox}">
                         <StackPanel Orientation="Horizontal">
@@ -143,7 +129,7 @@
                             <TextBlock
                                 Margin="0"
                                 VerticalAlignment="Center"
-                                FontSize="13"
+                                FontSize="12"
                                 Text="Zaloguj" />
                         </StackPanel>
                     </Button>
@@ -160,7 +146,8 @@
                             Width="25"
                             Height="25"
                             BorderThickness="0"
-                            Foreground="Wheat"
+                            Foreground="Gray"
+                            Opacity="0.9"
                             RenderTransformOrigin="0.5,0.5"
                             Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
                             <i:Interaction.Triggers>
@@ -224,11 +211,7 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Label Margin="5" Content="Silnik bazy:">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                    <Label Margin="5" Content="Silnik bazy:" />
                     <ComboBox
                         Grid.Column="1"
                         Height="25"
@@ -241,11 +224,7 @@
                     <Label
                         Grid.Row="1"
                         Margin="5"
-                        Content="Serwer:">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        Content="Serwer:" />
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
@@ -255,11 +234,7 @@
                     <Label
                         Grid.Row="2"
                         Margin="5"
-                        Content="Użytkownik:">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        Content="Użytkownik:" />
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -269,11 +244,7 @@
                     <Label
                         Grid.Row="3"
                         Margin="5"
-                        Content="Hasło:">
-                        <Label.Effect>
-                            <DropShadowEffect ShadowDepth="3" />
-                        </Label.Effect>
-                    </Label>
+                        Content="Hasło:" />
                     <PasswordBox
                         x:Name="DbPasswordBox"
                         Grid.Row="3"

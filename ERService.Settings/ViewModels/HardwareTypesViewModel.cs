@@ -82,24 +82,35 @@ namespace ERService.Settings.ViewModels
         private void InitializeEvents()
         {
             PropertyChanged += HardwareTypesViewModel_PropertyChangedAsync;
+            HardwareTypes.CollectionChanged += (s, a) => 
+            { 
+                if (!HasChanges) 
+                { 
+                    HasChanges = _hardwareTypeRepository.HasChanges(); 
+                    SaveCommand.RaiseCanExecuteChanged(); 
+                } 
+            };
+            CustomItems.CollectionChanged += (s, a) => 
+            { 
+                if (!HasChanges) 
+                { 
+                    HasChanges = _customItemRepository.HasChanges(); 
+                    SaveCommand.RaiseCanExecuteChanged(); 
+                } 
+            };
         }
 
         private async Task LoadCustomItems()
         {
-            foreach (var wrappedItem in CustomItems)
-            {
-                wrappedItem.PropertyChanged -= WrappedCustomItem_PropertyChanged;
-            }
-
             CustomItems.Clear();
 
             var customItems = await _customItemRepository.GetCustomItemsByHardwareTypeAsync(SelectedHardwareType.Id);
             foreach (var item in customItems)
             {
                 var wrappedModel = new CustomItemWrapper(item);
-                wrappedModel.PropertyChanged += WrappedCustomItem_PropertyChanged;
 
-                if (CustomItems.Contains(wrappedModel)) continue;
+                if (CustomItems.Contains(wrappedModel)) 
+                    continue;
 
                 CustomItems.Add(wrappedModel);
             }
@@ -107,18 +118,13 @@ namespace ERService.Settings.ViewModels
 
         private async Task LoadHardwareTypes()
         {
-            foreach (var wrappedType in HardwareTypes)
-            {
-                wrappedType.PropertyChanged -= WrappedHardwareType_PropertyChanged;
-            }
-
             HardwareTypes.Clear();
 
             var hardwareTypes = await _hardwareTypeRepository.GetAllAsync();
             foreach (var type in hardwareTypes)
             {
                 var wrappedModel = new HardwareTypeWrapper(type);
-                wrappedModel.PropertyChanged += WrappedHardwareType_PropertyChanged;
+                
                 HardwareTypes.Add(wrappedModel);
             }
         }
@@ -163,8 +169,7 @@ namespace ERService.Settings.ViewModels
 
             if (!String.IsNullOrWhiteSpace(dialogResult))
             {
-                var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });
-                wrappedCustomItem.PropertyChanged += WrappedCustomItem_PropertyChanged;
+                var wrappedCustomItem = new CustomItemWrapper(new CustomItem() { HardwareTypeId = SelectedHardwareType.Model.Id });                
                 _customItemRepository.Add(wrappedCustomItem.Model);
                 CustomItems.Add(wrappedCustomItem);
 
@@ -178,7 +183,6 @@ namespace ERService.Settings.ViewModels
             if (!String.IsNullOrWhiteSpace(dialogResult))
             {
                 var wrappedHardwareType = new HardwareTypeWrapper(new HardwareType());
-                wrappedHardwareType.PropertyChanged += WrappedHardwareType_PropertyChanged;
                 _hardwareTypeRepository.Add(wrappedHardwareType.Model);
                 HardwareTypes.Add(wrappedHardwareType);
 
@@ -204,8 +208,6 @@ namespace ERService.Settings.ViewModels
                 return;
             }
 
-            SelectedCustomItem.PropertyChanged -= WrappedCustomItem_PropertyChanged;
-
             _customItemRepository.Remove(SelectedCustomItem.Model);
             CustomItems.Remove(_selectedCustomItem);
 
@@ -228,8 +230,6 @@ namespace ERService.Settings.ViewModels
                 return;
             }
 
-            SelectedHardwareType.PropertyChanged -= WrappedHardwareType_PropertyChanged;
-
             _hardwareTypeRepository.Remove(SelectedHardwareType.Model);
             HardwareTypes.Remove(_selectedHardwareType);
 
@@ -241,34 +241,7 @@ namespace ERService.Settings.ViewModels
         private async Task<bool> IsHardwareTypeInUse(HardwareType model)
         {
             var ids = await _hardwareTypeRepository.GetHardwareIDsWith(model.Id);
-
             return ids.Length > 0;
-        }
-
-        private void WrappedCustomItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!HasChanges) 
-            {
-                HasChanges = _customItemRepository.HasChanges();
-            }
-
-            if (e.PropertyName == nameof(CustomItemWrapper.HasErrors))
-            {
-                SaveCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        private void WrappedHardwareType_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!HasChanges)
-            {
-                HasChanges = _hardwareTypeRepository.HasChanges();
-            }
-
-            if (e.PropertyName == nameof(HardwareTypeWrapper.HasErrors))
-            {
-                SaveCommand.RaiseCanExecuteChanged();
-            }
         }
 
         #endregion Events and Event Handlers

@@ -6,7 +6,7 @@ namespace ERService.Infrastructure.Extensions
 {
     public static class ChartExtenssions
     {
-        public static Chart GetChartForPDF<T>(this Chart chart) where T : Chart
+        public static Chart CloneChart<T>(this Chart chart) where T : Chart
         {
             var newChart = Activator.CreateInstance(chart.GetType()) as T;
             newChart.DisableAnimations = true;

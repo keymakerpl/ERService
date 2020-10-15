@@ -7,8 +7,6 @@ namespace ERService.Statistics
 {
     public class StatisticsModule : IModule
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
         public void OnInitialized(IContainerProvider containerProvider)
         {
 

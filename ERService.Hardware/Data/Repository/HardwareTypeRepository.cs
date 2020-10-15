@@ -23,7 +23,8 @@ namespace ERService.HardwareModule.Data.Repository
             var query = SQLQueryBuilder.CreateQuery(nameof(Hardware))
                                 .Select($"{nameof(Hardware)}.{nameof(Hardware.Id)}")
                                 .Join(nameof(HardwareType), $"{nameof(Hardware)}.{nameof(Hardware.HardwareTypeID)}"
-                                , $"{nameof(HardwareType)}.{nameof(HardwareType.Id)}");
+                                , $"{nameof(HardwareType)}.{nameof(HardwareType.Id)}")
+                                .Where($"{nameof(HardwareType)}.{nameof(HardwareType.Id)}", hardwareTypeID);
             
             var sqlQuery = query.Compile();
             var ids = await GetAsync<Guid>(sqlQuery.Query, sqlQuery.Parameters);

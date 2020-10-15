@@ -10,7 +10,7 @@
     xmlns:prism="http://prismlibrary.com/"
     Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
@@ -57,91 +57,136 @@
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Border
-                            Height="250"
-                            BorderBrush="LightGray"
-                            BorderThickness="0"
+                            Height="280"
                             Style="{StaticResource DefaultBorderStyle}"
                             UseLayoutRounding="True">
-                            <DataGrid
-                                ItemsSource="{Binding HardwareTypes}"
-                                SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay}"
-                                Style="{StaticResource DefaultDataGridStyle}">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                                        Header="Typy urządzeń" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <Border.Effect>
-                                <DropShadowEffect ShadowDepth="2" />
-                            </Border.Effect>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <DataGrid
+                                    Background="Transparent"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    ItemsSource="{Binding HardwareTypes}"
+                                    SelectedItem="{Binding SelectedHardwareType, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultDataGridStyle}">
+                                    <DataGrid.Resources>
+                                        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Margin" Value="5,5,5,10" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Opacity" Value="0.8" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    <DataGrid.RowStyle>
+                                        <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="{x:Type DataGridRow}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                            <Setter Property="Margin" Value="2" />
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Header="Typy urządzeń" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,5,0"
+                                        Command="{Binding AddHardwareTypeCommand}"
+                                        Style="{StaticResource AddSmallCircle}">
+                                        <iconPacks:PackIconOcticons
+                                            Margin="1,0,1,0"
+                                            Padding="3"
+                                            Foreground="SlateGray"
+                                            Kind="PlusSmall" />
+                                    </Button>
+                                    <Button Command="{Binding RemoveHardwareTypeCommand}" Style="{StaticResource RemoveSmallCircle}">
+                                        <iconPacks:PackIconOcticons
+                                            Margin="1,0,1,0"
+                                            Padding="3"
+                                            Foreground="SlateGray"
+                                            Kind="X" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
                         </Border>
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Button
-                                Width="20"
-                                Height="20"
-                                Margin="0,0,5,0"
-                                Command="{Binding AddHardwareTypeCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
-                            </Button>
-                            <Button
-                                Width="20"
-                                Height="20"
-                                Margin="0,0,15,0"
-                                Command="{Binding RemoveHardwareTypeCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="3" Kind="Minus" />
-                            </Button>
-                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Row="0" Grid.Column="1">
                         <Border
-                            Height="250"
+                            Height="280"
                             BorderThickness="0"
                             Style="{StaticResource DefaultBorderStyle}"
                             UseLayoutRounding="True">
-                            <DataGrid
-                                ItemsSource="{Binding CustomItems}"
-                                SelectedItem="{Binding SelectedCustomItem, Mode=TwoWay}"
-                                Style="{StaticResource DefaultDataGridStyle}">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        Binding="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                                        Header="Pola zdefiniowane" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <Border.Effect>
-                                <DropShadowEffect ShadowDepth="2" />
-                            </Border.Effect>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <DataGrid
+                                    Background="Transparent"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    ItemsSource="{Binding CustomItems}"
+                                    SelectedItem="{Binding SelectedCustomItem, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultDataGridStyle}">
+                                    <DataGrid.Resources>
+                                        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Margin" Value="5,5,5,10" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Opacity" Value="0.8" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    <DataGrid.RowStyle>
+                                        <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="{x:Type DataGridRow}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                            <Setter Property="Margin" Value="2" />
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            ElementStyle="{StaticResource DataGridColumnStyle}"
+                                            Header="Pola zdefiniowane" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,5,0"
+                                        Command="{Binding AddCustomItemCommand}"
+                                        Style="{StaticResource AddSmallCircle}">
+                                        <iconPacks:PackIconOcticons
+                                            Margin="1,0,1,0"
+                                            Padding="3"
+                                            Foreground="SlateGray"
+                                            Kind="PlusSmall" />
+                                    </Button>
+                                    <Button Command="{Binding RemoveCustomItemCommand}" Style="{StaticResource RemoveSmallCircle}">
+                                        <iconPacks:PackIconOcticons
+                                            Margin="1,0,1,0"
+                                            Padding="3"
+                                            Foreground="SlateGray"
+                                            Kind="X" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
                         </Border>
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Button
-                                Width="20"
-                                Height="20"
-                                Margin="0,0,5,0"
-                                Command="{Binding AddCustomItemCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="3" Kind="Add" />
-                            </Button>
-                            <Button
-                                Width="20"
-                                Height="20"
-                                Margin="0,0,15,0"
-                                Command="{Binding RemoveCustomItemCommand}"
-                                Foreground="Gray"
-                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
-                                <iconPacks:PackIconModern Padding="3" Kind="Minus" />
-                            </Button>
-                        </StackPanel>
                     </StackPanel>
                 </Grid>
 

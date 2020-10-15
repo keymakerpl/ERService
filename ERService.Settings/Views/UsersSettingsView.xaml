@@ -225,9 +225,6 @@
                                                 Text="{Binding Role.Name}" />
                                         </WrapPanel>
                                     </Grid>
-                                    <Border.Effect>
-                                        <DropShadowEffect ShadowDepth="2" />
-                                    </Border.Effect>
                                 </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>

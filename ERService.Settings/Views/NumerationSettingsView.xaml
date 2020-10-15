@@ -103,9 +103,6 @@
                                 FontWeight="DemiBold" />
 
                         </Grid>
-                        <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" />
-                        </Border.Effect>
                     </Border>
                     <Border Width="250" Style="{StaticResource DefaultBorderStyle}">
                         <StackPanel
@@ -183,9 +180,6 @@
                                     FontSize="14" />
                             </Grid>
                         </StackPanel>
-                        <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" />
-                        </Border.Effect>
                     </Border>
 
                 </Grid>

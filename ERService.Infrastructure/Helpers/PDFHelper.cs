@@ -9,7 +9,7 @@ namespace ERService.Infrastructure.Helpers
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public static void ConvertImageToPDF(Stream imageStream, string filePath, string title = null, byte[] logo = null)
+        public static void SaveImageToPDF(Stream imageStream, string filePath, string header = null, byte[] logo = null)
         {
             var document = new Document(PageSize.A4);
             _ = PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
@@ -30,11 +30,11 @@ namespace ERService.Infrastructure.Helpers
                 img.Alignment = Element.ALIGN_CENTER;
                 img.SpacingBefore = 24f;
                 var font = new Font(Font.COURIER, 14f, Font.BOLD);
-                var header = new Paragraph(title ?? "", font);
-                header.SetAlignment("Center");
-                header.SpacingAfter = 24f;
-                header.SpacingBefore = 24f;
-                document.Add(header);
+                var title = new Paragraph(header ?? "", font);
+                title.SetAlignment("Center");
+                title.SpacingAfter = 24f;
+                title.SpacingBefore = 24f;
+                document.Add(title);
                 document.Add(img);
             }
             catch (Exception ex)
